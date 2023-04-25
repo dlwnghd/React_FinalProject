@@ -2,10 +2,18 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyles = createGlobalStyle`
     @font-face {
-        font-family: 'LINESeedKR-Bd';
-        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
+        font-family: 'LINESeed-Bd';
+        src: url('./assets/font/LINESeedKR-Bd.ttf');
+    }
+
+    @font-face {
+        font-family: 'LINESeed-Rg';
+        src: url('./assets/font/LINESeedKR-Rg.ttf');
+    }
+
+    @font-face {
+        font-family: 'LINESeed-Th';
+        src: url('./assets/font/LINESeedKR-Th.ttf');
     }
 
     * {
@@ -17,7 +25,7 @@ const GlobalStyles = createGlobalStyle`
     html {
         // Font : Line Seed (라인 시드)
         font-size: 62.5%;
-        font-family: 'LINESeedKR-Bd';
+        font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 
         @media screen and (max-width:820px) {
             font-size:50%;
@@ -57,7 +65,9 @@ const GlobalStyles = createGlobalStyle`
     }
 
     p {
-        font-size:${({ theme }) => theme.FONT_SIZE.small}
+        font-weight: 700;
+        font-size:${({ theme }) => theme.FONT_SIZE.small};
+        font-weight:${({ theme }) => theme.FONT_WEIGHT.bold}
     }
 
     span {
