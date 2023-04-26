@@ -20,9 +20,12 @@ export default Footer
 
 const FooterWrapper = styled.footer`
 	box-sizing: border-box;
-	/* box-shadow: 0 -0.1rem 1rem; */
 	padding: 0 15%;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+
+	@media screen and (max-width: 440px) {
+		display: none;
+	}
 `
 
 const FooterContainer = styled.div`
@@ -30,15 +33,25 @@ const FooterContainer = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	height: 32rem;
-	row-gap: 5rem;
+	row-gap: 9rem;
+
+	& > p {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.light};
+	}
 `
 
 const Logo = styled.h3`
 	color: black;
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 `
 
 const Description = styled.div`
 	color: black;
+
+	& > h2 {
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	}
 `
 
 const S = {
