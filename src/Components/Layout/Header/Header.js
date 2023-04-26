@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../Styles/common'
 import { CiSearch, CiMenuBurger, CiShoppingBasket } from 'react-icons/ci'
 import { useEffect, useRef, useState } from 'react'
+import Sidebar from './Components/Sidebar'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
@@ -15,9 +16,11 @@ function Header({ searchProduct }) {
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
 
-    /**
-     * 드롭다운 닫기 핸들러 
-     */
+	const [hamburgerShow, setHamburgerShow] = useState(false) // 모바일 햄버거메뉴 활성화용
+
+	/**
+	 * 드롭다운 닫기 핸들러
+	 */
 	const dropdownCloseHandler = ({ target }) => {
 		if (dropdown && userMenu.current && !userMenu.current.contains(target)) {
 			setDropdown(false)
@@ -62,7 +65,11 @@ function Header({ searchProduct }) {
 	return (
 		<S.HeaderWrapper>
 			<S.Topper>
-				<S.MobileIcon>
+				<S.MobileIcon
+					onClick={() => {
+						setHamburgerShow(prev => !prev)
+					}}
+				>
 					<CiMenuBurger
 						style={{
 							fontSize: '5.4rem',
@@ -170,6 +177,12 @@ function Header({ searchProduct }) {
 					</S.Login_Join>
 				)}
 			</S.Topper>
+			<Sidebar
+				hamburgerShow={hamburgerShow}
+				setHamburgerShow={setHamburgerShow}
+				selectedNav={selectedNav}
+				setSelectedNav={setSelectedNav}
+			/>
 			<S.MobileSearchContainer>
 				<CiSearch
 					style={{
@@ -234,10 +247,12 @@ const HeaderWrapper = styled.header`
 	padding: 0 15%;
 	padding-top: 1%;
 	border-bottom: 0.1px solid #eeeeee;
+	background-color: white;
 
 	@media screen and (max-width: 440px) {
-		position: fixed;
-		padding: 0 1.2rem;
+		position: sticky;
+		top: 0;
+		padding: 0px 1.2rem;
 		border-bottom: none;
 	}
 `
