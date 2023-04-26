@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { FlexAlignCSS } from '../../../Styles/common'
+import { FlexAlignCSS, WidthAutoCSS } from '../../../Styles/common'
 import { CiSearch, CiMenuBurger, CiShoppingBasket } from 'react-icons/ci'
 import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Components/Sidebar'
@@ -64,55 +64,7 @@ function Header({ searchProduct }) {
 
 	return (
 		<S.HeaderWrapper>
-			<S.Topper>
-				<S.MobileIcon
-					onClick={() => {
-						setHamburgerShow(prev => !prev)
-					}}
-				>
-					<CiMenuBurger
-						style={{
-							fontSize: '5.4rem',
-							color: 'gray',
-							cursor: 'pointer',
-						}}
-					/>
-				</S.MobileIcon>
-				<S.LogoContainer>
-					<S.Logo
-						onClick={() => {
-							navigate('/')
-							setSelectedNav(-1)
-						}}
-					>
-						NEGO MARKET
-					</S.Logo>
-				</S.LogoContainer>
-				<S.MobileIcon>
-					<CiShoppingBasket
-						style={{
-							fontSize: '5.4rem',
-							color: 'gray',
-							cursor: 'pointer',
-						}}
-					/>
-				</S.MobileIcon>
-				<S.SearchContainer>
-					<CiSearch
-						style={{
-							position: 'absolute',
-							color: 'gray',
-						}}
-					/>
-					<input
-						type="text"
-						placeholder={'어떤 상품을 찾으시나요?'}
-						onChange={onChangeSearch}
-						onKeyDown={handleKeyPress}
-						defaultValue={searchProduct} // 만약 검색 도중 새로고침이 일어나더라도 검색어가 남아있어야 함
-						value={product}
-					></input>
-				</S.SearchContainer>
+			<S.HeaderSpace>
 				{login ? (
 					<S.UserContainer>
 						<S.UserBox
@@ -122,9 +74,7 @@ function Header({ searchProduct }) {
 							}}
 						>
 							<img src={'./user.png'} width="17" />
-							<div>
-								<span>회원명</span>
-							</div>
+							<span>회원명</span>
 						</S.UserBox>
 						{dropdown && (
 							<UserDropDownMenu>
@@ -176,62 +126,92 @@ function Header({ searchProduct }) {
 						</span>
 					</S.Login_Join>
 				)}
-			</S.Topper>
-			<Sidebar
-				hamburgerShow={hamburgerShow}
-				setHamburgerShow={setHamburgerShow}
-				selectedNav={selectedNav}
-				setSelectedNav={setSelectedNav}
-			/>
-			<S.MobileSearchContainer>
-				<CiSearch
-					style={{
-						position: 'absolute',
-						top: '50%',
-						transform: 'translateY(-50%)',
-						left: '1rem',
-						fontSize: '2.8rem',
-						color: 'gray',
-					}}
+				<S.List>
+					<div>
+						<S.MobileIcon
+							onClick={() => {
+								setHamburgerShow(prev => !prev)
+							}}
+						>
+							<CiMenuBurger
+								style={{
+									fontSize: '5.4rem',
+									color: 'gray',
+									cursor: 'pointer',
+								}}
+							/>
+						</S.MobileIcon>
+						<S.Logo
+							onClick={() => {
+								navigate('/')
+								setSelectedNav(-1)
+							}}
+						>
+							NEGO MARKET
+						</S.Logo>
+						<S.MobileIcon>
+							<CiShoppingBasket
+								style={{
+									fontSize: '5.4rem',
+									color: 'gray',
+									cursor: 'pointer',
+								}}
+							/>
+						</S.MobileIcon>
+					</div>
+					<S.SearchContainer>
+						<CiSearch
+							style={{
+								position: 'absolute',
+								color: 'gray',
+							}}
+						/>
+						<input
+							type="text"
+							placeholder={'어떤 상품을 찾으시나요?'}
+							onChange={onChangeSearch}
+							onKeyDown={handleKeyPress}
+							defaultValue={searchProduct} // 만약 검색 도중 새로고침이 일어나더라도 검색어가 남아있어야 함
+							value={product}
+						></input>
+					</S.SearchContainer>
+				</S.List>
+				<Sidebar
+					hamburgerShow={hamburgerShow}
+					setHamburgerShow={setHamburgerShow}
+					selectedNav={selectedNav}
+					setSelectedNav={setSelectedNav}
 				/>
-				<input
-					type="text"
-					placeholder={'어떤 상품을 찾으시나요?'}
-					onChange={onChangeSearch}
-					onKeyDown={handleKeyPress}
-					defaultValue={searchProduct} // 만약 검색 도중 새로고침이 일어나더라도 검색어가 남아있어야 함
-					value={product}
-				></input>
-			</S.MobileSearchContainer>
-			<S.Bottom>
-				<S.NavItem
-					className={selectedNav === 0 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-					onClick={() => {
-						setSelectedNav(0) // 선택된 Navigation 항목의 인덱스 업데이트
-						navigate('/list/무료나눔리스트')
-					}}
-				>
-					FREE MARKET
-				</S.NavItem>
-				<S.NavItem
-					className={selectedNav === 1 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-					onClick={() => {
-						setSelectedNav(1) // 선택된 Navigation 항목의 인덱스 업데이트
-						navigate('/list/중고거래리스트')
-					}}
-				>
-					TRADE USED
-				</S.NavItem>
-				<S.NavItem
-					className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-					onClick={() => {
-						setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
-						navigate('/recent-price')
-					}}
-				>
-					MARKET TREND
-				</S.NavItem>
-			</S.Bottom>
+				<S.Bottom>
+					<S.NavItem
+						className={selectedNav === 0 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+						onClick={() => {
+							setSelectedNav(0) // 선택된 Navigation 항목의 인덱스 업데이트
+							navigate('/list/무료나눔리스트')
+						}}
+					>
+						FREE MARKET
+					</S.NavItem>
+					<S.NavItem
+						className={selectedNav === 1 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+						onClick={() => {
+							setSelectedNav(1) // 선택된 Navigation 항목의 인덱스 업데이트
+							navigate('/list/중고거래리스트')
+						}}
+					>
+						TRADE USED
+					</S.NavItem>
+					<S.NavItem
+						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+						onClick={() => {
+							setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
+							navigate('/recent-price')
+						}}
+					>
+						MARKET TREND
+					</S.NavItem>
+				</S.Bottom>
+			</S.HeaderSpace>
 		</S.HeaderWrapper>
 	)
 }
@@ -243,16 +223,20 @@ export default Header
  */
 const HeaderWrapper = styled.header`
 	width: 100%;
-	box-sizing: border-box;
-	padding: 0 15%;
-	padding-top: 1%;
 	border-bottom: 0.1px solid #eeeeee;
 	background-color: white;
+`
+
+/**
+ * Header공간
+ */
+const HeaderSpace = styled.div`
+	${WidthAutoCSS};
+	padding-top: 1rem;
 
 	@media screen and (max-width: 440px) {
 		position: sticky;
 		top: 0;
-		padding: 0px 1.2rem;
 		border-bottom: none;
 	}
 `
@@ -260,7 +244,8 @@ const HeaderWrapper = styled.header`
 /**
  * Header 상단
  */
-const Topper = styled.div`
+const List = styled.div`
+	text-align: center;
 	height: 10rem;
 	width: 100%;
 	display: flex;
@@ -268,7 +253,25 @@ const Topper = styled.div`
 	column-gap: 5rem;
 
 	@media screen and (max-width: 440px) {
-		align-items: center;
+		flex-direction: column;
+	}
+
+	& > input {
+		@media screen and (max-width: 440px) {
+			position: relative;
+			width: 100%;
+			left: 0%;
+			transform: translateX(0%);
+		}
+	}
+
+	& > div {
+		@media screen and (max-width: 440px) {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			top: 8rem;
+		}
 	}
 `
 
@@ -276,13 +279,11 @@ const Topper = styled.div`
  * 로그인 / 회원가입
  */
 const Login_Join = styled.div`
-	display: flex;
-	column-gap: 3rem;
-	align-items: flex-start;
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+	text-align: right;
 
 	& > span {
 		cursor: pointer;
+		margin: 0 1rem;
 	}
 
 	@media screen and (max-width: 440px) {
@@ -294,9 +295,13 @@ const Login_Join = styled.div`
  * 검색창
  */
 const SearchContainer = styled.div`
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
 	width: 33%;
-	position: relative;
 	${FlexAlignCSS}
+	top: 5.5rem;
+
 	& > input {
 		width: 100%;
 		height: 4rem;
@@ -313,29 +318,20 @@ const SearchContainer = styled.div`
 		font-size: 2.8rem;
 		color: black;
 	}
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
-`
-
-/**
- * 로고 구역
- */
-const LogoContainer = styled.div`
-	display: flex;
-	align-items: center;
 `
 
 /**
  * 로고
  */
 const Logo = styled.h1`
+	height: 100%;
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	cursor: pointer;
+	line-height: 5;
 
 	@media screen and (max-width: 440px) {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
+		line-height: 2.5;
 	}
 `
 
@@ -369,35 +365,35 @@ const NavItem = styled.div`
 	}
 `
 
-/**
- * 모바일 검색창
- */
-const MobileSearchContainer = styled.div`
-	display: none;
-	width: 100%;
-	position: relative;
+// /**
+//  * 모바일 검색창
+//  */
+// const MobileSearchContainer = styled.div`
+// 	display: none;
+// 	width: 100%;
+// 	position: relative;
 
-	@media screen and (max-width: 440px) {
-		display: block;
-	}
+// 	@media screen and (max-width: 440px) {
+// 		display: block;
+// 	}
 
-	& > input {
-		width: 100%;
-		height: 4rem;
-		box-sizing: border-box;
-		border-radius: 2rem;
-		text-indent: 4.4rem;
-		border: 0.2rem solid #aaa;
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	}
+// 	& > input {
+// 		width: 100%;
+// 		height: 4rem;
+// 		box-sizing: border-box;
+// 		border-radius: 2rem;
+// 		text-indent: 4.4rem;
+// 		border: 0.2rem solid #aaa;
+// 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+// 	}
 
-	& > svg {
-		position: absolute;
-		left: 1rem;
-		font-size: 2.8rem;
-		color: black;
-	}
-`
+// 	& > svg {
+// 		position: absolute;
+// 		left: 1rem;
+// 		font-size: 2.8rem;
+// 		color: black;
+// 	}
+// `
 
 /**
  * 모바일 아이콘 구역
@@ -420,8 +416,7 @@ const UserContainer = styled.div`
 	}
 `
 const UserBox = styled.div`
-	display: flex;
-	align-items: center;
+	text-align: right;
 	margin-top: 2px;
 `
 const UserDropDownMenu = styled.div`
@@ -444,11 +439,9 @@ const UserDropDownMenu = styled.div`
 
 const S = {
 	HeaderWrapper,
-	Topper,
+	List,
 	Login_Join,
 	SearchContainer,
-	MobileSearchContainer,
-	LogoContainer,
 	Logo,
 	Bottom,
 	NavItem,
@@ -456,4 +449,5 @@ const S = {
 	UserContainer,
 	UserBox,
 	UserDropDownMenu,
+	HeaderSpace,
 }

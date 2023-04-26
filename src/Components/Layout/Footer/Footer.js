@@ -1,17 +1,20 @@
 import styled from 'styled-components'
+import { WidthAutoCSS } from '../../../Styles/common'
 import TopButton from './TopButton/TopButton'
 
 function Footer() {
 	return (
 		<S.FooterWrapper>
-			<S.FooterContainer>
-				<TopButton />
-				<S.Description>
-					<S.Logo>WELCOME TO</S.Logo>
-					<h2>NEGO MARKET</h2>
-				</S.Description>
-				<p>Copyright by Team. Nego</p>
-			</S.FooterContainer>
+			<S.FootSize>
+				<S.FooterContainer>
+					<TopButton />
+					<S.Description>
+						<S.Logo>WELCOME TO</S.Logo>
+						<h2>NEGO MARKET</h2>
+					</S.Description>
+					<p>Copyright by Team. Nego</p>
+				</S.FooterContainer>
+			</S.FootSize>
 		</S.FooterWrapper>
 	)
 }
@@ -20,7 +23,6 @@ export default Footer
 
 const FooterWrapper = styled.footer`
 	box-sizing: border-box;
-	padding: 0 15%;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	@media screen and (max-width: 440px) {
@@ -54,9 +56,14 @@ const Description = styled.div`
 	}
 `
 
+const FootSize = styled.div`
+	${WidthAutoCSS};
+`
+
 const S = {
 	FooterWrapper,
 	FooterContainer,
 	Logo,
 	Description,
+	FootSize,
 }
