@@ -33,9 +33,9 @@ const FONT_SIZE = {
 }
 
 const FONT_WEIGHT = {
-	light: '100',
-	regular: '400',
-	bold: '700',
+	light: 'LINESeed-Th',
+	regular: 'LINESeed-Rg',
+	bold: 'LINESeed-Bd',
 }
 
 const theme = {
