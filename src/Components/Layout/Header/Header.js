@@ -222,6 +222,8 @@ export default Header
  * 전체 Header
  */
 const HeaderWrapper = styled.header`
+	position: relative;
+	z-index: 9999;
 	width: 100%;
 	border-bottom: 0.1px solid #eeeeee;
 	background-color: white;
