@@ -32,8 +32,12 @@ export const FillHeart_Icon = ({ size }) => (
 
 export const Profile_Icon = () => <AiOutlineUser /> // 프로필
 export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
-export const PaginationArrowSingle_Icon = () => <AiFillCaretRight /> // 페이지네이션화살표 (>)
-export const PaginationArrowDouble_Icon = () => <AiFillForward /> // 페이지네이션화살표 (>>)
+export const PaginationArrowSingle_Icon = ({ rotate }) => (
+	<AiFillCaretRight style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>)
+export const PaginationArrowDouble_Icon = ({ rotate }) => (
+	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>>)
 export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
 export const MenuBurger_Icon = () => <AiOutlineMenu /> // 햄버거
 export const InterestBasket_Icon = () => <AiOutlineShoppingCart /> // 관심 상품
