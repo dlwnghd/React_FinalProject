@@ -25,7 +25,7 @@ function Main() {
 									title={item.title}
 									price={item.price}
 									posterPath={item.image_url}
-									context={item.status}
+									context={item.script}
 									isLiked={item.liked}
 									key={idx}
 								/>
@@ -43,7 +43,7 @@ function Main() {
 									title={item.title}
 									price={item.price}
 									posterPath={item.image_url}
-									context={item.status}
+									context={item.script}
 									isLiked={item.liked}
 									key={idx}
 								/>
