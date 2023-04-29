@@ -1,25 +1,30 @@
 import styled from 'styled-components'
 import ProductInfo from './Components/ProductInfo'
 import { FlexCenterCSS, WidthAutoCSS } from '../../Styles/common'
+import productsMock from '../../__mock__/Data/Product/product.data'
+import { useState } from 'react'
 
 function Detail() {
+	const [product, setProduct] = useState(productsMock[0])
 	return (
-		<S.Wrapper>
-			<ProductInfo />
-			<Maps>
-				<div>지도</div>
-			</Maps>
-			<S.PrdListBox>
-				<RecentPrdList>
-					<span>최근 본 상품 보러가기</span>
-					<div>최근 본 상품 리스트 영역</div>
-				</RecentPrdList>
-				<AnotherPrdList>
-					<span>다른 상품 보러가기</span>
-					<div>다른 상품 리스트 영역</div>
-				</AnotherPrdList>
-			</S.PrdListBox>
-		</S.Wrapper>
+		<>
+			<S.Wrapper>
+				<ProductInfo prd={product} />
+				<Maps>
+					<div>지도</div>
+				</Maps>
+				<S.PrdListBox>
+					<RecentPrdList>
+						<span>최근 본 상품 보러가기</span>
+						<div>최근 본 상품 리스트 영역</div>
+					</RecentPrdList>
+					<AnotherPrdList>
+						<span>다른 상품 보러가기</span>
+						<div>다른 상품 리스트 영역</div>
+					</AnotherPrdList>
+				</S.PrdListBox>
+			</S.Wrapper>
+		</>
 	)
 }
 
