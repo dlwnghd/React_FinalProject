@@ -13,7 +13,8 @@ import Login from '../Pages/Form/Login/Login'
 import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
-import Withdrawal from '../Pages/MyPage/UserEdit/Pages/Withdrawal/Withdrawal'
+import MyPageNav from '../Pages/MyPage/Components/Navigation/Navigation'
+import MyPageHeader from '../Pages/MyPage/Components/Header'
 
 const router = createBrowserRouter([
 	{
@@ -41,28 +42,36 @@ const router = createBrowserRouter([
 				element: <SignUp />,
 			},
 			{
-				path: '/mypage-bank',
-				element: <MyBank />,
+				path: '',
+				element: <MyPageHeader />,
+				children: [
+					{
+						path: '/mypage-bank',
+						element: <MyBank />,
+					},
+					{
+						path: '/mypage-interest',
+						element: <MyInterest />,
+					},
+					{
+						path: '/mypage-register',
+						element: <MyPrdRegister />,
+					},
+				],
 			},
 			{
-				path: '/mypage-interest',
-				element: <MyInterest />,
-			},
-			{
-				path: '/mypage-register',
-				element: <MyPrdRegister />,
-			},
-			{
-				path: '/mypage/useredit-changepw',
-				element: <ChangePW />,
-			},
-			{
-				path: '/mypage/useredit-userinfo',
-				element: <UserInfo />,
-			},
-			{
-				path: '/mypage/useredit-withdrawal',
-				element: <Withdrawal />,
+				path: '',
+				element: <MyPageNav type={'userEdit'} />,
+				children: [
+					{
+						path: '/mypage/useredit-changepw',
+						element: <ChangePW />,
+					},
+					{
+						path: '/mypage/useredit-userinfo',
+						element: <UserInfo />,
+					},
+				],
 			},
 			{
 				path: '/recent-price',
