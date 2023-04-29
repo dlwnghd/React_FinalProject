@@ -23,10 +23,12 @@ import {
 export const Search_Icon = () => <AiOutlineSearch /> // 검색
 export const Arrow_Icon = () => <AiOutlineArrowRight /> // 슬라이드 화살표
 
-export const NotFillHeart_Icon = ({ size, color }) => (
-	<AiOutlineHeart size={size} color={color} />
+export const NotFillHeart_Icon = ({ size, onClick }) => (
+	<AiOutlineHeart size={size ? size : 50} onClick={onClick} />
 ) // 빈 하트
-export const FillHeart_Icon = () => <AiFillHeart /> // 찬 하트
+export const FillHeart_Icon = ({ size, onClick }) => (
+	<AiFillHeart size={size ? size : 50} onClick={onClick} />
+) // 찬 하트
 export const Profile_Icon = () => <AiOutlineUser /> // 프로필
 export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
 export const PaginationArrowSingle_Icon = () => <AiFillCaretRight /> // 페이지네이션화살표 (>)
@@ -36,7 +38,9 @@ export const MenuBurger_Icon = () => <AiOutlineMenu /> // 햄버거
 export const InterestBasket_Icon = () => <AiOutlineShoppingCart /> // 관심 상품
 export const Camera_Icon = () => <AiOutlineCamera /> // 이미지 추가
 export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
-export const EtcOption_Icon = () => <AiOutlineMore /> // 기타 옵션
+export const EtcOption_Icon = ({ size }) => (
+	<AiOutlineMore size={size ? size : 50} />
+) // 기타 옵션
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
