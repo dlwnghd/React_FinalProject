@@ -29,7 +29,7 @@ const router = createBrowserRouter([
 				element: <List />,
 			},
 			{
-				path: '/detail/:idx',
+				path: '/detail',
 				element: <Detail />,
 			},
 			{
