@@ -29,9 +29,7 @@ function FloatingBar() {
 						<RecentPrd
 							images={images.imgUrl}
 							key={idx}
-							onClick={
-								(() => navigate(`/detail/${product.idx}`), { state: product })
-							}
+							onClick={() => navigate(`/detail/${product.idx}`)}
 						/>
 					)
 				})}

@@ -2,10 +2,12 @@ import styled from 'styled-components'
 import PrdDescription from './Description/Description'
 import PrdThumbnail from './Thumbnail/Thumbnail'
 
-function ProductInfo() {
+function ProductInfo({ prd }) {
+	const { ProductImages } = prd
+	console.log(ProductImages)
 	return (
 		<S.Wrapper>
-			<PrdThumbnail />
+			<PrdThumbnail ProductImages={ProductImages} />
 			<PrdDescription />
 		</S.Wrapper>
 	)
