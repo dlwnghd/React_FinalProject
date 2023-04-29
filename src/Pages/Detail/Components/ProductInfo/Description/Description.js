@@ -1,6 +1,9 @@
 import styled from 'styled-components'
-import { TiHeartOutline, TiHeartFullOutline } from 'react-icons/ti'
 import { useState } from 'react'
+import {
+	FillHeart_Icon,
+	NotFillHeart_Icon,
+} from '../../../../../Components/Icons/Icons'
 function PrdDescription() {
 	const [like, setLike] = useState(false)
 
@@ -27,7 +30,7 @@ function PrdDescription() {
 			<S.OptionBox>
 				<S.HeartBox onClick={onClickLike}>
 					<span>찜</span>
-					{like ? <TiHeartFullOutline /> : <TiHeartOutline />}
+					{like ? <FillHeart_Icon /> : <NotFillHeart_Icon />}
 				</S.HeartBox>
 				<S.ButtonBox>
 					<Button>채팅</Button>
