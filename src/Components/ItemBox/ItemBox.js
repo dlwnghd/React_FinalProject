@@ -16,6 +16,8 @@ function ItemBox({ posterPath, title, context, price, isLiked }) {
 		setIsHeart(prev => !prev)
 	}
 
+	const onEdit = () => {}
+
 	return (
 		<S.Wrapper>
 			<S.ItemContainer posterIMG={posterPath}>
@@ -28,7 +30,11 @@ function ItemBox({ posterPath, title, context, price, isLiked }) {
 			<S.DescContainer>
 				<S.DescBox context={context}>
 					<h4>{title}</h4>
-					{context !== '' ? <p>{context}</p> : <EtcOption_Icon size="30" />}
+					{context !== '' ? (
+						<p>{context}</p>
+					) : (
+						<EtcOption_Icon size="30" onClick={onEdit} />
+					)}
 				</S.DescBox>
 				<h4>{price.toLocaleString()}원</h4>
 			</S.DescContainer>
