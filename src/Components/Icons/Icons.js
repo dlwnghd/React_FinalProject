@@ -10,6 +10,7 @@ import {
 	AiOutlinePlusCircle,
 	AiOutlineMenu,
 	AiOutlineShoppingCart,
+	AiOutlineClose,
 	AiOutlineHome,
 	AiOutlineShop,
 	AiOutlineSwap,
@@ -22,18 +23,28 @@ import {
 
 export const Search_Icon = () => <AiOutlineSearch /> // 검색
 export const Arrow_Icon = () => <AiOutlineArrowRight /> // 슬라이드 화살표
-export const NotFillHeart_Icon = () => <AiOutlineHeart /> // 빈 하트
-export const FillHeart_Icon = () => <AiFillHeart /> // 찬 하트
+export const NotFillHeart_Icon = ({ size }) => (
+	<AiOutlineHeart size={size ? size : 20} />
+) // 빈 하트
+export const FillHeart_Icon = ({ size }) => (
+	<AiFillHeart size={size ? size : 20} />
+) // 찬 하트
+
 export const Profile_Icon = () => <AiOutlineUser /> // 프로필
 export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
-export const PaginationArrowSingle_Icon = () => <AiFillCaretRight /> // 페이지네이션화살표 (>)
-export const PaginationArrowDouble_Icon = () => <AiFillForward /> // 페이지네이션화살표 (>>)
+export const PaginationArrowSingle_Icon = ({ rotate }) => (
+	<AiFillCaretRight style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>)
+export const PaginationArrowDouble_Icon = ({ rotate }) => (
+	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>>)
 export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
 export const MenuBurger_Icon = () => <AiOutlineMenu /> // 햄버거
 export const InterestBasket_Icon = () => <AiOutlineShoppingCart /> // 관심 상품
 export const Camera_Icon = () => <AiOutlineCamera /> // 이미지 추가
 export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
 export const EtcOption_Icon = () => <AiOutlineMore /> // 기타 옵션
+export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
