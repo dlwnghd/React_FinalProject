@@ -22,6 +22,8 @@ function Footer() {
 export default Footer
 
 const FooterWrapper = styled.footer`
+	position: relative;
+	z-index: 9999;
 	box-sizing: border-box;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
