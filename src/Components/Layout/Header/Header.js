@@ -227,6 +227,8 @@ const HeaderWrapper = styled.header`
 	width: 100%;
 	border-bottom: 0.1px solid #eeeeee;
 	background-color: white;
+	position: sticky;
+	top: 0;
 `
 
 /**
@@ -235,12 +237,6 @@ const HeaderWrapper = styled.header`
 const HeaderSpace = styled.div`
 	${WidthAutoCSS};
 	padding-top: 1rem;
-
-	@media screen and (max-width: 440px) {
-		position: sticky;
-		top: 0;
-		border-bottom: none;
-	}
 `
 
 /**
