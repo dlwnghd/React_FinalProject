@@ -1,9 +1,3 @@
-/*
-    // 생성한 mockApi 불러오기
-    import * as ProductApi from './product/product.api';
+import * as ProductApi from './Product/product.api'
 
-    // handler에 등록
-    export const handler = [...Object.values(ProductApi)]
-*/
-
-export const handler = [...Object.values()]
+export const handler = [...Object.values(ProductApi)]
