@@ -22,6 +22,7 @@ import {
 
 export const Search_Icon = () => <AiOutlineSearch /> // 검색
 export const Arrow_Icon = () => <AiOutlineArrowRight /> // 슬라이드 화살표
+
 export const NotFillHeart_Icon = ({ size, color }) => (
 	<AiOutlineHeart size={size} color={color} />
 ) // 빈 하트
