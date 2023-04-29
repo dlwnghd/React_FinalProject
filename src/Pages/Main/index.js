@@ -4,9 +4,11 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
+import productsMock from '../../__mock__/Data/Product/product.data'
+import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
 import GridBanner from './Components/Banner/GridBanner'
-import SlideBanner from './Components/Banner/SlideBanner'
+import ItemBox from '../../Components/ItemBox/ItemBox'
 
 function Main() {
 	return (
@@ -16,213 +18,37 @@ function Main() {
 				<GridBanner />
 				<S.FreeMarketList>
 					<S.Title>FREE MARKET</S.Title>
-					{/* 호출된 4 column 2row 데이터 입힌 후, 공용 컴포넌트 ItemBox 재사용 */}
 					<S.ProductList>
-						<S.ProductBox>
-							{/* 이미지 div */}
-							<div></div>
-							{/* 디스크립션 div */}
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							{/* 하트 div */}
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
+						{productsMock.slice(0, 8).map((item, idx) => {
+							return (
+								<ItemBox
+									title={item.title}
+									price={item.price}
+									posterPath={item.image_url}
+									context={item.status}
+									isLiked={item.liked}
+									key={idx}
+								/>
+							)
+						})}
 					</S.ProductList>
 				</S.FreeMarketList>
 				<SlideBanner />
 				<S.TradeUsedList>
 					<S.Title>TRADE USED</S.Title>
-					{/* 호출된 4 column 2row 데이터 입힌 후, 공용 컴포넌트 ItemBox 재사용 */}
 					<S.ProductList>
-						<S.ProductBox>
-							{/* 이미지 div */}
-							<div></div>
-							{/* 디스크립션 div */}
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							{/* 하트 div */}
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
-						<S.ProductBox>
-							<div></div>
-							<div>
-								<h4>고양이</h4>
-								<h3>247,000원</h3>
-								<p>
-									덴마크 장인의 손길이 닿은 살아 숨쉬는 네모난 고양이, 갸우뚱
-									되는 개성을 지닌 인형
-								</p>
-							</div>
-							<div>♥</div>
-						</S.ProductBox>
+						{productsMock.slice(0, 8).map((item, idx) => {
+							return (
+								<ItemBox
+									title={item.title}
+									price={item.price}
+									posterPath={item.image_url}
+									context={item.status}
+									isLiked={item.liked}
+									key={idx}
+								/>
+							)
+						})}
 					</S.ProductList>
 				</S.TradeUsedList>
 			</S.Container>
@@ -237,7 +63,7 @@ const Wrapper = styled.section`
 `
 
 const Container = styled.section`
-	margin: 6rem 0;
+	margin: 12rem 0;
 `
 
 const FreeMarketList = styled.section`
@@ -248,7 +74,7 @@ const TradeUsedList = styled.section`
 	margin: 12rem 0;
 `
 
-const Title = styled.h4`
+const Title = styled.h3`
 	text-align: center;
 `
 
