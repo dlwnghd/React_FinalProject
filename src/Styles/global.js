@@ -3,17 +3,17 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalStyles = createGlobalStyle`
     @font-face {
         font-family: 'LINESeed-Bd';
-        src: url('./assets/font/LINESeedKR-Bd.ttf');
+        src: url('../assets/font/LINESeedKR-Bd.ttf');
     }
 
     @font-face {
         font-family: 'LINESeed-Rg';
-        src: url('./assets/font/LINESeedKR-Rg.ttf');
+        src: url('../assets/font/LINESeedKR-Rg.ttf');
     }
 
     @font-face {
         font-family: 'LINESeed-Th';
-        src: url('./assets/font/LINESeedKR-Th.ttf');
+        src: url('../assets/font/LINESeedKR-Th.ttf');
     }
 
     * {
