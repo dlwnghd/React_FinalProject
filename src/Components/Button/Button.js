@@ -9,6 +9,7 @@ function Button(props) {
 		children,
 		...rest
 	} = props
+	console.log({ ...props })
 
 	return (
 		<S.Button
