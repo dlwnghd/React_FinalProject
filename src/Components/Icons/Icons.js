@@ -1,5 +1,4 @@
 import {
-	AiOutlineSearch,
 	AiOutlineArrowRight,
 	AiOutlineHeart,
 	AiFillHeart,
@@ -19,8 +18,11 @@ import {
 	AiOutlineExport,
 	AiOutlineMore,
 } from 'react-icons/ai'
+import { CiSearch } from 'react-icons/ci'
 
-export const Search_Icon = () => <AiOutlineSearch /> // 검색
+export const Search_Icon = ({ color, position }) => (
+	<CiSearch color={color} position={position} />
+) // 검색
 
 export const Arrow_Icon = ({ size }) => (
 	<AiOutlineArrowRight size={size ? size : 50} />
