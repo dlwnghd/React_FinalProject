@@ -79,44 +79,14 @@ const Title = styled.h3`
 `
 
 const ProductList = styled.div`
+	width: 100%;
 	margin-top: 4rem;
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)}
+	${ColumnNumberCSS(4)};
 
-	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
-	}
-`
-
-const ProductBox = styled.div`
-	position: relative;
-	cursor: pointer;
-
-	& > div:first-of-type {
-		width: 27.6rem;
-		height: 27.6rem;
-		background: ${({ theme }) => theme.COLOR.common.gray[100]};
-
-		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-			width: 100%;
-			height: 17.4rem;
-		}
-	}
-	& > div:nth-of-type(2) {
-		margin-top: 2rem;
-
-		& > h3 {
-			margin: 1rem 0 2rem;
-		}
-	}
-	& > div:last-of-type {
-		position: absolute;
-		z-index: 3;
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		cursor: pointer;
-		padding: 2rem;
-		top: 0;
-		right: 0;
+		column-gap: 1rem;
 	}
 `
 
@@ -127,5 +97,4 @@ const S = {
 	TradeUsedList,
 	Title,
 	ProductList,
-	ProductBox,
 }
