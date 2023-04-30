@@ -82,7 +82,7 @@ const SideBarContainer = styled.nav`
 	width: 100%;
 	z-index: 99;
 	height: 100%;
-	top: 8rem;
+	top: 0;
 	left: 0;
 
 	& > ul {
