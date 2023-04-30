@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import {
+	FlexAlignCSS,
 	FlexBetweenCSS,
 	FlexCenterCSS,
 	WidthAutoCSS,
@@ -7,27 +8,55 @@ import {
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
 import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { FORM_TYPE } from '../../../Consts/form.type'
+import CheckBox from '../../../Components/CheckBox/CheckBox'
+import AlertText from '../../../Components/AlertText/AlertText'
 
 function Login() {
 	const navigate = useNavigate()
+	const {
+		register,
+		formState: { errors },
+		getValues,
+		handleSubmit,
+	} = useForm()
+
+	const onSubmit = data => {
+		const email = getValues('email')
+		const password = getValues('password')
+
+		// axios
+	}
 
 	return (
 		<S.Wrapper>
 			<S.Container>
 				<h1>로그인</h1>
-				<form>
-					<S.StyledInput type="text" placeholder="아이디를 입력해주세요" />
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<S.StyledInput
+						type="text"
+						placeholder="아이디(이메일)를 입력해주세요"
+						{...register('email', FORM_TYPE.EMAIL_TYPE)}
+					/>
+					{errors.email && (
+						<AlertText type={'error'}>{errors.email.message}</AlertText>
+					)}
 					<S.StyledInput
 						type="password"
 						placeholder="비밀번호를 입력해주세요 (8~16자의 영문자, 숫자 조합)"
+						{...register('password', FORM_TYPE.PASSWORD_TYPE)}
 					/>
-					<S.StyledButton type="button" size={'full'} shape={'square'}>
+					{errors.password && (
+						<AlertText type={'error'}>{errors.password.message}</AlertText>
+					)}
+					<S.StyledButton type="submit" size={'full'} shape={'square'}>
 						로그인
 					</S.StyledButton>
 				</form>
 				<S.BottomBox>
 					<div>
-						<input type="checkbox" />
+						<CheckBox />
 						<label>아이디 저장</label>
 					</div>
 					<ul>
@@ -71,7 +100,11 @@ const StyledButton = styled(Button)`
 
 const BottomBox = styled.div`
 	${FlexBetweenCSS}
-	margin-top: 1.7rem;
+	margin-top: 2rem;
+
+	& > div {
+		${FlexAlignCSS}
+	}
 
 	& > div:first-child {
 		@media screen and (max-width: 600px) {
@@ -81,7 +114,6 @@ const BottomBox = styled.div`
 
 	& > div > label {
 		margin-left: 0.8rem;
-		padding-top: 0.46rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
 
