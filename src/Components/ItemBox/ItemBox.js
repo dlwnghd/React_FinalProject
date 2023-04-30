@@ -20,13 +20,13 @@ function ItemBox({ posterPath, title, context, price, isLiked }) {
 
 	return (
 		<S.Wrapper>
-			<S.ItemContainer posterIMG={posterPath}>
+			<S.IMGContainer posterIMG={posterPath}>
 				{!isHeart ? (
 					<NotFillHeart_Icon size="20" onClick={onHeart} />
 				) : (
 					<FillHeart_Icon size="20" onClick={onHeart} />
 				)}
-			</S.ItemContainer>
+			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox context={context}>
 					<h4>{title}</h4>
@@ -45,11 +45,16 @@ function ItemBox({ posterPath, title, context, price, isLiked }) {
 export default ItemBox
 
 const Wrapper = styled.div`
-	width: 27.6rem;
+	${FlexBetweenCSS}
+	flex-direction: column;
 	cursor: pointer;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
 `
 
-const ItemContainer = styled.div`
+const IMGContainer = styled.div`
 	position: relative;
 	width: 100%;
 	height: 27.6rem;
@@ -76,20 +81,33 @@ const ItemContainer = styled.div`
 `
 
 const DescContainer = styled.div`
+	${FlexBetweenCSS}
+	width:100%;
+	padding: 0 1rem;
+	flex-direction: column;
+	align-items: baseline;
 	margin-top: 2rem;
-
-	& > div > p {
-		margin: 1rem 0 2rem;
-	}
+	/* background: red; */
 `
 
 const DescBox = styled.div`
+	width: 100%;
 	${({ context }) => context === '' && FlexBetweenCSS}
+
+	& > p {
+		margin: 1rem 0 2rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 `
 
 const S = {
 	Wrapper,
-	ItemContainer,
+	IMGContainer,
 	DescContainer,
 	DescBox,
 }
