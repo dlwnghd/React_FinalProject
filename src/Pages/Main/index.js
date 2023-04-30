@@ -7,7 +7,7 @@ import {
 import productsMock from '../../__mock__/Data/Product/product.data'
 import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
-import GridBanner from './Components/Banner/GridBanner'
+import GridBanner from './Components/Banner/RecentBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 
 function Main() {
