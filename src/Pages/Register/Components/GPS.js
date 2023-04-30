@@ -1,21 +1,32 @@
 import DaumPostcode from 'react-daum-postcode'
+import styled from 'styled-components'
+import { FlexCenterCSS } from '../../../Styles/common'
+import { useSetRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 
 function GPS() {
-	//일단 지번으로 가져오고,
+	const setIsOpenModal = useSetRecoilState(isOpenModalAtom)
+
+	//일단 지번으로 가져오고
 	const gpsSelect = data => {
 		console.log(data)
+		setIsOpenModal(false)
 	}
 
 	const postCodeStyle = {
-		// display: 'block',
-		// position: 'absolute',
-		// top: '20%',
-		width: '400px',
-		height: '400px',
-		// padding: '7px',
-		// zIndex: 100,
+		width: '600px',
+		height: '500px',
 	}
 
-	return <DaumPostcode style={postCodeStyle} onComplete={gpsSelect} autoClose />
+	return (
+		<Wrapper>
+			<DaumPostcode style={postCodeStyle} onComplete={gpsSelect} autoClose />
+		</Wrapper>
+	)
 }
 export default GPS
+
+const Wrapper = styled.div`
+	${FlexCenterCSS}
+	padding-top: 20px;
+`

@@ -16,8 +16,7 @@ const sizeCSS = {
 	large: css`
 		width: 30vw;
 		min-width: 433px;
-		height: 450px;
-		padding: 12px;
+		height: 580px;
 	`,
 	extra: css`
 		width: 70vw;

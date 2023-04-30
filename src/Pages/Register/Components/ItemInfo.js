@@ -7,6 +7,7 @@ import Button from '../../../Components/Button/Button'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 import Modal from '../../../Components/Modal/Modal'
+import GPS from './GPS'
 function ItemInfo() {
 	const {
 		register,
@@ -25,6 +26,12 @@ function ItemInfo() {
 		setIntPrice(changePrice.toLocaleString())
 	}
 	const onSubmit = () => {}
+
+	//modal open
+	const modalOpen = () => {
+		document.body.style.overflow = 'hidden'
+		setIsOpenModal(true)
+	}
 	return (
 		<S.WrapperInfo onSubmit={handleSubmit(onSubmit)}>
 			<InputWrap>
@@ -73,13 +80,14 @@ function ItemInfo() {
 					<Button
 						shape={'square'}
 						variant={'default-reverse'}
-						onClick={() => setIsOpenModal(true)}
+						onClick={modalOpen}
 					>
 						주소 검색
 					</Button>
 					{isOpenModal && (
-						<Modal size={'extra'}>
-							<div>모달입니다</div>
+						<Modal size={'large'}>
+							<h1>주소 검색</h1>
+							<GPS />
 						</Modal>
 					)}
 				</InputValue>

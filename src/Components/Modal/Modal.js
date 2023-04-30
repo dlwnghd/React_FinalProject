@@ -1,7 +1,6 @@
 import { useSetRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
 import * as S from './Modal.style'
-import GPS from '../../Pages/Register/Components/GPS'
 
 function Modal(props) {
 	const { size, children, ...rest } = props
@@ -18,11 +17,15 @@ function Modal(props) {
 				{children}
 				<span
 					onClick={onClickCloseModal}
-					style={{ position: 'absolute', top: '5px', right: '5px' }}
+					style={{
+						position: 'absolute',
+						top: '5px',
+						right: '5px',
+						cursor: 'pointer',
+					}}
 				>
 					X
 				</span>
-				<GPS />
 			</S.Modal>
 		</S.Wrapper>
 	)
