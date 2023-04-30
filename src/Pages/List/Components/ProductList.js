@@ -1,20 +1,33 @@
+import axios from 'axios'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import productsMock from '../../../__mock__/Data/Product/product.data'
 
-function ProductList({ productList }) {
-
-
+function ProductList() {
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const data = await axios.get('/api/products')
+				console.log(data)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		getData()
+	}, [])
 	return (
 		<S.Items>
-			{productList.map(item => (
+			{productsMock.map(item => (
 				<S.Item>
 					<ImageContainer>
-						<img src={item.thumbnail} width={'inherit'}/>
-						<button>test</button>
+						<img src={item.image_url} width={'inherit'} />
 					</ImageContainer>
 					<S.ProductInfo>
 						<S.ProductTitle>{item.title}</S.ProductTitle>
-						<S.ProductContent>{item.content}</S.ProductContent>
+						<S.ProductContent>
+							글의 내용이 무언가 있을겁니다 분명히 ㅎㅎ;;
+						</S.ProductContent>
 						<S.ProductPrice>
 							{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						</S.ProductPrice>
@@ -48,10 +61,8 @@ const Item = styled.div`
 const ImageContainer = styled.div`
 	position: relative;
 
-	@media screen and (max-width: 440px) {
-		& > img {
-            width: 100%;
-        }
+	& > img {
+		width: 100%;
 	}
 
 	& > button {
@@ -67,8 +78,8 @@ const ProductInfo = styled.div`
 
 const ProductTitle = styled.p`
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-    margin: 1rem 0;
-    `
+	margin: 1rem 0;
+`
 const ProductContent = styled.p`
 	overflow: hidden;
 	white-space: nowrap;
@@ -86,7 +97,7 @@ const S = {
 	Items,
 	Item,
 	ImageContainer,
-    ProductInfo,
+	ProductInfo,
 	ProductTitle,
 	ProductContent,
 	ProductPrice,
