@@ -1,9 +1,7 @@
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
 
 function SlideBanner() {
-	console.log(productsMock)
 	return (
 		<S.Wrapper>
 			<S.Container>

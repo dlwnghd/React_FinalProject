@@ -9,7 +9,7 @@ import { FlexBetweenCSS } from '../../Styles/common'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
-function ItemBox({ posterPath, title, context, price, isLiked }) {
+function ItemBox({ posterPath, title, context, price, isLiked, ...rest }) {
 	const [isHeart, setIsHeart] = useState(isLiked)
 
 	const onHeart = () => {
@@ -19,7 +19,7 @@ function ItemBox({ posterPath, title, context, price, isLiked }) {
 	const onEdit = () => {}
 
 	return (
-		<S.Wrapper>
+		<S.Wrapper {...rest}>
 			<S.IMGContainer posterIMG={posterPath}>
 				{!isHeart ? (
 					<NotFillHeart_Icon size="20" onClick={onHeart} />
