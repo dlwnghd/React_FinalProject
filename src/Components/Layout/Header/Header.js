@@ -30,6 +30,7 @@ function Header({ searchProduct }) {
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
+
 	const dropdownCloseHandler = ({ target }) => {
 		if (dropdown && userMenu.current && !userMenu.current.contains(target)) {
 			setDropdown(false)
@@ -238,6 +239,7 @@ const HeaderSpace = styled.div`
 /**
  * Header 상단
  */
+
 const List = styled.div`
 	position: relative;
 	text-align: center;

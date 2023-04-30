@@ -1,7 +1,9 @@
+import TotalPrice from './Components/TotalPrice.js/TotalPrice'
+
 function MyBank() {
 	return (
 		<>
-			<div></div>
+			<TotalPrice />
 		</>
 	)
 }

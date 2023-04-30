@@ -77,6 +77,14 @@ const GlobalStyles = createGlobalStyle`
     span {
         font-size:${({ theme }) => theme.FONT_SIZE.tiny}
     }
+
+    button {
+        border: none;
+    }
+    
+    input {
+        outline: none;
+    }
 `
 
 export default GlobalStyles
