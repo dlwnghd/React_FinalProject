@@ -8,7 +8,7 @@ import productsMock from '../../../../__mock__/Data/Product/product.data'
 import { useEffect, useRef, useState } from 'react'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 
-function GridBanner() {
+function RecentBanner() {
 	const [currentX, setCurrentX] = useState(0)
 	const slider = useRef(null)
 
@@ -35,15 +35,19 @@ function GridBanner() {
 	const onTouchStart = e => {
 		setStartX(e.touches[0].clientX)
 	}
+
 	const onTouchMove = e => {
 		setEndX(e.touches[0].clientX)
 	}
+
 	const onTouchEnd = () => {
-		if (endX > startX) {
+		const isMoved = endX - startX
+
+		if (isMoved > 100) {
 			prevSlide()
 		}
 
-		if (startX > endX) {
+		if (isMoved < -100) {
 			nextSlide()
 		}
 	}
@@ -90,7 +94,7 @@ function GridBanner() {
 	)
 }
 
-export default GridBanner
+export default RecentBanner
 
 const Wrapper = styled.section`
 	overflow: hidden;
@@ -113,17 +117,18 @@ const SlideList = styled.div`
 `
 
 const SlideBox = styled.ul`
+	width: 100%;
 	${GridCenterCSS}
 	${ColumnNumberCSS(6)}
     box-sizing: border-box;
 
-	& > li {
-		width: 17.4rem;
-		height: 17.4rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
+		${ColumnNumberCSS(3)}
 	}
 
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		${ColumnNumberCSS(3)}
+	& > li {
+		width: 100%;
+		height: 17.4rem;
 	}
 `
 
@@ -131,20 +136,24 @@ const SlideItem = styled.li`
 	cursor: pointer;
 	background: ${({ recentIMG }) => `url(${recentIMG})`} no-repeat center center;
 	background-size: cover;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 100%;
+	}
 `
 
 const ButtonBox = styled.div`
 	& > button {
 		position: absolute;
-		cursor: pointer;
 		top: 50%;
-		transform: translateY(-50%);
 		width: 3rem;
 		height: 6rem;
+		${FlexCenterCSS}
+		transform: translateY(-50%);
 		border: none;
 		box-sizing: border-box;
 		background: ${({ theme }) => theme.COLOR.common.white};
-		${FlexCenterCSS}
+		cursor: pointer;
 	}
 
 	& > .prev {
