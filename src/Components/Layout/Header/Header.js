@@ -5,13 +5,13 @@ import {
 	FlexBetweenCSS,
 	WidthAutoCSS,
 } from '../../../Styles/common'
-import { CiSearch } from 'react-icons/ci'
 import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Components/Sidebar'
 import {
 	InterestBasket_Icon,
 	MenuBurger_Icon,
 	Profile_Icon,
+	Search_Icon,
 } from '../../Icons/Icons'
 
 function Header({ searchProduct }) {
@@ -157,12 +157,7 @@ function Header({ searchProduct }) {
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
-						<CiSearch
-							style={{
-								position: 'absolute',
-								color: 'gray',
-							}}
-						/>
+						<Search_Icon color="gray" position="absolute" />
 						<input
 							type="text"
 							placeholder={'어떤 상품을 찾으시나요?'}

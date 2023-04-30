@@ -1,5 +1,4 @@
 import {
-	AiOutlineSearch,
 	AiOutlineArrowRight,
 	AiOutlineHeart,
 	AiFillHeart,
@@ -19,28 +18,13 @@ import {
 	AiOutlineExport,
 	AiOutlineMore,
 } from 'react-icons/ai'
+import { CiSearch } from 'react-icons/ci'
 
-export const Search_Icon = () => <AiOutlineSearch /> // 검색
-<<<<<<<<< Temporary merge branch 1
-export const Arrow_Icon = ({ size }) => (
-	<AiOutlineArrowRight size={size ? size : 50} />
-) // 슬라이드 화살표
-export const NotFillHeart_Icon = ({ size }) => (
-	<AiOutlineHeart size={size ? size : 20} />
-) // 빈 하트
-export const FillHeart_Icon = ({ size }) => (
-	<AiFillHeart size={size ? size : 20} />
-) // 찬 하트
+export const Search_Icon = ({ color, position }) => (
+	<CiSearch color={color} position={position} />
+) // 검색
 
-export const Profile_Icon = () => <AiOutlineUser /> // 프로필
-export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
-export const PaginationArrowSingle_Icon = ({ rotate }) => (
-	<AiFillCaretRight style={{ transform: `rotate(${rotate}deg)` }} />
-) // 페이지네이션화살표 (>)
-export const PaginationArrowDouble_Icon = ({ rotate }) => (
-	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
-) // 페이지네이션화살표 (>>)
-=========
+
 export const Arrow_Icon = ({ size }) => (
 	<AiOutlineArrowRight size={size ? size : 50} />
 ) // 슬라이드 화살표
@@ -61,7 +45,7 @@ export const PaginationArrowSingle_Icon = ({ rotate }) => (
 export const PaginationArrowDouble_Icon = ({ rotate }) => (
 	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
 ) // 페이지네이션화살표 (>>)
->>>>>>>>> Temporary merge branch 2
+
 export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
 export const MenuBurger_Icon = ({ size, color, cursor }) => (
 	<AiOutlineMenu size={size} color={color} cursor={cursor} />
@@ -75,7 +59,7 @@ export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
 export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
->>>>>>>>> Temporary merge branch 2
+
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
