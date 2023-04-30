@@ -34,7 +34,7 @@ export const FillHeart_Icon = ({ size, onClick }) => (
 export const Profile_Icon = ({ size }) => (
 	<AiOutlineUser size={size ? size : 50} />
 ) // 프로필
-export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
+export const DropdownArrow_Icon = ({ size }) => <AiFillCaretDown size={size} /> // 드롭 다운 화살표
 export const PaginationArrowSingle_Icon = () => <AiFillCaretRight /> // 페이지네이션화살표 (>)
 export const PaginationArrowDouble_Icon = () => <AiFillForward /> // 페이지네이션화살표 (>>)
 export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
