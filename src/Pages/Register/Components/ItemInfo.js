@@ -105,6 +105,9 @@ const InputWrap = styled.div`
 	${GridCenterCSS}
 	justify-items: flex-start;
 	${ColumnNumberCSS(10)}
+	:last-child {
+		border: none;
+	}
 `
 const InputWrap2 = styled.div`
 	padding: 1.5rem 0;
