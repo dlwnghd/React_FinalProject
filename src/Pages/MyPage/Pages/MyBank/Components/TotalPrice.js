@@ -3,7 +3,7 @@ import {
 	ColumnNumberCSS,
 	GridCenterCSS,
 	WidthAutoCSS,
-} from '../../../../../../Styles/common'
+} from '../../../../../Styles/common'
 
 function TotalPrice() {
 	return (

@@ -1,9 +1,18 @@
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { FlexAlignCSS, WidthAutoCSS } from '../../../Styles/common'
-import { CiSearch, CiMenuBurger, CiShoppingBasket } from 'react-icons/ci'
+import {
+	FlexAlignCSS,
+	FlexBetweenCSS,
+	WidthAutoCSS,
+} from '../../../Styles/common'
 import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Components/Sidebar'
+import {
+	InterestBasket_Icon,
+	MenuBurger_Icon,
+	Profile_Icon,
+	Search_Icon,
+} from '../../Icons/Icons'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
@@ -21,7 +30,6 @@ function Header({ searchProduct }) {
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
-
 	const dropdownCloseHandler = ({ target }) => {
 		if (dropdown && userMenu.current && !userMenu.current.contains(target)) {
 			setDropdown(false)
@@ -74,8 +82,8 @@ function Header({ searchProduct }) {
 								setDropdown(prev => !prev)
 							}}
 						>
-							<img src={'./user.png'} width="17" />
-							<span>회원명</span>
+							<Profile_Icon size="28" />
+							<p>로그인 / 회원가입</p>
 						</S.UserBox>
 						{dropdown && (
 							<UserDropDownMenu>
@@ -134,13 +142,7 @@ function Header({ searchProduct }) {
 								setHamburgerShow(prev => !prev)
 							}}
 						>
-							<CiMenuBurger
-								style={{
-									fontSize: '5.4rem',
-									color: 'gray',
-									cursor: 'pointer',
-								}}
-							/>
+							<MenuBurger_Icon size="24" color="gray" cursor="pointer" />
 						</S.MobileIcon>
 						<S.Logo
 							onClick={() => {
@@ -151,22 +153,11 @@ function Header({ searchProduct }) {
 							NEGO MARKET
 						</S.Logo>
 						<S.MobileIcon>
-							<CiShoppingBasket
-								style={{
-									fontSize: '5.4rem',
-									color: 'gray',
-									cursor: 'pointer',
-								}}
-							/>
+							<InterestBasket_Icon size="24" color="gray" cursor="pointer" />
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
-						<CiSearch
-							style={{
-								position: 'absolute',
-								color: 'gray',
-							}}
-						/>
+						<Search_Icon color="gray" position="absolute" />
 						<input
 							type="text"
 							placeholder={'어떤 상품을 찾으시나요?'}
@@ -226,7 +217,7 @@ const HeaderWrapper = styled.header`
 	position: relative;
 	z-index: 9999;
 	width: 100%;
-	border-bottom: 0.1px solid #eeeeee;
+	border-bottom: 0.1rem solid #eeeeee;
 	background-color: white;
 	position: sticky;
 	top: 0;
@@ -237,20 +228,18 @@ const HeaderWrapper = styled.header`
  */
 const HeaderSpace = styled.div`
 	${WidthAutoCSS};
-	padding-top: 1rem;
 `
 
 /**
  * Header 상단
  */
-
 const List = styled.div`
+	position: relative;
 	text-align: center;
 	height: 10rem;
 	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	column-gap: 5rem;
+	${FlexBetweenCSS}
+	margin-bottom:2rem;
 
 	@media screen and (max-width: 440px) {
 		flex-direction: column;
@@ -266,11 +255,21 @@ const List = styled.div`
 	}
 
 	& > div {
+		${FlexAlignCSS}
+	}
+
+	& > div:first-of-type {
 		@media screen and (max-width: 440px) {
 			width: 100%;
-			display: flex;
-			justify-content: space-between;
-			top: 8rem;
+			height: 6rem;
+			${FlexBetweenCSS}
+		}
+	}
+
+	& > div:last-of-type {
+		@media screen and (max-width: 440px) {
+			width: 100%;
+			top: 6rem;
 		}
 	}
 `
@@ -298,9 +297,8 @@ const SearchContainer = styled.div`
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 33%;
+	width: 33.3%;
 	${FlexAlignCSS}
-	top: 5.5rem;
 
 	& > input {
 		width: 100%;
@@ -308,7 +306,8 @@ const SearchContainer = styled.div`
 		box-sizing: border-box;
 		border-radius: 2rem;
 		text-indent: 4.4rem;
-		border: 0.2rem solid #aaa;
+		border: 0.1rem solid #aaa;
+		outline: none;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
 
@@ -324,14 +323,11 @@ const SearchContainer = styled.div`
  * 로고
  */
 const Logo = styled.h1`
-	height: 100%;
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	cursor: pointer;
-	line-height: 5;
 
 	@media screen and (max-width: 440px) {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		line-height: 2.5;
 	}
 `
 
@@ -352,8 +348,7 @@ const Bottom = styled.nav`
  * 네비게이션 아이템들
  */
 const NavItem = styled.div`
-	display: flex;
-	align-items: center;
+	${FlexAlignCSS}
 	cursor: pointer;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
@@ -403,10 +398,19 @@ const MobileIcon = styled.div`
 
 	@media screen and (max-width: 440px) {
 		display: block;
+
+		& > svg {
+			position: relative;
+			z-index: 9999;
+		}
 	}
 `
 
 const UserContainer = styled.div`
+	height: 4rem;
+	${FlexAlignCSS}
+	justify-content: flex-end;
+
 	& > * {
 		cursor: pointer;
 	}
@@ -416,8 +420,12 @@ const UserContainer = styled.div`
 	}
 `
 const UserBox = styled.div`
-	text-align: right;
-	margin-top: 2px;
+	${FlexAlignCSS};
+	height: 100%;
+
+	& > svg {
+		margin-right: 1rem;
+	}
 `
 const UserDropDownMenu = styled.div`
 	position: absolute;

@@ -1,3 +1,4 @@
+
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {
@@ -112,5 +113,6 @@ const Button = styled.button`
 		transform: revert;
 	}
 `
+
 
 export default Pagination
