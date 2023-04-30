@@ -26,7 +26,7 @@ const PASSWORD_TYPE = {
 	},
 	pattern: {
 		value: REGEX.password,
-		message: '영문자와 숫자를 포함해서 입력해주세요',
+		message: '영문자, 숫자, 특수문자를 포함해서 입력해주세요',
 	},
 }
 
