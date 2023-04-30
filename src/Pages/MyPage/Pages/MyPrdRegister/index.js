@@ -1,9 +1,5 @@
 function MyPrdRegister() {
-	return (
-		<>
-			<div></div>
-		</>
-	)
+	return <></>
 }
 
 export default MyPrdRegister
