@@ -19,9 +19,9 @@ function GPS() {
 	}
 
 	return (
-		<Wrapper>
+		<S.Wrapper>
 			<DaumPostcode style={postCodeStyle} onComplete={gpsSelect} autoClose />
-		</Wrapper>
+		</S.Wrapper>
 	)
 }
 export default GPS
@@ -30,3 +30,4 @@ const Wrapper = styled.div`
 	${FlexCenterCSS}
 	padding-top: 20px;
 `
+const S = { Wrapper }

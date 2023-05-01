@@ -34,49 +34,49 @@ function ItemInfo() {
 	}
 	return (
 		<S.WrapperInfo onSubmit={handleSubmit(onSubmit)}>
-			<InputWrap>
-				<InputLabel>상품명 *</InputLabel>
-				<InputValue>
+			<S.InputWrap>
+				<S.InputLabel>상품명 *</S.InputLabel>
+				<S.InputValue>
 					<Input
 						placeholder="상품 제목을 입력해주세요."
 						{...register('title', {
 							required: '상품명을 입력해주세요',
 						})}
 					/>
-				</InputValue>
-			</InputWrap>
-			{errors.title && <Error>ddd</Error>}
-			<InputWrap>
-				<InputLabel>태그 *</InputLabel>
-				<InputValue>
+				</S.InputValue>
+			</S.InputWrap>
+			{errors.title && <S.Error>ddd</S.Error>}
+			<S.InputWrap>
+				<S.InputLabel>태그 *</S.InputLabel>
+				<S.InputValue>
 					<Input placeholder="태그를 ,(콤마)와 함께 입력해주세요." />
-				</InputValue>
-			</InputWrap>
+				</S.InputValue>
+			</S.InputWrap>
 
-			<MiddleWrap>
-				<InputWrap2>
-					<InputLabel2>카테고리 *</InputLabel2>
-					<InputValue2>
+			<S.MiddleWrap>
+				<S.InputWrap2>
+					<S.InputLabel2>카테고리 *</S.InputLabel2>
+					<S.InputValue2>
 						<Input placeholder="0: 무료나눔 / 1: 중고거래" />
-					</InputValue2>
-				</InputWrap2>
-				<InputWrap2>
-					<InputLabel2>가격 *</InputLabel2>
-					<InputValue2>
+					</S.InputValue2>
+				</S.InputWrap2>
+				<S.InputWrap2>
+					<S.InputLabel2>가격 *</S.InputLabel2>
+					<S.InputValue2>
 						<Input type="number" value={intPrice} />
-					</InputValue2>
-				</InputWrap2>
-			</MiddleWrap>
+					</S.InputValue2>
+				</S.InputWrap2>
+			</S.MiddleWrap>
 
-			<InputWrap>
-				<InputLabel>상품설명 *</InputLabel>
-				<InputValue>
-					<Textarea placeholder="상품 제목을 입력해주세요." />
-				</InputValue>
-			</InputWrap>
-			<InputWrap>
-				<InputLabel>거래지역 *</InputLabel>
-				<InputValue>
+			<S.InputWrap>
+				<S.InputLabel>상품설명 *</S.InputLabel>
+				<S.InputValue>
+					<S.Textarea placeholder="상품 제목을 입력해주세요." />
+				</S.InputValue>
+			</S.InputWrap>
+			<S.InputWrap>
+				<S.InputLabel>거래지역 *</S.InputLabel>
+				<S.InputValue>
 					<Button
 						shape={'square'}
 						variant={'default-reverse'}
@@ -90,8 +90,8 @@ function ItemInfo() {
 							<GPS />
 						</Modal>
 					)}
-				</InputValue>
-			</InputWrap>
+				</S.InputValue>
+			</S.InputWrap>
 		</S.WrapperInfo>
 	)
 }
@@ -149,5 +149,14 @@ const Textarea = styled.textarea`
 	padding: 1rem 1.2rem;
 `
 const S = {
-	WrapperInfo,
+	WrapperInfo, //
+	Textarea,
+	MiddleWrap,
+	InputValue2,
+	InputLabel2,
+	InputValue, //
+	InputLabel, //
+	InputWrap2,
+	InputWrap, //
+	Error,
 }

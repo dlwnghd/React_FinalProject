@@ -67,7 +67,7 @@ function Images() {
 					ref={pictureInput}
 					onChange={e => onAddImg(e)}
 				/>
-				<ImgBox
+				<S.ImgBox
 					draggable
 					onDragStart={() => (dragStartIdx.current = 0)}
 					onDragEnd={onhandleSort}
@@ -75,8 +75,8 @@ function Images() {
 				>
 					<S.Img onClick={handleClick} src={imageList[0]} />
 					<S.Del onClick={() => DelViewImg(0)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
+				</S.ImgBox>
+				<S.ImgBox
 					draggable
 					onDragStart={() => (dragStartIdx.current = 1)}
 					onDragEnd={onhandleSort}
@@ -84,8 +84,8 @@ function Images() {
 				>
 					<S.Img onClick={handleClick} src={imageList[1]} />
 					<S.Del onClick={() => DelViewImg(1)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
+				</S.ImgBox>
+				<S.ImgBox
 					draggable
 					onDragStart={() => (dragStartIdx.current = 2)}
 					onDragEnd={onhandleSort}
@@ -93,8 +93,8 @@ function Images() {
 				>
 					<S.Img onClick={handleClick} src={imageList[2]} />
 					<S.Del onClick={() => DelViewImg(2)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
+				</S.ImgBox>
+				<S.ImgBox
 					draggable
 					onDragStart={() => (dragStartIdx.current = 3)}
 					onDragEnd={onhandleSort}
@@ -102,7 +102,7 @@ function Images() {
 				>
 					<S.Img onClick={handleClick} src={imageList[3]} />
 					<S.Del onClick={() => DelViewImg(3)}>❌</S.Del>
-				</ImgBox>
+				</S.ImgBox>
 			</S.Wrapper>
 			<S.Hint>
 				클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
