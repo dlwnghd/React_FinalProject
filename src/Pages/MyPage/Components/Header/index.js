@@ -1,9 +1,11 @@
-function AccountHeader() {
+import MyPageNav from '../Navigation/Navigation'
+
+function MyPageHeader() {
 	return (
 		<>
-			<div></div>
+			<MyPageNav type={'myPage'} />
 		</>
 	)
 }
 
-export default AccountHeader
+export default MyPageHeader
