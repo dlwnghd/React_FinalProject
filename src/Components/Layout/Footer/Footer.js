@@ -27,7 +27,7 @@ const FooterWrapper = styled.footer`
 	position: relative;
 	z-index: 999;
 	box-sizing: border-box;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	background-color: ${({ theme }) => theme.COLOR.common.black};
 `
 
 const FooterContainer = styled.div`
@@ -36,6 +36,7 @@ const FooterContainer = styled.div`
 	justify-content: center;
 	height: 32rem;
 	row-gap: 9rem;
+	color: ${({ theme }) => theme.COLOR.common.white};
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
@@ -44,15 +45,13 @@ const FooterContainer = styled.div`
 `
 
 const Logo = styled.h3`
-	color: black;
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 `
 
 const Description = styled.div`
-	color: black;
-
 	& > h2 {
 		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		color: ${({ theme }) => theme.COLOR.main};
 	}
 `
 
