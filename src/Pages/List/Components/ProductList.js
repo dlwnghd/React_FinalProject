@@ -1,104 +1,85 @@
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import ItemBox from '../../../Components/ItemBox/ItemBox'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
-import productsMock from '../../../__mock__/Data/Product/product.data'
 
-function ProductList() {
+function ProductListWrapper() {
+	const [productList, setProductList] = useState(() => []) //Product List
+	const [page, setPage] = useState(1) //현재 페이지
+	const preventRef = useRef(true) //옵저버 중복 실행 방지
+	const obsRef = useRef(null) //observer Element
+
 	useEffect(() => {
-		const getData = async () => {
-			try {
-				const data = await axios.get('/api/products')
-				console.log(data)
-			} catch (err) {
-				console.log(err)
-			}
+		//옵저버 생성
+		console.log('옵저버 인식')
+		const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 })
+		if (obsRef.current) observer.observe(obsRef.current)
+		return () => {
+			observer.disconnect()
 		}
-		getData()
 	}, [])
+
+	useEffect(() => {
+		getProduct()
+	}, [page])
+
+	const obsHandler = entries => {
+		console.log('핸들러 실행')
+		setPage(prev => prev + 1)
+	}
+
+	const getProduct = useCallback(async () => {
+		//상품 불러오기
+		console.log('상품 불러오기!')
+		try {
+			const res = await axios.get('/api/products', {
+				params: {
+					page: page,
+					pageSize: 10,
+				},
+			})
+			setProductList(prev => [...prev, ...res.data]) //리스트 추가
+		} catch (e) {
+			console.error(e)
+		} finally {
+		}
+	}, [page])
+
 	return (
-		<S.Items>
-			{productsMock.map(item => (
-				<S.Item>
-					<ImageContainer>
-						<img src={item.image_url} width={'inherit'} />
-					</ImageContainer>
-					<S.ProductInfo>
-						<S.ProductTitle>{item.title}</S.ProductTitle>
-						<S.ProductContent>
-							글의 내용이 무언가 있을겁니다 분명히 ㅎㅎ;;
-						</S.ProductContent>
-						<S.ProductPrice>
-							{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-						</S.ProductPrice>
-					</S.ProductInfo>
-				</S.Item>
-			))}
-		</S.Items>
+		<S.ProductList>
+			{productList.map((item, idx) => {
+				return (
+					<ItemBox
+						title={item.title}
+						price={item.price}
+						posterPath={item.image_url}
+						context={item.script}
+						isLiked={item.liked}
+						key={idx}
+						onClick={() => navigate(`/detail/${item.idx}`)}
+					/>
+				)
+			})}
+			<li className="" ref={obsRef} />
+		</S.ProductList>
 	)
 }
 
-export default ProductList
+export default ProductListWrapper
 
-const Items = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(3)}
-	row-gap: 2rem;
-
-	@media screen and (max-width: 440px) {
-		${ColumnNumberCSS(2)}
-	}
-`
-const Item = styled.div`
-	width: 27.5rem;
-	cursor: pointer;
-
-	@media screen and (max-width: 440px) {
-		width: 15rem;
-	}
-`
-
-const ImageContainer = styled.div`
-	position: relative;
-
-	& > img {
-		width: 100%;
-	}
-
-	& > button {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
-`
-
-const ProductInfo = styled.div`
+const ProductList = styled.div`
 	width: 100%;
-`
+	margin-top: 4rem;
+	${GridCenterCSS}
+	${ColumnNumberCSS(4)};
 
-const ProductTitle = styled.p`
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	margin: 1rem 0;
-`
-const ProductContent = styled.p`
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	margin-bottom: 2rem;
-	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.light};
-	color: ${({ theme }) => theme.COLOR.common.gray[200]};
-`
-const ProductPrice = styled.p`
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(2)}
+		column-gap: 1rem;
+	}
 `
 
 const S = {
-	Items,
-	Item,
-	ImageContainer,
-	ProductInfo,
-	ProductTitle,
-	ProductContent,
-	ProductPrice,
+	ProductList,
 }

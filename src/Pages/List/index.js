@@ -4,7 +4,7 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import ProductList from './Components/ProductList'
+import ProductListWrapper from './Components/ProductList'
 
 function List() {
 	return (
@@ -23,7 +23,7 @@ function List() {
 						</select>
 					</span>
 				</S.ListInfoWrapper>
-				<ProductList />
+				<ProductListWrapper />
 			</S.Main>
 		</S.ListWrapper>
 	)
@@ -34,6 +34,7 @@ export default List
 const ListWrapper = styled.div`
 	${WidthAutoCSS};
 	margin: 2rem auto;
+    margin-bottom: 12rem;
 	display: flex;
 	justify-content: space-between;
 `
