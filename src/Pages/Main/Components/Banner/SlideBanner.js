@@ -37,6 +37,11 @@ const Container = styled.div`
 	${ColumnNumberCSS(2)}
     column-gap: 0;
 	overflow: hidden;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(1)}
+		row-gap: 0;
+	}
 `
 
 const SlideList = styled.div`

@@ -128,6 +128,8 @@ const SlideBox = styled.ul`
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(3)}
+		column-gap: 1rem;
+		row-gap: 1rem;
 	}
 
 	& > li {
