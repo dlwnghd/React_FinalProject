@@ -22,6 +22,7 @@ const dummyProduct = [
 		price: 100000,
 		status: '판매중',
 		title: '테스트 판매중입니다.',
+		script: '테스트는 고양이입니다. 고양이의 색깔은 무엇일까요? 하하',
 	},
 	{
 		idx: Math.floor(Math.random() * 10000),
@@ -46,6 +47,8 @@ const dummyProduct = [
 		price: 100000,
 		status: '판매완료',
 		title: '검색을 해보세요',
+		script:
+			'황금색 고양이는 테스트의 한 종류입니다. 금은 별처럼 반짝거립니다. 하하',
 	},
 ]
 
