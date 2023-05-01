@@ -80,9 +80,9 @@ const SideBarContainer = styled.nav`
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 	color: black;
 	width: 100%;
-	z-index: 99;
-	height: 100%;
-	top: 8rem;
+	z-index: 999;
+	height: 80%;
+	top: 7rem;
 	left: 0;
 
 	& > ul {
