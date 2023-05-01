@@ -49,6 +49,7 @@ const Wrapper = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
+	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
 
@@ -58,7 +59,8 @@ const Wrapper = styled.div`
 		cursor: pointer;
 		top: 1.4rem;
 		right: 1.4rem;
-		color: red;
+		color: ${({ theme }) => theme.COLOR.main};
+
 		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
 	}
 `
@@ -85,6 +87,12 @@ const DescContainer = styled.div`
 const DescBox = styled.div`
 	width: 100%;
 	${({ context }) => context === '' && FlexBetweenCSS}
+
+	& > h4 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 
 	& > p {
 		margin: 1rem 0 2rem;
