@@ -3,11 +3,11 @@ import { DropdownArrow_Icon } from '../Icons/Icons'
 import { useRef } from 'react'
 import { useState } from 'react'
 
-function Filter({ filter }) {
+function Filter({ filterArray, ...rest }) {
 	// prop으로 전달받은 배열 데이터 : Search > filter
 	// 배열에 인수가 3개이면 border X
 
-	const newFilter = filter.sort((a, b) => {
+	const newFilter = filterArray.sort((a, b) => {
 		return a.length - b.length
 	})
 
@@ -24,13 +24,13 @@ function Filter({ filter }) {
 		setIsSelect(prev => !prev)
 	}
 
-	const onLeave = () => {
-		setIsSelect(prev => !prev)
-	}
+	// const onLeave = () => {
+	// 	setIsSelect(prev => !prev)
+	// }
 
 	return (
 		<Wrapper>
-			<S.SelectContainer onMouseLeave={onLeave}>
+			<S.SelectContainer>
 				<S.DefaultBox number={newFilter.length} onClick={onSelect}>
 					{changeText}
 					<DropdownArrow_Icon size="16" />
@@ -41,8 +41,12 @@ function Filter({ filter }) {
 						number={newFilter.length}
 						onClick={onChange}
 					>
-						{filter.map((title, idx) => {
-							return <S.SelectBox key={idx}>{title}</S.SelectBox>
+						{newFilter.map((title, idx) => {
+							return (
+								<S.SelectBox key={idx} {...rest}>
+									{title}
+								</S.SelectBox>
+							)
 						})}
 					</S.SelectList>
 				)}
@@ -59,6 +63,7 @@ const Wrapper = styled.div`
 	position: absolute;
 	top: 0;
 	right: 0;
+	z-index: 1;
 `
 const SelectContainer = styled.div`
 	width: 100%;
@@ -93,6 +98,7 @@ const SelectList = styled.ul`
 const SelectBox = styled.li`
 	padding: 1rem 0;
 	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
+	background: ${({ theme }) => theme.COLOR.common.white};
 
 	&:last-of-type {
 		border-bottom: none;
