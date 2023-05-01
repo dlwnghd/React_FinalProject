@@ -17,7 +17,12 @@ function Modal(props) {
 				{children}
 				<span
 					onClick={onClickCloseModal}
-					style={{ position: 'absolute', top: '5px', right: '5px' }}
+					style={{
+						position: 'absolute',
+						top: '5px',
+						right: '5px',
+						cursor: 'pointer',
+					}}
 				>
 					X
 				</span>
