@@ -13,6 +13,8 @@ import {
 	AiOutlineShop,
 	AiOutlineSwap,
 	AiOutlineComment,
+	AiOutlineClose,
+	AiOutlineRollback,
 	AiOutlineReddit,
 	AiOutlineCamera,
 	AiOutlineExport,
@@ -23,7 +25,6 @@ import { CiSearch } from 'react-icons/ci'
 export const Search_Icon = ({ color, position }) => (
 	<CiSearch color={color} position={position} />
 ) // 검색
-
 
 export const Arrow_Icon = ({ size }) => (
 	<AiOutlineArrowRight size={size ? size : 50} />
@@ -59,7 +60,7 @@ export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
 export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
-
+export const RollBack_icon = () => <AiOutlineRollback /> // 뒤로 가기
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
