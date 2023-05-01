@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../Styles/common'
-import TopButton from './TopButton/TopButton'
+import MobileFooter from './Components/MobileFooter'
+import TopButton from './Components/TopButton'
 
 function Footer() {
 	return (
@@ -15,6 +16,7 @@ function Footer() {
 					<p>Copyright by Team. Nego</p>
 				</S.FooterContainer>
 			</S.FootSize>
+			<MobileFooter />
 		</S.FooterWrapper>
 	)
 }
@@ -23,13 +25,9 @@ export default Footer
 
 const FooterWrapper = styled.footer`
 	position: relative;
-	z-index: 9999;
+	z-index: 999;
 	box-sizing: border-box;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
 `
 
 const FooterContainer = styled.div`
@@ -60,6 +58,10 @@ const Description = styled.div`
 
 const FootSize = styled.div`
 	${WidthAutoCSS};
+
+	@media screen and (max-width: 440px) {
+		display: none;
+	}
 `
 
 const S = {
