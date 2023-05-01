@@ -7,7 +7,7 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 
 	const sliceProducts = productsMock.slice(
 		(page - 1) * 10,
-		(page - 1) * 10 + pageSize,
+		(page - 1) * 10 + Number(pageSize),
 	)
 
 	return res(ctx.status(200), ctx.json(sliceProducts))
