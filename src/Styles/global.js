@@ -65,6 +65,14 @@ const GlobalStyles = createGlobalStyle`
         font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
     }
 
+    button {
+        border: none;
+    }
+
+    input {
+        outline: none;
+    }
+
     textarea {
         font-size:${({ theme }) => theme.FONT_SIZE.small}
     }
