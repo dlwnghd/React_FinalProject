@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
 import styled from 'styled-components'
 import {
 	FlexAlignCSS,
@@ -7,27 +11,58 @@ import {
 } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
-import { Link, useNavigate } from 'react-router-dom'
+
 import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import CheckBox from '../../../Components/CheckBox/CheckBox'
 import AlertText from '../../../Components/AlertText/AlertText'
 
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { userInfoAtom } from '../../../Atoms/userInfo.atom'
+import UserInfoService from '../../../Utils/loginService'
+import TokenService from '../../../Utils/tokenService'
+import { loginStateAtom } from '../../../Atoms/loginState.atom'
+
 function Login() {
 	const navigate = useNavigate()
+	const [error, setError] = useState(null)
+	const loginStateValue = useRecoilValue(loginStateAtom)
+	const setUserInfoValue = useSetRecoilState(userInfoAtom)
+
 	const {
 		register,
 		formState: { errors },
 		getValues,
+		watch,
 		handleSubmit,
 	} = useForm()
 
-	const onSubmit = data => {
-		const email = getValues('email')
-		const password = getValues('password')
+	const watchedEmail = watch('email')
+	const watchedPassword = watch('password')
 
-		// axios
+	const onSubmit = async () => {
+		const email = getValues('email')
+		const pw = getValues('password')
+
+		try {
+			const { data } = await axios.post('/api/user/login', { email, pw })
+			UserInfoService.setUserInfo(data.userInfo) // 웹 스토리지에 저장
+			TokenService.setAccessToken(data.token) // 웹 스토리지에 저장
+			setUserInfoValue(data.userInfo) // 전역 상태로 관리하기 위함
+			navigate('/')
+		} catch (err) {
+			const { message } = err.response.data
+			setError(message)
+		}
 	}
+
+	console.log(loginStateValue)
+
+	useEffect(() => {
+		setError(null)
+	}, [watchedEmail, watchedPassword])
+
+	if (loginStateValue) return <Navigate replace to="/" /> // 이미 로그인 상태이면 메인페이지로 보내기
 
 	return (
 		<S.Wrapper>
@@ -37,6 +72,7 @@ function Login() {
 					<S.StyledInput
 						type="text"
 						placeholder="아이디(이메일)를 입력해주세요"
+						status={errors.email && 'error'}
 						{...register('email', FORM_TYPE.EMAIL_TYPE)}
 					/>
 					{errors.email && (
@@ -44,12 +80,14 @@ function Login() {
 					)}
 					<S.StyledInput
 						type="password"
-						placeholder="비밀번호를 입력해주세요 (8~16자의 영문자, 숫자 조합)"
+						placeholder="비밀번호를 입력해주세요 (8~16자의 영문자, 숫자, 특수문자 조합)"
+						status={errors.password && 'error'}
 						{...register('password', FORM_TYPE.PASSWORD_TYPE)}
 					/>
 					{errors.password && (
 						<AlertText type={'error'}>{errors.password.message}</AlertText>
 					)}
+					{error && <AlertText type={'error'}>{error}</AlertText>}
 					<S.StyledButton type="submit" size={'full'} shape={'square'}>
 						로그인
 					</S.StyledButton>
