@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import Button from '../../../Components/Button/Button'
+import { Camera_Icon } from '../../../Components/Icons/Icons'
 
 function Images() {
 	const [imageList, setImageList] = useState([])
@@ -29,9 +31,9 @@ function Images() {
 
 	//이미지 삭제
 	const DelViewImg = e => {
-		// let filterImg = imageList.filter(el => el !== e)
-		// console.log(filterImg)
-		// setImageList(filterImg)
+		let filterImg = imageList.filter(el => el !== e)
+		console.log(filterImg)
+		setImageList(filterImg)
 	}
 
 	//Drag
@@ -57,52 +59,38 @@ function Images() {
 	}
 	return (
 		<S.TotalWrapper>
-			<S.ImgTitle>상품 이미지 * ({imageList.length}/4)</S.ImgTitle>
+			<S.Title>
+				<S.ImgTitle>상품 이미지 * ({imageList.length}/4)</S.ImgTitle>
+				<Button
+					onClick={handleClick}
+					shape={'square'}
+					variant={'default-reverse'}
+				>
+					<Camera_Icon style={{ color: 'gray' }} />
+				</Button>
+			</S.Title>
+
 			<S.Wrapper>
 				<input
 					type="file"
 					accept="image/*"
-					// multiple="multiple"
+					multiple="multiple"
 					style={{ display: 'none' }}
 					ref={pictureInput}
 					onChange={e => onAddImg(e)}
 				/>
-				<S.ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 0)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 0)}
-				>
-					<S.Img onClick={handleClick} src={imageList[0]} />
-					<S.Del onClick={() => DelViewImg(0)}>❌</S.Del>
-				</S.ImgBox>
-				<S.ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 1)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 1)}
-				>
-					<S.Img onClick={handleClick} src={imageList[1]} />
-					<S.Del onClick={() => DelViewImg(1)}>❌</S.Del>
-				</S.ImgBox>
-				<S.ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 2)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 2)}
-				>
-					<S.Img onClick={handleClick} src={imageList[2]} />
-					<S.Del onClick={() => DelViewImg(2)}>❌</S.Del>
-				</S.ImgBox>
-				<S.ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 3)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 3)}
-				>
-					<S.Img onClick={handleClick} src={imageList[3]} />
-					<S.Del onClick={() => DelViewImg(3)}>❌</S.Del>
-				</S.ImgBox>
+				{imageList.map((e, idx) => (
+					<S.ImgBox
+						key={idx}
+						draggable
+						onDragStart={() => (dragStartIdx.current = idx)}
+						onDragEnd={onhandleSort}
+						onDragEnter={() => (dragEnterIdx.current = idx)}
+					>
+						<S.Img src={imageList[idx]} />
+						<S.Del onClick={() => DelViewImg(e)}>❌</S.Del>
+					</S.ImgBox>
+				))}
 			</S.Wrapper>
 			<S.Hint>
 				클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
@@ -127,12 +115,15 @@ const TotalWrapper = styled.div`
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
 `
 const ImgTitle = styled.div`
-	margin-bottom: 2rem;
+	height: 100%;
+	margin-right: 2rem;
 `
-const ImgBox = styled.div``
+const ImgBox = styled.div`
+	position: relative;
+`
 const Img = styled.img`
-	width: 276px;
-	height: 276px;
+	width: 27.6rem;
+	height: 27.6rem;
 	cursor: pointer;
 	&:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -141,7 +132,14 @@ const Img = styled.img`
 `
 const Del = styled.span`
 	font-size: 20px;
-
+	position: absolute;
+	top: 0.5rem;
+	right: 1rem;
 	cursor: pointer;
 `
-const S = { Img, Wrapper, Del, ImgBox, ImgTitle, TotalWrapper, Hint }
+const Title = styled.div`
+	display: flex;
+	align-items: center;
+	margin-bottom: 3rem;
+`
+const S = { Img, Wrapper, Del, ImgBox, ImgTitle, TotalWrapper, Hint, Title }

@@ -9,7 +9,6 @@ function GPS() {
 
 	//일단 지번으로 가져오고
 	const gpsSelect = data => {
-		console.log(data)
 		setIsOpenModal(false)
 	}
 

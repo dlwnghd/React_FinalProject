@@ -1,5 +1,9 @@
 import styled from 'styled-components'
-import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import {
+	ColumnNumberCSS,
+	FlexCenterCSS,
+	GridCenterCSS,
+} from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
@@ -8,6 +12,8 @@ import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 import Modal from '../../../Components/Modal/Modal'
 import GPS from './GPS'
+import Map from './Map'
+import CheckBox from '../../../Components/CheckBox/CheckBox'
 function ItemInfo() {
 	const {
 		register,
@@ -25,13 +31,16 @@ function ItemInfo() {
 		const changePrice = Number(price.target.value.replaceAll(',', ''))
 		setIntPrice(changePrice.toLocaleString())
 	}
-	const onSubmit = () => {}
+	const onSubmit = data => {
+		console.log(data)
+	}
 
 	//modal open
 	const modalOpen = () => {
 		document.body.style.overflow = 'hidden'
 		setIsOpenModal(true)
 	}
+
 	return (
 		<S.WrapperInfo onSubmit={handleSubmit(onSubmit)}>
 			<S.InputWrap>
@@ -54,12 +63,16 @@ function ItemInfo() {
 			</S.InputWrap>
 
 			<S.MiddleWrap>
-				<S.InputWrap2>
-					<S.InputLabel2>카테고리 *</S.InputLabel2>
-					<S.InputValue2>
-						<Input placeholder="0: 무료나눔 / 1: 중고거래" />
-					</S.InputValue2>
-				</S.InputWrap2>
+				<S.InputWrapCheckBox>
+					<S.InputLabelCheckBox>카테고리 *</S.InputLabelCheckBox>
+					<S.InputValueCheckBox>
+						{/* <Input placeholder="0: 무료나눔 / 1: 중고거래" /> */}
+						<CheckBox style={{ margin: ' 0 2rem' }} />
+						<S.Label>무료나눔</S.Label>
+						<CheckBox style={{ margin: ' 0 2rem' }} />
+						<S.Label>중고거래</S.Label>
+					</S.InputValueCheckBox>
+				</S.InputWrapCheckBox>
 				<S.InputWrap2>
 					<S.InputLabel2>가격 *</S.InputLabel2>
 					<S.InputValue2>
@@ -92,6 +105,11 @@ function ItemInfo() {
 					)}
 				</S.InputValue>
 			</S.InputWrap>
+			<Map />
+			<S.ButtonWrap>
+				<Button style={{ margin: '4rem' }}>등록 완료</Button>
+				<Button style={{ margin: '4rem' }}>취소</Button>
+			</S.ButtonWrap>
 		</S.WrapperInfo>
 	)
 }
@@ -130,14 +148,33 @@ const InputValue = styled.div`
 
 const InputLabel2 = styled.div`
 	grid-column-start: 1;
-	grid-column-end: 2;
+	grid-column-end: 1;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
 const InputValue2 = styled.div`
 	grid-column-start: 2;
 	grid-column-end: 6;
 	width: 100%;
+	display: flex;
+	align-items: center;
 `
+const InputLabelCheckBox = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	margin-right: 3rem;
+`
+
+const InputWrapCheckBox = styled.div`
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+`
+const InputValueCheckBox = styled.div`
+	display: flex;
+	align-items: center;
+`
+
 const MiddleWrap = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(2)}
@@ -148,15 +185,26 @@ const Textarea = styled.textarea`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	padding: 1rem 1.2rem;
 `
+const ButtonWrap = styled.div`
+	${FlexCenterCSS}
+`
+const Label = styled.label`
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+`
 const S = {
-	WrapperInfo, //
+	WrapperInfo,
 	Textarea,
 	MiddleWrap,
 	InputValue2,
 	InputLabel2,
-	InputValue, //
-	InputLabel, //
+	InputValue,
+	InputLabel,
 	InputWrap2,
-	InputWrap, //
+	InputWrap,
 	Error,
+	ButtonWrap,
+	Label,
+	InputWrapCheckBox,
+	InputValueCheckBox,
+	InputLabelCheckBox,
 }
