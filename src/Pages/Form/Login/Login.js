@@ -51,12 +51,10 @@ function Login() {
 			UserInfoService.setUserInfo(data.userInfo) // 웹 스토리지에 저장
 			TokenService.setAccessToken(data.token) // 웹 스토리지에 저장
 			setUserInfoValue(data.userInfo) // 전역 상태로 관리하기 위함
-
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
 				localStorage.setItem('saveId', email)
 			}
-
 			navigate('/')
 		} catch (err) {
 			const { message } = err.response.data
