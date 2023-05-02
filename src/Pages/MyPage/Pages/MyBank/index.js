@@ -1,4 +1,4 @@
-import TotalPrice from './Components/TotalPrice.js/TotalPrice'
+import TotalPrice from './Components/TotalPrice'
 
 function MyBank() {
 	return (
