@@ -22,7 +22,8 @@ const dummyProduct = [
 		price: Math.floor(Math.random() * 100000),
 		status: '판매중',
 		title: '네모난 고양이',
-		script: '테스트는 고양이입니다. 고양이의 색깔은 무엇일까요? 하하',
+		description: '테스트는 고양이입니다. 고양이의 색깔은 무엇일까요? 하하',
+		category: 0,
 	},
 	{
 		idx: Math.floor(Math.random() * 10000),
@@ -47,8 +48,9 @@ const dummyProduct = [
 		price: Math.floor(Math.random() * 100000),
 		status: '판매완료',
 		title: '금빛 고양이',
-		script:
+		description:
 			'황금색 고양이는 테스트의 한 종류입니다. 금은 별처럼 반짝거립니다. 하하',
+		category: 0,
 	},
 	{
 		idx: Math.floor(Math.random() * 10000),
@@ -73,8 +75,9 @@ const dummyProduct = [
 		price: Math.floor(Math.random() * 100000),
 		status: '판매완료',
 		title: '은빛 고양이',
-		script:
+		description:
 			'은색 고양이는 테스트의 한 종류입니다. 은은 다이아몬드처럼 반짝거립니다. 하하',
+		category: 1,
 	},
 	{
 		idx: Math.floor(Math.random() * 10000),
@@ -99,7 +102,9 @@ const dummyProduct = [
 		price: Math.floor(Math.random() * 100000),
 		status: '판매완료',
 		title: '동빛 고양이',
-		script: '동색 고양이는 테스트의 한 종류입니다. 동은 음... 뭘까요. 하하',
+		description:
+			'동색 고양이는 테스트의 한 종류입니다. 동은 음... 뭘까요. 하하',
+		category: 1,
 	},
 ]
 
