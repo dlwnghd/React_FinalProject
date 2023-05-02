@@ -27,6 +27,7 @@ const sizeCSS = {
 export const AlertText = styled.p`
 	${({ type }) => typeCSS[type]};
 	${({ size }) => sizeCSS[size]}
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	margin-bottom: 1.2rem;
 	padding-left: 0.5rem;
 `

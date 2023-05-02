@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 
 import styled from 'styled-components'
 import {
@@ -11,20 +10,22 @@ import {
 } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
+import CheckBox from '../../../Components/CheckBox/CheckBox'
 
 import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
-import CheckBox from '../../../Components/CheckBox/CheckBox'
 import AlertText from '../../../Components/AlertText/AlertText'
 
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
+import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import UserInfoService from '../../../Utils/loginService'
 import TokenService from '../../../Utils/tokenService'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
+import axios from 'axios'
 
 function Login() {
 	const navigate = useNavigate()
+	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
 	const loginStateValue = useRecoilValue(loginStateAtom)
 	const setUserInfoValue = useSetRecoilState(userInfoAtom)
@@ -33,6 +34,7 @@ function Login() {
 		register,
 		formState: { errors },
 		getValues,
+		setValue,
 		watch,
 		handleSubmit,
 	} = useForm()
@@ -49,6 +51,12 @@ function Login() {
 			UserInfoService.setUserInfo(data.userInfo) // 웹 스토리지에 저장
 			TokenService.setAccessToken(data.token) // 웹 스토리지에 저장
 			setUserInfoValue(data.userInfo) // 전역 상태로 관리하기 위함
+
+			if (isSaveId) {
+				// 로그인 성공 시에만 아이디 저장
+				localStorage.setItem('saveId', email)
+			}
+
 			navigate('/')
 		} catch (err) {
 			const { message } = err.response.data
@@ -56,7 +64,12 @@ function Login() {
 		}
 	}
 
-	console.log(loginStateValue)
+	useEffect(() => {
+		const savedId = localStorage.getItem('saveId')
+		if (savedId) {
+			setValue('email', savedId)
+		}
+	}, [])
 
 	useEffect(() => {
 		setError(null)
@@ -88,15 +101,19 @@ function Login() {
 						<AlertText type={'error'}>{errors.password.message}</AlertText>
 					)}
 					{error && <AlertText type={'error'}>{error}</AlertText>}
+					<div>
+						<CheckBox
+							id="saveId"
+							onChange={() => setIsSaveId(prev => !prev)}
+							value={isSaveId}
+						/>
+						<label htmlFor="saveId">아이디 저장</label>
+					</div>
 					<S.StyledButton type="submit" size={'full'} shape={'square'}>
 						로그인
 					</S.StyledButton>
 				</form>
 				<S.BottomBox>
-					<div>
-						<CheckBox />
-						<label>아이디 저장</label>
-					</div>
 					<ul>
 						<li>아이디 찾기</li>
 						<li>비밀번호 찾기</li>
@@ -126,6 +143,16 @@ const Container = styled.div`
 	& > form {
 		margin-top: 3rem;
 	}
+
+	& > form > div {
+		${FlexAlignCSS}
+		margin-top: 1rem;
+	}
+
+	& > form > div > label {
+		margin-left: 0.8rem;
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	}
 `
 
 const StyledInput = styled(Input)`
@@ -138,21 +165,10 @@ const StyledButton = styled(Button)`
 
 const BottomBox = styled.div`
 	${FlexBetweenCSS}
-	margin-top: 2rem;
+	margin-top: 1rem;
 
-	& > div {
-		${FlexAlignCSS}
-	}
-
-	& > div:first-child {
-		@media screen and (max-width: 600px) {
-			display: none;
-		}
-	}
-
-	& > div > label {
-		margin-left: 0.8rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	& > ul {
+		margin-left: auto;
 	}
 
 	& > ul > li {
