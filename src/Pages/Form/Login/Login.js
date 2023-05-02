@@ -11,10 +11,10 @@ import {
 } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
+import CheckBox from '../../../Components/CheckBox/CheckBox'
 
 import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
-import CheckBox from '../../../Components/CheckBox/CheckBox'
 import AlertText from '../../../Components/AlertText/AlertText'
 
 import { useRecoilValue, useSetRecoilState } from 'recoil'
@@ -88,15 +88,15 @@ function Login() {
 						<AlertText type={'error'}>{errors.password.message}</AlertText>
 					)}
 					{error && <AlertText type={'error'}>{error}</AlertText>}
+					<div>
+						<CheckBox />
+						<label>아이디 저장</label>
+					</div>
 					<S.StyledButton type="submit" size={'full'} shape={'square'}>
 						로그인
 					</S.StyledButton>
 				</form>
 				<S.BottomBox>
-					<div>
-						<CheckBox />
-						<label>아이디 저장</label>
-					</div>
 					<ul>
 						<li>아이디 찾기</li>
 						<li>비밀번호 찾기</li>
@@ -126,6 +126,16 @@ const Container = styled.div`
 	& > form {
 		margin-top: 3rem;
 	}
+
+	& > form > div {
+		${FlexAlignCSS}
+		margin-top: 1rem;
+	}
+
+	& > form > div > label {
+		margin-left: 0.8rem;
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	}
 `
 
 const StyledInput = styled(Input)`
@@ -138,21 +148,10 @@ const StyledButton = styled(Button)`
 
 const BottomBox = styled.div`
 	${FlexBetweenCSS}
-	margin-top: 2rem;
+	margin-top: 1rem;
 
-	& > div {
-		${FlexAlignCSS}
-	}
-
-	& > div:first-child {
-		@media screen and (max-width: 600px) {
-			display: none;
-		}
-	}
-
-	& > div > label {
-		margin-left: 0.8rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	& > ul {
+		margin-left: auto;
 	}
 
 	& > ul > li {
