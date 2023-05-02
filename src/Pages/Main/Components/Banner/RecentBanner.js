@@ -16,7 +16,6 @@ function RecentBanner() {
 	const nextSlide = () => {
 		if (currentX < productsMock.slice(0, 4).length - 1) {
 			setCurrentX(currentX + 1)
-			console.log(currentX)
 		}
 	}
 
