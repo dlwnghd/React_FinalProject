@@ -7,6 +7,7 @@ import {
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import { useEffect, useRef, useState } from 'react'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
+import { useNavigate } from 'react-router-dom'
 
 function RecentBanner() {
 	const [currentX, setCurrentX] = useState(0)
@@ -52,6 +53,8 @@ function RecentBanner() {
 		}
 	}
 
+	const navigate = useNavigate()
+
 	return (
 		<S.Wrapper>
 			<S.Title>최근 등록 상품</S.Title>
@@ -74,6 +77,7 @@ function RecentBanner() {
 										<S.SlideItem
 											key={idx}
 											recentIMG={`${item.image_url}`}
+											onClick={() => navigate(`/detail/${item.idx}`)}
 										></S.SlideItem>
 									)
 								})}
