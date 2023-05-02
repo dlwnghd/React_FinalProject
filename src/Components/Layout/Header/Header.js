@@ -142,7 +142,7 @@ function Header({ searchProduct }) {
 								setHamburgerShow(prev => !prev)
 							}}
 						>
-							<MenuBurger_Icon size="24" color="gray" cursor="pointer" />
+							<MenuBurger_Icon size="24" color="white" cursor="pointer" />
 						</S.MobileIcon>
 						<S.Logo
 							onClick={() => {
@@ -153,11 +153,11 @@ function Header({ searchProduct }) {
 							NEGO MARKET
 						</S.Logo>
 						<S.MobileIcon>
-							<InterestBasket_Icon size="24" color="gray" cursor="pointer" />
+							<InterestBasket_Icon size="24" color="white" cursor="pointer" />
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
-						<Search_Icon color="gray" position="absolute" />
+						<Search_Icon color="black" position="absolute" />
 						<input
 							type="text"
 							placeholder={'어떤 상품을 찾으시나요?'}
@@ -217,10 +217,10 @@ const HeaderWrapper = styled.header`
 	position: relative;
 	z-index: 9999;
 	width: 100%;
-	border-bottom: 0.1rem solid #eeeeee;
-	background-color: white;
+	background-color: ${({ theme }) => theme.COLOR.common.black};
 	position: sticky;
 	top: 0;
+	padding: 2rem 0 0;
 `
 
 /**
@@ -228,6 +228,10 @@ const HeaderWrapper = styled.header`
  */
 const HeaderSpace = styled.div`
 	${WidthAutoCSS};
+
+	@media screen and (max-width: 440px) {
+		padding-bottom: 2rem;
+	}
 `
 
 /**
@@ -303,10 +307,12 @@ const SearchContainer = styled.div`
 	& > input {
 		width: 100%;
 		height: 4rem;
+		color: ${({ theme }) => theme.COLOR.common.black};
 		box-sizing: border-box;
 		border-radius: 2rem;
 		text-indent: 4.4rem;
-		border: 0.1rem solid #aaa;
+		background: white;
+		border: none;
 		outline: none;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
@@ -315,7 +321,7 @@ const SearchContainer = styled.div`
 		position: absolute;
 		left: 1rem;
 		font-size: 2.8rem;
-		color: black;
+		color: ${({ theme }) => theme.COLOR.common.black};
 	}
 `
 
@@ -323,6 +329,7 @@ const SearchContainer = styled.div`
  * 로고
  */
 const Logo = styled.h1`
+	color: ${({ theme }) => theme.COLOR.main};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	cursor: pointer;
 
@@ -337,7 +344,7 @@ const Logo = styled.h1`
 const Bottom = styled.nav`
 	display: flex;
 	column-gap: 4rem;
-	height: 5.5rem;
+	/* height: 5.5rem; */
 
 	@media screen and (max-width: 440px) {
 		display: none;
@@ -348,15 +355,26 @@ const Bottom = styled.nav`
  * 네비게이션 아이템들
  */
 const NavItem = styled.div`
+	position: relative;
 	${FlexAlignCSS}
 	cursor: pointer;
+	padding: 2rem 0;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	color: ${({ theme }) => theme.COLOR.common.white};
 
 	/* 선택된 항목에만 box_shadow 추가 */
 	&.selected {
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-		box-shadow: rgb(25, 31, 40) 0px -3px 0px inset;
+		color: ${({ theme }) => theme.COLOR.main};
+
+		&::after {
+			position: absolute;
+			bottom: 0;
+			content: '';
+			width: 100%;
+			height: 0.3rem;
+			background: ${({ theme }) => theme.COLOR.main};
+		}
 	}
 `
 
@@ -410,6 +428,7 @@ const UserContainer = styled.div`
 	height: 4rem;
 	${FlexAlignCSS}
 	justify-content: flex-end;
+	color: ${({ theme }) => theme.COLOR.common.white};
 
 	& > * {
 		cursor: pointer;

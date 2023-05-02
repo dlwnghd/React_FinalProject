@@ -9,8 +9,11 @@ import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
 import GridBanner from './Components/Banner/RecentBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
+import { useNavigate } from 'react-router-dom'
 
 function Main() {
+	const navigate = useNavigate()
+
 	return (
 		<S.Wrapper>
 			<MainBanner />
@@ -28,6 +31,7 @@ function Main() {
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
+									onClick={() => navigate(`/detail/${item.idx}`)}
 								/>
 							)
 						})}
@@ -46,6 +50,7 @@ function Main() {
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
+									onClick={() => navigate(`/detail/${item.idx}`)}
 								/>
 							)
 						})}
