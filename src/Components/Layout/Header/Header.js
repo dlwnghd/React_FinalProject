@@ -27,7 +27,7 @@ function Header({ searchProduct }) {
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
 
-	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 햄버거메뉴 활성화용
+	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 관심상품메뉴 활성화용
 
 	/**
 	 * 드롭다운 닫기 핸들러

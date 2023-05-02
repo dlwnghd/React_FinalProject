@@ -1,9 +1,14 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
-import { FlexAlignCSS } from '../../../../Styles/common'
+import { ColumnNumberCSS, FlexAlignCSS, GridCenterCSS } from '../../../../Styles/common'
+import productsMock from '../../../../__mock__/Data/Product/product.data'
+import ItemBox from '../../../ItemBox/ItemBox'
 
-function Sidebar({ interestedProductShow, setInterestedProductShow }) {
+function Sidebar({
+	interestedProductShow,
+	setInterestedProductShow,
+}) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
 
@@ -18,7 +23,23 @@ function Sidebar({ interestedProductShow, setInterestedProductShow }) {
 
 	return (
 		<S.InterestedProductMenu>
-			<S.SideBarContainer ref={slideRef}></S.SideBarContainer>
+			<S.SideBarContainer ref={slideRef}>
+				<S.ProductList>
+					{productsMock.slice(0, 8).map((item, idx) => {
+						return (
+							<ItemBox
+								title={item.title}
+								price={item.price}
+								posterPath={item.image_url}
+								context={item.script}
+								isLiked={item.liked}
+								key={idx}
+								onClick={() => navigate(`/detail/${item.idx}`)}
+							/>
+						)
+					})}
+				</S.ProductList>
+			</S.SideBarContainer>
 		</S.InterestedProductMenu>
 	)
 }
@@ -48,7 +69,20 @@ const SideBarContainer = styled.nav`
 	left: 0;
 `
 
+const ProductList = styled.div`
+	width: 100%;
+	margin-top: 4rem;
+	${GridCenterCSS}
+	${ColumnNumberCSS(4)};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(2)}
+		column-gap: 5rem;
+	}
+`
+
 const S = {
 	InterestedProductMenu,
 	SideBarContainer,
+	ProductList,
 }
