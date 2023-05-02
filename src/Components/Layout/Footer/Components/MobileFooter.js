@@ -1,6 +1,7 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
+import { isNavigationAtom } from '../../../../Atoms/Navigation.atom'
 import {
 	Chatting_Icon,
 	FreeMarket_Icon,
@@ -10,8 +11,8 @@ import {
 } from '../../../Icons/Icons'
 
 function MobileFooter() {
-    const navigate = useNavigate()
-	const [footerSelect, setFooterSelect] = useState(1)
+	const navigate = useNavigate()
+	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
 	return (
 		<S.NavigationWrapper>
@@ -20,7 +21,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 1 ? 'active' : ''}`}
 						onClick={() => {
-                            navigate('/')
+							navigate('/')
 							setFooterSelect(1)
 						}}
 					>
@@ -34,7 +35,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 2 ? 'active' : ''}`}
 						onClick={() => {
-                            navigate('/list/무료나눔리스트')
+							navigate('/list/무료나눔리스트')
 							setFooterSelect(2)
 						}}
 					>
@@ -48,7 +49,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 3 ? 'active' : ''}`}
 						onClick={() => {
-                            navigate('/list/중고거래리스트')
+							navigate('/list/중고거래리스트')
 							setFooterSelect(3)
 						}}
 					>
@@ -62,6 +63,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 4 ? 'active' : ''}`}
 						onClick={() => {
+							navigate('/chat인데 modal로 띄우기로 해서 흠')
 							setFooterSelect(4)
 						}}
 					>
@@ -75,7 +77,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 5 ? 'active' : ''}`}
 						onClick={() => {
-                            navigate('/mypage-bank')
+							navigate('/mypage-bank')
 							setFooterSelect(5)
 						}}
 					>
