@@ -11,60 +11,62 @@ function SignUp() {
 	return (
 		<S.Wrapper>
 			<h1>회원가입</h1>
-			<S.Container>
-				<S.Form>
-					<div>
-						<label>아이디(이메일)</label>
+			<S.Form>
+				<div>
+					<S.InputSection>
 						<div>
-							<p>이메일을 입력해주세요</p>
-							<Input />
+							<label>아이디(이메일)</label>
+							<div>
+								<p>이메일을 입력해주세요</p>
+								<Input />
+							</div>
 						</div>
-					</div>
-					<div>
-						<label>닉네임</label>
 						<div>
-							<p>2~10자 이내</p>
-							<Input />
+							<label>닉네임</label>
+							<div>
+								<p>2~10자 이내</p>
+								<Input />
+							</div>
 						</div>
-					</div>
-					<div>
-						<label>비밀번호</label>
 						<div>
-							<p>10~16자의 영문자, 숫자, 특수 문자 조합</p>
-							<Input type="password" />
+							<label>비밀번호</label>
+							<div>
+								<p>10~16자의 영문자, 숫자, 특수 문자 조합</p>
+								<Input type="password" />
+							</div>
 						</div>
-					</div>
-					<div>
-						<label>비밀번호 확인</label>
 						<div>
-							<Input type="password" />
+							<label>비밀번호 확인</label>
+							<div>
+								<Input type="password" />
+							</div>
 						</div>
-					</div>
-					<div>
-						<label>주소</label>
 						<div>
-							<Input />
-							<S.StyledButton
-								shape={'square'}
-								variant={'default-reverse'}
-								type="button"
-							>
-								주소 찾기
-							</S.StyledButton>
+							<label>주소</label>
+							<div>
+								<Input />
+								<S.StyledButton
+									shape={'square'}
+									variant={'default-reverse'}
+									type="button"
+								>
+									주소 찾기
+								</S.StyledButton>
+							</div>
 						</div>
-					</div>
-					<div>
-						<label>연락처</label>
 						<div>
-							<Input />
+							<label>연락처</label>
+							<div>
+								<Input />
+							</div>
 						</div>
-					</div>
-				</S.Form>
-				<S.MapSection></S.MapSection>
-			</S.Container>
-			<div>
-				<Button>회원가입</Button>
-			</div>
+					</S.InputSection>
+					<S.MapSection></S.MapSection>
+				</div>
+				<div>
+					<Button>회원가입</Button>
+				</div>
+			</S.Form>
 		</S.Wrapper>
 	)
 }
@@ -79,20 +81,23 @@ const Wrapper = styled.div`
 		font-size: ${({ theme }) => theme.FONT_SIZE.big};
 		text-align: center;
 	}
-
-	& > div:last-child {
-		text-align: center;
-	}
-`
-
-const Container = styled.div`
-	width: 100%;
-	margin-top: 7rem;
-	${FlexBetweenCSS}
-	align-items: flex-start;
 `
 
 const Form = styled.form`
+	width: 100%;
+	margin-top: 7rem;
+
+	& > div {
+		${FlexBetweenCSS}
+		align-items: flex-start;
+	}
+
+	& > div:last-child > button {
+		margin: 0 auto;
+	}
+`
+
+const InputSection = styled.section`
 	width: 49%;
 
 	@media screen and (max-width: 670px) {
@@ -145,4 +150,4 @@ const MapSection = styled.section`
 	}
 `
 
-const S = { Wrapper, Container, Form, StyledButton, MapSection }
+const S = { Wrapper, Form, InputSection, StyledButton, MapSection }
