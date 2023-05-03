@@ -9,6 +9,7 @@ function GPS() {
 
 	//일단 지번으로 가져오고
 	const gpsSelect = data => {
+		console.log(data)
 		setIsOpenModal(false)
 	}
 
@@ -18,9 +19,9 @@ function GPS() {
 	}
 
 	return (
-		<S.Wrapper>
+		<Wrapper>
 			<DaumPostcode style={postCodeStyle} onComplete={gpsSelect} autoClose />
-		</S.Wrapper>
+		</Wrapper>
 	)
 }
 export default GPS
@@ -29,4 +30,3 @@ const Wrapper = styled.div`
 	${FlexCenterCSS}
 	padding-top: 20px;
 `
-const S = { Wrapper }

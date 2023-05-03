@@ -13,20 +13,18 @@ function Images() {
 	}
 
 	const onAddImg = e => {
-		let file = e.target.files[0]
-		const reader = new FileReader()
-		reader.readAsDataURL(file)
-		if (imageList.length >= 4) {
-			return alert('이미지 입력은 최대 4개입니다')
+		const ImageLists = e.target.files
+		let ImageUrlLists = [...imageList]
+
+		for (let i = 0; i < ImageLists.length; i++) {
+			const currentImageUrl = URL.createObjectURL(ImageLists[i])
+			ImageUrlLists.push(currentImageUrl)
 		}
-		return new Promise(resolve => {
-			reader.onload = () => {
-				if (imageList.find(el => el === reader.result))
-					return alert('이미 선택한 이미지입니다.')
-				setImageList([...imageList, reader.result])
-				resolve()
-			}
-		})
+
+		if (ImageUrlLists.length > 4) {
+			ImageUrlLists = ImageUrlLists.slice(0, 4)
+		}
+		setImageList(ImageUrlLists)
 	}
 
 	//이미지 삭제
@@ -74,7 +72,7 @@ function Images() {
 				<input
 					type="file"
 					accept="image/*"
-					multiple="multiple"
+					multiple
 					style={{ display: 'none' }}
 					ref={pictureInput}
 					onChange={e => onAddImg(e)}
@@ -86,11 +84,13 @@ function Images() {
 						onDragStart={() => (dragStartIdx.current = idx)}
 						onDragEnd={onhandleSort}
 						onDragEnter={() => (dragEnterIdx.current = idx)}
+						onDragOver={e => e.preventDefault()}
 					>
 						<S.Img src={imageList[idx]} />
 						<S.Del onClick={() => DelViewImg(e)}>❌</S.Del>
 					</S.ImgBox>
 				))}
+				{imageList[0] && <MainImg>대표사진</MainImg>}
 			</S.Wrapper>
 			<S.Hint>
 				클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
@@ -108,6 +108,7 @@ const Hint = styled.div`
 const Wrapper = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)}
+	position: relative;
 `
 const TotalWrapper = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
@@ -117,6 +118,9 @@ const TotalWrapper = styled.div`
 const ImgTitle = styled.div`
 	height: 100%;
 	margin-right: 2rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin-bottom: 2rem;
+	}
 `
 const ImgBox = styled.div`
 	position: relative;
@@ -141,5 +145,31 @@ const Title = styled.div`
 	display: flex;
 	align-items: center;
 	margin-bottom: 3rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 `
-const S = { Img, Wrapper, Del, ImgBox, ImgTitle, TotalWrapper, Hint, Title }
+const MainImg = styled.div`
+	width: 27.6rem;
+	height: 7rem;
+	background-color: #c3c5c7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 0.5rem;
+	left: 0;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+`
+const S = {
+	Img,
+	Wrapper,
+	Del,
+	ImgBox,
+	ImgTitle,
+	TotalWrapper,
+	Hint,
+	Title,
+	MainImg,
+}

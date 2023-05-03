@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 const { kakao } = window
 
-function Map() {
+function ViewMap() {
 	useEffect(() => {
 		let mapContainer = document.getElementById('map') //지도에 표시할 div
 
@@ -31,4 +31,4 @@ function Map() {
 	)
 }
 
-export default Map
+export default ViewMap
