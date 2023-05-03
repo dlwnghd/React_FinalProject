@@ -6,73 +6,208 @@ import {
 } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
+import { Controller, useForm } from 'react-hook-form'
 import { AlertText } from '../../../Components/AlertText/AlertText.style'
+import { FORM_TYPE } from '../../../Consts/form.type'
+import { useState } from 'react'
 
 function SignUp() {
+	const [isDuplicateNickname, setIsDuplicateNickname] = useState(false)
+	const {
+		control,
+		watch,
+		formState: { errors },
+		handleSubmit,
+	} = useForm()
+
+	const onSubmitSignup = () => {
+		// ...
+	}
+
+	const onCheckDuplicateNickName = e => {
+		// 닉네임 중복검사 api 요청 후 처리
+		// setIsDuplicateNickname(true)
+	}
+
 	return (
 		<S.Wrapper>
 			<h1>회원가입</h1>
 			<S.Form onSubmit={handleSubmit(onSubmitSignup)}>
 				<ul>
 					<S.InputSection>
-						<li>
-							<S.InputBox>
-								<label>아이디(이메일)</label>
-								<Input
-									type="text"
-									placeholder="아이디(이메일)을 입력해주세요"
-								/>
-							</S.InputBox>
-							<div></div>
-						</li>
-
-						<li>
-							<S.InputBox>
-								<label>닉네임</label>
-								<Input placeholder="2~10자 이내" />
-							</S.InputBox>
-							<div></div>
-						</li>
-						<li>
-							<S.InputBox>
-								<label>비밀번호</label>
-								<Input
-									type="password"
-									placeholder="10~16자의 영문자, 숫자, 특수 문자 조합"
-								/>
-							</S.InputBox>
-							<div></div>
-						</li>
-						<li>
-							<S.InputBox>
-								<label>비밀번호 확인</label>
-								<Input type="password" />
-							</S.InputBox>
-							<div></div>
-						</li>
-						<li>
-							<S.InputBox>
-								<label>주소</label>
-								<div>
-									<Input />
-									<S.StyledButton
-										shape={'square'}
-										variant={'default-reverse'}
-										type="button"
-									>
-										주소 찾기
-									</S.StyledButton>
-								</div>
-							</S.InputBox>
-							<div></div>
-						</li>
-						<li>
-							<S.InputBox>
-								<label>연락처</label>
-								<Input />
-							</S.InputBox>
-							<div></div>
-						</li>
+						<Controller
+							name="email"
+							control={control}
+							rules={FORM_TYPE.EMAIL_TYPE}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>아이디(이메일)</label>
+										<Input
+											type="text"
+											placeholder="아이디(이메일)을 입력해주세요"
+											{...field}
+											status={errors.email && 'error'}
+										/>
+									</S.InputBox>
+									<div>
+										{errors.email && (
+											<S.StyledAlertText type="error">
+												{errors.email.message}
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
+						<Controller
+							name="nickName"
+							control={control}
+							rules={FORM_TYPE.NICKNAME_TYPE}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>닉네임</label>
+										<Input
+											type="text"
+											placeholder="2~10자 이내"
+											status={
+												errors.nickName || isDuplicateNickname
+													? 'error'
+													: 'default'
+											}
+											{...field}
+											onBlur={onCheckDuplicateNickName}
+										/>
+									</S.InputBox>
+									<div>
+										{errors.nickName && (
+											<S.StyledAlertText type="error">
+												{errors.nickName.message}
+											</S.StyledAlertText>
+										)}
+										{isDuplicateNickname && (
+											<S.StyledAlertText type="error">
+												중복된 닉네임입니다
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
+						<Controller
+							name="password"
+							control={control}
+							rules={FORM_TYPE.PASSWORD_TYPE}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>비밀번호</label>
+										<Input
+											type="password"
+											placeholder="10~16자의 영문자, 숫자, 특수 문자 조합"
+											{...field}
+											status={errors.password && 'error'}
+										/>
+									</S.InputBox>
+									<div>
+										{errors.password && (
+											<S.StyledAlertText type="error">
+												{errors.password.message}
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
+						<Controller
+							name="passwordConfirm"
+							control={control}
+							rules={{
+								required: '비밀번호 확인을 입력해주세요',
+								validate: value =>
+									value === watch('password') ||
+									'입력한 비밀번호와 일치하지 않습니다',
+							}}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>비밀번호 확인</label>
+										<Input
+											type="password"
+											{...field}
+											status={errors.passwordConfirm && 'error'}
+										/>
+									</S.InputBox>
+									<div>
+										{errors.passwordConfirm && (
+											<S.StyledAlertText type="error">
+												{errors.passwordConfirm.message}
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
+						<Controller
+							name="region"
+							control={control}
+							rules={{ required: '주소를 입력해주세요' }}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>주소</label>
+										<div>
+											<Input
+												type="text"
+												status={errors.region && 'error'}
+												{...field}
+											/>
+											<S.StyledButton
+												shape={'square'}
+												variant={'default-reverse'}
+												type="button"
+											>
+												주소 찾기
+											</S.StyledButton>
+										</div>
+									</S.InputBox>
+									<div>
+										{errors.region && (
+											<S.StyledAlertText type="error">
+												{errors.region.message}
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
+						<Controller
+							name="phone"
+							control={control}
+							rules={FORM_TYPE.PHONE_TYPE}
+							render={({ field }) => (
+								<li>
+									<S.InputBox>
+										<label>연락처</label>
+										<Input
+											type="text"
+											maxLength="13"
+											{...field}
+											status={errors.phone && 'error'}
+											onChange={e => console.log(e.target.value)}
+										/>
+									</S.InputBox>
+									<div>
+										{errors.phone && (
+											<S.StyledAlertText type="error">
+												{errors.phone.message}
+											</S.StyledAlertText>
+										)}
+									</div>
+								</li>
+							)}
+						></Controller>
 					</S.InputSection>
 					<S.MapSection></S.MapSection>
 				</ul>
@@ -106,7 +241,7 @@ const Form = styled.form`
 	}
 
 	& > ul:last-child > button {
-		margin: 0 auto;
+		margin: 5rem auto;
 	}
 `
 
@@ -118,7 +253,7 @@ const InputSection = styled.section`
 	}
 
 	& > li {
-		margin-bottom: 4rem;
+		margin-bottom: 2.8rem;
 	}
 
 	& > li > div:last-child {
@@ -156,7 +291,7 @@ const StyledButton = styled(Button)`
 
 const MapSection = styled.section`
 	width: 49%;
-	height: 50rem;
+	height: 44rem;
 	background-color: gray;
 
 	@media screen and (max-width: 670px) {
