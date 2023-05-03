@@ -6,66 +6,79 @@ import {
 } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
 import Button from '../../../Components/Button/Button'
+import { AlertText } from '../../../Components/AlertText/AlertText.style'
 
 function SignUp() {
 	return (
 		<S.Wrapper>
 			<h1>회원가입</h1>
-			<S.Form>
-				<div>
+			<S.Form onSubmit={handleSubmit(onSubmitSignup)}>
+				<ul>
 					<S.InputSection>
-						<div>
-							<label>아이디(이메일)</label>
-							<div>
-								<p>이메일을 입력해주세요</p>
-								<Input />
-							</div>
-						</div>
-						<div>
-							<label>닉네임</label>
-							<div>
-								<p>2~10자 이내</p>
-								<Input />
-							</div>
-						</div>
-						<div>
-							<label>비밀번호</label>
-							<div>
-								<p>10~16자의 영문자, 숫자, 특수 문자 조합</p>
+						<li>
+							<S.InputBox>
+								<label>아이디(이메일)</label>
+								<Input
+									type="text"
+									placeholder="아이디(이메일)을 입력해주세요"
+								/>
+							</S.InputBox>
+							<div></div>
+						</li>
+
+						<li>
+							<S.InputBox>
+								<label>닉네임</label>
+								<Input placeholder="2~10자 이내" />
+							</S.InputBox>
+							<div></div>
+						</li>
+						<li>
+							<S.InputBox>
+								<label>비밀번호</label>
+								<Input
+									type="password"
+									placeholder="10~16자의 영문자, 숫자, 특수 문자 조합"
+								/>
+							</S.InputBox>
+							<div></div>
+						</li>
+						<li>
+							<S.InputBox>
+								<label>비밀번호 확인</label>
 								<Input type="password" />
-							</div>
-						</div>
-						<div>
-							<label>비밀번호 확인</label>
-							<div>
-								<Input type="password" />
-							</div>
-						</div>
-						<div>
-							<label>주소</label>
-							<div>
+							</S.InputBox>
+							<div></div>
+						</li>
+						<li>
+							<S.InputBox>
+								<label>주소</label>
+								<div>
+									<Input />
+									<S.StyledButton
+										shape={'square'}
+										variant={'default-reverse'}
+										type="button"
+									>
+										주소 찾기
+									</S.StyledButton>
+								</div>
+							</S.InputBox>
+							<div></div>
+						</li>
+						<li>
+							<S.InputBox>
+								<label>연락처</label>
 								<Input />
-								<S.StyledButton
-									shape={'square'}
-									variant={'default-reverse'}
-									type="button"
-								>
-									주소 찾기
-								</S.StyledButton>
-							</div>
-						</div>
-						<div>
-							<label>연락처</label>
-							<div>
-								<Input />
-							</div>
-						</div>
+							</S.InputBox>
+							<div></div>
+						</li>
 					</S.InputSection>
 					<S.MapSection></S.MapSection>
-				</div>
-				<div>
+				</ul>
+				<ul>
 					<Button>회원가입</Button>
-				</div>
+				</ul>
 			</S.Form>
 		</S.Wrapper>
 	)
@@ -87,12 +100,12 @@ const Form = styled.form`
 	width: 100%;
 	margin-top: 7rem;
 
-	& > div {
+	& > ul {
 		${FlexBetweenCSS}
 		align-items: flex-start;
 	}
 
-	& > div:last-child > button {
+	& > ul:last-child > button {
 		margin: 0 auto;
 	}
 `
@@ -104,35 +117,36 @@ const InputSection = styled.section`
 		width: 90%;
 	}
 
-	& > div {
-		${FlexAlignCSS}
+	& > li {
 		margin-bottom: 4rem;
 	}
 
-	& > div > label {
+	& > li > div:last-child {
+		text-align: end;
+		margin-top: 0.3rem;
+	}
+`
+
+const InputBox = styled.div`
+	${FlexAlignCSS}
+
+	& > label {
 		width: 19rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
 		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	}
 
-	& > div > div {
-		width: 45rem;
+	/* 주소 input + button */
+	& > div {
+		width: 100%;
 		position: relative;
 		margin-left: auto;
 		${FlexAlignCSS}
 	}
+`
 
-	& > div > div > p {
-		position: absolute;
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-		color: ${({ theme }) => theme.COLOR.common.gray[400]};
-		right: 0;
-		top: -2.4rem;
-
-		@media screen and (max-width: 740px) {
-			display: none;
-		}
-	}
+const StyledAlertText = styled(AlertText)`
+	font-size: 1.5rem;
 `
 
 const StyledButton = styled(Button)`
@@ -150,4 +164,12 @@ const MapSection = styled.section`
 	}
 `
 
-const S = { Wrapper, Form, InputSection, StyledButton, MapSection }
+const S = {
+	Wrapper,
+	Form,
+	InputSection,
+	InputBox,
+	StyledAlertText,
+	StyledButton,
+	MapSection,
+}
