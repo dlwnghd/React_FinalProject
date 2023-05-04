@@ -10,24 +10,96 @@ import { Controller, useForm } from 'react-hook-form'
 import { AlertText } from '../../../Components/AlertText/AlertText.style'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import { useState } from 'react'
+import { useEffect } from 'react'
+import UserApi from '../../../Apis/userApi'
+import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
+import { useNavigate } from 'react-router-dom'
 
 function SignUp() {
-	const [isDuplicateNickname, setIsDuplicateNickname] = useState(false)
+	const navigate = useNavigate('/')
+	const [isDuplicate, setIsDuplicate] = useState({
+		email: { state: null, message: '' },
+		nickname: { state: null, message: '' },
+	})
+
 	const {
 		control,
 		watch,
+		setValue,
+		getValue,
 		formState: { errors },
 		handleSubmit,
-	} = useForm()
+	} = useForm({
+		mode: 'onChange',
+	})
 
-	const onSubmitSignup = () => {
-		// ...
+	const watchedEmail = watch('email')
+	const watchedNickname = watch('nickname')
+
+	const onSubmitSignup = async () => {
+		if (!isDuplicate.email.state || !isDuplicate.nickname.state) return
+
+		const newUser = {
+			email: getValue('email'),
+			pw: getValue('password'),
+			nickName: getValue('nickname'),
+			phone: getValue('phone'),
+			region: getValue('region'),
+		}
+
+		try {
+			await UserApi.signup(newUser)
+			navigate('/')
+		} catch (err) {
+			if (err.response.status === 400) {
+			}
+		}
 	}
 
-	const onCheckDuplicateNickName = e => {
-		// 닉네임 중복검사 api 요청 후 처리
-		// setIsDuplicateNickname(true)
+	const onCheckDuplicate = async (e, type) => {
+		const value = e.target.value
+
+		if (!value || errors[type]) {
+			setIsDuplicate(prev => ({
+				...prev,
+				[type]: { state: null, message: '' },
+			}))
+			return
+		}
+
+		const checkApi =
+			type === 'email' ? UserApi.checkEmail : UserApi.checkNickname
+
+		try {
+			const res = await checkApi({ [type]: value })
+			setIsDuplicate(prev => ({
+				...prev,
+				[type]: { state: false, message: res.data.message },
+			}))
+		} catch (err) {
+			if (err.response.status === 400) {
+				setIsDuplicate(prev => ({
+					...prev,
+					[type]: { state: true, message: err.response.data.message },
+				}))
+			}
+		}
 	}
+
+	// 입력한 내용이 달라지면 중복검사 했던 내용 초기화
+	useEffect(() => {
+		setIsDuplicate(prev => ({
+			...prev,
+			email: { state: null, message: '' },
+		}))
+	}, [watchedEmail])
+
+	useEffect(() => {
+		setIsDuplicate(prev => ({
+			...prev,
+			nickname: { state: null, message: '' },
+		}))
+	}, [watchedNickname])
 
 	return (
 		<S.Wrapper>
@@ -47,7 +119,14 @@ function SignUp() {
 											type="text"
 											placeholder="아이디(이메일)을 입력해주세요"
 											{...field}
-											status={errors.email && 'error'}
+											status={
+												errors.email || isDuplicate.email.state
+													? 'error'
+													: 'default'
+											}
+											onBlur={e => {
+												onCheckDuplicate(e, 'email')
+											}}
 										/>
 									</S.InputBox>
 									<div>
@@ -56,12 +135,19 @@ function SignUp() {
 												{errors.email.message}
 											</S.StyledAlertText>
 										)}
+										{isDuplicate.email.state !== null && !errors.email && (
+											<S.StyledAlertText
+												type={isDuplicate.email.state ? 'error' : 'success'}
+											>
+												{isDuplicate.email.message}
+											</S.StyledAlertText>
+										)}
 									</div>
 								</li>
 							)}
 						></Controller>
 						<Controller
-							name="nickName"
+							name="nickname"
 							control={control}
 							rules={FORM_TYPE.NICKNAME_TYPE}
 							render={({ field }) => (
@@ -72,25 +158,30 @@ function SignUp() {
 											type="text"
 											placeholder="2~10자 이내"
 											status={
-												errors.nickName || isDuplicateNickname
+												errors.nickname || isDuplicate.nickname.state
 													? 'error'
 													: 'default'
 											}
 											{...field}
-											onBlur={onCheckDuplicateNickName}
+											onBlur={e => onCheckDuplicate(e, 'nickname')}
 										/>
 									</S.InputBox>
 									<div>
-										{errors.nickName && (
+										{errors.nickname && (
 											<S.StyledAlertText type="error">
-												{errors.nickName.message}
+												{errors.nickname.message}
 											</S.StyledAlertText>
 										)}
-										{isDuplicateNickname && (
-											<S.StyledAlertText type="error">
-												중복된 닉네임입니다
-											</S.StyledAlertText>
-										)}
+										{isDuplicate.nickname.state !== null &&
+											!errors.nickname && (
+												<S.StyledAlertText
+													type={
+														isDuplicate.nickname.state ? 'error' : 'success'
+													}
+												>
+													{isDuplicate.nickname.message}
+												</S.StyledAlertText>
+											)}
 									</div>
 								</li>
 							)}
@@ -135,6 +226,7 @@ function SignUp() {
 										<label>비밀번호 확인</label>
 										<Input
 											type="password"
+											placeholder="비밀번호 확인을 입력해주세요"
 											{...field}
 											status={errors.passwordConfirm && 'error'}
 										/>
@@ -160,7 +252,9 @@ function SignUp() {
 										<div>
 											<Input
 												type="text"
+												placeholder="주소 검색을 해주세요"
 												status={errors.region && 'error'}
+												readOnly
 												{...field}
 											/>
 											<S.StyledButton
@@ -192,10 +286,12 @@ function SignUp() {
 										<label>연락처</label>
 										<Input
 											type="text"
-											maxLength="13"
+											placeholder="휴대폰 번호를 입력해주세요"
 											{...field}
 											status={errors.phone && 'error'}
-											onChange={e => console.log(e.target.value)}
+											onBlur={e =>
+												setValue('phone', addHyphenToPhoneNum(field.value))
+											}
 										/>
 									</S.InputBox>
 									<div>
