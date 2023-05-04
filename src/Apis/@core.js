@@ -1,6 +1,6 @@
 import axios from 'axios'
 import TokenService from '../Utils/tokenService'
-import AuthApi from './authApi'
+import UserApi from './userApi'
 import LOCAL_STORAGE_KEY from '../Consts/storage.key'
 
 const axiosInstance = axios.create({
@@ -28,14 +28,14 @@ axiosInstance.interceptors.response.use(
 	async error => {
 		if (error.response.status === 417) {
 			// access token 재발급 필요
-			AuthApi.logout()
+			UserApi.logout()
 			TokenService.removeAccessToken(LOCAL_STORAGE_KEY.ACCESS_TOKEN) // 기존 access token 삭제
 		}
 		const originalRequest = error.config
 		if (error.response.status === 403 && !originalRequest._retry) {
 			// refresh 관련 세션 만료
 			originalRequest._retry = true // 재요청 보냄을 의미
-			const res = await AuthApi.refreshToken()
+			const res = await UserApi.refreshToken()
 			if (res.status === 200) {
 				// access_token 다시 세팅
 				const token = res.data.token
