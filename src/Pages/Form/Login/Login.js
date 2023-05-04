@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import AlertText from '../../../Components/AlertText/AlertText'
 
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import { LoginService } from '../../../Utils/loginService'
@@ -26,7 +26,7 @@ function Login() {
 	const navigate = useNavigate()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const loginStateValue = useRecoilValue(loginStateAtom)
+	const [loginStateValue, setLoginStateValue] = useRecoilState(loginStateAtom)
 	const setUserInfoValue = useSetRecoilState(userInfoAtom)
 
 	const {
@@ -47,7 +47,9 @@ function Login() {
 
 		try {
 			const { data } = await axios.post('/api/user/login', { email, pw })
-			LoginService.login(data.tokenForHeader, data.user)
+			LoginService.login(data.token, data.userInfo)
+			setUserInfoValue(data.userInfo)
+			setLoginStateValue(true)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
 				localStorage.setItem('saveId', email)
