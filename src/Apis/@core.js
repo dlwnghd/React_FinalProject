@@ -1,7 +1,6 @@
 import axios from 'axios'
 import TokenService from '../Utils/tokenService'
 import UserApi from './userApi'
-import LOCAL_STORAGE_KEY from '../Consts/storage.key'
 
 const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -15,6 +14,7 @@ axiosInstance.interceptors.request.use(
 			config.headers.Authorization = `Bearer ${access_token}`
 			return config
 		}
+		return config
 	},
 	error => {
 		return Promise.reject(error)
@@ -22,8 +22,8 @@ axiosInstance.interceptors.request.use(
 )
 
 axiosInstance.interceptors.response.use(
-	res => {
-		return res
+	response => {
+		return response
 	},
 	async error => {
 		if (error.response.status === 417) {
@@ -34,6 +34,7 @@ axiosInstance.interceptors.response.use(
 		const originalRequest = error.config
 		if (error.response.status === 403 && !originalRequest._retry) {
 			// refresh 관련 세션 만료
+
 			originalRequest._retry = true // 재요청 보냄을 의미
 			const res = await UserApi.refreshToken()
 			if (res.status === 200) {
@@ -43,7 +44,6 @@ axiosInstance.interceptors.response.use(
 				axiosInstance.defaults.headers.common[
 					'Authorization'
 				] = `Bearer ${token}`
-
 				return axiosInstance(originalRequest) // 재요청
 			}
 		}
