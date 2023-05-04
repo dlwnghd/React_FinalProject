@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {
 	FlexAlignCSS,
@@ -14,10 +14,21 @@ import {
 	RollBack_icon,
 } from '../../Icons/Icons'
 import { useRecoilState } from 'recoil'
-import { isNavigationAtom } from '../../../Atoms/Navigation.atom'
+import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
+
+	const NavigationFilter= [
+		'freeMarket',
+		'usedTrade',
+		'chat',
+		'mypage',
+	]
+
+	// 현재 URL 기억 State (0: 무료, 1: 중고)
+	const currentURL = useLocation().pathname
+
 
 	const [product, setProduct] = useState('') // 검색할 물품 State관리용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
@@ -29,6 +40,16 @@ function Header({ searchProduct }) {
 
 	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 관심상품메뉴 활성화용
 
+	useEffect(() => {
+		const foundIndex = NavigationFilter.findIndex(item =>
+			currentURL.includes(item),
+		)
+		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
+	}, [currentURL])
+
+
+
+	
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
@@ -188,7 +209,7 @@ function Header({ searchProduct }) {
 						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 						onClick={() => {
 							setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/무료나눔리스트')
+							navigate('/list/freeMarket')
 						}}
 					>
 						FREE MARKET
@@ -197,20 +218,11 @@ function Header({ searchProduct }) {
 						className={selectedNav === 3 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 						onClick={() => {
 							setSelectedNav(3) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/중고거래리스트')
+							navigate('/list/usedTrade')
 						}}
 					>
 						TRADE USED
 					</S.NavItem>
-					{/* <S.NavItem
-						className={selectedNav === 4 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-						onClick={() => {
-							setSelectedNav(4) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/recent-price')
-						}}
-					>
-						MARKET TREND
-					</S.NavItem> */}
 				</S.Bottom>
 			</S.HeaderSpace>
 		</S.HeaderWrapper>
