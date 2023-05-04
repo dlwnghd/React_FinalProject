@@ -1,15 +1,23 @@
-import LOCAL_STORAGE_KEY from '../Consts/storage.key'
+import { useSetRecoilState } from 'recoil'
+import TokenService from './tokenService'
+import UserInfoService from './userInfoService'
+import { userInfoAtom } from '../Atoms/userInfo.atom'
+import { loginStateAtom } from '../Atoms/loginState.atom'
 
-const UserInfoService = {
-	setUserInfo(userInfo) {
-		localStorage.setItem(LOCAL_STORAGE_KEY.USER_INFO, JSON.stringify(userInfo))
+const setUserInfoAtom = useSetRecoilState(userInfoAtom)
+const setLoginStateAtom = useSetRecoilState(loginStateAtom)
+
+export const LoginService = {
+	login(token, userInfo) {
+		TokenService.setAccessToken(token)
+		UserInfoService.setUserInfo(userInfo)
+		setUserInfoAtom(userInfo)
+		setLoginStateAtom(true)
 	},
-	getUserInfo() {
-		return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.USER_INFO))
-	},
-	removeUserInfo() {
-		localStorage.removeItem(LOCAL_STORAGE_KEY.USER_INFO)
+	logout() {
+		TokenService.removeAccessToken()
+		UserInfoService.removeUserInfo()
+		setUserInfoAtom({})
+		setLoginStateAtom(false)
 	},
 }
-
-export default UserInfoService

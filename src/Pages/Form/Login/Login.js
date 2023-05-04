@@ -19,8 +19,7 @@ import AlertText from '../../../Components/AlertText/AlertText'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
-import UserInfoService from '../../../Utils/loginService'
-import TokenService from '../../../Utils/tokenService'
+import { LoginService } from '../../../Utils/loginService'
 import axios from 'axios'
 
 function Login() {
@@ -48,9 +47,7 @@ function Login() {
 
 		try {
 			const { data } = await axios.post('/api/user/login', { email, pw })
-			UserInfoService.setUserInfo(data.userInfo) // 웹 스토리지에 저장
-			TokenService.setAccessToken(data.token) // 웹 스토리지에 저장
-			setUserInfoValue(data.userInfo) // 전역 상태로 관리하기 위함
+			LoginService.login(data.tokenForHeader, data.user)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
 				localStorage.setItem('saveId', email)
