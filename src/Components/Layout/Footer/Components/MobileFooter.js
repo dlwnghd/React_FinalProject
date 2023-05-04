@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { isNavigationAtom } from '../../../../Atoms/Navigation.atom'
+import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import {
 	Chatting_Icon,
 	FreeMarket_Icon,
@@ -35,7 +35,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 2 ? 'active' : ''}`}
 						onClick={() => {
-							navigate('/list/무료나눔리스트')
+							navigate('/list/freeMarket')
 							setFooterSelect(2)
 						}}
 					>
@@ -49,7 +49,7 @@ function MobileFooter() {
 					<S.NavigationUlLi
 						className={`list ${footerSelect === 3 ? 'active' : ''}`}
 						onClick={() => {
-							navigate('/list/중고거래리스트')
+							navigate('/list/usedTrade')
 							setFooterSelect(3)
 						}}
 					>
