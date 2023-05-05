@@ -12,15 +12,7 @@ function MainBanner() {
 	const [endX, setEndX] = useState(0)
 	const slider = useRef()
 
-	const onTouchStart = e => {
-		setStartX(e.touches[0].clientX)
-	}
-
-	const onTouchMove = e => {
-		setEndX(e.touches[0].clientX)
-	}
-
-	const onTouchEnd = () => {
+	const onMove = () => {
 		const isMoved = endX - startX
 
 		if (isMoved > 100 && currentIdx > 0) {
@@ -30,6 +22,27 @@ function MainBanner() {
 		if (isMoved < -100 && currentIdx < productsMock.slice(0, 4).length - 1) {
 			setCurrentIdx(currentIdx + 1)
 		}
+	}
+
+	const onTouchStart = e => {
+		setStartX(e.touches[0].clientX)
+	}
+	const onTouchMove = e => {
+		setEndX(e.touches[0].clientX)
+	}
+	const onTouchEnd = () => {
+		onMove()
+	}
+
+	const onMouseDown = e => {
+		setStartX(e.clientX)
+	}
+	const onMouseMove = e => {
+		setEndX(e.clientX)
+	}
+	const onMouseUp = e => {
+		e.preventDefault()
+		onMove()
 	}
 
 	useEffect(() => {
@@ -43,6 +56,9 @@ function MainBanner() {
 				onTouchStart={onTouchStart}
 				onTouchMove={onTouchMove}
 				onTouchEnd={onTouchEnd}
+				onMouseDown={onMouseDown}
+				onMouseMove={onMouseMove}
+				onMouseUp={onMouseUp}
 			>
 				{productsMock.slice(0, 4).map((bnr, idx) => {
 					return (
@@ -67,6 +83,10 @@ const Wrapper = styled.section`
 	overflow: hidden;
 	box-sizing: border-box;
 	border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		height: 55rem;
+	}
 `
 
 const SlideList = styled.ul`
