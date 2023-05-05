@@ -57,6 +57,8 @@ const PHONE_TYPE = {
 	pattern: {
 		value: REGEX.phone,
 		message: '휴대폰 번호를 정확히 입력해주세요',
+	},
+}
 
 const PRODUCT_DESCRIPTION_TYPE = {
 	required: {
