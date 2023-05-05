@@ -16,24 +16,22 @@ import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import AlertText from '../../../Components/AlertText/AlertText'
 
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
-import UserInfoService from '../../../Utils/loginService'
-import TokenService from '../../../Utils/tokenService'
-import axios from 'axios'
+import { LoginService } from '../../../Utils/loginService'
+import UserApi from '../../../Apis/userApi'
 
 function Login() {
 	const navigate = useNavigate()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const loginStateValue = useRecoilValue(loginStateAtom)
+	const [loginStateValue, setLoginStateValue] = useRecoilState(loginStateAtom)
 	const setUserInfoValue = useSetRecoilState(userInfoAtom)
 
 	const {
 		register,
 		formState: { errors },
-		getValues,
 		setValue,
 		watch,
 		handleSubmit,
@@ -42,18 +40,17 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
-	const onSubmit = async () => {
-		const email = getValues('email')
-		const pw = getValues('password')
+	const onSubmit = async data => {
+		const { email, password: pw } = data
 
 		try {
-			const { data } = await axios.post('/api/user/login', { email, pw })
-			UserInfoService.setUserInfo(data.userInfo) // 웹 스토리지에 저장
-			TokenService.setAccessToken(data.token) // 웹 스토리지에 저장
-			setUserInfoValue(data.userInfo) // 전역 상태로 관리하기 위함
+			const { data } = await UserApi.login({ email, pw })
+			LoginService.login(data.tokenForHeader, data.user)
+			setUserInfoValue(data.user)
+			setLoginStateValue(true)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
-				localStorage.setItem('saveId', email)
+				LoginService.setSaveId(email)
 			}
 			navigate('/')
 		} catch (err) {
@@ -63,7 +60,7 @@ function Login() {
 	}
 
 	useEffect(() => {
-		const savedId = localStorage.getItem('saveId')
+		const savedId = LoginService.getSavedId()
 		if (savedId) {
 			setValue('email', savedId)
 		}

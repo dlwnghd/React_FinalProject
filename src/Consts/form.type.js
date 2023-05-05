@@ -30,6 +30,34 @@ const PASSWORD_TYPE = {
 	},
 }
 
+const NICKNAME_TYPE = {
+	required: {
+		value: true,
+		message: '닉네임을 입력해주세요',
+	},
+	minLength: {
+		value: 2,
+		message: '2자 이상 입력해주세요',
+	},
+	maxLength: {
+		value: 10,
+		message: '10자 이하로 입력해주세요',
+	},
+	pattern: {
+		value: REGEX.nickname,
+		message: '공백 및 한글 초성이나 모음은 쓸 수 없습니다',
+	},
+}
+
+const PHONE_TYPE = {
+	required: {
+		value: true,
+		message: '연락처를 입력해주세요',
+	},
+	pattern: {
+		value: REGEX.phone,
+		message: '휴대폰 번호를 정확히 입력해주세요',
+
 const PRODUCT_DESCRIPTION_TYPE = {
 	required: {
 		value: true,
@@ -44,5 +72,7 @@ const PRODUCT_DESCRIPTION_TYPE = {
 export const FORM_TYPE = {
 	EMAIL_TYPE,
 	PASSWORD_TYPE,
+	NICKNAME_TYPE,
+	PHONE_TYPE,
 	PRODUCT_DESCRIPTION_TYPE,
 }

@@ -1,15 +1,20 @@
 import LOCAL_STORAGE_KEY from '../Consts/storage.key'
+import TokenService from './tokenService'
+import UserInfoService from './userInfoService'
 
-const UserInfoService = {
-	setUserInfo(userInfo) {
-		localStorage.setItem(LOCAL_STORAGE_KEY.USER_INFO, JSON.stringify(userInfo))
+export const LoginService = {
+	login(token, userInfo) {
+		TokenService.setAccessToken(token)
+		UserInfoService.setUserInfo(userInfo)
 	},
-	getUserInfo() {
-		return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.USER_INFO))
+	logout() {
+		TokenService.removeAccessToken()
+		UserInfoService.removeUserInfo()
 	},
-	removeUserInfo() {
-		localStorage.removeItem(LOCAL_STORAGE_KEY.USER_INFO)
+	setSaveId(email) {
+		localStorage.setItem(LOCAL_STORAGE_KEY.SAVE_ID, email)
+	},
+	getSavedId() {
+		localStorage.getItem(LOCAL_STORAGE_KEY.SAVE_ID)
 	},
 }
-
-export default UserInfoService
