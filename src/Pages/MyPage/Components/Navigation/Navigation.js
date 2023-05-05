@@ -1,29 +1,28 @@
 import styled from 'styled-components'
-import {
-	FlexAlignCSS,
-	FlexBetweenCSS,
-	WidthAutoCSS,
-} from '../../../../Styles/common'
+import { FlexAlignCSS, WidthAutoCSS } from '../../../../Styles/common'
 import MY_PAGE_NAV_TYPE from '../../../../Consts/mypage-nav'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 function MyPageNav({ type }) {
 	const navigate = useNavigate()
 
 	return (
-		<S.Wrapper>
-			<S.Container>
-				{MY_PAGE_NAV_TYPE[type].map(nav => (
-					<S.Title
-						key={nav.title}
-						onClick={() => navigate(`${nav.path}`)}
-						state={window.location.pathname === nav.path}
-					>
-						{nav.title}
-					</S.Title>
-				))}
-			</S.Container>
-		</S.Wrapper>
+		<>
+			<S.Wrapper>
+				<S.Container>
+					{MY_PAGE_NAV_TYPE[type].map(nav => (
+						<S.Title
+							key={nav.title}
+							onClick={() => navigate(`${nav.path}`)}
+							state={window.location.pathname === nav.path}
+						>
+							{nav.title}
+						</S.Title>
+					))}
+				</S.Container>
+			</S.Wrapper>
+			<Outlet />
+		</>
 	)
 }
 export default MyPageNav
@@ -35,7 +34,9 @@ const Wrapper = styled.div`
 `
 const Container = styled.div`
 	width: 30rem;
-	${FlexBetweenCSS}
+	${FlexAlignCSS}
+	margin: 4rem 0;
+	column-gap: 4rem;
 `
 const Title = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};

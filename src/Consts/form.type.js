@@ -57,6 +57,15 @@ const PHONE_TYPE = {
 	pattern: {
 		value: REGEX.phone,
 		message: '휴대폰 번호를 정확히 입력해주세요',
+
+const PRODUCT_DESCRIPTION_TYPE = {
+	required: {
+		value: true,
+		message: '상품설명을 입력해주세요',
+	},
+	maxLength: {
+		value: 10000,
+		message: '10,000자 이하로 입력해주세요',
 	},
 }
 
@@ -65,4 +74,5 @@ export const FORM_TYPE = {
 	PASSWORD_TYPE,
 	NICKNAME_TYPE,
 	PHONE_TYPE,
+	PRODUCT_DESCRIPTION_TYPE,
 }

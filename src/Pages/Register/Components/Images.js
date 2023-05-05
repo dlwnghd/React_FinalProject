@@ -1,9 +1,13 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import Button from '../../../Components/Button/Button'
+import { Camera_Icon } from '../../../Components/Icons/Icons'
+import AlertText from '../../../Components/AlertText/AlertText'
+import { useState } from 'react'
 
-function Images() {
-	const [imageList, setImageList] = useState([])
+function Images({ imageList, setImageList }) {
+	const [imgNum, setImgNum] = useState(false)
 	const pictureInput = useRef()
 
 	const handleClick = () => {
@@ -11,27 +15,27 @@ function Images() {
 	}
 
 	const onAddImg = e => {
-		let file = e.target.files[0]
-		const reader = new FileReader()
-		reader.readAsDataURL(file)
-		if (imageList.length >= 4) {
-			return alert('이미지 입력은 최대 4개입니다')
+		const ImageLists = e.target.files
+		let ImageUrlLists = [...imageList]
+
+		for (let i = 0; i < ImageLists.length; i++) {
+			const currentImageUrl = URL.createObjectURL(ImageLists[i])
+			ImageUrlLists.push(currentImageUrl)
 		}
-		return new Promise(resolve => {
-			reader.onload = () => {
-				if (imageList.find(el => el === reader.result))
-					return alert('이미 선택한 이미지입니다.')
-				setImageList([...imageList, reader.result])
-				resolve()
-			}
-		})
+		setImgNum(() => false)
+		if (ImageUrlLists.length > 5) {
+			ImageUrlLists = ImageUrlLists.slice(0, 5)
+			setImgNum(() => true)
+		}
+
+		setImageList(ImageUrlLists)
 	}
 
 	//이미지 삭제
 	const DelViewImg = e => {
-		// let filterImg = imageList.filter(el => el !== e)
-		// console.log(filterImg)
-		// setImageList(filterImg)
+		let filterImg = imageList.filter(el => el !== e)
+		setImageList(filterImg)
+		setImgNum(() => false)
 	}
 
 	//Drag
@@ -57,57 +61,60 @@ function Images() {
 	}
 	return (
 		<S.TotalWrapper>
-			<S.ImgTitle>상품 이미지 * ({imageList.length}/4)</S.ImgTitle>
+			<MobileTitle>
+				<Left>상품 등록</Left>
+				<Right>
+					<BoldTxt>*필수항목</BoldTxt>은 꼭 입력해주세요
+				</Right>
+			</MobileTitle>
+			<S.Title>
+				<S.ImgTitle>상품 이미지 * ({imageList.length}/5)</S.ImgTitle>
+				<Button
+					onClick={handleClick}
+					shape={'square'}
+					variant={'default-reverse'}
+				>
+					<Camera_Icon style={{ color: 'gray' }} />
+				</Button>
+			</S.Title>
+
 			<S.Wrapper>
 				<input
 					type="file"
 					accept="image/*"
-					// multiple="multiple"
+					multiple
 					style={{ display: 'none' }}
 					ref={pictureInput}
 					onChange={e => onAddImg(e)}
 				/>
-				<ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 0)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 0)}
-				>
-					<S.Img onClick={handleClick} src={imageList[0]} />
-					<S.Del onClick={() => DelViewImg(0)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 1)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 1)}
-				>
-					<S.Img onClick={handleClick} src={imageList[1]} />
-					<S.Del onClick={() => DelViewImg(1)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 2)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 2)}
-				>
-					<S.Img onClick={handleClick} src={imageList[2]} />
-					<S.Del onClick={() => DelViewImg(2)}>❌</S.Del>
-				</ImgBox>
-				<ImgBox
-					draggable
-					onDragStart={() => (dragStartIdx.current = 3)}
-					onDragEnd={onhandleSort}
-					onDragEnter={() => (dragEnterIdx.current = 3)}
-				>
-					<S.Img onClick={handleClick} src={imageList[3]} />
-					<S.Del onClick={() => DelViewImg(3)}>❌</S.Del>
-				</ImgBox>
+				{imageList.map((e, idx) => (
+					<S.ImgBox
+						key={idx}
+						draggable
+						onDragStart={() => (dragStartIdx.current = idx)}
+						onDragEnd={onhandleSort}
+						onDragEnter={() => (dragEnterIdx.current = idx)}
+						onDragOver={e => e.preventDefault()}
+					>
+						<S.Img src={imageList[idx]} />
+						<S.Del onClick={() => DelViewImg(e)}>❌</S.Del>
+					</S.ImgBox>
+				))}
+				{imageList[0] && <MainImg>대표사진</MainImg>}
 			</S.Wrapper>
-			<S.Hint>
-				클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
-				있습니다.
-			</S.Hint>
+
+			{imgNum ? (
+				<S.Error>
+					<AlertText type={'error'}>
+						이미지 등록은 5개까지만 가능합니다.
+					</AlertText>
+				</S.Error>
+			) : (
+				<S.Hint>
+					클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
+					있습니다.
+				</S.Hint>
+			)}
 		</S.TotalWrapper>
 	)
 }
@@ -119,7 +126,8 @@ const Hint = styled.div`
 `
 const Wrapper = styled.div`
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)}
+	${ColumnNumberCSS(5)}
+	position: relative;
 `
 const TotalWrapper = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
@@ -127,12 +135,18 @@ const TotalWrapper = styled.div`
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
 `
 const ImgTitle = styled.div`
-	margin-bottom: 2rem;
+	height: 100%;
+	margin-right: 2rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin-bottom: 2rem;
+	}
 `
-const ImgBox = styled.div``
+const ImgBox = styled.div`
+	position: relative;
+`
 const Img = styled.img`
-	width: 276px;
-	height: 276px;
+	width: 20.6rem;
+	height: 20.6rem;
 	cursor: pointer;
 	&:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -141,7 +155,66 @@ const Img = styled.img`
 `
 const Del = styled.span`
 	font-size: 20px;
-
+	position: absolute;
+	top: 0.5rem;
+	right: 1rem;
 	cursor: pointer;
 `
-const S = { Img, Wrapper, Del, ImgBox, ImgTitle, TotalWrapper, Hint }
+const Title = styled.div`
+	display: flex;
+	align-items: center;
+	margin-bottom: 3rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+`
+const MainImg = styled.div`
+	width: 20.6rem;
+	height: 4rem;
+	background-color: #c3c5c7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 0.5rem;
+	left: 0.5rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+`
+const MobileTitle = styled.div`
+	display: none;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+		margin-bottom: 3rem;
+	}
+`
+const Left = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.big};
+`
+const Right = styled.div``
+const BoldTxt = styled.span`
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	color: ${({ theme }) => theme.COLOR.error};
+`
+const Error = styled.div`
+	grid-column-start: 1;
+	grid-column-end: 11;
+	width: 100%;
+	margin-top: 1rem;
+`
+const S = {
+	Img,
+	Wrapper,
+	Del,
+	ImgBox,
+	ImgTitle,
+	TotalWrapper,
+	Hint,
+	Title,
+	MainImg,
+	Error,
+}
