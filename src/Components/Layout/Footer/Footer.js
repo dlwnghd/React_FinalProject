@@ -24,10 +24,11 @@ function Footer() {
 export default Footer
 
 const FooterWrapper = styled.footer`
+	border-top: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 	position: relative;
 	z-index: 999;
 	box-sizing: border-box;
-	background-color: ${({ theme }) => theme.COLOR.common.black};
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 `
 
 const FooterContainer = styled.div`
@@ -36,7 +37,7 @@ const FooterContainer = styled.div`
 	justify-content: center;
 	height: 32rem;
 	row-gap: 9rem;
-	color: ${({ theme }) => theme.COLOR.common.white};
+	color: ${({ theme }) => theme.COLOR.common.black};
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};

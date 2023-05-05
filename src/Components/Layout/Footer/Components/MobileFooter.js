@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
+
 import {
 	Chatting_Icon,
 	FreeMarket_Icon,
@@ -9,6 +9,7 @@ import {
 	MyPage_Icon,
 	TradeUsed_Icon,
 } from '../../../Icons/Icons'
+import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 
 function MobileFooter() {
 	const navigate = useNavigate()

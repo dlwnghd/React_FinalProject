@@ -14,7 +14,7 @@ import {
 	RollBack_icon,
 } from '../../Icons/Icons'
 import { useRecoilState } from 'recoil'
-import { isNavigationAtom } from '../../../Atoms/Navigation.atom'
+import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 import { isOnSideBar } from '../../../Atoms/sideBar.atom'
 
 function Header({ searchProduct }) {
@@ -161,7 +161,7 @@ function Header({ searchProduct }) {
 						<S.MobileIcon onClick={() => navigate(-1)}>
 							<RollBack_icon
 								size="24"
-								color={onSideBar ? 'black' : 'white'}
+								color={onSideBar ? 'white' : 'black'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
@@ -180,13 +180,13 @@ function Header({ searchProduct }) {
 						>
 							<InterestBasket_Icon
 								size="24"
-								color={onSideBar ? 'black' : 'white'}
+								color={onSideBar ? 'white' : 'black'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
-						<Search_Icon color="black" position="absolute" />
+						<Search_Icon color="gray" position="absolute" />
 						<input
 							type="text"
 							placeholder={'어떤 상품을 찾으시나요?'}
@@ -232,7 +232,8 @@ const HeaderWrapper = styled.header`
 	position: relative;
 	z-index: 9999;
 	width: 100%;
-	background-color: ${({ theme }) => theme.COLOR.common.black};
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 	position: sticky;
 	top: 0;
 	padding: 2rem 0 0;
@@ -298,7 +299,7 @@ const List = styled.div`
  */
 const Login_Join = styled.div`
 	height: 4rem;
-	color: white;
+	color: ${({ theme }) => theme.COLOR.common.black};
 	text-align: right;
 
 	& > span {
@@ -328,8 +329,8 @@ const SearchContainer = styled.div`
 		box-sizing: border-box;
 		border-radius: 2rem;
 		text-indent: 4.4rem;
-		background: white;
-		border: none;
+		background: ${({ theme }) => theme.COLOR.common.white};
+		border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
 		outline: none;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
@@ -338,7 +339,7 @@ const SearchContainer = styled.div`
 		position: absolute;
 		left: 1rem;
 		font-size: 2.8rem;
-		color: ${({ theme }) => theme.COLOR.common.black};
+		/* color: ${({ theme }) => theme.COLOR.common.black}; */
 	}
 `
 
@@ -378,7 +379,7 @@ const NavItem = styled.div`
 	padding: 2rem 0;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	color: ${({ theme }) => theme.COLOR.common.white};
+	color: ${({ theme }) => theme.COLOR.common.black};
 
 	/* 선택된 항목에만 box_shadow 추가 */
 	&.selected {
