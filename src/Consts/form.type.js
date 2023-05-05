@@ -30,7 +30,19 @@ const PASSWORD_TYPE = {
 	},
 }
 
+const PRODUCT_DESCRIPTION_TYPE = {
+	required: {
+		value: true,
+		message: '상품설명을 입력해주세요',
+	},
+	maxLength: {
+		value: 10000,
+		message: '10,000자 이하로 입력해주세요',
+	},
+}
+
 export const FORM_TYPE = {
 	EMAIL_TYPE,
 	PASSWORD_TYPE,
+	PRODUCT_DESCRIPTION_TYPE,
 }
