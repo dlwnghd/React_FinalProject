@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { isProductPageAtom } from '../../Atoms/ProductPage.atom'
+import { isProductPageAtom } from '../../Atoms/productPage.atom'
 import Filter from '../../Components/Filter/Filter'
 import {
 	ColumnNumberCSS,
