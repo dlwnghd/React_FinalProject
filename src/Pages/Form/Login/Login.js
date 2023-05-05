@@ -52,7 +52,7 @@ function Login() {
 			setLoginStateValue(true)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
-				localStorage.setItem('saveId', email)
+				LoginService.saveId(email)
 			}
 			navigate('/')
 		} catch (err) {

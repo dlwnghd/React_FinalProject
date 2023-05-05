@@ -14,6 +14,7 @@ import { useEffect } from 'react'
 import UserApi from '../../../Apis/userApi'
 import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
 import { useNavigate } from 'react-router-dom'
+import { LoginService } from '../../../Utils/loginService'
 
 function SignUp() {
 	const navigate = useNavigate('/')
@@ -49,6 +50,7 @@ function SignUp() {
 
 		try {
 			await UserApi.signup(newUser)
+			LoginService.saveId(newUser.email)
 			navigate('/')
 		} catch (err) {
 			if (err.response.status === 400) {
