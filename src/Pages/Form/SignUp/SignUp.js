@@ -1,20 +1,15 @@
 import styled from 'styled-components'
-import {
-	FlexAlignCSS,
-	FlexBetweenCSS,
-	WidthAutoCSS,
-} from '../../../Styles/common'
-import Input from '../../../Components/Input/Input'
+import { FlexBetweenCSS, WidthAutoCSS } from '../../../Styles/common'
 import Button from '../../../Components/Button/Button'
 import { Controller, useForm } from 'react-hook-form'
-import { AlertText } from '../../../Components/AlertText/AlertText.style'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import UserApi from '../../../Apis/userApi'
-import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
 import { useNavigate } from 'react-router-dom'
 import { LoginService } from '../../../Utils/loginService'
+import FormItem from './Components/FormItem'
+import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
 
 function SignUp() {
 	const navigate = useNavigate('/')
@@ -27,12 +22,9 @@ function SignUp() {
 		control,
 		watch,
 		setValue,
-		getValue,
 		formState: { errors },
 		handleSubmit,
-	} = useForm({
-		mode: 'onChange',
-	})
+	} = useForm({ mode: 'onChange' })
 
 	const watchedEmail = watch('email')
 	const watchedNickname = watch('nickname')
@@ -107,45 +99,20 @@ function SignUp() {
 		<S.Wrapper>
 			<h1>회원가입</h1>
 			<S.Form onSubmit={handleSubmit(onSubmitSignup)}>
-				<ul>
+				<div>
 					<S.InputSection>
 						<Controller
 							name="email"
 							control={control}
 							rules={FORM_TYPE.EMAIL_TYPE}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>아이디(이메일)</label>
-										<Input
-											type="text"
-											placeholder="아이디(이메일)을 입력해주세요"
-											{...field}
-											status={
-												errors.email || isDuplicate.email.state
-													? 'error'
-													: 'default'
-											}
-											onBlur={e => {
-												onCheckDuplicate(e, 'email')
-											}}
-										/>
-									</S.InputBox>
-									<div>
-										{errors.email && (
-											<S.StyledAlertText type="error">
-												{errors.email.message}
-											</S.StyledAlertText>
-										)}
-										{isDuplicate.email.state !== null && !errors.email && (
-											<S.StyledAlertText
-												type={isDuplicate.email.state ? 'error' : 'success'}
-											>
-												{isDuplicate.email.message}
-											</S.StyledAlertText>
-										)}
-									</div>
-								</li>
+								<FormItem
+									name={'email'}
+									errors={errors}
+									field={field}
+									isDuplicate={isDuplicate.email}
+									onBlur={e => onCheckDuplicate(e, 'email')}
+								/>
 							)}
 						></Controller>
 						<Controller
@@ -153,39 +120,13 @@ function SignUp() {
 							control={control}
 							rules={FORM_TYPE.NICKNAME_TYPE}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>닉네임</label>
-										<Input
-											type="text"
-											placeholder="2~10자 이내"
-											status={
-												errors.nickname || isDuplicate.nickname.state
-													? 'error'
-													: 'default'
-											}
-											{...field}
-											onBlur={e => onCheckDuplicate(e, 'nickname')}
-										/>
-									</S.InputBox>
-									<div>
-										{errors.nickname && (
-											<S.StyledAlertText type="error">
-												{errors.nickname.message}
-											</S.StyledAlertText>
-										)}
-										{isDuplicate.nickname.state !== null &&
-											!errors.nickname && (
-												<S.StyledAlertText
-													type={
-														isDuplicate.nickname.state ? 'error' : 'success'
-													}
-												>
-													{isDuplicate.nickname.message}
-												</S.StyledAlertText>
-											)}
-									</div>
-								</li>
+								<FormItem
+									name={'nickname'}
+									errors={errors}
+									field={field}
+									isDuplicate={isDuplicate.nickname}
+									onBlur={e => onCheckDuplicate(e, 'nickname')}
+								/>
 							)}
 						></Controller>
 						<Controller
@@ -193,24 +134,7 @@ function SignUp() {
 							control={control}
 							rules={FORM_TYPE.PASSWORD_TYPE}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>비밀번호</label>
-										<Input
-											type="password"
-											placeholder="10~16자의 영문자, 숫자, 특수 문자 조합"
-											{...field}
-											status={errors.password && 'error'}
-										/>
-									</S.InputBox>
-									<div>
-										{errors.password && (
-											<S.StyledAlertText type="error">
-												{errors.password.message}
-											</S.StyledAlertText>
-										)}
-									</div>
-								</li>
+								<FormItem name={'password'} errors={errors} field={field} />
 							)}
 						></Controller>
 						<Controller
@@ -223,24 +147,11 @@ function SignUp() {
 									'입력한 비밀번호와 일치하지 않습니다',
 							}}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>비밀번호 확인</label>
-										<Input
-											type="password"
-											placeholder="비밀번호 확인을 입력해주세요"
-											{...field}
-											status={errors.passwordConfirm && 'error'}
-										/>
-									</S.InputBox>
-									<div>
-										{errors.passwordConfirm && (
-											<S.StyledAlertText type="error">
-												{errors.passwordConfirm.message}
-											</S.StyledAlertText>
-										)}
-									</div>
-								</li>
+								<FormItem
+									name={'passwordConfirm'}
+									errors={errors}
+									field={field}
+								/>
 							)}
 						></Controller>
 						<Controller
@@ -248,34 +159,7 @@ function SignUp() {
 							control={control}
 							rules={{ required: '주소를 입력해주세요' }}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>주소</label>
-										<div>
-											<Input
-												type="text"
-												placeholder="주소 검색을 해주세요"
-												status={errors.region && 'error'}
-												readOnly
-												{...field}
-											/>
-											<S.StyledButton
-												shape={'square'}
-												variant={'default-reverse'}
-												type="button"
-											>
-												주소 찾기
-											</S.StyledButton>
-										</div>
-									</S.InputBox>
-									<div>
-										{errors.region && (
-											<S.StyledAlertText type="error">
-												{errors.region.message}
-											</S.StyledAlertText>
-										)}
-									</div>
-								</li>
+								<FormItem name={'region'} errors={errors} field={field} />
 							)}
 						></Controller>
 						<Controller
@@ -283,35 +167,22 @@ function SignUp() {
 							control={control}
 							rules={FORM_TYPE.PHONE_TYPE}
 							render={({ field }) => (
-								<li>
-									<S.InputBox>
-										<label>연락처</label>
-										<Input
-											type="text"
-											placeholder="휴대폰 번호를 입력해주세요"
-											{...field}
-											status={errors.phone && 'error'}
-											onBlur={e =>
-												setValue('phone', addHyphenToPhoneNum(field.value))
-											}
-										/>
-									</S.InputBox>
-									<div>
-										{errors.phone && (
-											<S.StyledAlertText type="error">
-												{errors.phone.message}
-											</S.StyledAlertText>
-										)}
-									</div>
-								</li>
+								<FormItem
+									name={'phone'}
+									errors={errors}
+									field={field}
+									onBlur={e =>
+										setValue('phone', addHyphenToPhoneNum(field.value))
+									}
+								/>
 							)}
 						></Controller>
 					</S.InputSection>
 					<S.MapSection></S.MapSection>
-				</ul>
-				<ul>
+				</div>
+				<div>
 					<Button>회원가입</Button>
-				</ul>
+				</div>
 			</S.Form>
 		</S.Wrapper>
 	)
@@ -333,12 +204,12 @@ const Form = styled.form`
 	width: 100%;
 	margin-top: 7rem;
 
-	& > ul {
+	& > div {
 		${FlexBetweenCSS}
 		align-items: flex-start;
 	}
 
-	& > ul:last-child > button {
+	& > div > button {
 		margin: 5rem auto;
 	}
 `
@@ -349,42 +220,6 @@ const InputSection = styled.section`
 	@media screen and (max-width: 670px) {
 		width: 90%;
 	}
-
-	& > li {
-		margin-bottom: 2.8rem;
-	}
-
-	& > li > div:last-child {
-		text-align: end;
-		margin-top: 0.3rem;
-	}
-`
-
-const InputBox = styled.div`
-	${FlexAlignCSS}
-
-	& > label {
-		width: 19rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	}
-
-	/* 주소 input + button */
-	& > div {
-		width: 100%;
-		position: relative;
-		margin-left: auto;
-		${FlexAlignCSS}
-	}
-`
-
-const StyledAlertText = styled(AlertText)`
-	font-size: 1.5rem;
-`
-
-const StyledButton = styled(Button)`
-	margin-left: 1rem;
-	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 `
 
 const MapSection = styled.section`
@@ -401,8 +236,5 @@ const S = {
 	Wrapper,
 	Form,
 	InputSection,
-	InputBox,
-	StyledAlertText,
-	StyledButton,
 	MapSection,
 }
