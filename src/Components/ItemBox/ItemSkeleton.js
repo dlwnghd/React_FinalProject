@@ -17,7 +17,7 @@ function MainSkeleton() {
 				animation="wave"
 				variant="rounded"
 				width={'100%'}
-				height={'6.25%'}
+				height={'2.6rem'}
 			/>
 			<Skeleton
 				style={{ margin: '1rem 0px 2rem' }}
@@ -25,14 +25,14 @@ function MainSkeleton() {
 				animation="wave"
 				variant="rounded"
 				width={'100%'}
-				height={'11%'}
+				height={'5rem'}
 			/>
 			<Skeleton
 				sx={{ bgcolor: 'grey.400' }}
 				animation="wave"
 				variant="rounded"
 				width={'100%'}
-				height={'6.29%'}
+				height={'2.6rem'}
 			/>
 		</S.Wrapper>
 	)
