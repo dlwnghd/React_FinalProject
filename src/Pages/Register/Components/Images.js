@@ -1,11 +1,13 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import Button from '../../../Components/Button/Button'
 import { Camera_Icon } from '../../../Components/Icons/Icons'
+import AlertText from '../../../Components/AlertText/AlertText'
+import { useState } from 'react'
 
-function Images() {
-	const [imageList, setImageList] = useState([])
+function Images({ imageList, setImageList }) {
+	const [imgNum, setImgNum] = useState(false)
 	const pictureInput = useRef()
 
 	const handleClick = () => {
@@ -20,18 +22,20 @@ function Images() {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
 		}
-
-		if (ImageUrlLists.length > 4) {
-			ImageUrlLists = ImageUrlLists.slice(0, 4)
+		setImgNum(() => false)
+		if (ImageUrlLists.length > 5) {
+			ImageUrlLists = ImageUrlLists.slice(0, 5)
+			setImgNum(() => true)
 		}
+
 		setImageList(ImageUrlLists)
 	}
 
 	//이미지 삭제
 	const DelViewImg = e => {
 		let filterImg = imageList.filter(el => el !== e)
-		console.log(filterImg)
 		setImageList(filterImg)
+		setImgNum(() => false)
 	}
 
 	//Drag
@@ -57,8 +61,14 @@ function Images() {
 	}
 	return (
 		<S.TotalWrapper>
+			<MobileTitle>
+				<Left>상품 등록</Left>
+				<Right>
+					<BoldTxt>*필수항목</BoldTxt>은 꼭 입력해주세요
+				</Right>
+			</MobileTitle>
 			<S.Title>
-				<S.ImgTitle>상품 이미지 * ({imageList.length}/4)</S.ImgTitle>
+				<S.ImgTitle>상품 이미지 * ({imageList.length}/5)</S.ImgTitle>
 				<Button
 					onClick={handleClick}
 					shape={'square'}
@@ -92,10 +102,19 @@ function Images() {
 				))}
 				{imageList[0] && <MainImg>대표사진</MainImg>}
 			</S.Wrapper>
-			<S.Hint>
-				클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
-				있습니다.
-			</S.Hint>
+
+			{imgNum ? (
+				<S.Error>
+					<AlertText type={'error'}>
+						이미지 등록은 5개까지만 가능합니다.
+					</AlertText>
+				</S.Error>
+			) : (
+				<S.Hint>
+					클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
+					있습니다.
+				</S.Hint>
+			)}
 		</S.TotalWrapper>
 	)
 }
@@ -107,7 +126,7 @@ const Hint = styled.div`
 `
 const Wrapper = styled.div`
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)}
+	${ColumnNumberCSS(5)}
 	position: relative;
 `
 const TotalWrapper = styled.div`
@@ -126,8 +145,8 @@ const ImgBox = styled.div`
 	position: relative;
 `
 const Img = styled.img`
-	width: 27.6rem;
-	height: 27.6rem;
+	width: 20.6rem;
+	height: 20.6rem;
 	cursor: pointer;
 	&:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -151,16 +170,41 @@ const Title = styled.div`
 	}
 `
 const MainImg = styled.div`
-	width: 27.6rem;
-	height: 7rem;
+	width: 20.6rem;
+	height: 4rem;
 	background-color: #c3c5c7;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
 	bottom: 0.5rem;
-	left: 0;
+	left: 0.5rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+`
+const MobileTitle = styled.div`
+	display: none;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+		margin-bottom: 3rem;
+	}
+`
+const Left = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.big};
+`
+const Right = styled.div``
+const BoldTxt = styled.span`
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	color: ${({ theme }) => theme.COLOR.error};
+`
+const Error = styled.div`
+	grid-column-start: 1;
+	grid-column-end: 11;
+	width: 100%;
+	margin-top: 1rem;
 `
 const S = {
 	Img,
@@ -172,4 +216,5 @@ const S = {
 	Hint,
 	Title,
 	MainImg,
+	Error,
 }

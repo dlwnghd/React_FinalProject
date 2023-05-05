@@ -1,10 +1,12 @@
 import DaumPostcode from 'react-daum-postcode'
 import styled from 'styled-components'
-import { FlexCenterCSS } from '../../../Styles/common'
-import { useSetRecoilState } from 'recoil'
-import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 
-function GPS({ setResultAddress }) {
+import { useSetRecoilState } from 'recoil'
+
+import { FlexCenterCSS } from '../../Styles/common'
+import { isOpenModalAtom } from '../../Atoms/modal.atom'
+
+function DaumPostCodeAddress({ setResultAddress }) {
 	const setIsOpenModal = useSetRecoilState(isOpenModalAtom)
 
 	const gpsSelect = data => {
@@ -20,7 +22,7 @@ function GPS({ setResultAddress }) {
 		</Wrapper>
 	)
 }
-export default GPS
+export default DaumPostCodeAddress
 
 const Wrapper = styled.div`
 	${FlexCenterCSS}

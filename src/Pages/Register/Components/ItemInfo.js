@@ -13,34 +13,55 @@ import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import Modal from '../../../Components/Modal/Modal'
-import GPS from '../Components/GPS'
 import ViewMap from './ViewMap'
+import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 
-function ItemInfo() {
+function ItemInfo({ imageList }) {
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
-	} = useForm({ mode: 'onblur' })
+		setValue,
+	} = useForm()
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+
+	const [hashReset, setHashReset] = useState()
 	const [hashArr, setHashArr] = useState([])
+
 	const [intPrice, setIntPrice] = useState()
 	const [categoryCheckedNum, setCategoryCheckedNum] = useState()
+	const [resultAddress, setResultAddress] = useState()
 
 	const priceToString = price => {
-		const changePrice = Number(price.target.value.replaceAll(',', ''))
-		setIntPrice(changePrice.toLocaleString())
+		const changePrice = Number(
+			price.target.value.replaceAll(',', ''),
+		).toLocaleString()
+
+		setIntPrice(changePrice)
 	}
 
 	const onSubmit = data => {
-		console.log(data)
+		let price = Number(data.price.replace(/,/g, ''))
+		if (data.category == '0') {
+			price = 0
+		}
+
+		let totaldata = {
+			title: data.title,
+			price: price,
+			description: data.description,
+			region: resultAddress,
+			category: data.category,
+			tag: hashArr,
+			images: imageList,
+		}
 	}
 
 	const checkedCategory = e => {
 		const checkedNum = e.target.value
 		if (checkedNum === '0') {
-			setIntPrice('0')
+			setIntPrice(0)
 		}
 		setCategoryCheckedNum(checkedNum)
 	}
@@ -54,15 +75,18 @@ function ItemInfo() {
 		if (e.nativeEvent.isComposing) return
 		if (e.key === 'Enter') {
 			e.preventDefault()
+			setHashReset('')
 			if (e.target.value.trim().length === 0) return
-			setHashArr(prev => [...prev, e.target.value])
+			setHashArr(prev => [
+				...prev,
+				{ value: e.target.value, id: Math.floor(Math.random() * 100000) },
+			])
 		}
 	}
 
 	const deleteTagItem = e => {
 		setHashArr(hashArr.filter(el => el !== e))
 	}
-
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<S.InputWrap>
@@ -88,14 +112,27 @@ function ItemInfo() {
 				<S.TagBox>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
-							<S.TagText>{hash}</S.TagText>
+							<S.TagText>{hash.value}</S.TagText>
 							<DelButton onClick={() => deleteTagItem(hash)}>X</DelButton>
 						</S.TagItem>
 					))}
 					<S.StyledInput
+						value={hashReset}
 						onKeyDown={onkeyDown}
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
+						{...register('hash', {
+							required:
+								hashArr.length === 0 && '최소 하나 이상 태그 작성해주세요 ',
+							onChange: e => {
+								setHashReset(e.target.value)
+							},
+						})}
 					/>
+					{errors.hash && (
+						<S.Error>
+							<AlertText type={'error'}>{errors.hash.message}</AlertText>
+						</S.Error>
+					)}
 				</S.TagBox>
 			</S.InputWrap>
 
@@ -103,30 +140,44 @@ function ItemInfo() {
 				<S.InputWrapCheckBox>
 					<S.InputLabelCheckBox>카테고리 *</S.InputLabelCheckBox>
 					<S.InputValueCheckBox>
-						<S.Radio
-							type="radio"
-							name="category"
-							value={'0'}
-							{...register('category')}
-							onClick={checkedCategory}
-						/>
-						<S.Label>무료나눔</S.Label>
-						<S.Radio
-							type="radio"
-							name="category"
-							value={'1'}
-							{...register('category')}
-							onClick={checkedCategory}
-						/>
-						<S.Label>중고거래</S.Label>
+						<S.InputRadioWrap>
+							<S.Radio
+								type="radio"
+								name="category"
+								value={'0'}
+								{...register('category', {
+									required: '무료나눔 혹은 중고상품 선택해주세요 ',
+								})}
+								onClick={checkedCategory}
+							/>
+							<S.Label>무료나눔</S.Label>
+						</S.InputRadioWrap>
+						<S.InputRadioWrap>
+							<S.Radio
+								type="radio"
+								name="category"
+								value={'1'}
+								{...register('category', {
+									required: '무료나눔 혹은 중고상품 선택해주세요 ',
+								})}
+								onClick={checkedCategory}
+							/>
+							<S.Label>중고거래</S.Label>
+						</S.InputRadioWrap>
 					</S.InputValueCheckBox>
+					{errors.category && (
+						<S.ErrorCategory>
+							<AlertText type={'error'}>{errors.category.message}</AlertText>
+						</S.ErrorCategory>
+					)}
 				</S.InputWrapCheckBox>
-				<S.InputWrap2>
-					<S.InputLabel2>가격 *</S.InputLabel2>
-					<S.InputValue2>
+
+				<S.InputWrapPrice>
+					<S.InputLabelPrice>가격 *</S.InputLabelPrice>
+					<S.InputValuePrice>
 						<Input
 							{...register('price', {
-								required: '가격을 입력해주세요',
+								required: categoryCheckedNum !== '0' && '가격을 입력해주세요',
 								onChange: e => {
 									priceToString(e)
 								},
@@ -135,13 +186,13 @@ function ItemInfo() {
 							value={intPrice}
 						/>
 
-						{intPrice !== '0' && errors.price && (
+						{errors.price && (
 							<S.Error>
 								<AlertText type={'error'}>{errors.price.message}</AlertText>
 							</S.Error>
 						)}
-					</S.InputValue2>
-				</S.InputWrap2>
+					</S.InputValuePrice>
+				</S.InputWrapPrice>
 			</S.MiddleWrap>
 
 			<S.InputWrap>
@@ -149,18 +200,23 @@ function ItemInfo() {
 				<S.InputValue>
 					<S.Textarea
 						placeholder="상품 설명을 입력해주세요."
-						{...register('detail', FORM_TYPE.PRODUCT_DESCRIPTION_TYPE)}
+						{...register('description', FORM_TYPE.PRODUCT_DESCRIPTION_TYPE)}
 					/>
-					{errors.detail && (
+					{errors.description && (
 						<S.Error>
-							<AlertText type={'error'}>{errors.detail.message}</AlertText>
+							<AlertText type={'error'}>{errors.description.message}</AlertText>
 						</S.Error>
 					)}
 				</S.InputValue>
 			</S.InputWrap>
 			<S.InputWrap>
 				<S.InputLabel>거래지역 *</S.InputLabel>
-				<S.InputValue>
+				<S.InputValueAddress>
+					<AddressInput
+						placeholder="거래 주소를 검색해주세요"
+						value={resultAddress}
+						readOnly
+					/>
 					<Button
 						shape={'square'}
 						variant={'default-reverse'}
@@ -171,10 +227,10 @@ function ItemInfo() {
 					{isOpenModal && (
 						<Modal size={'large'}>
 							<h1>주소 검색</h1>
-							<GPS />
+							<DaumPostCodeAddress setResultAddress={setResultAddress} />
 						</Modal>
 					)}
-				</S.InputValue>
+				</S.InputValueAddress>
 			</S.InputWrap>
 			<ViewMap />
 			<S.ButtonWrap>
@@ -187,18 +243,6 @@ function ItemInfo() {
 	)
 }
 export default ItemInfo
-const Radio = styled.input`
-	accent-color: ${({ theme }) => theme.COLOR.common.gray[200]};
-	width: 1.7rem;
-	height: 1.7rem;
-	margin: 0 2rem;
-`
-const Error = styled.div`
-	grid-column-start: 1;
-	grid-column-end: 11;
-	width: 100%;
-	margin-top: 1rem;
-`
 const InputWrap = styled.div`
 	padding: 1.5rem 0;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -214,31 +258,101 @@ const InputWrap = styled.div`
 		align-items: flex-start;
 	}
 `
-const InputWrap2 = styled.div`
+const InputWrapPrice = styled.div`
 	padding: 1.5rem 0;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
 	${GridCenterCSS}
 	width: 100%;
 	justify-items: flex-start;
 	${ColumnNumberCSS(5)}
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
 `
+const InputWrapCheckBox = styled.div`
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+	height: 100%;
+	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		flex-direction: column;
+		align-items: flex-start;
+		padding-top: 1.6rem;
+		justify-content: space-between;
+	}
+`
+const MiddleWrap = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
+`
+const ButtonWrap = styled.div`
+	${FlexCenterCSS}
+`
+const InputRadioWrap = styled.div`
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: flex;
+		flex-direction: column;
+	}
+`
+
 const InputLabel = styled.div`
 	grid-column-start: 1;
 	grid-column-end: 2;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
+const InputLabelPrice = styled.div`
+	grid-column-start: 1;
+	grid-column-end: 1;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+`
+const InputLabelCheckBox = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	margin-right: 3rem;
+`
+const Label = styled.label`
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	margin-right: 2rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	}
+`
+
+const Radio = styled.input`
+	accent-color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	width: 1.7rem;
+	height: 1.7rem;
+	margin: 0 2rem;
+`
+const Error = styled.div`
+	grid-column-start: 1;
+	grid-column-end: 11;
+	width: 100%;
+	margin-top: 1rem;
+`
+const ErrorCategory = styled.div`
+	padding-left: 21%;
+	width: 100%;
+	margin-top: 1rem;
+`
+
 const InputValue = styled.div`
 	grid-column-start: 2;
 	grid-column-end: 11;
 	width: 100%;
 `
 
-const InputLabel2 = styled.div`
-	grid-column-start: 1;
-	grid-column-end: 1;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+const InputValueAddress = styled.div`
+	grid-column-start: 2;
+	grid-column-end: 11;
+	width: 100%;
+	display: flex;
 `
-const InputValue2 = styled.div`
+
+const InputValuePrice = styled.div`
 	grid-column-start: 2;
 	grid-column-end: 6;
 	width: 100%;
@@ -246,44 +360,33 @@ const InputValue2 = styled.div`
 	flex-direction: column;
 	align-items: center;
 `
-const InputLabelCheckBox = styled.div`
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	margin-right: 3rem;
-`
 
-const InputWrapCheckBox = styled.div`
-	display: flex;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
-`
 const InputValueCheckBox = styled.div`
 	display: flex;
 	align-items: center;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: flex;
+		flex-direction: column;
+	}
 `
-const MiddleWrap = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(2)}
-`
+
 const Textarea = styled.textarea`
 	width: 100%;
 	height: 30rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	padding: 1rem 1.2rem;
 `
-const ButtonWrap = styled.div`
-	${FlexCenterCSS}
-`
-const Label = styled.label`
-	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	margin-right: 2rem;
-`
+
 const StyledInput = styled(Input)`
 	display: inline-flex;
 	border: none;
 	outline: none;
 	cursor: text;
+`
+
+const AddressInput = styled(Input)`
+	height: 4.8rem;
+	width: 50%;
 `
 const TagBox = styled.div`
 	grid-column-start: 2;
@@ -317,24 +420,28 @@ const DelButton = styled.button`
 	background-color: white;
 	border-radius: 50%;
 `
+
 const S = {
-	Textarea,
 	MiddleWrap,
-	InputValue2,
-	InputLabel2,
-	InputValue,
-	InputLabel,
-	InputWrap2,
+	InputWrapPrice,
 	InputWrap,
-	Error,
 	ButtonWrap,
-	Label,
-	InputWrapCheckBox,
+	InputValuePrice,
+	InputLabelPrice,
+	InputValue,
 	InputValueCheckBox,
+	InputValueAddress,
+	InputWrapCheckBox,
+	InputRadioWrap,
+	Textarea,
+	InputLabel,
+	Error,
+	Label,
 	InputLabelCheckBox,
 	TagItem,
 	TagText,
 	StyledInput,
 	TagBox,
 	Radio,
+	ErrorCategory,
 }
