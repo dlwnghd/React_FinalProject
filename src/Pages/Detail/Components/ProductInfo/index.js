@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 import PrdDescription from './Description/Description'
 import PrdThumbnail from './Thumbnail/Thumbnail'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 
-function ProductInfo({ prd }) {
-	const { ProductImages } = prd
+function ProductInfo({ product }) {
+	const { ProductImages } = product
 	console.log(ProductImages)
 	return (
 		<S.Wrapper>
-			<PrdThumbnail ProductImages={ProductImages} />
-			<PrdDescription />
+			<PrdThumbnail productImages={ProductImages} />
+			<PrdDescription product={product} />
 		</S.Wrapper>
 	)
 }
@@ -16,13 +17,12 @@ function ProductInfo({ prd }) {
 export default ProductInfo
 
 const Wrapper = styled.div`
-	display: flex;
-	justify-content: center;
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
 	width: 100%;
 	gap: 2rem;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
+		${ColumnNumberCSS(1)}
 	}
 `
 

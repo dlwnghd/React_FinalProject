@@ -30,7 +30,7 @@ const router = createBrowserRouter([
 				element: <List />,
 			},
 			{
-				path: '/detail',
+				path: '/detail/:idx',
 				element: <Detail />,
 			},
 			{
@@ -79,8 +79,8 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/*',
-				element: <Error404 />
-			}
+				element: <Error404 />,
+			},
 		],
 	},
 ])
