@@ -1,16 +1,13 @@
 import styled from 'styled-components'
 import Filter from '../../Components/Filter/Filter'
-import {
-	ColumnNumberCSS,
-	FlexBetweenCSS,
-	GridCenterCSS,
-	WidthAutoCSS,
-} from '../../Styles/common'
-import { useNavigate, useParams } from 'react-router-dom'
-import productsMock from '../../__mock__/Data/Product/product.data'
-import ItemBox from '../../Components/ItemBox/ItemBox'
+import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
+import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { useRecoilState } from 'recoil'
+import { isProductPageAtom } from '../../Atoms/productPage.atom'
+import SearchList from './Components/SearchList'
+import productsMock from '../../__mock__/Data/Product/product.data'
 
 function Search() {
 	const searchFilter = [
@@ -23,64 +20,56 @@ function Search() {
 
 	// Api를 통해 들고오는... 검색한 쿼리스트링에 맞는 데이터만 호출하여 map...
 	// const { data, status, isLoading } = useSearchQuery({ word })
+	// word를 통해 호출된 data 중 status가 "판매중"인 것들만 배열에 담기
 
-	const searchResult = productsMock
-		.slice(0, 20)
-		.filter(item => item.title.includes(word)) // 호출된 데이터
-	const [changeResult, setChangeResult] = useState(searchResult) // 스테이트 관리
+	const [changeResult, setChangeResult] = useState([]) // 변경될 데이터
+	const [totalList, setTotalList] = useState([])
+
+	const [filterOption, setFilterOption] = useState(searchFilter[0])
+	const [page, setPage] = useRecoilState(isProductPageAtom)
 
 	useEffect(() => {
-		setChangeResult(searchResult)
-	}, [word])
+		setPage(1)
+		setTotalList(productsMock.filter(item => item.title.includes(word)))
+		setChangeResult([])
+	}, [word, filterOption])
 
 	const onFilter = e => {
-		if (e.target.innerText === searchFilter[0]) {
-			setChangeResult([
-				...changeResult.sort(
-					(a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-				),
-			])
+		switch (e.target.innerText) {
+			case searchFilter[0]:
+				setFilterOption(searchFilter[0])
+				break
+			case searchFilter[1]:
+				setFilterOption(searchFilter[1])
+				break
+			case searchFilter[2]:
+				setFilterOption(searchFilter[2])
+				break
+			case searchFilter[3]:
+				setFilterOption(searchFilter[3])
+				break
+			default:
+				break
 		}
-
-		if (e.target.innerText === searchFilter[1]) {
-			setChangeResult([...changeResult.sort((a, b) => b.idx - a.idx)])
-		}
-
-		if (e.target.innerText === searchFilter[2]) {
-			setChangeResult([...changeResult.sort((a, b) => b.price - a.price)])
-		}
-
-		if (e.target.innerText === searchFilter[3]) {
-			setChangeResult([...changeResult.sort((a, b) => a.price - b.price)])
-		}
-		console.log(changeResult)
 	}
 
-	const navigate = useNavigate()
 	return (
 		<S.Wrapper>
 			<S.SearchContainer>
 				<S.SearchTopper>
 					<h3>
-						{changeResult.length}개의 {word}를 찾았습니다.
+						{totalList.length}개의 {word}를 찾았습니다.
 					</h3>
 					<Filter filterArray={searchFilter} onClick={onFilter} />
 				</S.SearchTopper>
-				<S.ResultList>
-					{changeResult.map((item, idx) => {
-						return (
-							<ItemBox
-								title={item.title}
-								price={item.price}
-								posterPath={item.image_url}
-								context={item.script}
-								isLiked={item.liked}
-								key={idx}
-								onClick={() => navigate(`/detail/${item.idx}`)}
-							/>
-						)
-					})}
-				</S.ResultList>
+				<SearchList
+					changeResult={changeResult}
+					setChangeResult={setChangeResult}
+					word={word}
+					page={page}
+					setPage={setPage}
+					filterOption={filterOption}
+				/>
 			</S.SearchContainer>
 		</S.Wrapper>
 	)
@@ -111,19 +100,8 @@ const SearchTopper = styled.div`
 	margin-bottom: 2rem;
 `
 
-const ResultList = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(4)}
-
-	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
-		${ColumnNumberCSS(2)}
-		column-gap: 1rem;
-	}
-`
-
 const S = {
 	Wrapper,
 	SearchContainer,
 	SearchTopper,
-	ResultList,
 }
