@@ -42,7 +42,7 @@ function SignUp() {
 
 		try {
 			await UserApi.signup(newUser)
-			LoginService.saveId(newUser.email)
+			LoginService.setSaveId(newUser.email)
 			navigate('/')
 		} catch (err) {
 			if (err.response.status === 400) {

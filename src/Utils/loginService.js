@@ -11,7 +11,10 @@ export const LoginService = {
 		TokenService.removeAccessToken()
 		UserInfoService.removeUserInfo()
 	},
-	saveId(email) {
+	setSaveId(email) {
 		localStorage.setItem(LOCAL_STORAGE_KEY.SAVE_ID, email)
+	},
+	getSavedId() {
+		localStorage.getItem(LOCAL_STORAGE_KEY.SAVE_ID)
 	},
 }

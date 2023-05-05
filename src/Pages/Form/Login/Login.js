@@ -20,7 +20,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import { LoginService } from '../../../Utils/loginService'
-import axios from 'axios'
+import UserApi from '../../../Apis/userApi'
 
 function Login() {
 	const navigate = useNavigate()
@@ -32,7 +32,6 @@ function Login() {
 	const {
 		register,
 		formState: { errors },
-		getValues,
 		setValue,
 		watch,
 		handleSubmit,
@@ -42,17 +41,16 @@ function Login() {
 	const watchedPassword = watch('password')
 
 	const onSubmit = async () => {
-		const email = getValues('email')
-		const pw = getValues('password')
+		const { email, password: pw } = data
 
 		try {
-			const { data } = await axios.post('/api/user/login', { email, pw })
+			const { data } = await UserApi.login({ email, pw })
 			LoginService.login(data.token, data.userInfo)
 			setUserInfoValue(data.userInfo)
 			setLoginStateValue(true)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
-				LoginService.saveId(email)
+				LoginService.setSaveId(email)
 			}
 			navigate('/')
 		} catch (err) {
@@ -62,7 +60,7 @@ function Login() {
 	}
 
 	useEffect(() => {
-		const savedId = localStorage.getItem('saveId')
+		const savedId = LoginService.getSavedId()
 		if (savedId) {
 			setValue('email', savedId)
 		}
