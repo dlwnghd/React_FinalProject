@@ -21,7 +21,6 @@ function ItemInfo({ imageList }) {
 		register,
 		formState: { errors },
 		handleSubmit,
-		setValue,
 	} = useForm()
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
@@ -31,7 +30,11 @@ function ItemInfo({ imageList }) {
 
 	const [intPrice, setIntPrice] = useState()
 	const [categoryCheckedNum, setCategoryCheckedNum] = useState()
+
+	//동까지만 나오는 state
 	const [resultAddress, setResultAddress] = useState()
+	//위도 경도
+	const [addressInfo, setAddressInfo] = useState()
 
 	const priceToString = price => {
 		const changePrice = Number(
@@ -227,12 +230,15 @@ function ItemInfo({ imageList }) {
 					{isOpenModal && (
 						<Modal size={'large'}>
 							<h1>주소 검색</h1>
-							<DaumPostCodeAddress setResultAddress={setResultAddress} />
+							<DaumPostCodeAddress
+								setResultAddress={setResultAddress}
+								setAddressInfo={setAddressInfo}
+							/>
 						</Modal>
 					)}
 				</S.InputValueAddress>
 			</S.InputWrap>
-			<ViewMap />
+			<ViewMap addressInfo={addressInfo} />
 			<S.ButtonWrap>
 				<Button type="submit" style={{ margin: '4rem' }}>
 					등록 완료
