@@ -40,13 +40,13 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
-	const onSubmit = async () => {
+	const onSubmit = async data => {
 		const { email, password: pw } = data
 
 		try {
 			const { data } = await UserApi.login({ email, pw })
-			LoginService.login(data.token, data.userInfo)
-			setUserInfoValue(data.userInfo)
+			LoginService.login(data.tokenForHeader, data.user)
+			setUserInfoValue(data.user)
 			setLoginStateValue(true)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
