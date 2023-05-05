@@ -14,21 +14,16 @@ import {
 	RollBack_icon,
 } from '../../Icons/Icons'
 import { useRecoilState } from 'recoil'
-import { isNavigationAtom } from '../../../Atoms/navigation.atom'
+import { isNavigationAtom } from '../../../Atoms/Navigation.atom'
+import { isOnSideBar } from '../../../Atoms/sideBar.atom'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
 
-	const NavigationFilter= [
-		'freeMarket',
-		'usedTrade',
-		'chat',
-		'mypage',
-	]
+	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage']
 
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
 	const currentURL = useLocation().pathname
-
 
 	const [product, setProduct] = useState('') // 검색할 물품 State관리용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
@@ -38,7 +33,8 @@ function Header({ searchProduct }) {
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
 
-	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 관심상품메뉴 활성화용
+	// const [interestedProductShow, setInterestedProductShow] = useState(false)
+	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 
 	useEffect(() => {
 		const foundIndex = NavigationFilter.findIndex(item =>
@@ -47,9 +43,6 @@ function Header({ searchProduct }) {
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
 	}, [currentURL])
 
-
-
-	
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
@@ -96,6 +89,10 @@ function Header({ searchProduct }) {
 
 	return (
 		<S.HeaderWrapper>
+			<Sidebar
+				interestedProductShow={onSideBar}
+				setInterestedProductShow={setOnSideBar}
+			/>
 			<S.HeaderSpace>
 				{login ? (
 					<S.UserContainer>
@@ -164,7 +161,7 @@ function Header({ searchProduct }) {
 						<S.MobileIcon onClick={() => navigate(-1)}>
 							<RollBack_icon
 								size="24"
-								color={interestedProductShow ? 'black' : 'white'}
+								color={onSideBar ? 'black' : 'white'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
@@ -178,12 +175,12 @@ function Header({ searchProduct }) {
 						</S.Logo>
 						<S.MobileIcon
 							onClick={() => {
-								setInterestedProductShow(prev => !prev)
+								setOnSideBar(prev => !prev)
 							}}
 						>
 							<InterestBasket_Icon
 								size="24"
-								color={interestedProductShow ? 'black' : 'white'}
+								color={onSideBar ? 'black' : 'white'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
@@ -200,10 +197,7 @@ function Header({ searchProduct }) {
 						></input>
 					</S.SearchContainer>
 				</S.List>
-				<Sidebar
-					interestedProductShow={interestedProductShow}
-					setInterestedProductShow={setInterestedProductShow}
-				/>
+
 				<S.Bottom>
 					<S.NavItem
 						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
