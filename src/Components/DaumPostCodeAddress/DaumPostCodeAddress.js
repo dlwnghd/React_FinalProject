@@ -23,9 +23,8 @@ function DaumPostCodeAddress({ setResultAddress, setAddressInfo }) {
 			},
 		}
 		const url =
-			'https://dapi.kakao.com/v2/local/search/address.json?query=' + searchTxt // REST API url에 data.address값 전송
+			'https://dapi.kakao.com/v2/local/search/address.json?query=' + searchTxt
 		axios.get(url, config).then(function (result) {
-			// API호출
 			if (result.data !== undefined || result.data !== null) {
 				if (result.data.documents[0].x && result.data.documents[0].y) {
 					setAddressInfo({

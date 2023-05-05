@@ -4,6 +4,7 @@ const { kakao } = window
 
 function ViewMap({ addressInfo }) {
 	useEffect(() => {
+		if (!addressInfo) return
 		const { x, y } = addressInfo
 		let mapContainer = document.getElementById('map')
 
@@ -23,7 +24,9 @@ function ViewMap({ addressInfo }) {
 
 	return (
 		<>
-			<div id="map" style={{ width: '100%', height: '350px' }}></div>
+			{addressInfo && (
+				<div id="map" style={{ width: '100%', height: '350px' }}></div>
+			)}
 		</>
 	)
 }

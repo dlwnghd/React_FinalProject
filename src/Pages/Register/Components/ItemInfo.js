@@ -34,7 +34,7 @@ function ItemInfo({ imageList }) {
 	//동까지만 나오는 state
 	const [resultAddress, setResultAddress] = useState()
 	//위도 경도
-	const [addressInfo, setAddressInfo] = useState()
+	const [addressInfo, setAddressInfo] = useState('')
 
 	const priceToString = price => {
 		const changePrice = Number(
@@ -49,6 +49,7 @@ function ItemInfo({ imageList }) {
 		if (data.category == '0') {
 			price = 0
 		}
+		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
 
 		let totaldata = {
 			title: data.title,
