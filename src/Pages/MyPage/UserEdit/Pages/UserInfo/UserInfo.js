@@ -19,6 +19,7 @@ function UserInfo() {
 		mode: 'onChange',
 		defaultValues: {
 			profile_img: userMock[0].profile_img,
+			email: userMock[0].email,
 			nickName: userMock[0].nickName,
 			region: userMock[0].region,
 			phone: userMock[0].phone,
@@ -66,6 +67,7 @@ function UserInfo() {
 	const onSubmit = data => {
 		console.log(data)
 		const editUser = {
+			email: data.email,
 			nickName: data.nickName,
 			phone: data.phone,
 			region: data.region,
@@ -120,7 +122,7 @@ function UserInfo() {
 					</S.InputBox>
 					<S.InputBox>
 						<S.Label>아이디(이메일)</S.Label>
-						<Input defaultValue={userMock[0].email} disabled />
+						<Input disabled {...register('email')} />
 					</S.InputBox>
 					<div>
 						<S.InputBox>
