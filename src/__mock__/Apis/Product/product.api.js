@@ -32,22 +32,29 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 		- filterOption으로 sort(...) ➡️ 알고리즘이 다 다름
 		- page, pageSize로 slice((page - 1) * 10,(page - 1) * 10 Number(pageSize),)
 	 */
+
+	console.log('🔴🔴🔴🔴', filterOption === searchFilter[0])
+	console.log('🟡🟡🟡🟡', filterOption === searchFilter[1])
+	console.log('🟢🟢🟢🟢', filterOption === searchFilter[2])
+	console.log('🔵🔵🔵🔵', filterOption === searchFilter[3])
 	const sliceProducts = productsMock
 		.filter(item => item.status.includes(status))
 		.filter(item => item.title.includes(search))
 		.filter(item => item.category == category)
-		.sort(() => {
+		.sort((a, b) => {
 			if (filterOption === searchFilter[0]) {
-				;(a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+				return new Date(a.createdAt) - new Date(b.createdAt)
 			} else if (filterOption === searchFilter[1]) {
-				;(a, b) => b.idx - a.idx
+				return b.idx - a.idx
 			} else if (filterOption === searchFilter[2]) {
-				;(a, b) => b.price - a.price
+				return b.price - a.price
 			} else if (filterOption === searchFilter[3]) {
-				;(a, b) => a.price - b.price
+				return a.price - b.price
 			}
 		})
 		.slice((page - 1) * 10, (page - 1) * 10 + Number(pageSize))
+
+	console.log(sliceProducts)
 	return res(ctx.status(200), ctx.json(sliceProducts))
 })
 
