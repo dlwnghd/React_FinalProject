@@ -36,15 +36,15 @@ function SignUp() {
 	const watchedEmail = watch('email')
 	const watchedNickname = watch('nickname')
 
-	const onSubmitSignup = async () => {
+	const onSubmitSignup = async data => {
 		if (!isDuplicate.email.state || !isDuplicate.nickname.state) return
 
 		const newUser = {
-			email: getValue('email'),
-			pw: getValue('password'),
-			nickName: getValue('nickname'),
-			phone: getValue('phone'),
-			region: getValue('region'),
+			email: data.email,
+			pw: data.password,
+			nickName: data.nickname,
+			phone: data.phone,
+			region: data.region,
 		}
 
 		try {
