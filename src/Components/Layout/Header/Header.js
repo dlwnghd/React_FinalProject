@@ -16,6 +16,7 @@ import {
 import { useRecoilState } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 import { isOnSideBar } from '../../../Atoms/sideBar.atom'
+import { isScrollAtom } from '../../../Atoms/scrollState.atom'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
@@ -87,8 +88,21 @@ function Header({ searchProduct }) {
 		navigate(`/search/${product}`)
 	}
 
+	const [scroll, setScroll] = useRecoilState(isScrollAtom)
+
+	window.addEventListener('wheel', function (event) {
+		if (event.deltaY > 0) {
+			setScroll(true)
+		} else if (event.deltaY < 0) {
+			setScroll(false)
+		} else if (document.documentElement.scrollTop <= 0) {
+			setScroll(false)
+		}
+	})
+
+
 	return (
-		<S.HeaderWrapper>
+		<S.HeaderWrapper className={scroll ? 'scroll':''}>
 			<Sidebar
 				interestedProductShow={onSideBar}
 				setInterestedProductShow={setOnSideBar}
@@ -237,6 +251,14 @@ const HeaderWrapper = styled.header`
 	position: sticky;
 	top: 0;
 	padding: 2rem 0 0;
+	transition: 0.5s ease;
+
+
+	@media screen and (max-width: 440px) {
+		&.scroll {
+			top: -50px;
+		}
+	}
 `
 
 /**
