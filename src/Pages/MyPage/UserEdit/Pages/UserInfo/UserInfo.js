@@ -12,6 +12,7 @@ function UserInfo() {
 	const {
 		register,
 		getValues,
+		setValue,
 		formState: { errors },
 		handleSubmit,
 	} = useForm({
@@ -35,15 +36,44 @@ function UserInfo() {
 		}
 	}
 
+	const autoHyphen = str => {
+		str = str.replace(/[^0-9]/g, '')
+		var tmp = ''
+		if (str.length < 4) {
+			return str
+		} else if (str.length < 7) {
+			tmp += str.substr(0, 3)
+			tmp += '-'
+			tmp += str.substr(3)
+			return tmp
+		} else if (str.length < 11) {
+			tmp += str.substr(0, 3)
+			tmp += '-'
+			tmp += str.substr(3, 3)
+			tmp += '-'
+			tmp += str.substr(6)
+			return tmp
+		} else {
+			tmp += str.substr(0, 3)
+			tmp += '-'
+			tmp += str.substr(3, 4)
+			tmp += '-'
+			tmp += str.substr(7)
+			return tmp
+		}
+	}
+
 	const onSubmit = data => {
 		console.log(data)
 		const editUser = {
-			profile_img: data.profile_img,
 			nickName: data.nickName,
 			phone: data.phone,
 			region: data.region,
 		}
-		console.log(editUser)
+		const editImg = {
+			profile_img: data.profile_img,
+		}
+		console.log(editUser, editImg)
 		// useCallback(() => {
 		// 	axios({
 		// 		method: 'post',
@@ -89,12 +119,12 @@ function UserInfo() {
 						/>
 					</S.InputBox>
 					<S.InputBox>
-						<label>아이디(이메일)</label>
+						<S.Label>아이디(이메일)</S.Label>
 						<Input defaultValue={userMock[0].email} disabled />
 					</S.InputBox>
 					<div>
 						<S.InputBox>
-							<label>닉네임</label>
+							<S.Label>닉네임</S.Label>
 							<Input
 								status={errors.nickName && 'error'}
 								{...register('nickName', {
@@ -107,7 +137,7 @@ function UserInfo() {
 						</S.StyledAlert>
 					</div>
 					<S.InputBox>
-						<label>주소</label>
+						<S.Label>주소</S.Label>
 						<Input
 							{...register('region', { required: true })}
 							readOnly
@@ -119,10 +149,14 @@ function UserInfo() {
 					</S.InputBox>
 					<div>
 						<S.InputBox>
-							<label>연락처</label>
+							<S.Label>연락처</S.Label>
 							<Input
 								status={errors.phone && 'error'}
-								{...register('phone', { required: '연락처를 입력해주세요' })}
+								{...register('phone', {
+									required: '연락처를 입력해주세요',
+									onChange: () =>
+										setValue('phone', autoHyphen(getValues('phone'))),
+								})}
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
@@ -146,16 +180,24 @@ const Wrapper = styled.div`
 const InputBox = styled.div`
 	${FlexAlignCSS}
 	margin-bottom: 1.5rem;
-
-	& > label {
-		width: 25%;
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	}
 `
 
 const ImgLabel = styled.label`
 	cursor: pointer;
-	width: auto;
+	position: relative;
+	right: 3.8rem;
+	top: 2.4rem;
+	width: 1.8rem;
+	height: 1.8rem;
+	border-radius: 50%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
+	background: ${({ theme }) => theme.COLOR.common.white};
+`
+
+const Label = styled.label`
+	width: 25%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
 
 const ProfileImg = styled.img`
@@ -163,6 +205,8 @@ const ProfileImg = styled.img`
 	width: 7.2rem;
 	height: 7.2rem;
 	margin-right: 2rem;
+	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
+	background: ${({ theme }) => theme.COLOR.common.white};
 `
 
 const StyledAlert = styled(AlertText)`
@@ -184,6 +228,7 @@ const S = {
 	Wrapper,
 	InputBox,
 	ImgLabel,
+	Label,
 	ProfileImg,
 	StyledAlert,
 	RegisterButton,
