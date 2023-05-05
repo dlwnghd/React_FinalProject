@@ -2,53 +2,21 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import Pagination from './Components/Pagination'
-import { useState } from 'react'
-import { useRef } from 'react'
-import { useEffect } from 'react'
+import { slide } from '../../../../Utils/slide'
 
 function MainBanner() {
-	const [currentIdx, setCurrentIdx] = useState(0)
-	const [startX, setStartX] = useState(0)
-	const [endX, setEndX] = useState(0)
-	const slider = useRef()
-
-	const onMove = () => {
-		const isMoved = endX - startX
-
-		if (isMoved > 100 && currentIdx > 0) {
-			setCurrentIdx(currentIdx - 1)
-		}
-
-		if (isMoved < -100 && currentIdx < productsMock.slice(0, 4).length - 1) {
-			setCurrentIdx(currentIdx + 1)
-		}
-	}
-
-	const onTouchStart = e => {
-		setStartX(e.touches[0].clientX)
-	}
-	const onTouchMove = e => {
-		setEndX(e.touches[0].clientX)
-	}
-	const onTouchEnd = () => {
-		onMove()
-	}
-
-	const onMouseDown = e => {
-		setStartX(e.clientX)
-	}
-	const onMouseMove = e => {
-		setEndX(e.clientX)
-	}
-	const onMouseUp = e => {
-		e.preventDefault()
-		onMove()
-	}
-
-	useEffect(() => {
-		slider.current.style.transform = `translateX(-${currentIdx}00%)`
-	}, [currentIdx])
-
+	const {
+		onTouchStart,
+		onTouchMove,
+		onTouchEnd,
+		onMouseDown,
+		onMouseMove,
+		onMouseUp,
+		slider,
+		currentIdx,
+	} = slide(productsMock.slice(0, 4))
+	// Utils 함수가 많아질 경우, 스타일 컴포넌트의 S처럼 U로 관리
+	// productsMock : 만들어야되는 배너
 	return (
 		<S.Wrapper>
 			<S.SlideList
