@@ -1,6 +1,7 @@
 import { useSetRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
 import * as S from './Modal.style'
+import { ModalClose_icon } from '../Icons/Icons'
 
 function Modal(props) {
 	const { size, children, ...rest } = props
@@ -24,7 +25,7 @@ function Modal(props) {
 						cursor: 'pointer',
 					}}
 				>
-					X
+					<ModalClose_icon size={22} />
 				</span>
 			</S.Modal>
 		</S.Wrapper>

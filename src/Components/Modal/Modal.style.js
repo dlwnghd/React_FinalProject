@@ -16,7 +16,7 @@ const sizeCSS = {
 	large: css`
 		width: 30vw;
 		min-width: 433px;
-		height: 580px;
+		height: 500px;
 	`,
 	extra: css`
 		width: 70vw;
@@ -42,7 +42,7 @@ export const ModalTitle = styled.div`
 
 export const Wrapper = styled.div`
 	position: fixed;
-	z-index: 10;
+	z-index: 99999;
 	display: flex;
 	justify-content: center;
 	align-items: center;
