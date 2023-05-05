@@ -17,13 +17,13 @@ import {
 	AiOutlineCamera,
 	AiOutlineExport,
 	AiOutlineMore,
+	AiOutlineClose,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 
 export const Search_Icon = ({ color, position }) => (
 	<CiSearch color={color} position={position} />
 ) // 검색
-
 
 export const Arrow_Icon = ({ size }) => (
 	<AiOutlineArrowRight size={size ? size : 50} />
@@ -58,8 +58,7 @@ export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
 export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
-export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
-
+export const ModalClose_icon = ({ size }) => <AiOutlineClose size={size} /> // 모달 닫기
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
