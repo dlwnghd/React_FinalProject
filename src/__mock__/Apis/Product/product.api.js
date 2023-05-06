@@ -58,6 +58,42 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 	return res(ctx.status(200), ctx.json(sliceProducts))
 })
 
+export const getSearch = rest.get(
+	'/api/products/search',
+	async (req, res, ctx) => {
+		const searchFilter = [
+			'최근 등록순',
+			'인기 높은순',
+			'높은 가격순',
+			'낮은 가격순',
+		]
+		const page = req.url.searchParams.get('page') || 1
+		const pageSize = req.url.searchParams.get('pageSize') || 10
+		const search = req.url.searchParams.get('search') || ''
+		const filterOption =
+			req.url.searchParams.get('filterOption') || searchFilter[0]
+		const status = req.url.searchParams.get('status') || '판매중'
+
+		const sliceProducts = productsMock
+			.filter(item => item.status.includes(status))
+			.filter(item => item.title.includes(search))
+			.sort((a, b) => {
+				if (filterOption === searchFilter[0]) {
+					return new Date(a.createdAt) - new Date(b.createdAt)
+				} else if (filterOption === searchFilter[1]) {
+					return b.idx - a.idx
+				} else if (filterOption === searchFilter[2]) {
+					return b.price - a.price
+				} else if (filterOption === searchFilter[3]) {
+					return a.price - b.price
+				}
+			})
+			.slice((page - 1) * 10, (page - 1) * 10 + Number(pageSize))
+
+		return res(ctx.status(200), ctx.json(sliceProducts))
+	},
+)
+
 export const addProduct = rest.post('/api/product', async (req, res, ctx) => {
 	const data = req.body
 

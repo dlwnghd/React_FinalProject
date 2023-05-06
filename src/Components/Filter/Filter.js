@@ -5,8 +5,7 @@ import { useState } from 'react'
 import { FlexBetweenCSS } from '../../Styles/common'
 
 function Filter({ filterArray, ...rest }) {
-	// prop으로 전달받은 배열 데이터 : Search > filter
-	// 배열에 인수가 3개이면 border X
+	// 배열에 인수가 3개이면 필터 border X
 
 	const selectRef = useRef(null)
 	const [isSelect, setIsSelect] = useState(false)
@@ -70,17 +69,11 @@ const DefaultBox = styled.button`
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	padding: 1rem 1.6rem;
 	border-radius: 1rem;
-	border: ${({ number }) => (number <= 3 ? 0 : 0.1)}rem solid
+
+	border: ${({ number }) => (number === 3 ? 0 : 0.1)}rem solid
 		${({ theme }) => theme.COLOR.common.gray[300]};
 	width: 100%;
 	background: none;
-
-	& > svg {
-		/* position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		right: 0.6rem; */
-	}
 `
 
 const SelectList = styled.ul`
