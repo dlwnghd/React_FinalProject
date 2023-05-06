@@ -5,6 +5,10 @@ import Button from '../../../../../Components/Button/Button'
 import { FORM_TYPE } from '../../../../../Consts/form.type'
 import { useForm } from 'react-hook-form'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
+import UserApi from '../../../../../Apis/userApi'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
+import Modal from '../../../../../Components/Modal/Modal'
 
 function ChangePW() {
 	const {
@@ -15,10 +19,15 @@ function ChangePW() {
 	} = useForm({
 		mode: 'onChange',
 	})
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
-	const onSubmit = data => {
-		console.log(data)
-		console.log({ pw: data.newPw })
+	const onSubmit = async data => {
+		try {
+			await UserApi.userEditPw({ pw: data.newPw })
+			setIsOpenModal(true)
+		} catch (err) {
+			console.log(err)
+		}
 	}
 	return (
 		<S.Wrapper>
@@ -38,9 +47,6 @@ function ChangePW() {
 						{errors.newPw?.type !== 'required' &&
 							errors.newPw &&
 							errors.newPw.message}
-						{/* {errors.newPw?.type === 'minLength' && errors.newPw.message}
-						{errors.newPw?.type === 'maxLength' && errors.newPw.message}
-						{errors.newPw?.type === 'pattern' && errors.newPw.message} */}
 					</S.StyledAlert>
 				</div>
 				<div>
@@ -59,6 +65,7 @@ function ChangePW() {
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
 				</div>
+				{isOpenModal && <Modal></Modal>}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
 		</S.Wrapper>

@@ -4,7 +4,6 @@ import Input from '../../../../../Components/Input/Input'
 import Button from '../../../../../Components/Button/Button'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import userMock from '../../../../../__mock__/Data/User/user.data'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
 import { useRecoilState } from 'recoil'
@@ -12,8 +11,12 @@ import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import Modal from '../../../../../Components/Modal/Modal'
 import DaumPostCodeAddress from '../../../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
+import UserApi from '../../../../../Apis/userApi'
+import { useEffect } from 'react'
+import axios from 'axios'
 
 function UserInfo() {
+	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
 		getValues,
@@ -22,24 +25,36 @@ function UserInfo() {
 		handleSubmit,
 	} = useForm({
 		mode: 'onChange',
-		defaultValues: {
-			profile_img: userMock[0].profile_img,
-			email: userMock[0].email,
-			nickName: userMock[0].nickName,
-			region: userMock[0].region,
-			phone: userMock[0].phone,
-		},
 	})
 	const [imgFile, setImgFile] = useState('')
+	const [preFile, setPreFile] = useState()
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const { data } = await UserApi.userInfo()
+				setUserInfo({ ...data })
+				setImgFile(data.profile_url)
+				setPreFile(
+					data.profile_url ||
+						'https://static.nid.naver.com/images/web/user/default.png?type=s160',
+				)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		getData()
+	}, [])
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
-		console.log(file)
+		setImgFile(file)
 		const reader = new FileReader()
 		reader.readAsDataURL(file)
 		reader.onloadend = () => {
-			setImgFile(reader.result || null)
+			setPreFile(reader.result || null)
 		}
 	}
 
@@ -52,47 +67,52 @@ function UserInfo() {
 		setValue('region', str)
 	}
 
-	const onSubmit = data => {
-		console.log(data)
-		const editUser = {
-			email: data.email,
-			nickName: data.nickName,
-			phone: data.phone,
-			region: data.region,
+	const checkNickname = async e => {
+		const nickName = e.target.value
+		try {
+			const res = await UserApi.checkNickname({ nickName })
+			setIsDuplicate({ state: false, message: res.data.message })
+		} catch (err) {
+			if (err.response.status === 400) {
+				setIsDuplicate({ state: true, message: err.response.data.message })
+			}
+			console.log(err)
 		}
-		const editImg = {
-			profile_img: data.profile_img,
-		}
-		console.log(editUser, editImg)
-		// useCallback(() => {
-		// 	axios({
-		// 		method: 'post',
-		// 		url: '/api/user',
-		// 		headers: {
-		// 			Authorization: `Bearer ${TokenService.getAccessToken()}`,
-		// 		},
-		// 	})
-		// 		.then(response => {
-		// 			console.log(response.data)
-		// 		})
-		// 		.catch(error => {
-		// 			console.error(error)
-		// 		})
-		// })
 	}
+
+	const onSubmit = async editData => {
+		const formData = new FormData()
+		formData.append('profile_url', imgFile)
+		const editUser = {
+			email: editData.email,
+			nickName: editData.nickName,
+			phone: editData.phone,
+			region: editData.region,
+		}
+
+		try {
+			await axios.all([
+				UserApi.userEdit(editUser),
+				UserApi.userEditProfile(formData),
+			])
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	useEffect(() => {
+		setValue('email', userInfo.email)
+		setValue('nickName', userInfo.nick_name)
+		setValue('region', userInfo.region)
+		setValue('phone', userInfo.phone)
+	}, [userInfo])
 
 	return (
 		<S.Wrapper>
 			<FormProvider>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 					<S.InputBox>
-						<S.ProfileImg
-							src={
-								imgFile
-									? imgFile
-									: 'https://static.nid.naver.com/images/web/user/default.png?type=s160'
-							}
-						/>
+						<S.ProfileImg src={preFile} />
 						<S.ImgLabel htmlFor="profileImg">
 							<Camera_Icon />
 						</S.ImgLabel>
@@ -110,7 +130,11 @@ function UserInfo() {
 					</S.InputBox>
 					<S.InputBox>
 						<S.Label>아이디(이메일)</S.Label>
-						<Input disabled {...register('email')} />
+						<Input
+							readOnly
+							{...register('email')}
+							defaultValue={userInfo.email}
+						/>
 					</S.InputBox>
 					<div>
 						<S.InputBox>
@@ -118,13 +142,27 @@ function UserInfo() {
 							<Input
 								status={errors.nickName && 'error'}
 								{...register('nickName', {
-									required: '닉네임을 입력해주세요',
+									required: {
+										value: true,
+										message: '닉네임을 입력해주세요',
+									},
+									onBlur: e => checkNickname(e),
 								})}
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
 							{errors.nickName && errors.nickName.message}
 						</S.StyledAlert>
+						{isDuplicate && (
+							<S.StyledAlert
+								type={isDuplicate.state ? 'error' : 'success'}
+								size="default"
+							>
+								{isDuplicate.state !== null &&
+									!errors.nickName &&
+									isDuplicate.message}
+							</S.StyledAlert>
+						)}
 					</div>
 					<S.InputBox>
 						<S.Label>주소</S.Label>
@@ -153,7 +191,10 @@ function UserInfo() {
 							<Input
 								status={errors.phone && 'error'}
 								{...register('phone', {
-									required: '연락처를 입력해주세요',
+									required: {
+										value: true,
+										message: '연락처를 입력해주세요',
+									},
 									onChange: e =>
 										setValue('phone', addHyphenToPhoneNum(e.target.value)),
 								})}

@@ -23,6 +23,22 @@ const UserApi = {
 	refreshToken() {
 		return axiosInstance.get(PATH + '/refreshToken')
 	},
+	userInfo() {
+		return axiosInstance.get(PATH + '/info')
+	},
+	userEdit({ email, nickName, phone, region }) {
+		return axiosInstance.patch(PATH, { email, nickName, phone, region })
+	},
+	userEditProfile(image) {
+		return axiosInstance.patch(PATH + '/profile', image, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+	},
+	userEditPw({ pw }) {
+		return axiosInstance.patch(PATH + '/password', { pw })
+	},
 }
 
 export default UserApi
