@@ -1,13 +1,13 @@
 const recentPriceMock = []
 
-for (
-	let d = new Date('2022-02-01');
-	d <= new Date();
-	d.setDate(d.getDate() + 1)
-) {
+const end = new Date() // today's date
+const start = new Date(end.getFullYear() - 1, end.getMonth(), end.getDate()) // one year from today
+
+for (let date = start; date < end; date.setDate(date.getDate() + 1)) {
+	const amount = Math.floor(Math.random() * 90000) + 10000 // random amount between 10,000 and 99,999 won
 	recentPriceMock.push({
-		x: new Date(d),
-		y: Math.floor(Math.random() * 90000) + 10000,
+		x: new Date(date),
+		y: amount,
 	})
 }
 
