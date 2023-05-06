@@ -7,6 +7,11 @@ import { useState } from 'react'
 import userMock from '../../../../../__mock__/Data/User/user.data'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
+import Modal from '../../../../../Components/Modal/Modal'
+import DaumPostCodeAddress from '../../../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
+import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 
 function UserInfo() {
 	const {
@@ -26,6 +31,7 @@ function UserInfo() {
 		},
 	})
 	const [imgFile, setImgFile] = useState('')
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
@@ -37,31 +43,13 @@ function UserInfo() {
 		}
 	}
 
-	const autoHyphen = str => {
-		str = str.replace(/[^0-9]/g, '')
-		var tmp = ''
-		if (str.length < 4) {
-			return str
-		} else if (str.length < 7) {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3)
-			return tmp
-		} else if (str.length < 11) {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3, 3)
-			tmp += '-'
-			tmp += str.substr(6)
-			return tmp
-		} else {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3, 4)
-			tmp += '-'
-			tmp += str.substr(7)
-			return tmp
-		}
+	const modalOpen = () => {
+		document.body.style.overflow = 'hidden'
+		setIsOpenModal(true)
+	}
+
+	const setRegion = str => {
+		setValue('region', str)
 	}
 
 	const onSubmit = data => {
@@ -135,7 +123,7 @@ function UserInfo() {
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
-							{errors.nickName?.type === 'required' && '닉네임을 입력해주세요'}
+							{errors.nickName && errors.nickName.message}
 						</S.StyledAlert>
 					</div>
 					<S.InputBox>
@@ -145,9 +133,19 @@ function UserInfo() {
 							readOnly
 							style={{ width: '80%' }}
 						/>
-						<S.RegisterButton shape={'square'} variant={'default-reverse'}>
+						<S.RegisterButton
+							shape={'square'}
+							variant={'default-reverse'}
+							onClick={modalOpen}
+						>
 							주소 찾기
 						</S.RegisterButton>
+						{isOpenModal && (
+							<Modal size={'large'}>
+								<h1>주소 검색</h1>
+								<DaumPostCodeAddress setResultAddress={setRegion} />
+							</Modal>
+						)}
 					</S.InputBox>
 					<div>
 						<S.InputBox>
@@ -156,13 +154,13 @@ function UserInfo() {
 								status={errors.phone && 'error'}
 								{...register('phone', {
 									required: '연락처를 입력해주세요',
-									onChange: () =>
-										setValue('phone', autoHyphen(getValues('phone'))),
+									onChange: e =>
+										setValue('phone', addHyphenToPhoneNum(e.target.value)),
 								})}
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
-							{errors.phone?.type === 'required' && '연락처를 입력해주세요'}
+							{errors.phone && errors.phone.message}
 						</S.StyledAlert>
 					</div>
 					<S.SubmitButton>변경</S.SubmitButton>
@@ -177,6 +175,9 @@ export default UserInfo
 const Wrapper = styled.div`
 	${WidthAutoCSS}
 	width: 40%;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 95%;
+	}
 `
 
 const InputBox = styled.div`
@@ -200,6 +201,10 @@ const ImgLabel = styled.label`
 const Label = styled.label`
 	width: 25%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+		width: 30%;
+	}
 `
 
 const ProfileImg = styled.img`
@@ -214,17 +219,21 @@ const ProfileImg = styled.img`
 const StyledAlert = styled(AlertText)`
 	margin-left: 20%;
 	padding-left: 0rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin-left: 23%;
+	}
 `
 
 const RegisterButton = styled(Button)`
 	width: 20%;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 `
 
 const SubmitButton = styled(Button)`
 	display: block;
 	margin: auto;
 	margin-bottom: 2rem;
+	margin-top: 2rem;
 `
 const S = {
 	Wrapper,
