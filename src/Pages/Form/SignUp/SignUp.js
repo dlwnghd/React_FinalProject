@@ -10,6 +10,12 @@ import { useNavigate } from 'react-router-dom'
 import { LoginService } from '../../../Utils/loginService'
 import FormItem from './Components/FormItem'
 import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../../Atoms/modal.atom'
+
+import { ModalTitle } from '../../../Components/Modal/Modal.style'
+import Modal from '../../../Components/Modal/Modal'
+import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 
 function SignUp() {
 	const navigate = useNavigate('/')
@@ -17,6 +23,7 @@ function SignUp() {
 		email: { state: null, message: '' },
 		nickname: { state: null, message: '' },
 	})
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const {
 		control,
@@ -24,6 +31,7 @@ function SignUp() {
 		setValue,
 		formState: { errors },
 		handleSubmit,
+		clearErrors,
 	} = useForm({ mode: 'onChange' })
 
 	const watchedEmail = watch('email')
@@ -43,7 +51,7 @@ function SignUp() {
 		try {
 			await UserApi.signup(newUser)
 			LoginService.setSaveId(newUser.email)
-			navigate('/')
+			navigate('/login')
 		} catch (err) {
 			if (err.response.status === 400) {
 			}
@@ -94,6 +102,11 @@ function SignUp() {
 			nickname: { state: null, message: '' },
 		}))
 	}, [watchedNickname])
+
+	const setRegion = result => {
+		setValue('region', result)
+		clearErrors('region')
+	}
 
 	return (
 		<S.Wrapper>
@@ -159,9 +172,20 @@ function SignUp() {
 							control={control}
 							rules={{ required: '주소를 입력해주세요' }}
 							render={({ field }) => (
-								<FormItem name={'region'} errors={errors} field={field} />
+								<FormItem
+									name={'region'}
+									errors={errors}
+									field={field}
+									setIsOpenModal={setIsOpenModal}
+								/>
 							)}
 						></Controller>
+						{isOpenModal && (
+							<Modal size={'large'}>
+								<ModalTitle>주소찾기</ModalTitle>
+								<DaumPostCodeAddress setResultAddress={setRegion} />
+							</Modal>
+						)}
 						<Controller
 							name="phone"
 							control={control}
@@ -207,6 +231,10 @@ const Form = styled.form`
 	& > div {
 		${FlexBetweenCSS}
 		align-items: flex-start;
+
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+			text-align: center;
+		}
 	}
 
 	& > div > button {

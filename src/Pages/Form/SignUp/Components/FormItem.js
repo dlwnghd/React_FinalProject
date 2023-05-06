@@ -23,7 +23,7 @@ const nameToPlaceholder = {
 }
 
 function FormItem(props) {
-	const { name, errors, field, isDuplicate, ...rest } = props
+	const { name, errors, field, isDuplicate, setIsOpenModal, ...rest } = props
 
 	return (
 		<S.Wrapper>
@@ -34,6 +34,7 @@ function FormItem(props) {
 						type={name.includes('password') ? 'password' : 'text'}
 						placeholder={nameToPlaceholder[name]}
 						status={errors[name] && 'error'}
+						readOnly={name === 'region'}
 						{...field}
 						{...rest}
 					/>
@@ -44,6 +45,7 @@ function FormItem(props) {
 							shape={'square'}
 							variant={'default-reverse'}
 							type="button"
+							onClick={() => setIsOpenModal(true)}
 						>
 							주소찾기
 						</S.StyledButton>
