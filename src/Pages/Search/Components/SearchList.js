@@ -10,14 +10,19 @@ function SearchList({
 	changeResult,
 	setChangeResult,
 	search,
+	filterOption,
+	word,
 	page,
 	setPage,
-	filterOption,
 }) {
 	const navigate = useNavigate()
 	const preventRef = useRef(false)
 	const obsRef = useRef(null)
 	const timeOutRef = useRef(null)
+
+	useEffect(() => {
+		setPage(1)
+	}, [word, filterOption])
 
 	useEffect(() => {
 		// observer 생성 로직... 이해가 더 필요
@@ -56,6 +61,7 @@ function SearchList({
 	}, [page])
 
 	const getProduct = useCallback(async () => {
+		if (page === 0) return
 		try {
 			const res = await axios.get('/api/products/search', {
 				params: {

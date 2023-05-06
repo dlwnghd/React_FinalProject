@@ -4,10 +4,10 @@ import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useRecoilState } from 'recoil'
-import { isProductPageAtom } from '../../Atoms/productPage.atom'
 import SearchList from './Components/SearchList'
 import productsMock from '../../__mock__/Data/Product/product.data'
+import { useRecoilState } from 'recoil'
+import { isProductPageAtom } from '../../Atoms/productPage.atom'
 
 function Search() {
 	const searchFilter = [
@@ -27,12 +27,19 @@ function Search() {
 
 	const [filterOption, setFilterOption] = useState(searchFilter[0])
 	const [page, setPage] = useRecoilState(isProductPageAtom)
-
+	
+	useEffect(() => {
+		setPage(0)
+		setTotalList(productsMock.filter(item => item.title.includes(word)))
+		setChangeResult([])
+	}, [filterOption])
+	
 	useEffect(() => {
 		setPage(1)
 		setTotalList(productsMock.filter(item => item.title.includes(word)))
 		setChangeResult([])
-	}, [word, filterOption])
+	}, [word])
+
 
 	const onFilter = e => {
 		switch (e.target.innerText) {
@@ -65,9 +72,9 @@ function Search() {
 				<SearchList
 					changeResult={changeResult}
 					setChangeResult={setChangeResult}
-					word={word}
 					page={page}
 					setPage={setPage}
+					word={word}
 					filterOption={filterOption}
 				/>
 			</S.SearchContainer>
