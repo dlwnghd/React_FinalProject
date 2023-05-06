@@ -37,17 +37,29 @@ function List() {
 	//
 	const [page, setPage] = useRecoilState(isProductPageAtom) //현재 페이지(인피니티 스크롤링)
 
-	// 주소 변경, Filter 변경시
+	// 주소 변경시
 	// 화면에 랜더링될 상품 데이터 리스트 비우기 []
 	useEffect(() => {
 		setPage(1)
+		setFilterOption(listFilter[0])
 		setTotalResult(
 			productsMock
 				.filter(item => item.category == currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
-	}, [currentURL, filterOption])
+	}, [currentURL])
+
+	// 필터 변경시
+	useEffect(() => {
+		setPage(0)
+		setTotalResult(
+			productsMock
+				.filter(item => item.category == currentURL)
+				.filter(item => item.status.includes('판매중')),
+		)
+		setChangeResult([])
+	}, [filterOption])
 
 	// Filter선택 실행 코드
 	const onFilter = e => {
