@@ -60,7 +60,7 @@ function ProductListWrapper({
 
 	// 상품 불러오기
 	const getProduct = useCallback(async () => {
-		console.log('상품 불러오기 실행')
+		if (page === 0) return
 		try {
 			console.log(filterOption)
 			const res = await axios.get('/api/products', {
