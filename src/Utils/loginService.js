@@ -15,6 +15,6 @@ export const LoginService = {
 		localStorage.setItem(LOCAL_STORAGE_KEY.SAVE_ID, email)
 	},
 	getSavedId() {
-		localStorage.getItem(LOCAL_STORAGE_KEY.SAVE_ID)
+		return localStorage.getItem(LOCAL_STORAGE_KEY.SAVE_ID)
 	},
 }

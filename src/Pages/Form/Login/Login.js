@@ -130,6 +130,10 @@ const Container = styled.div`
 	width: 45%;
 	padding: 9rem 0;
 
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 80%;
+	}
+
 	& > h1 {
 		font-size: ${({ theme }) => theme.FONT_SIZE.big};
 		text-align: center;
