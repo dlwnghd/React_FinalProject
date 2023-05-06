@@ -7,13 +7,13 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import UserApi from '../../../Apis/userApi'
 import { useNavigate } from 'react-router-dom'
-import { LoginService } from '../../../Utils/loginService'
 import FormItem from './Components/FormItem'
 import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
+import UserInfoService from '../../../Utils/userInfoService'
 
 function SignUp() {
 	const navigate = useNavigate('/')
@@ -48,7 +48,7 @@ function SignUp() {
 
 		try {
 			await UserApi.signup(newUser)
-			LoginService.setSaveId(newUser.email)
+			UserInfoService.setSaveId(newUser.email)
 			navigate('/login')
 		} catch (err) {
 			if (err.response.status === 400) {

@@ -16,18 +16,18 @@ import { useForm } from 'react-hook-form'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import AlertText from '../../../Components/AlertText/AlertText'
 
-import { useRecoilState, useSetRecoilState } from 'recoil'
-import { userInfoAtom } from '../../../Atoms/userInfo.atom'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
-import { LoginService } from '../../../Utils/loginService'
 import UserApi from '../../../Apis/userApi'
+import useUser from '../../../Hooks/useUser'
+import { useRecoilValue } from 'recoil'
+import { loginStateAtom } from '../../../Atoms/loginState.atom'
+import UserInfoService from '../../../Utils/userInfoService'
 
 function Login() {
 	const navigate = useNavigate()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const [loginStateValue, setLoginStateValue] = useRecoilState(loginStateAtom)
-	const setUserInfoValue = useSetRecoilState(userInfoAtom)
+	const loginState = useRecoilValue(loginStateAtom)
+	const user = useUser()
 
 	const {
 		register,
@@ -45,12 +45,10 @@ function Login() {
 
 		try {
 			const { data } = await UserApi.login({ email, pw })
-			LoginService.login(data.tokenForHeader, data.user)
-			setUserInfoValue(data.user)
-			setLoginStateValue(true)
+			user.login(data.tokenForHeader, data.user)
 			if (isSaveId) {
 				// 로그인 성공 시에만 아이디 저장
-				LoginService.setSaveId(email)
+				UserInfoService.setSaveId(email)
 			}
 			navigate('/')
 		} catch (err) {
@@ -60,7 +58,7 @@ function Login() {
 	}
 
 	useEffect(() => {
-		const savedId = LoginService.getSavedId()
+		const savedId = UserInfoService.getSavedId()
 		if (savedId) {
 			setValue('email', savedId)
 		}
@@ -70,7 +68,7 @@ function Login() {
 		setError(null)
 	}, [watchedEmail, watchedPassword])
 
-	if (loginStateValue) return <Navigate replace to="/" /> // 이미 로그인 상태이면 메인페이지로 보내기
+	if (loginState) return <Navigate replace to="/" /> // 이미 로그인 상태이면 메인페이지로 보내기
 
 	return (
 		<S.Wrapper>
