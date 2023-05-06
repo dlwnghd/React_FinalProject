@@ -1,34 +1,34 @@
-import axios from 'axios'
 import { useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import ItemBox from '../../../Components/ItemBox/ItemBox'
+import { useNavigate } from 'react-router'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import styled from 'styled-components'
+import ItemBox from '../../../Components/ItemBox/ItemBox'
+import axios from 'axios'
 
-function ProductListWrapper({
-	currentURL,
+function SearchList({
 	changeResult,
 	setChangeResult,
+	search,
 	filterOption,
+	word,
 	page,
 	setPage,
 }) {
 	const navigate = useNavigate()
+	const preventRef = useRef(false)
+	const obsRef = useRef(null)
+	const timeOutRef = useRef(null)
 
-	const preventRef = useRef(false) //옵저버 중복 실행 방지
-	const obsRef = useRef(null) //observer Element
-	const timeoutRef = useRef(null) //타이머 ID
-
-	// 주소 변경시 Page번호 수정
 	useEffect(() => {
 		setPage(1)
-	}, [currentURL, filterOption])
+	}, [word, filterOption])
 
 	useEffect(() => {
-		//옵저버 생성
+		// observer 생성 로직... 이해가 더 필요
 		const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 })
 		if (obsRef.current) observer.observe(obsRef.current)
+
 		return () => {
 			observer.disconnect()
 		}
@@ -37,83 +37,85 @@ function ProductListWrapper({
 	useEffect(() => {
 		// 컴포넌트가 unmount 되기 전에 timeout 함수가 실행되었다면 clear 해줍니다.
 		return () => {
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
+			if (timeOutRef.current) clearTimeout(timeOutRef.current)
 		}
 	}, [])
 
-	// Page번호 변경시 디바운스 실행
-	useEffect(() => {
-		const timerId = setTimeout(() => {
-			getProduct()
-		}, 200) // 디바운스 시간 200ms
-		timeoutRef.current = timerId
-	}, [page])
-
-	// 옵저버 핸들러
 	const obsHandler = entries => {
+		// 매개변수 entries는 무엇을 받아오나...?
 		const target = entries[0]
+
+		// isIntersecting...?
 		if (target.isIntersecting && preventRef.current) {
 			preventRef.current = false
 			setPage(prev => prev + 1)
 		}
 	}
 
-	// 상품 불러오기
+	useEffect(() => {
+		const timerId = setTimeout(() => {
+			getProduct()
+		}, 200)
+
+		timeOutRef.current = timerId
+	}, [page])
+
 	const getProduct = useCallback(async () => {
 		if (page === 0) return
 		try {
-			console.log(filterOption)
-			const res = await axios.get('/api/products', {
+			const res = await axios.get('/api/products/search', {
 				params: {
+					search: search,
 					page: page,
 					pageSize: 10,
-					category: currentURL,
 					filterOption: filterOption,
 				},
 			})
-			setChangeResult(prev => [...prev, ...res.data]) //리스트 추가
+			setChangeResult(prev => [...prev, ...res.data])
 			preventRef.current = true
-		} catch (e) {
-			console.error(e)
+		} catch (error) {
+			console.log(error)
 		}
 	}, [page])
 
 	return (
-		<S.ProductList>
-			<MainSkeleton />
+		<S.ResultList>
 			{changeResult.map((item, idx) => {
-				return (
+				// isLoading 단계에서 skeleton UI...
+				return !changeResult ? (
+					<MainSkeleton />
+				) : (
 					<ItemBox
 						title={item.title}
 						price={item.price}
 						posterPath={item.image_url}
-						context={item.description}
+						context={item.script}
 						isLiked={item.liked}
-						createdAt={item.createdAt}
 						key={idx}
 						onClick={() => navigate(`/detail/${item.idx}`)}
 					/>
 				)
 			})}
-			<li className="" ref={obsRef} />
-		</S.ProductList>
+			<Observer className="" ref={obsRef}></Observer>
+		</S.ResultList>
 	)
 }
 
-export default ProductListWrapper
+export default SearchList
 
-const ProductList = styled.div`
-	width: 100%;
-	margin-top: 4rem;
+const ResultList = styled.div`
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)};
+	${ColumnNumberCSS(4)}
 
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;
 	}
 `
 
+const Observer = styled.div``
+
 const S = {
-	ProductList,
+	ResultList,
+	Observer,
 }

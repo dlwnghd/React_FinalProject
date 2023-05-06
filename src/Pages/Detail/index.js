@@ -1,3 +1,4 @@
+
 import styled from 'styled-components'
 import ProductInfo from './Components/ProductInfo'
 import {
@@ -6,18 +7,31 @@ import {
 	WidthAutoCSS,
 } from '../../Styles/common'
 import productsMock from '../../__mock__/Data/Product/product.data'
-import { useState } from 'react'
+import { useState ,useEffect} from 'react'
 import RecentBanner from '../Main/Components/Banner/RecentBanner'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { isOnSideBar } from '../../Atoms/sideBar.atom'
 
 function Detail() {
 	//서버로부터 상품들을 요청하고 idx값과 일치하는 것 찾기
-	const params = useParams()
-	const { idx } = params
+	const { idx } = useParams()
 
 	// ex ) const findproduct = productsMock.find(item => item.idx === idx)
 
 	const [product, setProduct] = useState(productsMock[0])
+
+
+
+function Detail() {
+	const params = useParams()
+	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar)
+
+	useEffect(() => {
+		setOnSideBar(false)
+	}, [params])
+
+
 	return (
 		<S.Wrapper>
 			<ProductInfo product={product} />
