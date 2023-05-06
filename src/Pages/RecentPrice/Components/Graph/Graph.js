@@ -2,24 +2,17 @@ import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
 import { FlexCenterCSS } from '../../../../Styles/common'
 
-function Graph({ filterOption }) {
+function Graph({ filterOption, dummyData }) {
 	console.log(filterOption)
-
-	const date = new Date()
-	const nowMonth = date.getMonth() + 1
-
-	console.log(nowMonth)
 
 	const series = [
 		{
-			name: 'series-1',
-			data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 100, 90, 80],
+			name: '노트북',
+			data: dummyData,
 		},
 	]
+
 	const options = {
-		theme: {
-			mode: 'dark',
-		},
 		chart: {
 			type: 'area',
 			stacked: false,
@@ -29,33 +22,64 @@ function Graph({ filterOption }) {
 				enabled: true,
 				autoScaleYaxis: true,
 			},
+			toolbar: {
+				autoSelectd: 'zoom',
+			},
+		},
+		dataLabels: {
+			enabled: false,
+		},
+		markers: {
+			size: 0,
+		},
+		title: {
+			text: '시세동향',
+			align: 'left',
+		},
+		fill: {
+			type: 'gradient',
+			gradient: {
+				shadeIntensity: 1,
+				inverseColors: false,
+				opacityFrom: 0.5,
+				opacityTo: 0,
+				stops: [0, 90, 100],
+			},
+		},
+		theme: {
+			mode: 'dark',
+		},
+		yaxis: {
+			labels: {
+				formatter: function (val) {
+					return val.toFixed(0)
+				},
+			},
+			title: {
+				text: '가격',
+			},
 		},
 		xaxis: {
-			categories: [
-				'1월',
-				'2월',
-				'3월',
-				'4월',
-				'5월',
-				'6월',
-				'7월',
-				'8월',
-				'9월',
-				'10월',
-				'11월',
-				'12월',
-			],
+			type: 'datetime',
+		},
+		tooltip: {
+			shared: false,
+			y: {
+				formatter: function (val) {
+					return val.toFixed(3)
+				},
+			},
 		},
 	}
 
 	return (
 		<GraphBox>
 			<ReactApexChart
-				type="line"
-				series={series}
 				options={options}
+				series={series}
 				height={500}
-				width={600}
+				type="area"
+				width={900}
 			/>
 		</GraphBox>
 	)
