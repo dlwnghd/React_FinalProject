@@ -60,7 +60,7 @@ export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
 export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
-export const RollBack_icon = () => <AiOutlineRollback /> // 뒤로 가기
+export const RollBack_icon = ({ size, color, cursor }) => <AiOutlineRollback size={size} color={color} cursor={cursor}/> // 뒤로 가기
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../../Styles/common'
 
-function PrdThumbnail({ ProductImages }) {
-	const [mainImage, setMainImages] = useState(ProductImages[0].imgUrl)
+function PrdThumbnail({ productImages }) {
+	const [mainImage, setMainImages] = useState(productImages[0].imgUrl)
 
 	const onClickMainImage = url => {
 		setMainImages(url)
@@ -12,7 +13,7 @@ function PrdThumbnail({ ProductImages }) {
 		<ThumbnailWrapper>
 			<MainThumBox images={mainImage}></MainThumBox>
 			<SubThumBox>
-				{ProductImages.map((item, idx) => {
+				{productImages.map((item, idx) => {
 					return (
 						<SubImages
 							images={item.imgUrl}
@@ -29,39 +30,40 @@ function PrdThumbnail({ ProductImages }) {
 export default PrdThumbnail
 
 const ThumbnailWrapper = styled.section`
-	display: flex;
-	flex-direction: row;
-	gap: 1rem;
-
+	${GridCenterCSS}
+	align-items: flex-start;
+	${ColumnNumberCSS(2)}
+	column-gap: 0.5rem;
+	row-gap: 0.5rem !important;
+	width: 100%;
 	@media screen and (max-width: 1024px) {
-		flex-direction: column;
+		${ColumnNumberCSS(1)}
 	}
 `
 const MainThumBox = styled.div`
-	
-		width: 480px;
-		height: 480px;
-		background-image: ${({ images }) => `url(${images})`};
-		background-repeat: no-repeat;
-		background-size: cover;
-		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-			width: 390px;
-			height: 390px;
-		}
+	width: 480px;
+	height: 480px;
+	background-image: ${({ images }) => `url(${images})`};
+	background-repeat: no-repeat;
+	background-size: cover;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 360px;
+		height: 360px;
 	}
 `
 const SubThumBox = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-
+	${GridCenterCSS}
+	${ColumnNumberCSS(1)}
+	row-gap: 0.5rem !important;
+	column-gap: 0.5rem !important;
 	@media screen and (max-width: 1024px) {
-		flex-direction: row;
+		${ColumnNumberCSS(4)}
+		text-align: left !important;
 	}
 `
 const SubImages = styled.div`
-	width: 92px;
-	height: 92px;
+	width: 90px;
+	height: 90px;
 	background-image: ${({ images }) => `url(${images})`};
 	background-repeat: no-repeat;
 	background-size: cover;

@@ -4,8 +4,12 @@ import {
 	FillHeart_Icon,
 	NotFillHeart_Icon,
 } from '../../../../../Components/Icons/Icons'
-function PrdDescription() {
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../../Styles/common'
+import { useNavigate } from 'react-router'
+function PrdDescription({ product }) {
+	const { title, price, description, ProductsTags } = product
 	const [like, setLike] = useState(false)
+	const navigate = useNavigate()
 
 	const onClickLike = () => {
 		setLike(prev => !prev)
@@ -14,17 +18,14 @@ function PrdDescription() {
 		<S.DescriptionWrapper>
 			<S.DetailBox>
 				<S.TitleBox>
-					<Title>네모난 고양이</Title>
+					<Title>{title}</Title>
 					<SubTitle>별나게 우수운 고양이, 다채로운 컬러</SubTitle>
 				</S.TitleBox>
 				<S.PriceBox>
-					<Price>3,980,000원</Price>
+					<Price>{price}원</Price>
 				</S.PriceBox>
 				<S.CtaBox>
-					<Cta>
-						어깨에 걸치는 손잡이와 크로스바디 착용을 위한 벨트형 스트랩 옵션이
-						있습니다.행복을 주세요
-					</Cta>
+					<Cta>{description} </Cta>
 				</S.CtaBox>
 			</S.DetailBox>
 			<S.OptionBox>
@@ -32,6 +33,15 @@ function PrdDescription() {
 					<span>찜</span>
 					{like ? <FillHeart_Icon /> : <NotFillHeart_Icon />}
 				</S.HeartBox>
+				<S.TagBox>
+					{ProductsTags.map((item, idx) => {
+						return (
+							<Tag key={idx} onClick={() => navigate(`/search/${item.tag}`)}>
+								<span>#{item.tag}</span>
+							</Tag>
+						)
+					})}
+				</S.TagBox>
 				<S.ButtonBox>
 					<Button>채팅</Button>
 					<Button>결제</Button>
@@ -44,16 +54,18 @@ function PrdDescription() {
 export default PrdDescription
 
 const DescriptionWrapper = styled.section`
-	display: flex;
+	${GridCenterCSS}
+	justify-items: flex-start;
 	width: 100%;
 	flex-direction: column;
-	justify-content: space-between;
+	align-items: flex-start;
 	height: 484px;
 `
 const DetailBox = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
+	${GridCenterCSS}
+	justify-items: flex-start;
+	width: 100%;
+	align-items: flex-start;
 `
 const TitleBox = styled.div`
 	display: flex;
@@ -78,15 +90,18 @@ const Price = styled.span`
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 `
 const CtaBox = styled.div`
-	height: 20rem;
+	height: 15rem;
 `
 const Cta = styled.span`
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 `
 const OptionBox = styled.div`
-	display: flex;
-	flex-direction: column;
+	${GridCenterCSS}
+	justify-items: flex-start;
+	widows: 100%;
+
+	row-gap: 1rem;
 `
 const HeartBox = styled.div`
 	width: 5rem;
@@ -107,16 +122,33 @@ const HeartBox = styled.div`
 		color: red;
 	}
 `
+const TagBox = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(5)}
+	justify-items: flex-start;
+`
+const Tag = styled.div`
+	border: 1px solid black;
+	padding: 1rem 0.5rem;
+	cursor: pointer;
+	border-radius: 3px;
+	& > span {
+		font-size: ${({ theme }) => theme.FONT_SIZE.large};
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+		text-align: center;
+	}
+`
 const ButtonBox = styled.div`
-	display: flex;
-	gap: 1rem;
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
+	width: 100%;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		flex-direction: column;
 	}
 `
 
 const Button = styled.button`
-	width: 50%;
+	width: 100%;
 	height: 7.2rem;
 	border-radius: 1rem;
 	border: 1px solid ${({ theme }) => theme.COLOR.main};
@@ -141,4 +173,5 @@ const S = {
 	OptionBox,
 	HeartBox,
 	ButtonBox,
+	TagBox,
 }

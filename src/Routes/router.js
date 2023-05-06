@@ -14,6 +14,7 @@ import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import Withdrawal from '../Pages/MyPage/UserEdit/Pages/Withdrawal/Withdrawal'
+import Error404 from '../Components/Error/404'
 
 const router = createBrowserRouter([
 	{
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
 				element: <List />,
 			},
 			{
-				path: '/detail',
+				path: '/detail/:idx',
 				element: <Detail />,
 			},
 			{
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
 			{
 				path: '/search/:word',
 				element: <Search />,
+			},
+			{
+				path: '/*',
+				element: <Error404 />,
 			},
 		],
 	},

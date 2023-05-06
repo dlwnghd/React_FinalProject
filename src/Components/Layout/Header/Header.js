@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {
 	FlexAlignCSS,
@@ -9,24 +9,47 @@ import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Components/Sidebar'
 import {
 	InterestBasket_Icon,
-	MenuBurger_Icon,
 	Profile_Icon,
 	Search_Icon,
+	RollBack_icon,
 } from '../../Icons/Icons'
+import { useRecoilState } from 'recoil'
+import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
 
-	const [product, setProduct] = useState('') // 검색할 물품 State관리용
-	const [selectedNav, setSelectedNav] = useState(-1) // 선택된 Navigation 항목의 인덱스
+	const NavigationFilter= [
+		'freeMarket',
+		'usedTrade',
+		'chat',
+		'mypage',
+	]
 
-	const [login, setLogin] = useState(true) // 로그인 Header 구현용 State
+	// 현재 URL 기억 State (0: 무료, 1: 중고)
+	const currentURL = useLocation().pathname
+
+
+	const [product, setProduct] = useState('') // 검색할 물품 State관리용
+	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
+
+	const [login, setLogin] = useState(false) // 로그인 Header 구현용 State
 
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
 
-	const [hamburgerShow, setHamburgerShow] = useState(false) // 모바일 햄버거메뉴 활성화용
+	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 관심상품메뉴 활성화용
 
+	useEffect(() => {
+		const foundIndex = NavigationFilter.findIndex(item =>
+			currentURL.includes(item),
+		)
+		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
+	}, [currentURL])
+
+
+
+	
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
@@ -56,7 +79,7 @@ function Header({ searchProduct }) {
 	const handleKeyPress = e => {
 		if (e.key === 'Enter') {
 			onSubmitSearch()
-			setSelectedNav(-1)
+			setSelectedNav(1)
 		}
 	}
 
@@ -83,14 +106,15 @@ function Header({ searchProduct }) {
 							}}
 						>
 							<Profile_Icon size="28" />
-							<p>로그인 / 회원가입</p>
+							<span>99+</span>
+							<p>회원명</p>
 						</S.UserBox>
 						{dropdown && (
-							<UserDropDownMenu>
+							<S.UserDropDownMenu>
 								<span
 									onClick={() => {
 										navigate('/mypage-bank')
-										setSelectedNav(-1)
+										setSelectedNav(5)
 									}}
 								>
 									마이페이지
@@ -98,7 +122,7 @@ function Header({ searchProduct }) {
 								<span
 									onClick={() => {
 										navigate('/mypage/useredit-userinfo')
-										setSelectedNav(-1)
+										setSelectedNav(5)
 									}}
 								>
 									회원정보 수정
@@ -107,12 +131,12 @@ function Header({ searchProduct }) {
 								<span
 									onClick={() => {
 										navigate('/')
-										setSelectedNav(-1)
+										setSelectedNav(4)
 									}}
 								>
 									LOGOUT
 								</span>
-							</UserDropDownMenu>
+							</S.UserDropDownMenu>
 						)}
 					</S.UserContainer>
 				) : (
@@ -120,7 +144,7 @@ function Header({ searchProduct }) {
 						<span
 							onClick={() => {
 								navigate('/login')
-								setSelectedNav(-1)
+								setSelectedNav(1)
 							}}
 						>
 							login
@@ -128,7 +152,7 @@ function Header({ searchProduct }) {
 						<span
 							onClick={() => {
 								navigate('/signup')
-								setSelectedNav(-1)
+								setSelectedNav(1)
 							}}
 						>
 							join
@@ -137,23 +161,31 @@ function Header({ searchProduct }) {
 				)}
 				<S.List>
 					<div>
-						<S.MobileIcon
-							onClick={() => {
-								setHamburgerShow(prev => !prev)
-							}}
-						>
-							<MenuBurger_Icon size="24" color="white" cursor="pointer" />
+						<S.MobileIcon onClick={() => navigate(-1)}>
+							<RollBack_icon
+								size="24"
+								color={interestedProductShow ? 'black' : 'white'}
+								cursor="pointer"
+							/>
 						</S.MobileIcon>
 						<S.Logo
 							onClick={() => {
 								navigate('/')
-								setSelectedNav(-1)
+								setSelectedNav(1)
 							}}
 						>
 							NEGO MARKET
 						</S.Logo>
-						<S.MobileIcon>
-							<InterestBasket_Icon size="24" color="white" cursor="pointer" />
+						<S.MobileIcon
+							onClick={() => {
+								setInterestedProductShow(prev => !prev)
+							}}
+						>
+							<InterestBasket_Icon
+								size="24"
+								color={interestedProductShow ? 'black' : 'white'}
+								cursor="pointer"
+							/>
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
@@ -169,38 +201,27 @@ function Header({ searchProduct }) {
 					</S.SearchContainer>
 				</S.List>
 				<Sidebar
-					hamburgerShow={hamburgerShow}
-					setHamburgerShow={setHamburgerShow}
-					selectedNav={selectedNav}
-					setSelectedNav={setSelectedNav}
+					interestedProductShow={interestedProductShow}
+					setInterestedProductShow={setInterestedProductShow}
 				/>
 				<S.Bottom>
 					<S.NavItem
-						className={selectedNav === 0 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 						onClick={() => {
-							setSelectedNav(0) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/무료나눔리스트')
+							setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
+							navigate('/list/freeMarket')
 						}}
 					>
 						FREE MARKET
 					</S.NavItem>
 					<S.NavItem
-						className={selectedNav === 1 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+						className={selectedNav === 3 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 						onClick={() => {
-							setSelectedNav(1) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/중고거래리스트')
+							setSelectedNav(3) // 선택된 Navigation 항목의 인덱스 업데이트
+							navigate('/list/usedTrade')
 						}}
 					>
 						TRADE USED
-					</S.NavItem>
-					<S.NavItem
-						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-						onClick={() => {
-							setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/recent-price')
-						}}
-					>
-						MARKET TREND
 					</S.NavItem>
 				</S.Bottom>
 			</S.HeaderSpace>
@@ -282,6 +303,8 @@ const List = styled.div`
  * 로그인 / 회원가입
  */
 const Login_Join = styled.div`
+	height: 4rem;
+	color: white;
 	text-align: right;
 
 	& > span {
@@ -378,36 +401,6 @@ const NavItem = styled.div`
 	}
 `
 
-// /**
-//  * 모바일 검색창
-//  */
-// const MobileSearchContainer = styled.div`
-// 	display: none;
-// 	width: 100%;
-// 	position: relative;
-
-// 	@media screen and (max-width: 440px) {
-// 		display: block;
-// 	}
-
-// 	& > input {
-// 		width: 100%;
-// 		height: 4rem;
-// 		box-sizing: border-box;
-// 		border-radius: 2rem;
-// 		text-indent: 4.4rem;
-// 		border: 0.2rem solid #aaa;
-// 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-// 	}
-
-// 	& > svg {
-// 		position: absolute;
-// 		left: 1rem;
-// 		font-size: 2.8rem;
-// 		color: black;
-// 	}
-// `
-
 /**
  * 모바일 아이콘 구역
  */
@@ -418,6 +411,7 @@ const MobileIcon = styled.div`
 		display: block;
 
 		& > svg {
+			transition: color 1s;
 			position: relative;
 			z-index: 9999;
 		}
@@ -445,6 +439,19 @@ const UserBox = styled.div`
 	& > svg {
 		margin-right: 1rem;
 	}
+
+	& > span {
+		position: absolute;
+		transform: translate(2.2rem, -1rem);
+		background: red;
+		border: 1px solid white;
+		border-radius: 50rem;
+		padding: 0px 5px;
+	}
+
+	& > p {
+		margin-left: 2.5rem;
+	}
 `
 const UserDropDownMenu = styled.div`
 	position: absolute;
@@ -452,14 +459,20 @@ const UserDropDownMenu = styled.div`
 	background-color: #acacac;
 	border: 1px solid black;
 	border-radius: 5%;
+	top: 25%;
+	z-index: 9999;
+	width: 12rem;
 
 	& > span {
 		padding: 1rem;
+		border: 1px solid white;
 		cursor: pointer;
+		border-radius: 5%;
 
 		:hover {
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
+			border: 1px solid white;
 		}
 	}
 `
