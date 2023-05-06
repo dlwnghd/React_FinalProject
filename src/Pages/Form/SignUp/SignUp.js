@@ -13,9 +13,7 @@ import addHyphenToPhoneNum from '../../../Utils/addHyphenToPhoneNum'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 
-import { ModalTitle } from '../../../Components/Modal/Modal.style'
-import Modal from '../../../Components/Modal/Modal'
-import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
+import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 
 function SignUp() {
 	const navigate = useNavigate('/')
@@ -180,12 +178,7 @@ function SignUp() {
 								/>
 							)}
 						></Controller>
-						{isOpenModal && (
-							<Modal size={'large'}>
-								<ModalTitle>주소찾기</ModalTitle>
-								<DaumPostCodeAddress setResultAddress={setRegion} />
-							</Modal>
-						)}
+						{isOpenModal && <RegionModal setRegion={setRegion} />}
 						<Controller
 							name="phone"
 							control={control}
