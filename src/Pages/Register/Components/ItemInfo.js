@@ -44,7 +44,7 @@ function ItemInfo({ imageList }) {
 		setIntPrice(changePrice)
 	}
 
-	const onSubmit = data => {
+	const onSubmit = async data => {
 		let price = Number(data.price.replace(/,/g, ''))
 		if (data.category == '0') {
 			price = 0
@@ -59,6 +59,24 @@ function ItemInfo({ imageList }) {
 			category: data.category,
 			tag: hashArr,
 			images: imageList,
+		}
+
+		const formData = new FormData()
+		formData.append('title', data.title)
+		formData.append('price', price)
+		formData.append('description', data.description)
+		formData.append('region', resultAddress)
+		formData.append('category', Number(data.category))
+		formData.append('tag', hashArr)
+		// formData.append('images', imageList)
+
+		try {
+			const response = await ProductApi.register(formData)
+			console.log(response)
+			alert('성공')
+		} catch (err) {
+			console.log(err)
+			alert('실패')
 		}
 	}
 
