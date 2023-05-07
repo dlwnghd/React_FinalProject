@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
 import { FlexCenterCSS } from '../../../../Styles/common'
@@ -5,12 +6,43 @@ import { FlexCenterCSS } from '../../../../Styles/common'
 function Graph({ filterOption, dummyData }) {
 	console.log(filterOption)
 
+	const dateFilter = ['3개월', '6개월', '1년']
+
 	const series = [
 		{
 			name: '노트북',
 			data: dummyData,
 		},
 	]
+
+	const chartRef = useRef(null)
+
+	useEffect(() => {
+		const chart = chartRef.current?.chart
+
+		// filter zoomX 테스트
+		if (filterOption === dateFilter[0]) {
+			chart.zoomX(
+				new Date('2023-02-07').getTime(),
+				new Date().getTime(),
+			)
+		}
+		if (filterOption === dateFilter[1]) {
+			chart.zoomX(
+				new Date('2022-12-07').getTime(),
+				new Date().getTime(),
+			)
+		}
+		if (filterOption === dateFilter[2]) {
+			chart.zoomX(
+				new Date('2022-05-07').getTime(),
+				new Date().getTime(),
+			)
+		}
+
+		// // Reset 테스트
+		// chart.resetSeries(false,true)
+	}, [filterOption])
 
 	const options = {
 		chart: {
@@ -52,7 +84,7 @@ function Graph({ filterOption, dummyData }) {
 		yaxis: {
 			labels: {
 				formatter: function (val) {
-					return val.toFixed(0)
+					return Math.round(val / 1000) * 1000
 				},
 			},
 			title: {
@@ -66,7 +98,7 @@ function Graph({ filterOption, dummyData }) {
 			shared: false,
 			y: {
 				formatter: function (val) {
-					return val.toFixed(3)
+					return Math.round(val / 1000) * 1000
 				},
 			},
 		},
@@ -79,7 +111,8 @@ function Graph({ filterOption, dummyData }) {
 				series={series}
 				height={500}
 				type="area"
-				width={900}
+				width={300}
+				ref={chartRef}
 			/>
 		</GraphBox>
 	)
