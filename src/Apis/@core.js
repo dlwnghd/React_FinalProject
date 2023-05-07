@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use(
 	config => {
 		const access_token = TokenService.getAccessToken()
 		if (access_token) {
-			config.headers.Authorization = `Bearer ${access_token}`
+			config.headers.Authorization = `bearer ${access_token}`
 			return config
 		}
 		return config
@@ -33,6 +33,7 @@ axiosInstance.interceptors.response.use(
 			TokenService.removeAccessToken()
 		}
 		const originalRequest = error.config
+		const user = useUser()
 		if (error.response.status === 403 && !originalRequest._retry) {
 			// refresh 관련 세션 만료
 			originalRequest._retry = true // 재요청 보냄을 의미
@@ -49,7 +50,7 @@ axiosInstance.interceptors.response.use(
 				}
 			} catch (err) {
 				// refresh 토큰도 만료된 경우 로그아웃
-				const user = useUser()
+				await UserApi.logout()
 				user.logout()
 				return Promise.reject(error)
 			}
