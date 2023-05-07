@@ -15,6 +15,7 @@ import { FORM_TYPE } from '../../../Consts/form.type'
 import Modal from '../../../Components/Modal/Modal'
 import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
+import ProductApi from '../../../Apis/productApi'
 
 function ItemInfo({ imageList }) {
 	const {
@@ -51,16 +52,6 @@ function ItemInfo({ imageList }) {
 		}
 		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
 
-		let totaldata = {
-			title: data.title,
-			price: price,
-			description: data.description,
-			region: resultAddress,
-			category: data.category,
-			tag: hashArr,
-			images: imageList,
-		}
-
 		const formData = new FormData()
 		formData.append('title', data.title)
 		formData.append('price', price)
@@ -68,16 +59,12 @@ function ItemInfo({ imageList }) {
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
-		// formData.append('images', imageList)
+		formData.append('images', imageList)
 
 		try {
 			const response = await ProductApi.register(formData)
 			console.log(response)
-			alert('성공')
-		} catch (err) {
-			console.log(err)
-			alert('실패')
-		}
+		} catch (err) {}
 	}
 
 	const checkedCategory = e => {
@@ -239,13 +226,12 @@ function ItemInfo({ imageList }) {
 						value={resultAddress}
 						readOnly
 					/>
-					<Button
-						shape={'square'}
-						variant={'default-reverse'}
+
+					<S.OpenMadalBtn
+						type="button"
+						value={'주소 검색'}
 						onClick={modalOpen}
-					>
-						주소 검색
-					</Button>
+					/>
 					{isOpenModal && (
 						<Modal size={'large'}>
 							<h1>주소 검색</h1>
@@ -445,7 +431,22 @@ const DelButton = styled.button`
 	background-color: white;
 	border-radius: 50%;
 `
+const OpenMadalBtn = styled.input`
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+	width: 16rem;
+	height: 4.8rem;
+	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 
+	border: none;
+	&:hover {
+		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
+		transition: all 0.2s ease-in-out;
+	}
+
+	&:disabled {
+		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+`
 const S = {
 	MiddleWrap,
 	InputWrapPrice,
@@ -469,4 +470,5 @@ const S = {
 	TagBox,
 	Radio,
 	ErrorCategory,
+	OpenMadalBtn,
 }
