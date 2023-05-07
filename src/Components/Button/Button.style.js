@@ -17,6 +17,12 @@ const variantCSS = {
 	'default-reverse': css`
 		border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 		font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		background-color: ${({ theme }) => theme.COLOR.common.white};
+
+		&:hover {
+			background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+			transition: all 0.2s ease-in-out;
+		}
 	`,
 }
 
