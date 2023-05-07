@@ -24,6 +24,16 @@ const variantCSS = {
 			transition: all 0.2s ease-in-out;
 		}
 	`,
+	'no-border': css`
+		font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		background-color: ${({ theme }) => theme.COLOR.common.white};
+		border: none;
+
+		&:hover {
+			background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+			transition: all 0.2s ease-in-out;
+		}
+	`,
 }
 
 const shapeCSS = {
