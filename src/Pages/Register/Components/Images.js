@@ -128,6 +128,9 @@ const Wrapper = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(5)}
 	position: relative;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(2)}
+	}
 `
 const TotalWrapper = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
