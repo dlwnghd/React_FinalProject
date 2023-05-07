@@ -32,6 +32,7 @@ function Main() {
 									isLiked={item.liked}
 									key={idx}
 									onClick={() => navigate(`/detail/${item.idx}`)}
+									// hover 되었을 경우, 투명도 있는 검정 바탕 위에 하트 표시하는 것으로 변경 예정
 								/>
 							)
 						})}
@@ -65,6 +66,10 @@ export default Main
 
 const Wrapper = styled.section`
 	${WidthAutoCSS}
+
+	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
+		width: 100%;
+	}
 `
 
 const Container = styled.section`

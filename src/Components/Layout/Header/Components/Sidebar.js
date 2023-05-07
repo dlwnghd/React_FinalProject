@@ -1,29 +1,30 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
-import { ColumnNumberCSS, FlexAlignCSS, GridCenterCSS } from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import ItemBox from '../../../ItemBox/ItemBox'
 
-function Sidebar({
-	interestedProductShow,
-	setInterestedProductShow,
-}) {
+function Sidebar({ interestedProductShow, setInterestedProductShow }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
 
 	useEffect(() => {
+		const $body = document.querySelector('body')
 		if (interestedProductShow === false) {
 			slideRef.current.style.transform = 'translateX(100%)'
+			$body.style.overflow = 'auto'
 		}
 		if (interestedProductShow === true) {
 			slideRef.current.style.transform = 'translateX(0%)'
+			$body.style.overflow = 'hidden'
 		}
 	})
 
 	return (
-		<S.InterestedProductMenu>
-			<S.SideBarContainer ref={slideRef}>
+		<S.Wrapper ref={slideRef}>
+			<h4>관심 상품 목록</h4>
+			<S.SideBarContainer>
 				<S.ProductList>
 					{productsMock.slice(0, 8).map((item, idx) => {
 						return (
@@ -40,49 +41,48 @@ function Sidebar({
 					})}
 				</S.ProductList>
 			</S.SideBarContainer>
-		</S.InterestedProductMenu>
+		</S.Wrapper>
 	)
 }
 
 export default Sidebar
 
-const InterestedProductMenu = styled.div`
-	${FlexAlignCSS}
+const Wrapper = styled.nav`
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 99;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	padding: 12rem 6rem;
+	color: black;
+	transition: 0.5s ease-in-out;
+	transform: translateX(100%);
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	@media screen and (min-width: 441px) {
 		display: none;
 	}
 `
 
-const SideBarContainer = styled.nav`
-	position: fixed;
-	transition: 0.5s ease-in-out;
-	transform: translateX(100%);
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-	color: black;
-	width: 100%;
-	z-index: 99;
-	height: 100%;
-	top: 0;
-	left: 0;
-`
+const SideBarContainer = styled.ul``
 
-const ProductList = styled.div`
+const ProductList = styled.li`
 	width: 100%;
-	margin-top: 4rem;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
-		column-gap: 5rem;
+		column-gap: 2rem;
 	}
 `
 
 const S = {
-	InterestedProductMenu,
+	Wrapper,
 	SideBarContainer,
 	ProductList,
 }

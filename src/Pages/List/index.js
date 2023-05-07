@@ -37,17 +37,29 @@ function List() {
 	//
 	const [page, setPage] = useRecoilState(isProductPageAtom) //현재 페이지(인피니티 스크롤링)
 
-	// 주소 변경, Filter 변경시
-	// 화면에 랜더링될 상품 데이터 리스트 비우기 []
+	// 필터 변경시
 	useEffect(() => {
-		setPage(1)
+		setPage(0)
 		setTotalResult(
 			productsMock
 				.filter(item => item.category == currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
-	}, [currentURL, filterOption])
+	}, [filterOption])
+
+	// 주소 변경시
+	// 화면에 랜더링될 상품 데이터 리스트 비우기 []
+	useEffect(() => {
+		setPage(1)
+		setFilterOption(listFilter[0])
+		setTotalResult(
+			productsMock
+				.filter(item => item.category == currentURL)
+				.filter(item => item.status.includes('판매중')),
+		)
+		setChangeResult([])
+	}, [currentURL])
 
 	// Filter선택 실행 코드
 	const onFilter = e => {
@@ -76,7 +88,7 @@ function List() {
 					<S.SearchTopper>
 						<h3>{totalResult.length}개의 상품</h3>
 						<Filter
-							filterArray={currentURL ? listFilter : listFilter.slice(0,2)}
+							filterArray={currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
 						/>
 					</S.SearchTopper>
