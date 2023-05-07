@@ -17,7 +17,7 @@ import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import ProductApi from '../../../Apis/productApi'
 
-function ItemInfo({ imageList }) {
+function Inputs({ imageList }) {
 	const {
 		register,
 		formState: { errors },
@@ -182,8 +182,8 @@ function ItemInfo({ imageList }) {
 				</S.InputWrapCheckBox>
 
 				<S.InputWrapPrice>
-					<S.InputLabelPrice>가격 *</S.InputLabelPrice>
-					<S.InputValuePrice>
+					<S.InputLabel>가격 *</S.InputLabel>
+					<S.InputValue>
 						<Input
 							{...register('price', {
 								required: categoryCheckedNum !== '0' && '가격을 입력해주세요',
@@ -200,7 +200,7 @@ function ItemInfo({ imageList }) {
 								<AlertText type={'error'}>{errors.price.message}</AlertText>
 							</S.Error>
 						)}
-					</S.InputValuePrice>
+					</S.InputValue>
 				</S.InputWrapPrice>
 			</S.MiddleWrap>
 
@@ -253,7 +253,7 @@ function ItemInfo({ imageList }) {
 		</form>
 	)
 }
-export default ItemInfo
+export default Inputs
 const InputWrap = styled.div`
 	padding: 1.5rem 0;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -315,11 +315,7 @@ const InputLabel = styled.div`
 	grid-column-end: 2;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
-const InputLabelPrice = styled.div`
-	grid-column-start: 1;
-	grid-column-end: 1;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-`
+
 const InputLabelCheckBox = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	margin-right: 3rem;
@@ -361,15 +357,6 @@ const InputValueAddress = styled.div`
 	grid-column-end: 11;
 	width: 100%;
 	display: flex;
-`
-
-const InputValuePrice = styled.div`
-	grid-column-start: 2;
-	grid-column-end: 6;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 `
 
 const InputValueCheckBox = styled.div`
@@ -452,8 +439,6 @@ const S = {
 	InputWrapPrice,
 	InputWrap,
 	ButtonWrap,
-	InputValuePrice,
-	InputLabelPrice,
 	InputValue,
 	InputValueCheckBox,
 	InputValueAddress,
