@@ -1,6 +1,7 @@
 import axios from 'axios'
 import TokenService from '../Utils/tokenService'
 import UserApi from './userApi'
+import useUser from '../Hooks/useUser'
 
 const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -26,15 +27,14 @@ axiosInstance.interceptors.response.use(
 		return response
 	},
 	async error => {
+		const user = useUser()
 		if (error.response.status === 417) {
 			// access token 재발급 필요
-			UserApi.logout()
-			TokenService.removeAccessToken(LOCAL_STORAGE_KEY.ACCESS_TOKEN) // 기존 access token 삭제
+			user.logout()
 		}
 		const originalRequest = error.config
 		if (error.response.status === 403 && !originalRequest._retry) {
 			// refresh 관련 세션 만료
-
 			originalRequest._retry = true // 재요청 보냄을 의미
 			const res = await UserApi.refreshToken()
 			if (res.status === 200) {
