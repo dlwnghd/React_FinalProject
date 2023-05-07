@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import styled from 'styled-components'
 import Filter from '../../Components/Filter/Filter'
 import recentPriceMock from '../../__mock__/Data/Product/recentPrice.data'
 
@@ -27,12 +28,19 @@ function RecentPrice() {
 	}
 
 	return (
-		<>
+		<S.RecentPriceWrapper>
 			<RecentSearch />
 			<Filter filterArray={dateFilter} onClick={onFilter} />
 			<Graph filterOption={filterOption} dummyData={dummyData} />
-		</>
+		</S.RecentPriceWrapper>
 	)
 }
 
 export default RecentPrice
+
+const RecentPriceWrapper = styled.div`
+`
+
+const S = {
+	RecentPriceWrapper,
+}

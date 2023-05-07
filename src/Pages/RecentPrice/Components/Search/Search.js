@@ -9,7 +9,7 @@ function RecentSearch() {
 				<S.Title>최근 시세 동향</S.Title>
 			</S.TitleBox>
 			<S.InputBox>
-				<Input placeholder="상품을 입력해주세요." />
+				<Input placeholder="어떤 상품의 시세가 궁금하신가요?" />
 				<FaSearch />
 			</S.InputBox>
 		</S.Wrapper>
