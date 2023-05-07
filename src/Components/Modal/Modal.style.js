@@ -3,24 +3,24 @@ import styled, { css } from 'styled-components'
 const sizeCSS = {
 	small: css`
 		width: 30vw;
-		min-width: 433px;
+		min-width: 350px;
 		height: 200px;
 		padding: 12px;
 	`,
 	medium: css`
 		width: 30vw;
-		min-width: 433px;
+		min-width: 350px;
 		height: 280px;
 		padding: 12px;
 	`,
 	large: css`
 		width: 30vw;
-		min-width: 433px;
+		min-width: 350px;
 		height: 500px;
 	`,
 	extra: css`
 		width: 70vw;
-		min-width: 433px;
+		min-width: 350px;
 		height: 750px;
 		padding: 12px;
 	`,
