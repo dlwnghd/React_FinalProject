@@ -18,7 +18,8 @@ function App() {
 		defaultOptions: {
 			queries: {
 				refetchOnWindowFocus: false,
-				retry: 1,
+				refetchOnMount: false,
+				retry: false,
 			},
 		},
 	})
