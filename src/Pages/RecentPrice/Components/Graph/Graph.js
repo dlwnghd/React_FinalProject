@@ -118,15 +118,27 @@ function Graph({ dummyData }) {
 		// Filter되는 날짜 데이터 연산 후 저장
 		const dateFilter = {
 			'최근 3개월': [
-				new Date(today.setMonth(today.getMonth() - 3)).getTime(),
+				new Date(
+					today.getFullYear(),
+					today.getMonth() - 2,
+					today.getDate(),
+				).getTime(),
 				today.getTime(),
 			],
 			'최근 6개월': [
-				new Date(today.setMonth(today.getMonth() - 6)).getTime(),
+				new Date(
+					today.getFullYear(),
+					today.getMonth() - 5,
+					today.getDate(),
+				).getTime(),
 				today.getTime(),
 			],
 			'최근 1년': [
-				new Date(today.setFullYear(today.getFullYear() - 1)).getTime(),
+				new Date(
+					today.getFullYear() - 1,
+					today.getMonth(),
+					today.getDate(),
+				).getTime(),
 				today.getTime(),
 			],
 		}
