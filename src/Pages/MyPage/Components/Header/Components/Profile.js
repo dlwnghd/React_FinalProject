@@ -3,14 +3,21 @@ import { useNavigate } from 'react-router'
 import Button from '../../../../../Components/Button/Button'
 import { FlexAlignCSS, WidthAutoCSS } from '../../../../../Styles/common'
 
-function Profile() {
+function Profile({ mainData }) {
 	const navigate = useNavigate()
+
 	return (
 		<S.Wrapper>
 			<S.ProfileWrapper>
-				<S.ProfileImg src="https://static.nid.naver.com/images/web/user/default.png?type=s160" />
-				<S.ProfileNickName>김태기</S.ProfileNickName>
+				<S.ProfileImg
+					src={
+						mainData.User.profileUrl ??
+						'https://static.nid.naver.com/images/web/user/default.png?type=s160'
+					}
+				/>
+				<S.ProfileNickName>{mainData.User.nickName}</S.ProfileNickName>
 			</S.ProfileWrapper>
+
 			<S.ButtonWrapper>
 				<S.StyledButton onClick={() => navigate('/mypage/useredit-userinfo')}>
 					내 정보 설정
@@ -18,10 +25,8 @@ function Profile() {
 				<S.StyledButton>
 					채팅 목록 <span>🔴</span>
 				</S.StyledButton>
-				<S.StyledButton
-				// disabled={true}
-				>
-					내 온도 <S.TempText>40°</S.TempText>
+				<S.StyledButton variant={'default-reverse'} state={'ondo'}>
+					거래 온도 <S.TempText>{mainData.ondo + '°'}</S.TempText>
 				</S.StyledButton>
 			</S.ButtonWrapper>
 		</S.Wrapper>
@@ -53,13 +58,14 @@ const ButtonWrapper = styled.div``
 
 const StyledButton = styled(Button)`
 	margin-right: 1rem;
+	width: 13rem;
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	cursor: ${({ state }) => state === 'ondo' && 'default'};
 `
 
 const TempText = styled.span`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	/* color: ${({ theme }) => theme.COLOR.hover}; */
 `
 
 const S = {

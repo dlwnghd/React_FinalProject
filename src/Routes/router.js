@@ -14,7 +14,7 @@ import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Navigation/Navigation'
-import MyPageHeader from '../Pages/MyPage/Components/Header'
+import MyPageIndex from '../Pages/MyPage/Components/Header'
 
 const router = createBrowserRouter([
 	{
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '',
-				element: <MyPageHeader />,
+				element: <MyPageIndex />,
 				children: [
 					{
 						path: '/mypage-bank',
