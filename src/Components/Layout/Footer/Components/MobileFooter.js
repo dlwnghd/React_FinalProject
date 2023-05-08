@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
+
 import {
 	Chatting_Icon,
 	FreeMarket_Icon,
@@ -9,13 +9,27 @@ import {
 	MyPage_Icon,
 	TradeUsed_Icon,
 } from '../../../Icons/Icons'
+import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
+import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
 
 function MobileFooter() {
 	const navigate = useNavigate()
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
+	const [scroll, setScroll] = useRecoilState(isScrollAtom)
+
+	window.addEventListener('wheel', function (event) {
+		if (event.deltaY > 0) {
+			setScroll(true)
+		} else if (event.deltaY < 0) {
+			setScroll(false)
+		} else if (document.documentElement.scrollTop <= 0) {
+			setScroll(false)
+		}
+	})
+
 	return (
-		<S.NavigationWrapper>
+		<S.NavigationWrapper className={scroll ? 'scroll' : ''}>
 			<S.Navigation className="navigation">
 				<S.NavigationUl>
 					<S.NavigationUlLi
@@ -106,9 +120,14 @@ const NavigationWrapper = styled.div`
 	width: 100%;
 	background: black;
 	border-top: 1.3rem solid ${({ theme }) => theme.COLOR.main};
+	transition: 0.5s ease;
 
 	@media screen and (max-width: 440px) {
 		display: block;
+	}
+
+	&.scroll {
+		bottom: -110px;
 	}
 `
 

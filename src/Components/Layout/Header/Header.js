@@ -15,20 +15,16 @@ import {
 } from '../../Icons/Icons'
 import { useRecoilState } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
+import { isOnSideBar } from '../../../Atoms/sideBar.atom'
+import { isScrollAtom } from '../../../Atoms/scrollState.atom'
 
 function Header({ searchProduct }) {
 	const navigate = useNavigate()
 
-	const NavigationFilter= [
-		'freeMarket',
-		'usedTrade',
-		'chat',
-		'mypage',
-	]
+	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage']
 
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
 	const currentURL = useLocation().pathname
-
 
 	const [product, setProduct] = useState('') // 검색할 물품 State관리용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
@@ -38,7 +34,8 @@ function Header({ searchProduct }) {
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
 
-	const [interestedProductShow, setInterestedProductShow] = useState(false) // 모바일 관심상품메뉴 활성화용
+	// const [interestedProductShow, setInterestedProductShow] = useState(false)
+	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 
 	useEffect(() => {
 		const foundIndex = NavigationFilter.findIndex(item =>
@@ -47,9 +44,6 @@ function Header({ searchProduct }) {
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
 	}, [currentURL])
 
-
-
-	
 	/**
 	 * 드롭다운 닫기 핸들러
 	 */
@@ -94,8 +88,25 @@ function Header({ searchProduct }) {
 		navigate(`/search/${product}`)
 	}
 
+	const [scroll, setScroll] = useRecoilState(isScrollAtom)
+
+	window.addEventListener('wheel', function (event) {
+		if (event.deltaY > 0) {
+			setScroll(true)
+		} else if (event.deltaY < 0) {
+			setScroll(false)
+		} else if (document.documentElement.scrollTop <= 0) {
+			setScroll(false)
+		}
+	})
+
+
 	return (
-		<S.HeaderWrapper>
+		<S.HeaderWrapper className={scroll ? 'scroll':''}>
+			<Sidebar
+				interestedProductShow={onSideBar}
+				setInterestedProductShow={setOnSideBar}
+			/>
 			<S.HeaderSpace>
 				{login ? (
 					<S.UserContainer>
@@ -164,7 +175,7 @@ function Header({ searchProduct }) {
 						<S.MobileIcon onClick={() => navigate(-1)}>
 							<RollBack_icon
 								size="24"
-								color={interestedProductShow ? 'black' : 'white'}
+								color={onSideBar ? 'white' : 'black'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
@@ -178,18 +189,18 @@ function Header({ searchProduct }) {
 						</S.Logo>
 						<S.MobileIcon
 							onClick={() => {
-								setInterestedProductShow(prev => !prev)
+								setOnSideBar(prev => !prev)
 							}}
 						>
 							<InterestBasket_Icon
 								size="24"
-								color={interestedProductShow ? 'black' : 'white'}
+								color={onSideBar ? 'white' : 'black'}
 								cursor="pointer"
 							/>
 						</S.MobileIcon>
 					</div>
 					<S.SearchContainer>
-						<Search_Icon color="black" position="absolute" />
+						<Search_Icon color="gray" position="absolute" />
 						<input
 							type="text"
 							placeholder={'어떤 상품을 찾으시나요?'}
@@ -200,10 +211,7 @@ function Header({ searchProduct }) {
 						></input>
 					</S.SearchContainer>
 				</S.List>
-				<Sidebar
-					interestedProductShow={interestedProductShow}
-					setInterestedProductShow={setInterestedProductShow}
-				/>
+
 				<S.Bottom>
 					<S.NavItem
 						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
@@ -238,10 +246,19 @@ const HeaderWrapper = styled.header`
 	position: relative;
 	z-index: 9999;
 	width: 100%;
-	background-color: ${({ theme }) => theme.COLOR.common.black};
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 	position: sticky;
 	top: 0;
 	padding: 2rem 0 0;
+	transition: 0.5s ease;
+
+
+	@media screen and (max-width: 440px) {
+		&.scroll {
+			top: -50px;
+		}
+	}
 `
 
 /**
@@ -304,7 +321,7 @@ const List = styled.div`
  */
 const Login_Join = styled.div`
 	height: 4rem;
-	color: white;
+	color: ${({ theme }) => theme.COLOR.common.black};
 	text-align: right;
 
 	& > span {
@@ -334,8 +351,8 @@ const SearchContainer = styled.div`
 		box-sizing: border-box;
 		border-radius: 2rem;
 		text-indent: 4.4rem;
-		background: white;
-		border: none;
+		background: ${({ theme }) => theme.COLOR.common.white};
+		border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
 		outline: none;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
@@ -344,7 +361,7 @@ const SearchContainer = styled.div`
 		position: absolute;
 		left: 1rem;
 		font-size: 2.8rem;
-		color: ${({ theme }) => theme.COLOR.common.black};
+		/* color: ${({ theme }) => theme.COLOR.common.black}; */
 	}
 `
 
@@ -384,7 +401,7 @@ const NavItem = styled.div`
 	padding: 2rem 0;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	color: ${({ theme }) => theme.COLOR.common.white};
+	color: ${({ theme }) => theme.COLOR.common.black};
 
 	/* 선택된 항목에만 box_shadow 추가 */
 	&.selected {
