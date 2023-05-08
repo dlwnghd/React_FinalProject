@@ -20,12 +20,11 @@ function Graph({ dummyData }) {
 		})
 	}
 
-
 	// Series(데이터가 들어가야할 곳!)
 	const series = [
 		{
-			name: '노트북',		// 상품명
-			data: dummyData,	// 데이터가 들어가야할 곳
+			name: '노트북', // 상품명
+			data: dummyData, // 데이터가 들어가야할 곳
 		},
 	]
 
@@ -114,12 +113,25 @@ function Graph({ dummyData }) {
 	function updateData(timeline) {
 		const chart = chartRef.current.chart
 
+		const today = new Date() // 오늘 날짜
+
+		// Filter되는 날짜 데이터 연산 후 저장
 		const dateFilter = {
-			'최근 3개월': [new Date('2023-02-07').getTime(), new Date().getTime()],
-			'최근 6개월': [new Date('2022-12-07').getTime(), new Date().getTime()],
-			'최근 1년': [new Date('2022-05-07').getTime(), new Date().getTime()],
+			'최근 3개월': [
+				new Date(today.setMonth(today.getMonth() - 3)).getTime(),
+				today.getTime(),
+			],
+			'최근 6개월': [
+				new Date(today.setMonth(today.getMonth() - 6)).getTime(),
+				today.getTime(),
+			],
+			'최근 1년': [
+				new Date(today.setFullYear(today.getFullYear() - 1)).getTime(),
+				today.getTime(),
+			],
 		}
 
+		// ex)  2/8 ~ 5/8 (3개월 전)
 		const [start, end] = dateFilter[timeline] || []
 
 		// 전체면 Reset
