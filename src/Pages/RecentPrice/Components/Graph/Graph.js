@@ -1,57 +1,41 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
+import Filter from '../../../../Components/Filter/Filter'
 import { FlexCenterCSS } from '../../../../Styles/common'
 
-function Graph({ filterOption, dummyData }) {
-	console.log(filterOption)
+function Graph({ dummyData }) {
+	const chartRef = useRef(null)
+	// Filter 종류
+	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년', '전체']
 
-	const dateFilter = ['3개월', '6개월', '1년']
+	// 필터버튼 클릭시
+	const onFilter = e => {
+		dateFilter.some(item => {
+			if (e.target.innerText == item) {
+				updateData(item)
+				return true
+			}
+			return false
+		})
+	}
 
+
+	// Series(데이터가 들어가야할 곳!)
 	const series = [
 		{
-			name: '노트북',
-			data: dummyData,
+			name: '노트북',		// 상품명
+			data: dummyData,	// 데이터가 들어가야할 곳
 		},
 	]
 
-	const chartRef = useRef(null)
-
-	useEffect(() => {
-		const chart = chartRef.current?.chart
-
-		// filter zoomX 테스트
-		if (filterOption === dateFilter[0]) {
-			chart.zoomX(
-				new Date('2023-02-07').getTime(),
-				new Date().getTime(),
-			)
-		}
-		if (filterOption === dateFilter[1]) {
-			chart.zoomX(
-				new Date('2022-12-07').getTime(),
-				new Date().getTime(),
-			)
-		}
-		if (filterOption === dateFilter[2]) {
-			chart.zoomX(
-				new Date('2022-05-07').getTime(),
-				new Date().getTime(),
-			)
-		}
-
-		// // Reset 테스트
-		// chart.resetSeries(false,true)
-	}, [filterOption])
-
+	// Option
 	const options = {
 		chart: {
+			id: 'area-datetime',
 			type: 'area',
-			stacked: false,
 			height: 350,
 			zoom: {
-				type: 'x',
-				enabled: true,
 				autoScaleYaxis: true,
 			},
 			toolbar: {
@@ -63,23 +47,30 @@ function Graph({ filterOption, dummyData }) {
 		},
 		markers: {
 			size: 0,
+			style: 'hollow',
 		},
 		title: {
 			text: '시세동향',
-			align: 'left',
+			align: 'center',
 		},
 		fill: {
 			type: 'gradient',
 			gradient: {
 				shadeIntensity: 1,
-				inverseColors: false,
-				opacityFrom: 0.5,
-				opacityTo: 0,
-				stops: [0, 90, 100],
+				opacityFrom: 0.7,
+				opacityTo: 0.9,
+				stops: [0, 100],
 			},
 		},
 		theme: {
 			mode: 'dark',
+			palette: 'palette1',
+			monochrome: {
+				enabled: false,
+				color: 'black',
+				shadeTo: 'light',
+				shadeIntensity: 0.65,
+			},
 		},
 		yaxis: {
 			labels: {
@@ -89,13 +80,28 @@ function Graph({ filterOption, dummyData }) {
 			},
 			title: {
 				text: '가격',
+				rotate: 0,
+				margin: 10,
+				offsetX: 0,
+				offsetY: 0,
+				floating: false,
+				style: {
+					fontSize: '14px',
+					fontWeight: 'bold',
+					fontFamily: undefined,
+					color: `${({ theme }) => theme.COLOR.main}`,
+				},
 			},
 		},
 		xaxis: {
 			type: 'datetime',
+			tickAmount: 6,
 		},
 		tooltip: {
 			shared: false,
+			x: {
+				format: 'dd MMM yyyy',
+			},
 			y: {
 				formatter: function (val) {
 					return Math.round(val / 1000) * 1000
@@ -104,17 +110,44 @@ function Graph({ filterOption, dummyData }) {
 		},
 	}
 
+	// ApexFilter zoom-in, zoom-out 적용
+	function updateData(timeline) {
+		const chart = chartRef.current.chart
+
+		const dateFilter = {
+			'최근 3개월': [new Date('2023-02-07').getTime(), new Date().getTime()],
+			'최근 6개월': [new Date('2022-12-07').getTime(), new Date().getTime()],
+			'최근 1년': [new Date('2022-05-07').getTime(), new Date().getTime()],
+		}
+
+		const [start, end] = dateFilter[timeline] || []
+
+		// 전체면 Reset
+		if (timeline === '전체') {
+			chart.resetSeries(true, true)
+			return
+		}
+
+		// Zoom 조절
+		if (start && end) {
+			return ApexCharts.exec('area-datetime', 'zoomX', start, end)
+		}
+	}
+
 	return (
-		<GraphBox>
-			<ReactApexChart
-				options={options}
-				series={series}
-				height={500}
-				type="area"
-				width={300}
-				ref={chartRef}
-			/>
-		</GraphBox>
+		<S.GraphBox id="chart">
+			<div id="chart-timeline">
+				<Filter filterArray={dateFilter} onClick={onFilter} />
+				<ReactApexChart
+					options={options}
+					series={series}
+					height={500}
+					type="area"
+					width={900}
+					ref={chartRef}
+				/>
+			</div>
+		</S.GraphBox>
 	)
 }
 
@@ -129,3 +162,7 @@ const GraphBox = styled.div`
 		}
 	}
 `
+
+const S = {
+	GraphBox,
+}
