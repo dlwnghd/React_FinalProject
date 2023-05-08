@@ -100,6 +100,10 @@ function Header({ searchProduct }) {
 		}
 	})
 
+	// url 변경시 스크롤 최상단으로 이동
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [navigate])
 
 	return (
 		<S.HeaderWrapper className={scroll ? 'scroll':''}>
