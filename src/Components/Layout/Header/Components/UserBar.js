@@ -83,7 +83,7 @@ const UserWrapper = styled.div`
 		cursor: pointer;
 	}
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: none;
 	}
 `
@@ -91,7 +91,7 @@ const UserWrapper = styled.div`
 const UserBox = styled.div`
 	${FlexAlignCSS};
 	height: 100%;
-	color: black;
+	color: ${({ theme }) => theme.COLOR.common.black};
 
 	& > svg {
 		margin-right: 1rem;
@@ -101,10 +101,10 @@ const UserBox = styled.div`
 		position: absolute;
 		transform: translate(2.2rem, -1rem);
 		background: red;
-		border: 1px solid white;
+		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 		border-radius: 50rem;
 		padding: 0px 5px;
-		color: white;
+		color: ${({ theme }) => theme.COLOR.common.white};
 	}
 
 	& > p {
@@ -115,8 +115,8 @@ const UserBox = styled.div`
 const UserDropDownMenu = styled.div`
 	position: absolute;
 	display: grid;
-	background-color: #acacac;
-	border: 1px solid black;
+	background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
+	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 	border-radius: 5%;
 	top: 25%;
 	z-index: 9999;
@@ -124,14 +124,14 @@ const UserDropDownMenu = styled.div`
 
 	& > span {
 		padding: 1rem;
-		border: 1px solid white;
+		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 		cursor: pointer;
 		border-radius: 5%;
 
 		:hover {
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
-			border: 1px solid white;
+			border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 		}
 	}
 `

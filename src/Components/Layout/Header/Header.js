@@ -24,7 +24,7 @@ function Header() {
 
 	const currentURL = useLocation().pathname // 현재 URL 기억 State (0: 무료, 1: 중고)
 
-	const [login, setLogin] = useState(false) // 로그인 Header 구현용 State
+	const [login, setLogin] = useState(true) // 로그인 Header 구현용 State
 
 	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
@@ -93,7 +93,7 @@ const HeaderWrapper = styled.header`
 	padding: 2rem 0 0;
 	transition: 0.5s ease;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		&.scroll {
 			top: -50px;
 		}
@@ -106,7 +106,7 @@ const HeaderWrapper = styled.header`
 const HeaderContainer = styled.div`
 	${WidthAutoCSS};
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		padding-bottom: 2rem;
 	}
 `
@@ -122,12 +122,12 @@ const List = styled.div`
 	${FlexBetweenCSS}
 	margin-bottom:2rem;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		flex-direction: column;
 	}
 
 	& > input {
-		@media screen and (max-width: 440px) {
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 			position: relative;
 			width: 100%;
 			left: 0%;
@@ -140,7 +140,7 @@ const List = styled.div`
 	}
 
 	& > div:first-of-type {
-		@media screen and (max-width: 440px) {
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 			width: 100%;
 			height: 6rem;
 			${FlexBetweenCSS}
@@ -148,7 +148,7 @@ const List = styled.div`
 	}
 
 	& > div:last-of-type {
-		@media screen and (max-width: 440px) {
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 			width: 100%;
 			top: 6rem;
 		}

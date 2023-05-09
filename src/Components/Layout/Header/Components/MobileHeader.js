@@ -35,7 +35,7 @@ const MobileHeaderWrapper = styled.div`
 	${FlexAlignCSS}
 
 	&:first-of-type {
-		@media screen and (max-width: 440px) {
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 			width: 100%;
 			height: 6rem;
 			${FlexBetweenCSS}
@@ -43,7 +43,7 @@ const MobileHeaderWrapper = styled.div`
 	}
 
 	&:last-of-type {
-		@media screen and (max-width: 440px) {
+		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 			width: 100%;
 			top: 6rem;
 		}
@@ -56,7 +56,7 @@ const MobileHeaderWrapper = styled.div`
 const MobileIcon = styled.div`
 	display: none;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: block;
 
 		& > svg {
@@ -75,7 +75,7 @@ const Logo = styled.h1`
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	cursor: pointer;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
 	}
 `

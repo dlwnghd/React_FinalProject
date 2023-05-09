@@ -38,7 +38,7 @@ const NavigationWrapper = styled.nav`
 	display: flex;
 	column-gap: 4rem;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: none;
 	}
 `

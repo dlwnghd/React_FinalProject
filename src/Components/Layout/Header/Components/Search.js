@@ -36,7 +36,7 @@ function HeaderSearchBar({ setSelectedNav }) {
 
 	return (
 		<S.SearchWrapper>
-			<Search_Icon color="gray" position="absolute" />
+			<Search_Icon position="absolute" />
 			<input
 				type="text"
 				placeholder={'어떤 상품을 찾으시나요?'}
@@ -73,10 +73,10 @@ const SearchWrapper = styled.div`
 	}
 
 	& > svg {
+		color: ${({ theme }) => theme.COLOR.common.gray[200]};
 		position: absolute;
 		left: 1rem;
 		font-size: 2.8rem;
-		/* color: ${({ theme }) => theme.COLOR.common.black}; */
 	}
 `
 

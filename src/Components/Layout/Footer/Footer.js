@@ -61,7 +61,7 @@ const DescriptionBox = styled.div`
 const FooterContainer = styled.div`
 	${WidthAutoCSS};
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: none;
 	}
 `

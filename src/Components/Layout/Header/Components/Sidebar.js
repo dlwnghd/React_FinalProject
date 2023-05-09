@@ -56,14 +56,14 @@ const SidebarWrapper = styled.nav`
 	height: 100%;
 	overflow-y: auto;
 	padding: 12rem 6rem;
-	color: black;
+	color: ${({ theme }) => theme.COLOR.common.black};
 	transition: 0.5s ease-in-out;
 	transform: translateX(100%);
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
-	@media screen and (min-width: 441px) {
+	@media screen and (min-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: none;
 	}
 `

@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
 import { MobileNav } from '../../../../Consts/@mobileNavConfig'
+import { FlexCenterCSS } from '../../../../Styles/common'
 
 function MobileFooter() {
 	const navigate = useNavigate()
@@ -36,7 +37,7 @@ function MobileFooter() {
 							>
 								<div>
 									<span className="icon">{nav.icon}</span>
-									<span className="text">홈</span>
+									<span className="text">{nav.text}</span>
 								</div>
 							</S.NavBox>
 						)
@@ -61,7 +62,7 @@ const NavigationWrapper = styled.div`
 	border-top: 1.3rem solid ${({ theme }) => theme.COLOR.main};
 	transition: 0.5s ease;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: block;
 	}
 
@@ -75,9 +76,7 @@ const NavigationContainer = styled.div`
 	width: 400px;
 	height: 70px;
 	background: black;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	${FlexCenterCSS};
 	border-radius: 10px;
 	margin: auto;
 `
@@ -96,13 +95,11 @@ const NavBox = styled.li`
 
 	& > div {
 		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		${FlexCenterCSS};
 		flex-direction: column;
 		width: 100%;
 		text-align: center;
-		font-weight: 700;
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	}
 
 	& > div .icon {
@@ -112,18 +109,18 @@ const NavBox = styled.li`
 		font-size: 3.5rem;
 		text-align: center;
 		transition: 0.5s;
-		color: white;
+		color: ${({ theme }) => theme.COLOR.common.white};
 	}
 
 	&.active > div .icon {
 		transform: translateY(-32px);
-		color: black;
+		color: ${({ theme }) => theme.COLOR.common.black};
 	}
 
 	& > div .text {
 		position: absolute;
-		color: #fff;
-		font-weight: 400;
+		color: ${({ theme }) => theme.COLOR.common.white};
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 		font-size: 0.75em;
 		letter-spacing: 0.05em;
 		transition: 0.5s;

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
+import { FlexCenterCSS } from '../../../../Styles/common'
 import { AddProduct_Icon } from '../../../Icons/Icons'
 
 function AddProductButton() {
@@ -44,7 +45,7 @@ const ButtonBox = styled.div`
 	height: fit-content;
 	transition: 0.5s ease;
 
-	@media screen and (max-width: 440px) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		&.scroll {
 			bottom: 25px;
 		}
@@ -52,18 +53,16 @@ const ButtonBox = styled.div`
 `
 
 const Button = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	${FlexCenterCSS};
 	width: 100%;
 	height: 100%;
 	color: white;
 	border-radius: 50%;
-	background-color: white;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 	color: ${({ theme }) => theme.COLOR.main};
 	cursor: pointer;
 	transition: 0.3s ease;
-	
+
 	&:hover {
 		scale: 1.2;
 		transform: rotate(-180deg);
