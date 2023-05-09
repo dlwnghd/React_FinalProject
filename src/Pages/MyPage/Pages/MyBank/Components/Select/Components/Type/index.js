@@ -3,19 +3,19 @@ import { FlexBetweenCSS } from '../../../../../../../../Styles/common'
 import { useState } from 'react'
 import { Down_Icon } from '../../../../../../../../Components/Icons/Icons'
 
-const purchaseText = '판매 내역'
-const saleText = '구매 내역'
+const sellerText = '판매 내역'
+const buyerText = '구매 내역'
 
 function TypeSelectBox() {
 	const [type, setType] = useState({
-		text: purchaseText,
+		text: buyerText,
 		category: 'buyer',
 	})
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
 
 	const onClickType = e => {
 		const text = e.target.textContent
-		setType({ text, category: text === purchaseText ? 'buyer' : 'seller' })
+		setType({ text, category: text === buyerText ? 'buyer' : 'seller' })
 	}
 
 	return (
@@ -26,14 +26,11 @@ function TypeSelectBox() {
 			</S.BoxContainer>
 			{isOpenSlide && (
 				<S.SelectContainer>
-					<S.SelectItem
-						onClick={onClickType}
-						state={type.text === purchaseText}
-					>
-						{purchaseText}
+					<S.SelectItem onClick={onClickType} state={type.text === sellerText}>
+						{sellerText}
 					</S.SelectItem>
-					<S.SelectItem onClick={onClickType} state={type.text === saleText}>
-						{saleText}
+					<S.SelectItem onClick={onClickType} state={type.text === buyerText}>
+						{buyerText}
 					</S.SelectItem>
 				</S.SelectContainer>
 			)}
