@@ -13,7 +13,7 @@ function RecentSearch({ onSearchPrd }) {
 	}
 
 	return (
-		<S.Wrapper>
+		<S.SearchWrapper>
 			<S.TitleBox>
 				<S.Title>최근 시세 동향</S.Title>
 			</S.TitleBox>
@@ -26,13 +26,13 @@ function RecentSearch({ onSearchPrd }) {
 				/>
 				<FaSearch />
 			</S.InputBox>
-		</S.Wrapper>
+		</S.SearchWrapper>
 	)
 }
 
 export default RecentSearch
 
-const Wrapper = styled.div`
+const SearchWrapper = styled.div`
 	${WidthAutoCSS}
 	display: flex;
 	flex-direction: column;
@@ -68,7 +68,7 @@ const Input = styled.input`
 `
 
 const S = {
-	Wrapper,
+	SearchWrapper,
 	Title,
 	InputBox,
 	TitleBox,
