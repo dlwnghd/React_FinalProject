@@ -5,92 +5,41 @@ import {
 	FlexBetweenCSS,
 	WidthAutoCSS,
 } from '../../../Styles/common'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Sidebar from './Components/Sidebar'
-import {
-	InterestBasket_Icon,
-	Profile_Icon,
-	Search_Icon,
-	RollBack_icon,
-} from '../../Icons/Icons'
 import { useRecoilState } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 import { isOnSideBar } from '../../../Atoms/sideBar.atom'
 import { isScrollAtom } from '../../../Atoms/scrollState.atom'
+import UserBar from './Components/UserBar'
+import NonUserBar from './Components/NonUserBar'
+import HeaderSearchBar from './Components/Search'
+import MobileHeader from './Components/MobileHeader'
+import Navigation from './Components/Navigation'
 
-function Header({ searchProduct }) {
-	const navigate = useNavigate()
+function Header() {
+	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage'] // 네비게이션 Filter
 
-	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage']
+	const navigate = useNavigate() // 네비게이션 추가
 
-	// 현재 URL 기억 State (0: 무료, 1: 중고)
-	const currentURL = useLocation().pathname
-	const { pathname } = useLocation()	// 이전 경로
-
-	const [product, setProduct] = useState('') // 검색할 물품 State관리용
-	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
+	const currentURL = useLocation().pathname // 현재 URL 기억 State (0: 무료, 1: 중고)
 
 	const [login, setLogin] = useState(false) // 로그인 Header 구현용 State
 
-	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
-	const [dropdown, setDropdown] = useState(true) // 사용자 드롭다운 관리용
-
-	// const [interestedProductShow, setInterestedProductShow] = useState(false)
+	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
+	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
 
+	// 현재 URL 변경시
 	useEffect(() => {
+		console.log('✅', currentURL)
 		const foundIndex = NavigationFilter.findIndex(item =>
 			currentURL.includes(item),
 		)
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
 	}, [currentURL])
 
-	/**
-	 * 드롭다운 닫기 핸들러
-	 */
-	const dropdownCloseHandler = ({ target }) => {
-		if (dropdown && userMenu.current && !userMenu.current.contains(target)) {
-			setDropdown(false)
-		}
-	}
-
-	useEffect(() => {
-		window.addEventListener('click', dropdownCloseHandler)
-		return () => {
-			window.removeEventListener('click', dropdownCloseHandler)
-		}
-	})
-
-	/**
-	 * 검색내용 변경
-	 */
-	const onChangeSearch = e => {
-		setProduct(e.target.value)
-	}
-
-	/**
-	 * Enter 키 입력시 검색 기능
-	 */
-	const handleKeyPress = e => {
-		if (e.key === 'Enter') {
-			onSubmitSearch()
-			setSelectedNav(1)
-		}
-	}
-
-	/**
-	 * 검색 기능
-	 */
-	const onSubmitSearch = () => {
-		if (product == '') {
-			alert('검색어를 입력해주세요')
-			return
-		}
-		navigate(`/search/${product}`)
-	}
-
-	const [scroll, setScroll] = useRecoilState(isScrollAtom)
-
+	// 스크롤 이벤트리스너
 	window.addEventListener('wheel', function (event) {
 		if (event.deltaY > 0) {
 			setScroll(true)
@@ -108,146 +57,22 @@ function Header({ searchProduct }) {
 
 	return (
 		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
-			<Sidebar
-				interestedProductShow={onSideBar}
-				setInterestedProductShow={setOnSideBar}
-			/>
-			<S.HeaderSpace>
+			<Sidebar onSideBar={onSideBar} />
+			<S.HeaderContainer>
 				{login ? (
-					<S.UserContainer>
-						<S.UserBox
-							ref={userMenu}
-							onClick={() => {
-								setDropdown(prev => !prev)
-							}}
-						>
-							<Profile_Icon size="28" />
-							<span>99+</span>
-							<p>회원명</p>
-						</S.UserBox>
-						{dropdown && (
-							<S.UserDropDownMenu>
-								<span
-									onClick={() => {
-										navigate('/mypage-bank')
-										setSelectedNav(5)
-									}}
-								>
-									마이페이지
-								</span>
-								<span
-									onClick={() => {
-										navigate('/mypage/useredit-userinfo')
-										setSelectedNav(5)
-									}}
-								>
-									회원정보 수정
-								</span>
-								<span>채팅목록</span>
-								<span
-									onClick={() => {
-										navigate('/')
-										setSelectedNav(4)
-									}}
-								>
-									LOGOUT
-								</span>
-							</S.UserDropDownMenu>
-						)}
-					</S.UserContainer>
+					<UserBar setSelectedNav={setSelectedNav} />
 				) : (
-					<S.Login_Join>
-						<span
-							onClick={() => {
-								navigate('/login'),
-									{
-										state: {
-											from: pathname,
-										},
-									}
-								setSelectedNav(1)
-							}}
-						>
-							login
-						</span>
-						<span
-							onClick={() => {
-								navigate('/signup'),
-									{
-										state: {
-											from: pathname,
-										},
-									}
-								setSelectedNav(1)
-							}}
-						>
-							join
-						</span>
-					</S.Login_Join>
+					<NonUserBar setSelectedNav={setSelectedNav} />
 				)}
 				<S.List>
-					<div>
-						<S.MobileIcon onClick={() => navigate(-1)}>
-							<RollBack_icon
-								size="24"
-								color={onSideBar ? 'white' : 'black'}
-								cursor="pointer"
-							/>
-						</S.MobileIcon>
-						<S.Logo
-							onClick={() => {
-								navigate('/')
-								setSelectedNav(1)
-							}}
-						>
-							NEGO MARKET
-						</S.Logo>
-						<S.MobileIcon
-							onClick={() => {
-								setOnSideBar(prev => !prev)
-							}}
-						>
-							<InterestBasket_Icon
-								size="24"
-								color={onSideBar ? 'white' : 'black'}
-								cursor="pointer"
-							/>
-						</S.MobileIcon>
-					</div>
-					<S.SearchContainer>
-						<Search_Icon color="gray" position="absolute" />
-						<input
-							type="text"
-							placeholder={'어떤 상품을 찾으시나요?'}
-							onChange={onChangeSearch}
-							onKeyDown={handleKeyPress}
-							defaultValue={searchProduct} // 만약 검색 도중 새로고침이 일어나더라도 검색어가 남아있어야 함
-							value={product}
-						></input>
-					</S.SearchContainer>
+					<MobileHeader
+						setSelectedNav={setSelectedNav}
+						setOnSideBar={setOnSideBar}
+					/>
+					<HeaderSearchBar setSelectedNav={setSelectedNav} />
 				</S.List>
-
-				<S.Bottom>
-					<S.NavItem
-						className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-						onClick={() => {
-							setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/freeMarket')
-						}}
-					>
-						FREE MARKET
-					</S.NavItem>
-					<S.NavItem
-						className={selectedNav === 3 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
-						onClick={() => {
-							setSelectedNav(3) // 선택된 Navigation 항목의 인덱스 업데이트
-							navigate('/list/usedTrade')
-						}}
-					>
-						TRADE USED
-					</S.NavItem>
-				</S.Bottom>
-			</S.HeaderSpace>
+				<Navigation selectedNav={selectedNav} setSelectedNav={setSelectedNav} />
+			</S.HeaderContainer>
 		</S.HeaderWrapper>
 	)
 }
@@ -278,7 +103,7 @@ const HeaderWrapper = styled.header`
 /**
  * Header공간
  */
-const HeaderSpace = styled.div`
+const HeaderContainer = styled.div`
 	${WidthAutoCSS};
 
 	@media screen and (max-width: 440px) {
@@ -330,195 +155,8 @@ const List = styled.div`
 	}
 `
 
-/**
- * 로그인 / 회원가입
- */
-const Login_Join = styled.div`
-	height: 4rem;
-	color: ${({ theme }) => theme.COLOR.common.black};
-	text-align: right;
-
-	& > span {
-		cursor: pointer;
-		margin: 0 1rem;
-	}
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
-`
-
-/**
- * 검색창
- */
-const SearchContainer = styled.div`
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 33.3%;
-	${FlexAlignCSS}
-
-	& > input {
-		width: 100%;
-		height: 4rem;
-		color: ${({ theme }) => theme.COLOR.common.black};
-		box-sizing: border-box;
-		border-radius: 2rem;
-		text-indent: 4.4rem;
-		background: ${({ theme }) => theme.COLOR.common.white};
-		border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
-		outline: none;
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	}
-
-	& > svg {
-		position: absolute;
-		left: 1rem;
-		font-size: 2.8rem;
-		/* color: ${({ theme }) => theme.COLOR.common.black}; */
-	}
-`
-
-/**
- * 로고
- */
-const Logo = styled.h1`
-	color: ${({ theme }) => theme.COLOR.main};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	cursor: pointer;
-
-	@media screen and (max-width: 440px) {
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-	}
-`
-
-/**
- * Header 하단
- */
-const Bottom = styled.nav`
-	display: flex;
-	column-gap: 4rem;
-	/* height: 5.5rem; */
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
-`
-
-/**
- * 네비게이션 아이템들
- */
-const NavItem = styled.div`
-	position: relative;
-	${FlexAlignCSS}
-	cursor: pointer;
-	padding: 2rem 0;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	color: ${({ theme }) => theme.COLOR.common.black};
-
-	/* 선택된 항목에만 box_shadow 추가 */
-	&.selected {
-		color: ${({ theme }) => theme.COLOR.main};
-
-		&::after {
-			position: absolute;
-			bottom: 0;
-			content: '';
-			width: 100%;
-			height: 0.3rem;
-			background: ${({ theme }) => theme.COLOR.main};
-		}
-	}
-`
-
-/**
- * 모바일 아이콘 구역
- */
-const MobileIcon = styled.div`
-	display: none;
-
-	@media screen and (max-width: 440px) {
-		display: block;
-
-		& > svg {
-			transition: color 1s;
-			position: relative;
-			z-index: 9999;
-		}
-	}
-`
-
-const UserContainer = styled.div`
-	height: 4rem;
-	${FlexAlignCSS}
-	justify-content: flex-end;
-	color: ${({ theme }) => theme.COLOR.common.white};
-
-	& > * {
-		cursor: pointer;
-	}
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
-`
-const UserBox = styled.div`
-	${FlexAlignCSS};
-	height: 100%;
-
-	& > svg {
-		margin-right: 1rem;
-	}
-
-	& > span {
-		position: absolute;
-		transform: translate(2.2rem, -1rem);
-		background: red;
-		border: 1px solid white;
-		border-radius: 50rem;
-		padding: 0px 5px;
-	}
-
-	& > p {
-		margin-left: 2.5rem;
-	}
-`
-const UserDropDownMenu = styled.div`
-	position: absolute;
-	display: grid;
-	background-color: #acacac;
-	border: 1px solid black;
-	border-radius: 5%;
-	top: 25%;
-	z-index: 9999;
-	width: 12rem;
-
-	& > span {
-		padding: 1rem;
-		border: 1px solid white;
-		cursor: pointer;
-		border-radius: 5%;
-
-		:hover {
-			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-			background-color: ${({ theme }) => theme.COLOR.hover};
-			border: 1px solid white;
-		}
-	}
-`
-
 const S = {
 	HeaderWrapper,
 	List,
-	Login_Join,
-	SearchContainer,
-	Logo,
-	Bottom,
-	NavItem,
-	MobileIcon,
-	UserContainer,
-	UserBox,
-	UserDropDownMenu,
-	HeaderSpace,
+	HeaderContainer,
 }

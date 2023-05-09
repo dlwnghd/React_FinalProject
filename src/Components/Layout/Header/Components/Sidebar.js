@@ -5,24 +5,24 @@ import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import ItemBox from '../../../ItemBox/ItemBox'
 
-function Sidebar({ interestedProductShow, setInterestedProductShow }) {
+function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
-		if (interestedProductShow === false) {
+		if (onSideBar === false) {
 			slideRef.current.style.transform = 'translateX(100%)'
 			$body.style.overflow = 'auto'
 		}
-		if (interestedProductShow === true) {
+		if (onSideBar === true) {
 			slideRef.current.style.transform = 'translateX(0%)'
 			$body.style.overflow = 'hidden'
 		}
 	})
 
 	return (
-		<S.Wrapper ref={slideRef}>
+		<S.SidebarWrapper ref={slideRef}>
 			<h4>관심 상품 목록</h4>
 			<S.SideBarContainer>
 				<S.ProductList>
@@ -41,15 +41,15 @@ function Sidebar({ interestedProductShow, setInterestedProductShow }) {
 					})}
 				</S.ProductList>
 			</S.SideBarContainer>
-		</S.Wrapper>
+		</S.SidebarWrapper>
 	)
 }
 
 export default Sidebar
 
-const Wrapper = styled.nav`
+const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 0;
+	top: 7.8rem;
 	left: 0;
 	z-index: 99;
 	width: 100%;
@@ -82,7 +82,7 @@ const ProductList = styled.li`
 `
 
 const S = {
-	Wrapper,
+	SidebarWrapper,
 	SideBarContainer,
 	ProductList,
 }
