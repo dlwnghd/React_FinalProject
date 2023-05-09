@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 import styled from 'styled-components'
 import {
@@ -24,6 +24,9 @@ import UserInfoService from '../../../Utils/userInfoService'
 
 function Login() {
 	const navigate = useNavigate()
+	const location = useLocation()
+	const from = location.state?.from
+
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
 	const loginState = useRecoilValue(loginStateAtom)
@@ -50,7 +53,8 @@ function Login() {
 				// 로그인 성공 시에만 아이디 저장
 				UserInfoService.setSaveId(email)
 			}
-			navigate('/')
+			if (from) return navigate(from) // 이전 페이지 정보가 있다면 그 페이지로 돌아감
+			navigate('/') // 그게 아니라면 메인 페이지로 이동
 		} catch (err) {
 			const { message } = err.response.data
 			setError(message)

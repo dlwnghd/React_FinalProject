@@ -13,8 +13,8 @@ function Modal(props) {
 	}
 
 	return (
-		<S.Wrapper>
-			<S.Modal size={size} {...rest}>
+		<S.Wrapper className="active">
+			<S.Modal size={size} {...rest} className="active">
 				{children}
 				<span
 					onClick={onClickCloseModal}
