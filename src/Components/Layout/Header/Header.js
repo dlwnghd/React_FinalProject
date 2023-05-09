@@ -25,6 +25,7 @@ function Header({ searchProduct }) {
 
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
 	const currentURL = useLocation().pathname
+	const { pathname } = useLocation()	// 이전 경로
 
 	const [product, setProduct] = useState('') // 검색할 물품 State관리용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
@@ -106,7 +107,7 @@ function Header({ searchProduct }) {
 	}, [navigate])
 
 	return (
-		<S.HeaderWrapper className={scroll ? 'scroll':''}>
+		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
 			<Sidebar
 				interestedProductShow={onSideBar}
 				setInterestedProductShow={setOnSideBar}
@@ -158,7 +159,12 @@ function Header({ searchProduct }) {
 					<S.Login_Join>
 						<span
 							onClick={() => {
-								navigate('/login')
+								navigate('/login'),
+									{
+										state: {
+											from: pathname,
+										},
+									}
 								setSelectedNav(1)
 							}}
 						>
@@ -166,7 +172,12 @@ function Header({ searchProduct }) {
 						</span>
 						<span
 							onClick={() => {
-								navigate('/signup')
+								navigate('/signup'),
+									{
+										state: {
+											from: pathname,
+										},
+									}
 								setSelectedNav(1)
 							}}
 						>
@@ -256,7 +267,6 @@ const HeaderWrapper = styled.header`
 	top: 0;
 	padding: 2rem 0 0;
 	transition: 0.5s ease;
-
 
 	@media screen and (max-width: 440px) {
 		&.scroll {
