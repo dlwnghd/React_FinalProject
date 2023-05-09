@@ -12,7 +12,7 @@ const getMyPageMainData = async () => {
 
 const useGetMyPageMainData = () => {
 	const navigate = useNavigate()
-	const { pathName } = useLocation()
+	const { pathname } = useLocation()
 	const setIsOpenModal = useSetRecoilState(isOpenModalAtom)
 
 	const { data, error, status, isLoading, isError } = useQuery(
@@ -21,15 +21,15 @@ const useGetMyPageMainData = () => {
 		{
 			cacheTime: 1000 * 60 * 30, // 30분
 			onError: error => {
-				if (error.response.status === 403) {
-					navigate('/login', {
-						state: {
-							from: pathName,
-						},
-					})
-					return setIsOpenModal(true)
-				}
-				return Promise.reject(error)
+				// if (error.response.status === 403) {
+				// 	navigate('/login', {
+				// 		state: {
+				// 			from: pathname,
+				// 		},
+				// 	})
+				// 	return setIsOpenModal(true)
+				// }
+				// return Promise.reject(error)
 			},
 		},
 	)
