@@ -14,6 +14,7 @@ import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
 
 function MobileFooter() {
 	const navigate = useNavigate()
+	const MobileNav = ['홈','무료','네고','채팅','내 정보']
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
@@ -33,10 +34,10 @@ function MobileFooter() {
 			<S.Navigation className="navigation">
 				<S.NavigationUl>
 					<S.NavigationUlLi
-						className={`list ${footerSelect === 1 ? 'active' : ''}`}
+						className={`list ${footerSelect === 0 ? 'active' : ''}`}
 						onClick={() => {
 							navigate('/')
-							setFooterSelect(1)
+							setFooterSelect(0)
 						}}
 					>
 						<div>
@@ -47,10 +48,10 @@ function MobileFooter() {
 						</div>
 					</S.NavigationUlLi>
 					<S.NavigationUlLi
-						className={`list ${footerSelect === 2 ? 'active' : ''}`}
+						className={`list ${footerSelect === 1 ? 'active' : ''}`}
 						onClick={() => {
 							navigate('/list/freeMarket')
-							setFooterSelect(2)
+							setFooterSelect(1)
 						}}
 					>
 						<div>
@@ -61,10 +62,10 @@ function MobileFooter() {
 						</div>
 					</S.NavigationUlLi>
 					<S.NavigationUlLi
-						className={`list ${footerSelect === 3 ? 'active' : ''}`}
+						className={`list ${footerSelect === 2 ? 'active' : ''}`}
 						onClick={() => {
 							navigate('/list/usedTrade')
-							setFooterSelect(3)
+							setFooterSelect(2)
 						}}
 					>
 						<div>
@@ -75,10 +76,10 @@ function MobileFooter() {
 						</div>
 					</S.NavigationUlLi>
 					<S.NavigationUlLi
-						className={`list ${footerSelect === 4 ? 'active' : ''}`}
+						className={`list ${footerSelect === 3 ? 'active' : ''}`}
 						onClick={() => {
 							navigate('/chat인데 modal로 띄우기로 해서 흠')
-							setFooterSelect(4)
+							setFooterSelect(3)
 						}}
 					>
 						<div>
@@ -89,10 +90,10 @@ function MobileFooter() {
 						</div>
 					</S.NavigationUlLi>
 					<S.NavigationUlLi
-						className={`list ${footerSelect === 5 ? 'active' : ''}`}
+						className={`list ${footerSelect === 4 ? 'active' : ''}`}
 						onClick={() => {
 							navigate('/mypage-bank')
-							setFooterSelect(5)
+							setFooterSelect(4)
 						}}
 					>
 						<div>

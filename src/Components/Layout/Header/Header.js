@@ -36,7 +36,7 @@ function Header() {
 		const foundIndex = NavigationFilter.findIndex(item =>
 			currentURL.includes(item),
 		)
-		setSelectedNav(foundIndex !== -1 ? foundIndex + 2 : 1)
+		setSelectedNav(foundIndex !== -1 ? foundIndex + 1 : 0)
 	}, [currentURL])
 
 	// 스크롤 이벤트리스너

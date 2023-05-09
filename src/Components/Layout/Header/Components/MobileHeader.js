@@ -14,7 +14,7 @@ function MobileHeader({ setSelectedNav, setOnSideBar }) {
 			<S.Logo
 				onClick={() => {
 					navigate('/')
-					setSelectedNav(1)
+					setSelectedNav(0)
 				}}
 			>
 				NEGO MARKET

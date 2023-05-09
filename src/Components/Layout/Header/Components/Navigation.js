@@ -8,18 +8,18 @@ function Navigation({ selectedNav, setSelectedNav }) {
 	return (
 		<S.NavigationWrapper>
 			<S.NavItem
-				className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+				className={selectedNav === 1 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 				onClick={() => {
-					setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
+					setSelectedNav(1) // 선택된 Navigation 항목의 인덱스 업데이트
 					navigate('/list/freeMarket')
 				}}
 			>
 				FREE MARKET
 			</S.NavItem>
 			<S.NavItem
-				className={selectedNav === 3 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
+				className={selectedNav === 2 ? 'selected' : ''} // Navigation 항목의 인덱스에 따라 클래스 추가
 				onClick={() => {
-					setSelectedNav(3) // 선택된 Navigation 항목의 인덱스 업데이트
+					setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
 					navigate('/list/usedTrade')
 				}}
 			>
