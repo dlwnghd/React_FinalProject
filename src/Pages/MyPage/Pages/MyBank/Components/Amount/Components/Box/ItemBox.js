@@ -2,7 +2,7 @@ import {
 	Dollar_Icon,
 	Shopping_Icon,
 	Total_Icon,
-} from '../../../../../../../Components/Icons/Icons'
+} from '../../../../../../../../Components/Icons/Icons'
 import * as S from './style'
 
 const TITLEITEM = {

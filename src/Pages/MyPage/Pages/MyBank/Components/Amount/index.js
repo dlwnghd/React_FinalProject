@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { ColumnNumberCSS, FlexAlignCSS } from '../../../../../../Styles/common'
-import AmountItemBox from './Components/ItemBox'
-import AmountTotalBox from './Components/TotalBox'
+import AmountItemBox from './Components/Box/ItemBox'
+import AmountTotalBox from './Components/Box/TotalBox'
 
 function AmountSection() {
 	const amount = {

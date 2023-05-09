@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import {
 	FlexBetweenCSS,
 	FlexCenterCSS,
-} from '../../../../../../../Styles/common'
+} from '../../../../../../../../Styles/common'
 
 export const Wrapper = styled.div`
 	display: flex;
