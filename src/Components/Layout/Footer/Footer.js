@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../Styles/common'
+import AddProductButton from './Components/AddProductButton'
 import MobileFooter from './Components/MobileFooter'
-import TopButton from './Components/TopButton'
+// import TopButton from './Components/TopButton'
 
 function Footer() {
 	return (
 		<S.FooterWrapper>
 			<S.FootSize>
 				<S.FooterContainer>
-					<TopButton />
+					{/* <TopButton /> */}
 					<S.Description>
 						<S.Logo>WELCOME TO</S.Logo>
 						<h2>NEGO MARKET</h2>
@@ -16,6 +17,7 @@ function Footer() {
 					<p>Copyright by Team. Nego</p>
 				</S.FooterContainer>
 			</S.FootSize>
+			<AddProductButton />
 			<MobileFooter />
 		</S.FooterWrapper>
 	)
