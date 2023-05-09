@@ -6,30 +6,31 @@ import { Down_Icon } from '../../../../../../../../Components/Icons/Icons'
 const sellerText = '판매 내역'
 const buyerText = '구매 내역'
 
-function TypeSelectBox() {
-	const [type, setType] = useState({
-		text: buyerText,
-		category: 'buyer',
-	})
+function TypeSelectBox({ setFilter }) {
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
+	const [type, setType] = useState(sellerText)
 
 	const onClickType = e => {
-		const text = e.target.textContent
-		setType({ text, category: text === buyerText ? 'buyer' : 'seller' })
+		const selected = e.target.textContent
+		setType(selected)
+		setFilter(prev => ({
+			...prev,
+			category: selected === sellerText ? 'seller' : 'buyer',
+		}))
 	}
 
 	return (
 		<S.Wrapper onClick={() => setIsOpenSlide(prev => !prev)}>
 			<S.BoxContainer>
-				<span>{type.text}</span>
+				<span>{type}</span>
 				<Down_Icon />
 			</S.BoxContainer>
 			{isOpenSlide && (
 				<S.SelectContainer>
-					<S.SelectItem onClick={onClickType} state={type.text === sellerText}>
+					<S.SelectItem onClick={onClickType} state={type === sellerText}>
 						{sellerText}
 					</S.SelectItem>
-					<S.SelectItem onClick={onClickType} state={type.text === buyerText}>
+					<S.SelectItem onClick={onClickType} state={type === buyerText}>
 						{buyerText}
 					</S.SelectItem>
 				</S.SelectContainer>

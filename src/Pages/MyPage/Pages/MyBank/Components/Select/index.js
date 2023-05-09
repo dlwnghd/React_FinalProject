@@ -1,11 +1,13 @@
 import styled from 'styled-components'
 import TypeSelectBox from './Components/Type'
 import { FlexBetweenCSS } from '../../../../../../Styles/common'
+import Calendar from './Components/Calendar'
 
-function SelectSection() {
+function SelectSection({ setFilter }) {
 	return (
 		<S.Wrapper>
-			<TypeSelectBox />
+			<TypeSelectBox setFilter={setFilter} />
+			<Calendar setFilter={setFilter} />
 		</S.Wrapper>
 	)
 }
