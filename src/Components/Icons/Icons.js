@@ -21,6 +21,7 @@ import {
 	AiFillShopping,
 	AiOutlineDollarCircle,
 	AiOutlineFund,
+	AiOutlineDown,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 
@@ -70,8 +71,13 @@ export const Shopping_Icon = ({ size, color }) => (
 export const Dollar_Icon = ({ size, color }) => (
 	<AiOutlineDollarCircle size={size} color={color} />
 )
+// 통계 아이콘
 export const Total_Icon = ({ size, color }) => (
 	<AiOutlineFund size={size} color={color} />
+)
+// 아래 꼬리없는 arrow
+export const Down_Icon = ({ size, color }) => (
+	<AiOutlineDown size={size} color={color} />
 )
 
 // 탭바
