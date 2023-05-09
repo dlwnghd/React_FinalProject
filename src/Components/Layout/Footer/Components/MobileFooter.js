@@ -2,22 +2,14 @@ import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 
-import {
-	Chatting_Icon,
-	FreeMarket_Icon,
-	Home_Icon,
-	MyPage_Icon,
-	TradeUsed_Icon,
-} from '../../../Icons/Icons'
 import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
+import { MobileNav } from '../../../../Consts/@mobileNavConfig'
 
 function MobileFooter() {
 	const navigate = useNavigate()
-	const MobileNav = ['홈','무료','네고','채팅','내 정보']
-	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
-
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
+	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
 	window.addEventListener('wheel', function (event) {
 		if (event.deltaY > 0) {
@@ -31,81 +23,27 @@ function MobileFooter() {
 
 	return (
 		<S.NavigationWrapper className={scroll ? 'scroll' : ''}>
-			<S.Navigation className="navigation">
-				<S.NavigationUl>
-					<S.NavigationUlLi
-						className={`list ${footerSelect === 0 ? 'active' : ''}`}
-						onClick={() => {
-							navigate('/')
-							setFooterSelect(0)
-						}}
-					>
-						<div>
-							<span className="icon">
-								<Home_Icon />
-							</span>
-							<span className="text">홈</span>
-						</div>
-					</S.NavigationUlLi>
-					<S.NavigationUlLi
-						className={`list ${footerSelect === 1 ? 'active' : ''}`}
-						onClick={() => {
-							navigate('/list/freeMarket')
-							setFooterSelect(1)
-						}}
-					>
-						<div>
-							<span className="icon">
-								<FreeMarket_Icon />
-							</span>
-							<span className="text">무료</span>
-						</div>
-					</S.NavigationUlLi>
-					<S.NavigationUlLi
-						className={`list ${footerSelect === 2 ? 'active' : ''}`}
-						onClick={() => {
-							navigate('/list/usedTrade')
-							setFooterSelect(2)
-						}}
-					>
-						<div>
-							<span className="icon">
-								<TradeUsed_Icon />
-							</span>
-							<span className="text">네고</span>
-						</div>
-					</S.NavigationUlLi>
-					<S.NavigationUlLi
-						className={`list ${footerSelect === 3 ? 'active' : ''}`}
-						onClick={() => {
-							navigate('/chat인데 modal로 띄우기로 해서 흠')
-							setFooterSelect(3)
-						}}
-					>
-						<div>
-							<span className="icon">
-								<Chatting_Icon />
-							</span>
-							<span className="text">채팅</span>
-						</div>
-					</S.NavigationUlLi>
-					<S.NavigationUlLi
-						className={`list ${footerSelect === 4 ? 'active' : ''}`}
-						onClick={() => {
-							navigate('/mypage-bank')
-							setFooterSelect(4)
-						}}
-					>
-						<div>
-							<span className="icon">
-								<MyPage_Icon />
-							</span>
-							<span className="text">내 정보</span>
-						</div>
-					</S.NavigationUlLi>
+			<S.NavigationContainer className="navigation">
+				<S.NavList>
+					{MobileNav.map((nav, idx) => {
+						return (
+							<S.NavBox
+								className={`list ${footerSelect === idx ? 'active' : ''}`}
+								onClick={() => {
+									navigate(`${nav.navigation}`)
+									setFooterSelect(idx)
+								}}
+							>
+								<div>
+									<span className="icon">{nav.icon}</span>
+									<span className="text">홈</span>
+								</div>
+							</S.NavBox>
+						)
+					})}
 					<S.Indicator className="indicator" />
-				</S.NavigationUl>
-			</S.Navigation>
+				</S.NavList>
+			</S.NavigationContainer>
 		</S.NavigationWrapper>
 	)
 }
@@ -132,7 +70,7 @@ const NavigationWrapper = styled.div`
 	}
 `
 
-const Navigation = styled.div`
+const NavigationContainer = styled.div`
 	position: relative;
 	width: 400px;
 	height: 70px;
@@ -144,12 +82,12 @@ const Navigation = styled.div`
 	margin: auto;
 `
 
-const NavigationUl = styled.ul`
+const NavList = styled.ul`
 	display: flex;
 	width: 350px;
 `
 
-const NavigationUlLi = styled.li`
+const NavBox = styled.li`
 	position: relative;
 	list-style: none;
 	width: 70px;
@@ -198,21 +136,13 @@ const NavigationUlLi = styled.li`
 		transform: translateY(10px);
 	}
 
-	&:nth-child(1).active ~ .indicator {
-		transform: translateX(calc(70px * 0));
-	}
-	&:nth-child(2).active ~ .indicator {
-		transform: translateX(calc(70px * 1));
-	}
-	&:nth-child(3).active ~ .indicator {
-		transform: translateX(calc(70px * 2));
-	}
-	&:nth-child(4).active ~ .indicator {
-		transform: translateX(calc(70px * 3));
-	}
-	&:nth-child(5).active ~ .indicator {
-		transform: translateX(calc(70px * 4));
-	}
+	${props =>
+		Array.from({ length: 5 }).map(
+			(_, index) =>
+				`&:nth-child(${
+					index + 1
+				}).active ~ .indicator {transform: translateX(calc(70px * ${index}));}`,
+		)}
 `
 
 const Indicator = styled.div`
@@ -252,8 +182,9 @@ const Indicator = styled.div`
 
 const S = {
 	NavigationWrapper,
+	NavigationContainer,
 	Navigation,
-	NavigationUl,
-	NavigationUlLi,
+	NavList,
+	NavBox,
 	Indicator,
 }

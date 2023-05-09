@@ -7,16 +7,16 @@ import MobileFooter from './Components/MobileFooter'
 function Footer() {
 	return (
 		<S.FooterWrapper>
-			<S.FootSize>
-				<S.FooterContainer>
+			<S.FooterContainer>
+				<S.FooterContent>
 					{/* <TopButton /> */}
-					<S.Description>
+					<S.DescriptionBox>
 						<S.Logo>WELCOME TO</S.Logo>
 						<h2>NEGO MARKET</h2>
-					</S.Description>
+					</S.DescriptionBox>
 					<p>Copyright by Team. Nego</p>
-				</S.FooterContainer>
-			</S.FootSize>
+				</S.FooterContent>
+			</S.FooterContainer>
 			<AddProductButton />
 			<MobileFooter />
 		</S.FooterWrapper>
@@ -33,7 +33,7 @@ const FooterWrapper = styled.footer`
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 `
 
-const FooterContainer = styled.div`
+const FooterContent = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -51,14 +51,14 @@ const Logo = styled.h3`
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 `
 
-const Description = styled.div`
+const DescriptionBox = styled.div`
 	& > h2 {
 		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 		color: ${({ theme }) => theme.COLOR.main};
 	}
 `
 
-const FootSize = styled.div`
+const FooterContainer = styled.div`
 	${WidthAutoCSS};
 
 	@media screen and (max-width: 440px) {
@@ -68,8 +68,8 @@ const FootSize = styled.div`
 
 const S = {
 	FooterWrapper,
-	FooterContainer,
+	FooterContent,
 	Logo,
-	Description,
-	FootSize,
+	DescriptionBox,
+	FooterContainer,
 }
