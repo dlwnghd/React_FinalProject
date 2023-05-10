@@ -1,0 +1,4 @@
+const QUERY_KEY = {
+	GET_MYPAGE_MAIN_DATA: 'GET_MYPAGE_MAIN_DATA',
+}
+export default QUERY_KEY

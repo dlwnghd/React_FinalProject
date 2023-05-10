@@ -1,7 +1,7 @@
 import axios from 'axios'
 import TokenService from '../Utils/tokenService'
 import UserApi from './userApi'
-import useUser from '../Hooks/useUser'
+import UserInfoService from '../Utils/userInfoService'
 
 const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -12,8 +12,7 @@ axiosInstance.interceptors.request.use(
 	config => {
 		const access_token = TokenService.getAccessToken()
 		if (access_token) {
-			config.headers.Authorization = `Bearer ${access_token}`
-			return config
+			config.headers.Authorization = `bearer ${access_token}`
 		}
 		return config
 	},
@@ -33,25 +32,27 @@ axiosInstance.interceptors.response.use(
 			TokenService.removeAccessToken()
 		}
 		const originalRequest = error.config
-		if (error.response.status === 403 && !originalRequest._retry) {
+		if (
+			error.response.status === 403 &&
+			originalRequest.headers.Authorization &&
+			!originalRequest._retry
+		) {
+			originalRequest._retry = true
 			// refresh 관련 세션 만료
-			originalRequest._retry = true // 재요청 보냄을 의미
 			try {
 				const res = await UserApi.refreshToken()
 				if (res.status === 200) {
 					// access_token 다시 세팅
 					const { token } = res.data
 					TokenService.setAccessToken(token) // 새로운 access token 세팅
-					axiosInstance.defaults.headers.common[
-						'Authorization'
-					] = `bearer ${token}`
+					originalRequest.headers['Authorization'] = `bearer ${token}`
 					return axiosInstance(originalRequest) // 재요청
 				}
 			} catch (err) {
 				// refresh 토큰도 만료된 경우 로그아웃
-				const user = useUser()
-				user.logout()
-				return Promise.reject(error)
+				await UserApi.logout()
+				TokenService.removeAccessToken()
+				UserInfoService.removeUserInfo()
 			}
 		}
 		return Promise.reject(error)

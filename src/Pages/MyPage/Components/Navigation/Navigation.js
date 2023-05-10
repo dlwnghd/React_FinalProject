@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { FlexAlignCSS, WidthAutoCSS } from '../../../../Styles/common'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const MY_PAGE_NAV_TYPE = {
 	myPage: [
@@ -74,7 +74,6 @@ function MyPageNav({ type }) {
 					))}
 				</S.Container>
 			</S.Wrapper>
-			<Outlet />
 		</>
 	)
 }
