@@ -1,110 +1,128 @@
 import styled from 'styled-components'
-import { FlexAlignCSS, WidthAutoCSS } from '../../../../../Styles/common'
+import {
+	FlexAlignCSS,
+	FlexCenterCSS,
+	WidthAutoCSS,
+} from '../../../../../Styles/common'
 import Input from '../../../../../Components/Input/Input'
 import Button from '../../../../../Components/Button/Button'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import userMock from '../../../../../__mock__/Data/User/user.data'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
+import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
+import UserApi from '../../../../../Apis/userApi'
+import { useEffect } from 'react'
+import axios from 'axios'
+import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
+import Modal from '../../../../../Components/Modal/Modal'
 
 function UserInfo() {
+	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
-		getValues,
 		setValue,
 		formState: { errors },
 		handleSubmit,
 	} = useForm({
 		mode: 'onChange',
-		defaultValues: {
-			profile_img: userMock[0].profile_img,
-			email: userMock[0].email,
-			nickName: userMock[0].nickName,
-			region: userMock[0].region,
-			phone: userMock[0].phone,
-		},
 	})
 	const [imgFile, setImgFile] = useState('')
+	const [preFile, setPreFile] = useState()
+	const [isSubmit, setIsSubmit] = useState(false)
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const { data } = await UserApi.userInfo()
+				setUserInfo({ ...data })
+				setImgFile(data.profile_url)
+				setPreFile(
+					data.profile_url ||
+						'https://static.nid.naver.com/images/web/user/default.png?type=s160',
+				)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		getData()
+	}, [])
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
-		console.log(file)
+		setImgFile(file)
 		const reader = new FileReader()
 		reader.readAsDataURL(file)
 		reader.onloadend = () => {
-			setImgFile(reader.result || null)
+			setPreFile(reader.result || null)
 		}
 	}
 
-	const autoHyphen = str => {
-		str = str.replace(/[^0-9]/g, '')
-		var tmp = ''
-		if (str.length < 4) {
-			return str
-		} else if (str.length < 7) {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3)
-			return tmp
-		} else if (str.length < 11) {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3, 3)
-			tmp += '-'
-			tmp += str.substr(6)
-			return tmp
-		} else {
-			tmp += str.substr(0, 3)
-			tmp += '-'
-			tmp += str.substr(3, 4)
-			tmp += '-'
-			tmp += str.substr(7)
-			return tmp
+	const modalOpen = () => {
+		document.body.style.overflow = 'hidden'
+		setIsOpenModal(true)
+	}
+
+	const setRegion = str => {
+		setValue('region', str)
+	}
+
+	const checkNickname = async e => {
+		const nickName = e.target.value
+		try {
+			const res = await UserApi.checkNickname({ nickName })
+			setIsDuplicate({ state: false, message: res.data.message })
+		} catch (err) {
+			if (err.response.status === 400) {
+				setIsDuplicate({ state: true, message: err.response.data.message })
+			}
+			console.log(err)
 		}
 	}
 
-	const onSubmit = data => {
-		console.log(data)
+	const onSubmit = async editData => {
+		const formData = new FormData()
+		formData.append('profile_url', imgFile)
 		const editUser = {
-			email: data.email,
-			nickName: data.nickName,
-			phone: data.phone,
-			region: data.region,
+			email: editData.email,
+			nickName: editData.nickName,
+			phone: editData.phone,
+			region: editData.region,
 		}
-		const editImg = {
-			profile_img: data.profile_img,
+		setIsSubmit(true)
+		try {
+			await axios.all([
+				UserApi.userEdit(editUser),
+				UserApi.userEditProfile(formData),
+			])
+			setIsDuplicate({ state: false, message: '' })
+			setIsOpenModal(true)
+			setTimeout(() => {
+				setIsOpenModal(false)
+				setIsSubmit(false)
+			}, 3000)
+		} catch (err) {
+			console.log(err)
 		}
-		console.log(editUser, editImg)
-		// useCallback(() => {
-		// 	axios({
-		// 		method: 'post',
-		// 		url: '/api/user',
-		// 		headers: {
-		// 			Authorization: `Bearer ${TokenService.getAccessToken()}`,
-		// 		},
-		// 	})
-		// 		.then(response => {
-		// 			console.log(response.data)
-		// 		})
-		// 		.catch(error => {
-		// 			console.error(error)
-		// 		})
-		// })
 	}
+
+	useEffect(() => {
+		setValue('email', userInfo.email)
+		setValue('nickName', userInfo.nick_name)
+		setValue('region', userInfo.region)
+		setValue('phone', userInfo.phone)
+	}, [userInfo])
 
 	return (
 		<S.Wrapper>
 			<FormProvider>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 					<S.InputBox>
-						<S.ProfileImg
-							src={
-								imgFile
-									? imgFile
-									: 'https://static.nid.naver.com/images/web/user/default.png?type=s160'
-							}
-						/>
+						<S.ProfileImg src={preFile} />
 						<S.ImgLabel htmlFor="profileImg">
 							<Camera_Icon />
 						</S.ImgLabel>
@@ -122,7 +140,11 @@ function UserInfo() {
 					</S.InputBox>
 					<S.InputBox>
 						<S.Label>아이디(이메일)</S.Label>
-						<Input disabled {...register('email')} />
+						<Input
+							readOnly
+							{...register('email')}
+							defaultValue={userInfo.email}
+						/>
 					</S.InputBox>
 					<div>
 						<S.InputBox>
@@ -130,13 +152,27 @@ function UserInfo() {
 							<Input
 								status={errors.nickName && 'error'}
 								{...register('nickName', {
-									required: '닉네임을 입력해주세요',
+									required: {
+										value: true,
+										message: '닉네임을 입력해주세요',
+									},
+									onChange: e => checkNickname(e),
 								})}
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
-							{errors.nickName?.type === 'required' && '닉네임을 입력해주세요'}
+							{errors.nickName && errors.nickName.message}
 						</S.StyledAlert>
+						{isDuplicate && (
+							<S.StyledAlert
+								type={isDuplicate.state ? 'error' : 'success'}
+								size="default"
+							>
+								{isDuplicate.state !== null &&
+									!errors.nickName &&
+									isDuplicate.message}
+							</S.StyledAlert>
+						)}
 					</div>
 					<S.InputBox>
 						<S.Label>주소</S.Label>
@@ -145,9 +181,15 @@ function UserInfo() {
 							readOnly
 							style={{ width: '80%' }}
 						/>
-						<S.RegisterButton shape={'square'} variant={'default-reverse'}>
+						<S.RegisterButton
+							type="button"
+							shape={'square'}
+							variant={'default-reverse'}
+							onClick={modalOpen}
+						>
 							주소 찾기
 						</S.RegisterButton>
+						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
 					</S.InputBox>
 					<div>
 						<S.InputBox>
@@ -155,16 +197,24 @@ function UserInfo() {
 							<Input
 								status={errors.phone && 'error'}
 								{...register('phone', {
-									required: '연락처를 입력해주세요',
-									onChange: () =>
-										setValue('phone', autoHyphen(getValues('phone'))),
+									required: {
+										value: true,
+										message: '연락처를 입력해주세요',
+									},
+									onChange: e =>
+										setValue('phone', addHyphenToPhoneNum(e.target.value)),
 								})}
 							/>
 						</S.InputBox>
 						<S.StyledAlert type="error" size="default">
-							{errors.phone?.type === 'required' && '연락처를 입력해주세요'}
+							{errors.phone && errors.phone.message}
 						</S.StyledAlert>
 					</div>
+					{isSubmit && isOpenModal && (
+						<S.StyledModal size="medium">
+							<S.Text>프로필 수정이 완료되었습니다</S.Text>
+						</S.StyledModal>
+					)}
 					<S.SubmitButton>변경</S.SubmitButton>
 				</form>
 			</FormProvider>
@@ -177,6 +227,9 @@ export default UserInfo
 const Wrapper = styled.div`
 	${WidthAutoCSS}
 	width: 40%;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 95%;
+	}
 `
 
 const InputBox = styled.div`
@@ -200,6 +253,10 @@ const ImgLabel = styled.label`
 const Label = styled.label`
 	width: 25%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+		width: 30%;
+	}
 `
 
 const ProfileImg = styled.img`
@@ -214,17 +271,27 @@ const ProfileImg = styled.img`
 const StyledAlert = styled(AlertText)`
 	margin-left: 20%;
 	padding-left: 0rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin-left: 23%;
+	}
 `
 
 const RegisterButton = styled(Button)`
 	width: 20%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+`
+const StyledModal = styled(Modal)`
+	${FlexCenterCSS}
+`
+const Text = styled.div`
+	text-align: center;
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
-
 const SubmitButton = styled(Button)`
 	display: block;
 	margin: auto;
 	margin-bottom: 2rem;
+	margin-top: 2rem;
 `
 const S = {
 	Wrapper,
@@ -234,5 +301,7 @@ const S = {
 	ProfileImg,
 	StyledAlert,
 	RegisterButton,
+	StyledModal,
+	Text,
 	SubmitButton,
 }

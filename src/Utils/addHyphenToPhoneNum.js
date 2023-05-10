@@ -1,14 +1,28 @@
-const addHyphenToPhoneNum = phoneNum => {
-	// 숫자 이외의 모든 문자 제거
-	const trimmedNumber = phoneNum?.replace(/[^0-9]/g, '')
-
-	// 전화번호가 11자리 이상이면 뒷자리 4자리는 모두 묶어서 "-"로 구분
-	if (trimmedNumber?.length >= 11) {
-		return trimmedNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+const addHyphenToPhoneNum = str => {
+	str = str.replace(/[^0-9]/g, '')
+	var tmp = ''
+	if (str.length < 4) {
+		return str
+	} else if (str.length < 7) {
+		tmp += str.substr(0, 3)
+		tmp += '-'
+		tmp += str.substr(3)
+		return tmp
+	} else if (str.length < 11) {
+		tmp += str.substr(0, 3)
+		tmp += '-'
+		tmp += str.substr(3, 3)
+		tmp += '-'
+		tmp += str.substr(6)
+		return tmp
+	} else {
+		tmp += str.substr(0, 3)
+		tmp += '-'
+		tmp += str.substr(3, 4)
+		tmp += '-'
+		tmp += str.substr(7)
+		return tmp
 	}
-
-	// 그 외에는 앞자리 3자리와 뒷자리를 "-"로 구분
-	return trimmedNumber?.replace(/(\d{3})(\d{0,4})?(\d{0,4})?/, '$1-$2$3')
 }
 
 export default addHyphenToPhoneNum

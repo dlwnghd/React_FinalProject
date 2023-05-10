@@ -32,6 +32,33 @@ const MY_PAGE_NAV_TYPE = {
 function MyPageNav({ type }) {
 	const navigate = useNavigate()
 
+	const MY_PAGE_NAV_TYPE = {
+		myPage: [
+			{
+				title: '가계부',
+				path: '/mypage-bank',
+			},
+			{
+				title: '등록상품',
+				path: '/mypage-register',
+			},
+			{
+				title: '관심상품',
+				path: '/mypage-interest',
+			},
+		],
+		userEdit: [
+			{
+				title: '프로필 수정',
+				path: '/mypage/useredit-userinfo',
+			},
+			{
+				title: '비밀번호 변경',
+				path: '/mypage/useredit-changepw',
+			},
+		],
+	}
+
 	return (
 		<>
 			<S.Wrapper>
@@ -63,6 +90,9 @@ const Container = styled.div`
 	${FlexAlignCSS}
 	margin: 4rem 0;
 	column-gap: 4rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin: 3rem 0;
+	}
 `
 const Title = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
