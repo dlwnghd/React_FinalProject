@@ -1,4 +1,4 @@
-import { WidthAutoCSS } from '../../../../../Styles/common'
+import { FlexCenterCSS, WidthAutoCSS } from '../../../../../Styles/common'
 import Input from '../../../../../Components/Input/Input'
 import styled from 'styled-components'
 import Button from '../../../../../Components/Button/Button'
@@ -15,6 +15,7 @@ function ChangePW() {
 		register,
 		watch,
 		handleSubmit,
+		setValue,
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
@@ -25,6 +26,9 @@ function ChangePW() {
 		try {
 			await UserApi.userEditPw({ pw: data.newPw })
 			setIsOpenModal(true)
+			setTimeout(() => setIsOpenModal(false), 3000)
+			setValue('newPw', '')
+			setValue('newPwConfirm', '')
 		} catch (err) {
 			console.log(err)
 		}
@@ -65,7 +69,11 @@ function ChangePW() {
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
 				</div>
-				{isOpenModal && <Modal></Modal>}
+				{isOpenModal && (
+					<S.StyledModal size="medium">
+						<S.Text>비밀번호 변경이 완료되었습니다</S.Text>
+					</S.StyledModal>
+				)}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
 		</S.Wrapper>
@@ -89,6 +97,13 @@ const StyledInput = styled(Input)`
 const StyledAlert = styled(AlertText)`
 	padding-left: 0rem;
 `
+const StyledModal = styled(Modal)`
+	${FlexCenterCSS}
+`
+const Text = styled.div`
+	text-align: center;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+`
 const StyledButton = styled(Button)`
 	display: block;
 	margin: auto;
@@ -100,5 +115,7 @@ const S = {
 	Wrapper,
 	StyledInput,
 	StyledButton,
+	StyledModal,
+	Text,
 	StyledAlert,
 }
