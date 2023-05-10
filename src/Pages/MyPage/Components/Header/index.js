@@ -1,7 +1,6 @@
-import { Outlet } from 'react-router-dom'
-import MyPageNav from '../Navigation/Navigation'
 import Profile from './Components/Profile'
 import useGetMyPageMainData from '../../../../Hooks/Queries/get-myPageMain'
+import MyPageNav from './Components/Navigation'
 
 function MyPageIndex() {
 	const { data: mainData, status, error } = useGetMyPageMainData()
@@ -13,7 +12,6 @@ function MyPageIndex() {
 		<>
 			<Profile mainData={mainData} />
 			<MyPageNav type={'myPage'} />
-			<Outlet />
 		</>
 	)
 }

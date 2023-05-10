@@ -13,7 +13,7 @@ import Login from '../Pages/Form/Login/Login'
 import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
-import MyPageNav from '../Pages/MyPage/Components/Navigation/Navigation'
+import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
 import PrivateRoute from './private'
 
