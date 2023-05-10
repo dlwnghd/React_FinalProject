@@ -4,21 +4,22 @@ import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 
-import ProductApi from '../../../../../Apis/productApi'
+// import ProductApi from '../../../../../Apis/productApi'
 
-function MyPrdItemBox({ posterPath, title, price, status, idx, ...rest }) {
+function MyPrdItemBox({ item }) {
 	const [editOption, setEditOption] = useState(false)
 
-	const onProductDel = async () => {
-		try {
-			await ProductApi.delete(idx)
-		} catch (err) {
-			console.log('실패')
-		}
-	}
+	const { image_url, title, price, status, idx } = item
+
+	// const onProductDel = async () => {
+	// 	try {
+	// 		await ProductApi.delete(idx)
+	// 	} catch (err) {
+	// 	}
+	// }
 	return (
 		<S.Wrapper>
-			<S.IMGContainer posterIMG={posterPath} status={status}>
+			<S.IMGContainer posterIMG={image_url} status={status}>
 				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
 			</S.IMGContainer>
 			<S.DescContainer>
@@ -75,7 +76,6 @@ const Wrapper = styled.div`
 		right: 1.4rem;
 		color: ${({ theme }) => theme.COLOR.main};
 		font-weight: 900;
-		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
 	}
 `
 
@@ -97,7 +97,6 @@ const DescContainer = styled.div`
 	flex-direction: column;
 	align-items: baseline;
 	margin-top: 2rem;
-	/* background: red; */
 `
 
 const DescBox = styled.div`
@@ -139,10 +138,14 @@ const EditBox = styled.div`
 	& > div:first-child {
 		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
 	}
-	width: 5rem;
+	width: 6rem;
 	right: 1rem;
+	text-align: center;
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 	position: absolute;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 6rem;
+	}
 `
 const S = {
 	Wrapper,

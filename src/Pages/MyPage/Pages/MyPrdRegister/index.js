@@ -11,6 +11,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 
 function MyPrdRegister() {
+	//일단 땜빵용으로 map돌리는 dummyData입니다.
 	const dummyProduct = [
 		{
 			idx: Math.floor(Math.random() * 10000),
@@ -74,12 +75,12 @@ function MyPrdRegister() {
 			category: 0,
 		},
 	]
-	const [category, setCategory] = useState(0)
-
 	const listArr = []
 	for (let i = 0; i < 10; i++) {
 		listArr.push(...dummyProduct)
 	}
+
+	const [category, setCategory] = useState(0)
 
 	const myPrdApi = async () => {
 		try {
@@ -87,11 +88,10 @@ function MyPrdRegister() {
 				page: 1,
 				category,
 			})
+			console.log(res.data.products)
 		} catch {}
 	}
-	const onSelectCategory = e => {
-		setCategory(e.target.value)
-	}
+
 	useEffect(() => {
 		myPrdApi()
 	}, [category])
@@ -100,23 +100,14 @@ function MyPrdRegister() {
 		<S.Wrapper>
 			<S.TotalNumAndFilter>
 				<div>전체 {listArr.length}개</div>
-				<select onChange={onSelectCategory}>
+				<select onChange={e => setCategory(e.target.value)}>
 					<option value={0}>중고상품</option>
 					<option value={1}>무료상품</option>
 				</select>
 			</S.TotalNumAndFilter>
 			<S.PrdList>
 				{listArr.map((item, idx) => {
-					return (
-						<MyPrdItemBox
-							key={idx}
-							idx={idx}
-							title={item.title}
-							price={item.price}
-							posterPath={item.image_url}
-							status={item.status}
-						/>
-					)
+					return <MyPrdItemBox key={idx} item={item} />
 				})}
 			</S.PrdList>
 		</S.Wrapper>
