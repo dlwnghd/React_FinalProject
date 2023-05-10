@@ -8,11 +8,18 @@ import RecentSearch from './Components/Search/Search'
 
 function RecentPrice() {
 	const [dummyData, setDummyData] = useState(recentPriceMock)
+	const [searchPrd, setSearchPrd] = useState([])
+
+	const onSearchPrd = search => {
+		const searchList = dummyData.filter(item => item.name === search)
+
+		setSearchPrd(searchList)
+	}
 
 	return (
 		<S.RecentPriceWrapper>
-			<RecentSearch />
-			<Graph dummyData={dummyData} />
+			<RecentSearch onSearchPrd={onSearchPrd} />
+			{searchPrd && <Graph dummyData={searchPrd} />}
 		</S.RecentPriceWrapper>
 	)
 }
