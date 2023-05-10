@@ -48,7 +48,9 @@ export const PaginationArrowDouble_Icon = ({ rotate }) => (
 	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
 ) // 페이지네이션화살표 (>>)
 
-export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
+export const AddProduct_Icon = ({ size, color }) => (
+	<AiOutlinePlusCircle size={size} color={color} />
+) // 상품 등록
 export const MenuBurger_Icon = ({ size, color, cursor }) => (
 	<AiOutlineMenu size={size} color={color} cursor={cursor} />
 ) // 햄버거

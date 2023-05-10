@@ -85,13 +85,13 @@ function List() {
 		<S.Wrapper>
 			<S.ListWrapper>
 				<S.Main>
-					<S.SearchTopper>
+					<S.SearchContainer>
 						<h3>{totalResult.length}개의 상품</h3>
 						<Filter
 							filterArray={currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
 						/>
-					</S.SearchTopper>
+					</S.SearchContainer>
 					<ProductListWrapper
 						currentURL={currentURL}
 						changeResult={changeResult}
@@ -124,7 +124,7 @@ const Main = styled.div`
 	width: 100%;
 `
 
-const SearchTopper = styled.div`
+const SearchContainer = styled.div`
 	position: relative;
 	${FlexBetweenCSS};
 	margin-bottom: 2rem;
@@ -154,7 +154,7 @@ const S = {
 	Wrapper,
 	ListWrapper,
 	Main,
-	SearchTopper,
+	SearchContainer,
 	Items,
 	Item,
 	ImageContainer,
