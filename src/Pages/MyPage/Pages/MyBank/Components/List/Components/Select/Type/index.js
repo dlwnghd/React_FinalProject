@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { FlexBetweenCSS } from '../../../../../../../../Styles/common'
 import { useState } from 'react'
-import { Down_Icon } from '../../../../../../../../Components/Icons/Icons'
+import { Down_Icon } from '../../../../../../../../../Components/Icons/Icons'
+import { FlexBetweenCSS } from '../../../../../../../../../Styles/common'
 
 const sellerText = '판매 내역'
 const buyerText = '구매 내역'
