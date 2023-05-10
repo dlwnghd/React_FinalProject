@@ -1,5 +1,9 @@
 import styled from 'styled-components'
-import { FlexAlignCSS, WidthAutoCSS } from '../../../../../Styles/common'
+import {
+	FlexAlignCSS,
+	FlexCenterCSS,
+	WidthAutoCSS,
+} from '../../../../../Styles/common'
 import Input from '../../../../../Components/Input/Input'
 import Button from '../../../../../Components/Button/Button'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -8,18 +12,17 @@ import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
-import Modal from '../../../../../Components/Modal/Modal'
-import DaumPostCodeAddress from '../../../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
 import axios from 'axios'
+import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
+import Modal from '../../../../../Components/Modal/Modal'
 
 function UserInfo() {
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
-		getValues,
 		setValue,
 		formState: { errors },
 		handleSubmit,
@@ -28,6 +31,7 @@ function UserInfo() {
 	})
 	const [imgFile, setImgFile] = useState('')
 	const [preFile, setPreFile] = useState()
+	const [isSubmit, setIsSubmit] = useState(false)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
 
@@ -89,12 +93,18 @@ function UserInfo() {
 			phone: editData.phone,
 			region: editData.region,
 		}
-
+		setIsSubmit(true)
 		try {
 			await axios.all([
 				UserApi.userEdit(editUser),
 				UserApi.userEditProfile(formData),
 			])
+			setIsDuplicate({ state: false, message: '' })
+			setIsOpenModal(true)
+			setTimeout(() => {
+				setIsOpenModal(false)
+				setIsSubmit(false)
+			}, 3000)
 		} catch (err) {
 			console.log(err)
 		}
@@ -146,7 +156,7 @@ function UserInfo() {
 										value: true,
 										message: '닉네임을 입력해주세요',
 									},
-									onBlur: e => checkNickname(e),
+									onChange: e => checkNickname(e),
 								})}
 							/>
 						</S.InputBox>
@@ -172,18 +182,14 @@ function UserInfo() {
 							style={{ width: '80%' }}
 						/>
 						<S.RegisterButton
+							type="button"
 							shape={'square'}
 							variant={'default-reverse'}
 							onClick={modalOpen}
 						>
 							주소 찾기
 						</S.RegisterButton>
-						{isOpenModal && (
-							<Modal size={'large'}>
-								<h1>주소 검색</h1>
-								<DaumPostCodeAddress setResultAddress={setRegion} />
-							</Modal>
-						)}
+						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
 					</S.InputBox>
 					<div>
 						<S.InputBox>
@@ -204,6 +210,11 @@ function UserInfo() {
 							{errors.phone && errors.phone.message}
 						</S.StyledAlert>
 					</div>
+					{isSubmit && isOpenModal && (
+						<S.StyledModal size="medium">
+							<S.Text>프로필 수정이 완료되었습니다</S.Text>
+						</S.StyledModal>
+					)}
 					<S.SubmitButton>변경</S.SubmitButton>
 				</form>
 			</FormProvider>
@@ -269,7 +280,13 @@ const RegisterButton = styled(Button)`
 	width: 20%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 `
-
+const StyledModal = styled(Modal)`
+	${FlexCenterCSS}
+`
+const Text = styled.div`
+	text-align: center;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+`
 const SubmitButton = styled(Button)`
 	display: block;
 	margin: auto;
@@ -284,5 +301,7 @@ const S = {
 	ProfileImg,
 	StyledAlert,
 	RegisterButton,
+	StyledModal,
+	Text,
 	SubmitButton,
 }
