@@ -2,8 +2,20 @@ import styled from 'styled-components'
 import { EtcOption_Icon } from '../../../../../Components/Icons/Icons'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
+import { useState } from 'react'
 
-function MyPrdItemBox({ posterPath, title, price, status, ...rest }) {
+import ProductApi from '../../../../../Apis/productApi'
+
+function MyPrdItemBox({ posterPath, title, price, status, idx, ...rest }) {
+	const [editOption, setEditOption] = useState(false)
+
+	const onProductDel = async () => {
+		try {
+			await ProductApi.delete(idx)
+		} catch (err) {
+			console.log('실패')
+		}
+	}
 	return (
 		<S.Wrapper>
 			<S.IMGContainer posterIMG={posterPath} status={status}>
@@ -12,7 +24,18 @@ function MyPrdItemBox({ posterPath, title, price, status, ...rest }) {
 			<S.DescContainer>
 				<S.DescBox>
 					<h4>{title}</h4>
-					<EtcOption_Icon size="30" />
+					<S.IconContainer>
+						<EtcOption_Icon
+							size="30"
+							onClick={() => setEditOption(prev => !prev)}
+						/>
+						{editOption && (
+							<S.EditBox>
+								<div>수정</div>
+								<div onClick={onProductDel}>삭제</div>
+							</S.EditBox>
+						)}
+					</S.IconContainer>
 				</S.DescBox>
 				<h4>{price.toLocaleString()}원</h4>
 			</S.DescContainer>
@@ -100,6 +123,27 @@ const SoldOut = styled.h2`
 	z-index: 100;
 	left: 5%;
 `
+const IconContainer = styled.div`
+	cursor: pointer;
+	position: relative;
+`
+const EditBox = styled.div`
+	border: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+	& > div {
+		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+		padding: 0.5rem;
+		:hover {
+			background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
+		}
+	}
+	& > div:first-child {
+		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+	width: 5rem;
+	right: 1rem;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	position: absolute;
+`
 const S = {
 	Wrapper,
 	IMGContainer,
@@ -107,4 +151,6 @@ const S = {
 	DescBox,
 	SoldOut,
 	ButtonContainer,
+	IconContainer,
+	EditBox,
 }

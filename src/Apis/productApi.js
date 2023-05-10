@@ -10,6 +10,14 @@ const ProductApi = {
 			},
 		})
 	},
+	delete({ prod_idx }) {
+		return (
+			axiosInstance.delete(PATH),
+			{
+				params: { prod_idx },
+			}
+		)
+	},
 }
 
 export default ProductApi

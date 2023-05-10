@@ -63,7 +63,6 @@ function Inputs({ imageList }) {
 
 		try {
 			const response = await ProductApi.register(formData)
-			console.log(response)
 		} catch (err) {}
 	}
 

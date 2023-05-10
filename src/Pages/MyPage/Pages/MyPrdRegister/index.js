@@ -6,6 +6,9 @@ import {
 	GridCenterCSS,
 } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
+import MypageApi from '../../../../Apis/mypageApi'
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 function MyPrdRegister() {
 	const dummyProduct = [
@@ -71,22 +74,43 @@ function MyPrdRegister() {
 			category: 0,
 		},
 	]
+	const [category, setCategory] = useState(0)
+
 	const listArr = []
 	for (let i = 0; i < 10; i++) {
 		listArr.push(...dummyProduct)
 	}
 
+	const myPrdApi = async () => {
+		try {
+			const res = await MypageApi.productList({
+				page: 1,
+				category,
+			})
+		} catch {}
+	}
+	const onSelectCategory = e => {
+		setCategory(e.target.value)
+	}
+	useEffect(() => {
+		myPrdApi()
+	}, [category])
+
 	return (
 		<S.Wrapper>
 			<S.TotalNumAndFilter>
 				<div>전체 {listArr.length}개</div>
-				<div>최신순</div>
+				<select onChange={onSelectCategory}>
+					<option value={0}>중고상품</option>
+					<option value={1}>무료상품</option>
+				</select>
 			</S.TotalNumAndFilter>
 			<S.PrdList>
 				{listArr.map((item, idx) => {
 					return (
 						<MyPrdItemBox
 							key={idx}
+							idx={idx}
 							title={item.title}
 							price={item.price}
 							posterPath={item.image_url}
