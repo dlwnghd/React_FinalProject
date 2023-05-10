@@ -124,20 +124,9 @@ const SearchContent = styled.div`
 	margin-bottom: 2rem;
 `
 
-const ImageContainer = styled.div`
-	position: relative;
-
-	& > button {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
-`
-
 const S = {
 	ListWrapper,
 	ListContainer,
 	MainContent,
 	SearchContent,
-	ImageContainer,
 }
