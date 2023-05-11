@@ -23,7 +23,15 @@ const nameToPlaceholder = {
 }
 
 function FormItem(props) {
-	const { name, errors, field, isDuplicate, setIsOpenModal, ...rest } = props
+	const {
+		name,
+		errors,
+		field,
+		isDuplicate,
+		setIsOpenModal,
+		setModalType,
+		...rest
+	} = props
 
 	return (
 		<S.Wrapper>
@@ -45,7 +53,10 @@ function FormItem(props) {
 							shape={'square'}
 							variant={'default-reverse'}
 							type="button"
-							onClick={() => setIsOpenModal(true)}
+							onClick={() => {
+								setModalType('region')
+								setIsOpenModal(true)
+							}}
 						>
 							주소찾기
 						</S.StyledButton>
