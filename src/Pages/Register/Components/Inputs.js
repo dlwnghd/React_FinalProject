@@ -1,26 +1,25 @@
 import styled from 'styled-components'
-import {
-	ColumnNumberCSS,
-	FlexCenterCSS,
-	GridCenterCSS,
-} from '../../../Styles/common'
+import { FlexAlignCSS, FlexCenterCSS } from '../../../Styles/common'
 import Input from '../../../Components/Input/Input'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useState } from 'react'
 import Button from '../../../Components/Button/Button'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
-import AlertText from '../../../Components/AlertText/AlertText'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import Modal from '../../../Components/Modal/Modal'
 import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import ProductApi from '../../../Apis/productApi'
-import { ModalClose_icon } from '../../../Components/Icons/Icons'
+import FormItem from './InputComponents/FormItem'
+import Tagitem from './InputComponents/TagItem'
+import CategoryItem from './InputComponents/CategoryItem'
+import PriceItem from './InputComponents/PriceItem'
 
 function Inputs({ imageList }) {
 	const {
-		register,
+		control,
+
 		formState: { errors },
 		handleSubmit,
 	} = useForm()
@@ -42,8 +41,8 @@ function Inputs({ imageList }) {
 		const changePrice = Number(
 			price.target.value.replaceAll(',', ''),
 		).toLocaleString()
-
 		setIntPrice(changePrice)
+		console.log(intPrice)
 	}
 
 	const onSubmit = async data => {
@@ -61,9 +60,10 @@ function Inputs({ imageList }) {
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
 		formData.append('images', imageList)
-
+		console.log(formData)
 		try {
 			const response = await ProductApi.register(formData)
+			console.log(response)
 		} catch (err) {}
 	}
 
@@ -73,6 +73,7 @@ function Inputs({ imageList }) {
 			setIntPrice(0)
 		}
 		setCategoryCheckedNum(checkedNum)
+		console.log(checkedNum)
 	}
 
 	const modalOpen = () => {
@@ -98,130 +99,70 @@ function Inputs({ imageList }) {
 	}
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<S.InputContainer>
-				<h1>상품명 *</h1>
-				<S.InputValue>
-					<Input
-						placeholder="상품 제목을 입력해주세요."
-						style={{ margin: '1rem 0' }}
-						{...register('title', {
-							required: '상품명을 입력해주세요',
-						})}
-					/>
-					{errors.title && (
-						<S.Error>
-							<AlertText type={'error'}>{errors.title.message}</AlertText>
-						</S.Error>
-					)}
-				</S.InputValue>
-			</S.InputContainer>
-
-			<S.InputContainer>
-				<h1>태그 *</h1>
-				<S.TagBox>
-					{hashArr.map((hash, idx) => (
-						<S.TagItem key={idx}>
-							<div>{hash.value}</div>
-							<S.DelButton onClick={() => deleteTagItem(hash)}>
-								<ModalClose_icon size={17} />
-							</S.DelButton>
-						</S.TagItem>
-					))}
-					<S.StyledInput
-						value={hashReset}
+			<Controller
+				name="title"
+				control={control}
+				rules={FORM_TYPE.PRODUCT_TITLE_TYPE}
+				render={({ field }) => (
+					<FormItem name={'title'} errors={errors} field={field} />
+				)}
+			></Controller>
+			<Controller
+				name="hash"
+				control={control}
+				rules={{
+					required: hashArr.length === 0 && '최소 하나 이상 태그 작성해주세요 ',
+				}}
+				render={({ field }) => (
+					<Tagitem
+						name={'hash'}
+						errors={errors}
+						field={field}
+						hashArr={hashArr}
+						hashReset={hashReset}
 						onKeyDown={onkeyDown}
-						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
-						{...register('hash', {
-							required:
-								hashArr.length === 0 && '최소 하나 이상 태그 작성해주세요 ',
-							onChange: e => {
-								setHashReset(e.target.value)
-							},
-						})}
+						deleteTagItem={deleteTagItem}
+						onChange={e => setHashReset(e.target.value)}
 					/>
-					{errors.hash && (
-						<S.Error>
-							<AlertText type={'error'}>{errors.hash.message}</AlertText>
-						</S.Error>
-					)}
-				</S.TagBox>
-			</S.InputContainer>
-
-			<S.MiddleWrap>
-				<S.InputWrapCheckBox>
-					<S.InputLabelCheckBox>카테고리 *</S.InputLabelCheckBox>
-					<S.InputValueCheckBox>
-						<S.InputRadioWrap>
-							<S.Radio
-								type="radio"
-								name="category"
-								value={'1'}
-								{...register('category', {
-									required: '무료나눔 혹은 중고상품 선택해주세요 ',
-								})}
-								onClick={checkedCategory}
-							/>
-							<S.Label>무료나눔</S.Label>
-						</S.InputRadioWrap>
-						<S.InputRadioWrap>
-							<S.Radio
-								type="radio"
-								name="category"
-								value={'0'}
-								{...register('category', {
-									required: '무료나눔 혹은 중고상품 선택해주세요 ',
-								})}
-								onClick={checkedCategory}
-							/>
-							<S.Label>중고거래</S.Label>
-						</S.InputRadioWrap>
-					</S.InputValueCheckBox>
-					{errors.category && (
-						<S.ErrorCategory>
-							<AlertText type={'error'}>{errors.category.message}</AlertText>
-						</S.ErrorCategory>
-					)}
-				</S.InputWrapCheckBox>
-
-				<S.InputWrapPrice>
-					<h1>가격 *</h1>
-					<S.InputValue>
-						<Input
-							{...register('price', {
-								required: categoryCheckedNum !== '0' && '가격을 입력해주세요',
-								onChange: e => {
-									priceToString(e)
-								},
-							})}
-							disabled={categoryCheckedNum === '1' ? true : false}
-							value={intPrice}
-						/>
-
-						{errors.price && (
-							<S.Error>
-								<AlertText type={'error'}>{errors.price.message}</AlertText>
-							</S.Error>
-						)}
-					</S.InputValue>
-				</S.InputWrapPrice>
-			</S.MiddleWrap>
+				)}
+			></Controller>
+			<Controller
+				name="category"
+				control={control}
+				rules={FORM_TYPE.PRODUCT_CATEGORY_TYPE}
+				render={({ field }) => (
+					<CategoryItem
+						errors={errors}
+						field={field}
+						checkedCategory={checkedCategory}
+					/>
+				)}
+			></Controller>
+			<Controller
+				name="price"
+				control={control}
+				rules={FORM_TYPE.PRODUCT_PRICE_TYPE}
+				render={({ field }) => (
+					<PriceItem
+						name={'price'}
+						errors={errors}
+						field={field}
+						priceToString={priceToString}
+						value={intPrice}
+					/>
+				)}
+			></Controller>
+			<Controller
+				name="description"
+				control={control}
+				rules={FORM_TYPE.PRODUCT_DESCRIPTION_TYPE}
+				render={({ field }) => (
+					<FormItem name={'description'} errors={errors} field={field} />
+				)}
+			></Controller>
 
 			<S.InputContainer>
-				<h1>상품설명 *</h1>
-				<S.InputValue>
-					<S.Textarea
-						placeholder="상품 설명을 입력해주세요."
-						{...register('description', FORM_TYPE.PRODUCT_DESCRIPTION_TYPE)}
-					/>
-					{errors.description && (
-						<S.Error>
-							<AlertText type={'error'}>{errors.description.message}</AlertText>
-						</S.Error>
-					)}
-				</S.InputValue>
-			</S.InputContainer>
-			<S.InputContainer>
-				<h1>거래지역 *</h1>
+				<h6>거래 지역 *</h6>
 				<S.InputValueAddress>
 					<AddressInput
 						placeholder="거래 주소를 검색해주세요"
@@ -256,105 +197,22 @@ function Inputs({ imageList }) {
 	)
 }
 export default Inputs
+
 const InputContainer = styled.div`
-	padding: 1.5rem 0;
-	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
-	${GridCenterCSS}
-	justify-items: flex-start;
-	${ColumnNumberCSS(10)}
-	:last-child {
-		border: none;
-	}
+	${FlexAlignCSS}
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 	}
-	& > h1 {
-		grid-column-start: 1;
-		grid-column-end: 2;
+	& > h6 {
+		width: 14rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	}
 `
-const InputWrapPrice = styled.div`
-	padding: 1.5rem 0;
-	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
-	${GridCenterCSS}
-	width: 100%;
-	justify-items: flex-start;
-	${ColumnNumberCSS(5)}
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	& > h1 {
-		grid-column-start: 1;
-		grid-column-end: 2;
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	}
-`
-const InputWrapCheckBox = styled.div`
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	width: 100%;
-	height: 100%;
-	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		flex-direction: column;
-		align-items: flex-start;
-		padding-top: 1.6rem;
-		justify-content: space-between;
-	}
-`
-const MiddleWrap = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(2)}
-`
+
 const ButtonWrap = styled.div`
 	${FlexCenterCSS}
-`
-const InputRadioWrap = styled.div`
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
-	}
-`
-const InputLabelCheckBox = styled.div`
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	margin-right: 3rem;
-`
-const Label = styled.label`
-	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	margin-right: 2rem;
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
-	}
-`
-
-const Radio = styled.input`
-	accent-color: ${({ theme }) => theme.COLOR.common.gray[200]};
-	width: 1.7rem;
-	height: 1.7rem;
-	margin: 0 2rem;
-`
-const Error = styled.div`
-	grid-column-start: 1;
-	grid-column-end: 11;
-	width: 100%;
-	margin-top: 1rem;
-`
-const ErrorCategory = styled.div`
-	padding-left: 21%;
-	width: 100%;
-	margin-top: 1rem;
-`
-
-const InputValue = styled.div`
-	grid-column-start: 2;
-	grid-column-end: 11;
-	width: 100%;
 `
 
 const InputValueAddress = styled.div`
@@ -364,45 +222,11 @@ const InputValueAddress = styled.div`
 	display: flex;
 `
 
-const InputValueCheckBox = styled.div`
-	display: flex;
-	align-items: center;
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
-	}
-`
-
-const Textarea = styled.textarea`
-	width: 100%;
-	height: 30rem;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	padding: 1rem 1.2rem;
-`
-
-const StyledInput = styled(Input)`
-	display: inline-flex;
-	border: none;
-	outline: none;
-	cursor: text;
-`
-
 const AddressInput = styled(Input)`
 	height: 4.8rem;
 	width: 50%;
 `
-const TagBox = styled.div`
-	grid-column-start: 2;
-	grid-column-end: 11;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
-	&:focus-within {
-		border-color: tomato;
-	}
-`
+
 const TagItem = styled.div`
 	display: flex;
 	align-items: center;
@@ -415,13 +239,6 @@ const TagItem = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
 
-const DelButton = styled.button`
-	width: 1.7rem;
-	height: 1.7rem;
-	margin-left: 0.5rem;
-	background-color: white;
-	border-radius: 50%;
-`
 const OpenMadalBtn = styled.input`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	width: 16rem;
@@ -439,24 +256,9 @@ const OpenMadalBtn = styled.input`
 	}
 `
 const S = {
-	MiddleWrap,
-	InputWrapPrice,
-	InputContainer,
-	ButtonWrap,
-	InputValue,
-	InputValueCheckBox,
 	InputValueAddress,
-	InputWrapCheckBox,
-	InputRadioWrap,
-	Textarea,
-	DelButton,
-	Error,
-	Label,
-	InputLabelCheckBox,
 	TagItem,
-	StyledInput,
-	TagBox,
-	Radio,
-	ErrorCategory,
 	OpenMadalBtn,
+	ButtonWrap,
+	InputContainer,
 }

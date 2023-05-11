@@ -60,6 +60,25 @@ const PHONE_TYPE = {
 	},
 }
 
+const PRODUCT_TITLE_TYPE = {
+	required: {
+		value: true,
+		message: '상품명을 입력해주세요',
+	},
+}
+
+const PRODUCT_CATEGORY_TYPE = {
+	required: {
+		value: true,
+		message: '무료나눔 혹은 중고상품 선택해주세요',
+	},
+}
+const PRODUCT_PRICE_TYPE = {
+	required: {
+		value: true,
+		message: '가격을 입력해주세요',
+	},
+}
 const PRODUCT_DESCRIPTION_TYPE = {
 	required: {
 		value: true,
@@ -77,4 +96,8 @@ export const FORM_TYPE = {
 	NICKNAME_TYPE,
 	PHONE_TYPE,
 	PRODUCT_DESCRIPTION_TYPE,
+	PRODUCT_TITLE_TYPE,
+
+	PRODUCT_CATEGORY_TYPE,
+	PRODUCT_PRICE_TYPE,
 }

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-const statusCSS = {
+export const statusCSS = {
 	success: css`
 		border: 1px solid ${({ theme }) => theme.COLOR.success};
 	`,
