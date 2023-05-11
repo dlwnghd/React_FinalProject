@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components'
-import { FlexCenterCSS } from '../../Styles/common'
 
 const variantCSS = {
 	default: css`
@@ -67,6 +66,5 @@ export const Button = styled.button`
 	${({ variant }) => variantCSS[variant]}
 	${({ shape }) => shapeCSS[shape]}
     ${({ size }) => sizeCSS[size]}
-	${FlexCenterCSS}
 	cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 `
