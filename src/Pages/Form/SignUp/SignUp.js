@@ -256,7 +256,7 @@ const InputSection = styled.section`
 
 const MapSection = styled.section`
 	width: 49%;
-	height: 44rem;
+	height: 47.5rem;
 	background-color: gray;
 
 	@media screen and (max-width: 670px) {
