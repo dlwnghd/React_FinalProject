@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import styled from 'styled-components'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import Button from '../../../Components/Button/Button'
-import { Camera_Icon } from '../../../Components/Icons/Icons'
+import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { useState } from 'react'
 
@@ -17,7 +17,7 @@ function Images({ imageList, setImageList }) {
 	const onAddImg = e => {
 		const ImageLists = e.target.files
 		let ImageUrlLists = [...imageList]
-
+		console.log(ImageUrlLists)
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
@@ -30,6 +30,16 @@ function Images({ imageList, setImageList }) {
 
 		setImageList(ImageUrlLists)
 	}
+	// const onAddImg = e => {
+	// 	const ImageLists = e.target.files
+	// 	console.log(ImageLists)
+
+	// const reader = new FileReader()
+	// reader.readAsDataURL(ImageLists)
+	// reader.onloadend = () => {
+	// 	setImageList(reader.result || null)
+	// }
+	// }
 
 	//이미지 삭제
 	const DelViewImg = e => {
@@ -97,7 +107,9 @@ function Images({ imageList, setImageList }) {
 						onDragOver={e => e.preventDefault()}
 					>
 						<S.Img src={imageList[idx]} />
-						<S.Del onClick={() => DelViewImg(e)}>❌</S.Del>
+						<S.Del onClick={() => DelViewImg(e)}>
+							<ModalClose_icon size={25} />
+						</S.Del>
 					</S.ImgBox>
 				))}
 				{imageList[0] && <MainImg>대표사진</MainImg>}
@@ -160,7 +172,7 @@ const Del = styled.span`
 	font-size: 20px;
 	position: absolute;
 	top: 0.5rem;
-	right: 1rem;
+	right: 0.2rem;
 	cursor: pointer;
 `
 const Title = styled.div`

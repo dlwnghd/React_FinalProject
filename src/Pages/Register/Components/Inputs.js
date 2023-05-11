@@ -16,6 +16,7 @@ import Modal from '../../../Components/Modal/Modal'
 import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import ProductApi from '../../../Apis/productApi'
+import { ModalClose_icon } from '../../../Components/Icons/Icons'
 
 function Inputs({ imageList }) {
 	const {
@@ -47,7 +48,7 @@ function Inputs({ imageList }) {
 
 	const onSubmit = async data => {
 		let price = Number(data.price.replace(/,/g, ''))
-		if (data.category == '0') {
+		if (data.category == '1') {
 			price = 0
 		}
 		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
@@ -68,7 +69,7 @@ function Inputs({ imageList }) {
 
 	const checkedCategory = e => {
 		const checkedNum = e.target.value
-		if (checkedNum === '0') {
+		if (checkedNum === '1') {
 			setIntPrice(0)
 		}
 		setCategoryCheckedNum(checkedNum)
@@ -97,8 +98,8 @@ function Inputs({ imageList }) {
 	}
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<S.InputWrap>
-				<S.InputLabel>상품명 *</S.InputLabel>
+			<S.InputContainer>
+				<h1>상품명 *</h1>
 				<S.InputValue>
 					<Input
 						placeholder="상품 제목을 입력해주세요."
@@ -113,15 +114,17 @@ function Inputs({ imageList }) {
 						</S.Error>
 					)}
 				</S.InputValue>
-			</S.InputWrap>
+			</S.InputContainer>
 
-			<S.InputWrap>
-				<S.InputLabel>태그 *</S.InputLabel>
+			<S.InputContainer>
+				<h1>태그 *</h1>
 				<S.TagBox>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
-							<S.TagText>{hash.value}</S.TagText>
-							<DelButton onClick={() => deleteTagItem(hash)}>X</DelButton>
+							<div>{hash.value}</div>
+							<S.DelButton onClick={() => deleteTagItem(hash)}>
+								<ModalClose_icon size={17} />
+							</S.DelButton>
 						</S.TagItem>
 					))}
 					<S.StyledInput
@@ -142,7 +145,7 @@ function Inputs({ imageList }) {
 						</S.Error>
 					)}
 				</S.TagBox>
-			</S.InputWrap>
+			</S.InputContainer>
 
 			<S.MiddleWrap>
 				<S.InputWrapCheckBox>
@@ -152,7 +155,7 @@ function Inputs({ imageList }) {
 							<S.Radio
 								type="radio"
 								name="category"
-								value={'0'}
+								value={'1'}
 								{...register('category', {
 									required: '무료나눔 혹은 중고상품 선택해주세요 ',
 								})}
@@ -164,7 +167,7 @@ function Inputs({ imageList }) {
 							<S.Radio
 								type="radio"
 								name="category"
-								value={'1'}
+								value={'0'}
 								{...register('category', {
 									required: '무료나눔 혹은 중고상품 선택해주세요 ',
 								})}
@@ -181,7 +184,7 @@ function Inputs({ imageList }) {
 				</S.InputWrapCheckBox>
 
 				<S.InputWrapPrice>
-					<S.InputLabel>가격 *</S.InputLabel>
+					<h1>가격 *</h1>
 					<S.InputValue>
 						<Input
 							{...register('price', {
@@ -190,7 +193,7 @@ function Inputs({ imageList }) {
 									priceToString(e)
 								},
 							})}
-							disabled={categoryCheckedNum === '0' ? true : false}
+							disabled={categoryCheckedNum === '1' ? true : false}
 							value={intPrice}
 						/>
 
@@ -203,8 +206,8 @@ function Inputs({ imageList }) {
 				</S.InputWrapPrice>
 			</S.MiddleWrap>
 
-			<S.InputWrap>
-				<S.InputLabel>상품설명 *</S.InputLabel>
+			<S.InputContainer>
+				<h1>상품설명 *</h1>
 				<S.InputValue>
 					<S.Textarea
 						placeholder="상품 설명을 입력해주세요."
@@ -216,9 +219,9 @@ function Inputs({ imageList }) {
 						</S.Error>
 					)}
 				</S.InputValue>
-			</S.InputWrap>
-			<S.InputWrap>
-				<S.InputLabel>거래지역 *</S.InputLabel>
+			</S.InputContainer>
+			<S.InputContainer>
+				<h1>거래지역 *</h1>
 				<S.InputValueAddress>
 					<AddressInput
 						placeholder="거래 주소를 검색해주세요"
@@ -241,7 +244,7 @@ function Inputs({ imageList }) {
 						</Modal>
 					)}
 				</S.InputValueAddress>
-			</S.InputWrap>
+			</S.InputContainer>
 			<ViewMap addressInfo={addressInfo} />
 			<S.ButtonWrap>
 				<Button type="submit" style={{ margin: '4rem' }}>
@@ -253,7 +256,7 @@ function Inputs({ imageList }) {
 	)
 }
 export default Inputs
-const InputWrap = styled.div`
+const InputContainer = styled.div`
 	padding: 1.5rem 0;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
 	${GridCenterCSS}
@@ -267,6 +270,11 @@ const InputWrap = styled.div`
 		flex-direction: column;
 		align-items: flex-start;
 	}
+	& > h1 {
+		grid-column-start: 1;
+		grid-column-end: 2;
+		font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	}
 `
 const InputWrapPrice = styled.div`
 	padding: 1.5rem 0;
@@ -279,6 +287,11 @@ const InputWrapPrice = styled.div`
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+	}
+	& > h1 {
+		grid-column-start: 1;
+		grid-column-end: 2;
+		font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	}
 `
 const InputWrapCheckBox = styled.div`
@@ -308,13 +321,6 @@ const InputRadioWrap = styled.div`
 		flex-direction: column;
 	}
 `
-
-const InputLabel = styled.div`
-	grid-column-start: 1;
-	grid-column-end: 2;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-`
-
 const InputLabelCheckBox = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	margin-right: 3rem;
@@ -406,10 +412,9 @@ const TagItem = styled.div`
 	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 5px;
 	color: white;
-`
-const TagText = styled.span`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 `
+
 const DelButton = styled.button`
 	width: 1.7rem;
 	height: 1.7rem;
@@ -436,7 +441,7 @@ const OpenMadalBtn = styled.input`
 const S = {
 	MiddleWrap,
 	InputWrapPrice,
-	InputWrap,
+	InputContainer,
 	ButtonWrap,
 	InputValue,
 	InputValueCheckBox,
@@ -444,12 +449,11 @@ const S = {
 	InputWrapCheckBox,
 	InputRadioWrap,
 	Textarea,
-	InputLabel,
+	DelButton,
 	Error,
 	Label,
 	InputLabelCheckBox,
 	TagItem,
-	TagText,
 	StyledInput,
 	TagBox,
 	Radio,
