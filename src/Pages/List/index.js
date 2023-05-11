@@ -37,7 +37,7 @@ function List() {
 		setPage(0)
 		setTotalResult(
 			productsMock
-				.filter(item => item.category == currentURL)
+				.filter(item => item.category === currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
@@ -50,7 +50,7 @@ function List() {
 		setFilterOption(listFilter[0])
 		setTotalResult(
 			productsMock
-				.filter(item => item.category == currentURL)
+				.filter(item => item.category === currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
