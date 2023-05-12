@@ -6,7 +6,7 @@ import {
 } from '../../../../../Styles/common'
 import Input from '../../../../../Components/Input/Input'
 import Button from '../../../../../Components/Button/Button'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
@@ -18,6 +18,8 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+import MESSAGE from '../../../../../Consts/message'
 
 function UserInfo() {
 	const [userInfo, setUserInfo] = useState({})
@@ -34,6 +36,7 @@ function UserInfo() {
 	const [isSubmit, setIsSubmit] = useState(false)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
+	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
 
 	useEffect(() => {
 		const getData = async () => {
@@ -46,7 +49,9 @@ function UserInfo() {
 						'https://static.nid.naver.com/images/web/user/default.png?type=s160',
 				)
 			} catch (err) {
-				console.log(err)
+				setIsSubmit(true)
+				setMessage(MESSAGE.USERDATA.FAILURE)
+				setIsOpenModal(true)
 			}
 		}
 		getData()
@@ -64,6 +69,7 @@ function UserInfo() {
 
 	const modalOpen = () => {
 		document.body.style.overflow = 'hidden'
+		setIsSubmit(false)
 		setIsOpenModal(true)
 	}
 
@@ -80,7 +86,6 @@ function UserInfo() {
 			if (err.response.status === 400) {
 				setIsDuplicate({ state: true, message: err.response.data.message })
 			}
-			console.log(err)
 		}
 	}
 
@@ -99,6 +104,7 @@ function UserInfo() {
 				UserApi.userEdit(editUser),
 				UserApi.userEditProfile(formData),
 			])
+			setMessage(MESSAGE.USEREDIT.SUCCESS)
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
 			setTimeout(() => {
@@ -106,7 +112,10 @@ function UserInfo() {
 				setIsSubmit(false)
 			}, 3000)
 		} catch (err) {
-			console.log(err)
+			if (err.response.status === 400) {
+				setMessage(MESSAGE.USEREDIT.FAILURE)
+				setIsOpenModal(true)
+			}
 		}
 	}
 
@@ -119,105 +128,95 @@ function UserInfo() {
 
 	return (
 		<S.Wrapper>
-			<FormProvider>
-				<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+				<S.InputBox>
+					<S.ProfileImg src={preFile} />
+					<S.ImgLabel htmlFor="profileImg">
+						<Camera_Icon />
+					</S.ImgLabel>
+					<Input
+						type="file"
+						id="profileImg"
+						accept="image/*"
+						style={{ display: 'none' }}
+						{...register('profile_img', {
+							onChange: e => {
+								saveImgFile(e)
+							},
+						})}
+					/>
+				</S.InputBox>
+				<S.InputBox>
+					<S.Label>아이디(이메일)</S.Label>
+					<Input readOnly {...register('email')} />
+				</S.InputBox>
+				<div>
 					<S.InputBox>
-						<S.ProfileImg src={preFile} />
-						<S.ImgLabel htmlFor="profileImg">
-							<Camera_Icon />
-						</S.ImgLabel>
+						<S.Label>닉네임</S.Label>
 						<Input
-							type="file"
-							id="profileImg"
-							accept="image/*"
-							style={{ display: 'none' }}
-							{...register('profile_img', {
-								onChange: e => {
-									saveImgFile(e)
+							status={errors.nickName && 'error'}
+							{...register('nickName', {
+								required: {
+									value: true,
+									message: '닉네임을 입력해주세요',
 								},
+								onChange: e => checkNickname(e),
 							})}
 						/>
 					</S.InputBox>
-					<S.InputBox>
-						<S.Label>아이디(이메일)</S.Label>
-						<Input
-							readOnly
-							{...register('email')}
-							defaultValue={userInfo.email}
-						/>
-					</S.InputBox>
-					<div>
-						<S.InputBox>
-							<S.Label>닉네임</S.Label>
-							<Input
-								status={errors.nickName && 'error'}
-								{...register('nickName', {
-									required: {
-										value: true,
-										message: '닉네임을 입력해주세요',
-									},
-									onChange: e => checkNickname(e),
-								})}
-							/>
-						</S.InputBox>
-						<S.StyledAlert type="error" size="default">
-							{errors.nickName && errors.nickName.message}
-						</S.StyledAlert>
-						{isDuplicate && (
-							<S.StyledAlert
-								type={isDuplicate.state ? 'error' : 'success'}
-								size="default"
-							>
-								{isDuplicate.state !== null &&
-									!errors.nickName &&
-									isDuplicate.message}
-							</S.StyledAlert>
-						)}
-					</div>
-					<S.InputBox>
-						<S.Label>주소</S.Label>
-						<Input
-							{...register('region', { required: true })}
-							readOnly
-							style={{ width: '80%' }}
-						/>
-						<S.RegisterButton
-							type="button"
-							shape={'square'}
-							variant={'default-reverse'}
-							onClick={modalOpen}
+					<S.StyledAlert type="error" size="default">
+						{errors.nickName && errors.nickName.message}
+					</S.StyledAlert>
+					{isDuplicate && (
+						<S.StyledAlert
+							type={isDuplicate.state ? 'error' : 'success'}
+							size="default"
 						>
-							주소 찾기
-						</S.RegisterButton>
-						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
-					</S.InputBox>
-					<div>
-						<S.InputBox>
-							<S.Label>연락처</S.Label>
-							<Input
-								status={errors.phone && 'error'}
-								{...register('phone', {
-									required: {
-										value: true,
-										message: '연락처를 입력해주세요',
-									},
-									onChange: e =>
-										setValue('phone', addHyphenToPhoneNum(e.target.value)),
-								})}
-							/>
-						</S.InputBox>
-						<S.StyledAlert type="error" size="default">
-							{errors.phone && errors.phone.message}
+							{isDuplicate.state !== null &&
+								!errors.nickName &&
+								isDuplicate.message}
 						</S.StyledAlert>
-					</div>
-					{isSubmit && isOpenModal && (
-						<S.StyledModal size="medium">
-							<S.Text>프로필 수정이 완료되었습니다</S.Text>
-						</S.StyledModal>
 					)}
-					<S.SubmitButton>변경</S.SubmitButton>
-				</form>
-			</FormProvider>
+				</div>
+				<S.InputBox>
+					<S.Label>주소</S.Label>
+					<Input
+						{...register('region', { required: true })}
+						readOnly
+						style={{ width: '80%' }}
+					/>
+					<S.RegisterButton
+						type="button"
+						shape={'square'}
+						variant={'default-reverse'}
+						onClick={modalOpen}
+					>
+						주소 찾기
+					</S.RegisterButton>
+					{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
+				</S.InputBox>
+				<div>
+					<S.InputBox>
+						<S.Label>연락처</S.Label>
+						<Input
+							status={errors.phone && 'error'}
+							{...register('phone', {
+								required: {
+									value: true,
+									message: '연락처를 입력해주세요',
+								},
+								onChange: e =>
+									setValue('phone', addHyphenToPhoneNum(e.target.value)),
+							})}
+						/>
+					</S.InputBox>
+					<S.StyledAlert type="error" size="default">
+						{errors.phone && errors.phone.message}
+					</S.StyledAlert>
+				</div>
+				{isSubmit && isOpenModal && <AlertModal message={message} />}
+				<S.SubmitButton>변경</S.SubmitButton>
+			</form>
 		</S.Wrapper>
 	)
 }

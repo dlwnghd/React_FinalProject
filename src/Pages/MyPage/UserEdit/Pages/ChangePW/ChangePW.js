@@ -9,6 +9,9 @@ import UserApi from '../../../../../Apis/userApi'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import Modal from '../../../../../Components/Modal/Modal'
+import MESSAGE from '../../../../../Consts/message'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+import { useState } from 'react'
 
 function ChangePW() {
 	const {
@@ -21,16 +24,21 @@ function ChangePW() {
 		mode: 'onChange',
 	})
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [message, setMessage] = useState(MESSAGE.PWEDIT.SUCCESS)
 
 	const onSubmit = async data => {
 		try {
 			await UserApi.userEditPw({ pw: data.newPw })
+			setMessage(MESSAGE.PWEDIT.SUCCESS)
 			setIsOpenModal(true)
 			setTimeout(() => setIsOpenModal(false), 3000)
 			setValue('newPw', '')
 			setValue('newPwConfirm', '')
 		} catch (err) {
-			console.log(err)
+			if (err.response.status === 400) {
+				setMessage(MESSAGE.PWEDIT.FAILURE)
+				setIsOpenModal(true)
+			}
 		}
 	}
 	return (
@@ -69,11 +77,7 @@ function ChangePW() {
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
 				</div>
-				{isOpenModal && (
-					<S.StyledModal size="medium">
-						<S.Text>비밀번호 변경이 완료되었습니다</S.Text>
-					</S.StyledModal>
-				)}
+				{isOpenModal && <AlertModal message={message} />}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
 		</S.Wrapper>
