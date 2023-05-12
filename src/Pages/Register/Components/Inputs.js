@@ -12,14 +12,12 @@ import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
 import ProductApi from '../../../Apis/productApi'
 import FormItem from './InputComponents/FormItem'
-import Tagitem from './InputComponents/TagItem'
 import CategoryItem from './InputComponents/CategoryItem'
 import PriceItem from './InputComponents/PriceItem'
-
+import TagsItem from './InputComponents/TagsItem'
 function Inputs({ imageList }) {
 	const {
 		control,
-
 		formState: { errors },
 		handleSubmit,
 	} = useForm()
@@ -42,7 +40,14 @@ function Inputs({ imageList }) {
 			price.target.value.replaceAll(',', ''),
 		).toLocaleString()
 		setIntPrice(changePrice)
-		console.log(intPrice)
+	}
+
+	const checkedCategory = e => {
+		const checkedNum = e.target.value
+		if (checkedNum === '1') {
+			setIntPrice('0')
+		}
+		setCategoryCheckedNum(checkedNum)
 	}
 
 	const onSubmit = async data => {
@@ -65,15 +70,6 @@ function Inputs({ imageList }) {
 			const response = await ProductApi.register(formData)
 			console.log(response)
 		} catch (err) {}
-	}
-
-	const checkedCategory = e => {
-		const checkedNum = e.target.value
-		if (checkedNum === '1') {
-			setIntPrice(0)
-		}
-		setCategoryCheckedNum(checkedNum)
-		console.log(checkedNum)
 	}
 
 	const modalOpen = () => {
@@ -114,7 +110,7 @@ function Inputs({ imageList }) {
 					required: hashArr.length === 0 && '최소 하나 이상 태그 작성해주세요 ',
 				}}
 				render={({ field }) => (
-					<Tagitem
+					<TagsItem
 						name={'hash'}
 						errors={errors}
 						field={field}
@@ -122,7 +118,7 @@ function Inputs({ imageList }) {
 						hashReset={hashReset}
 						onKeyDown={onkeyDown}
 						deleteTagItem={deleteTagItem}
-						onChange={e => setHashReset(e.target.value)}
+						setHashReset={setHashReset}
 					/>
 				)}
 			></Controller>
@@ -133,21 +129,26 @@ function Inputs({ imageList }) {
 				render={({ field }) => (
 					<CategoryItem
 						errors={errors}
+						onClick={checkedCategory}
 						field={field}
-						checkedCategory={checkedCategory}
 					/>
 				)}
 			></Controller>
 			<Controller
 				name="price"
 				control={control}
-				rules={FORM_TYPE.PRODUCT_PRICE_TYPE}
+				rules={{
+					required: categoryCheckedNum !== '1' && '가격을 입력해주세요',
+				}}
 				render={({ field }) => (
 					<PriceItem
 						name={'price'}
 						errors={errors}
+						intPrice={intPrice}
+						setIntPrice={setIntPrice}
+						categoryCheckedNum={categoryCheckedNum}
 						field={field}
-						priceToString={priceToString}
+						onChange={priceToString}
 						value={intPrice}
 					/>
 				)}
@@ -227,18 +228,6 @@ const AddressInput = styled(Input)`
 	width: 50%;
 `
 
-const TagItem = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin: 0.5rem;
-	padding: 0.5rem;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
-	border-radius: 5px;
-	color: white;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
-`
-
 const OpenMadalBtn = styled.input`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	width: 16rem;
@@ -257,7 +246,7 @@ const OpenMadalBtn = styled.input`
 `
 const S = {
 	InputValueAddress,
-	TagItem,
+
 	OpenMadalBtn,
 	ButtonWrap,
 	InputContainer,

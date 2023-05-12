@@ -5,8 +5,17 @@ import { FlexAlignCSS } from '../../../../Styles/common'
 import Input from '../../../../Components/Input/Input'
 import AlertText from '../../../../Components/AlertText/AlertText'
 
-function Tagitem(props) {
-	const { errors, field, hashReset, hashArr, deleteTagItem } = props
+function TagsItem(props) {
+	const {
+		errors,
+		field,
+		hashArr,
+		hashReset,
+		deleteTagItem,
+		setHashReset,
+		onKeyDown,
+	} = props
+
 	return (
 		<div>
 			<S.InputField>
@@ -21,9 +30,11 @@ function Tagitem(props) {
 						</S.TagItem>
 					))}
 					<S.StyledInput
-						value={hashReset}
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
 						field={field}
+						onKeyDown={onKeyDown}
+						value={hashReset}
+						onChange={e => setHashReset(e.target.value)}
 					/>
 				</S.TagBox>
 			</S.InputField>
@@ -34,7 +45,7 @@ function Tagitem(props) {
 		</div>
 	)
 }
-export default Tagitem
+export default TagsItem
 
 const InputField = styled.div`
 	${FlexAlignCSS}

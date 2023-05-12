@@ -3,7 +3,7 @@ import { FlexAlignCSS } from '../../../../Styles/common'
 import AlertText from '../../../../Components/AlertText/AlertText'
 
 function CategoryItem(props) {
-	const { errors, field, setIsOpenModal, checkedCategory, ...rest } = props
+	const { errors, field, ...rest } = props
 
 	return (
 		<div>
@@ -15,11 +15,8 @@ function CategoryItem(props) {
 							type="radio"
 							name="category"
 							value={'1'}
-							{...field}
+							// {...field}
 							{...rest}
-							// {...register('category', {
-							// 	required: '무료나눔 혹은 중고상품 선택해주세요 ',
-							// })}
 						/>
 						<S.Label>무료나눔</S.Label>
 					</S.InputRadioWrap>
@@ -28,18 +25,15 @@ function CategoryItem(props) {
 							type="radio"
 							name="category"
 							value={'0'}
-							{...field}
+							// {...field}
 							{...rest}
-							// {...register('category', {
-							// 	required: '무료나눔 혹은 중고상품 선택해주세요 ',
-							// })}
 						/>
 						<S.Label>중고거래</S.Label>
 					</S.InputRadioWrap>
 				</S.InputValueCheckBox>
 			</S.InputField>
 
-			<S.StyledAlertText type="category">
+			<S.StyledAlertText type="error">
 				{errors.category && errors.category.message}
 			</S.StyledAlertText>
 		</div>

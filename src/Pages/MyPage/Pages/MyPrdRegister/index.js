@@ -82,17 +82,16 @@ function MyPrdRegister() {
 
 	const [category, setCategory] = useState(0)
 
-	const myPrdApi = async () => {
-		try {
-			const res = await MypageApi.productList({
-				page: 1,
-				category,
-			})
-			console.log(res.data.products)
-		} catch {}
-	}
-
 	useEffect(() => {
+		const myPrdApi = async () => {
+			try {
+				const res = await MypageApi.productList({
+					page: 1,
+					category,
+				})
+				console.log(res.data.products)
+			} catch {}
+		}
 		myPrdApi()
 	}, [category])
 

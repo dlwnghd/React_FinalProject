@@ -5,7 +5,16 @@ import Input from '../../../../Components/Input/Input'
 import Button from '../../../../Components/Button/Button'
 
 function PriceItem(props) {
-	const { name, errors, field, setIsOpenModal, priceToString, ...rest } = props
+	const {
+		name,
+		errors,
+		setIsOpenModal,
+		categoryCheckedNum,
+		intPrice,
+		setIntPrice,
+		field,
+		...rest
+	} = props
 
 	return (
 		<S.Wrapper>
@@ -15,10 +24,10 @@ function PriceItem(props) {
 					<Input
 						placeholder={'가격을 입력해주세요.'}
 						status={errors.price && 'error'}
-						readOnly={name === 'region'}
+						disabled={categoryCheckedNum === '1' ? true : false}
+						value={intPrice}
 						{...field}
 						{...rest}
-						onChange={priceToString}
 					/>
 				</div>
 			</S.InputField>
