@@ -24,7 +24,15 @@ const nameToPlaceholder = {
 // 상품명, 가격, 상품설명, 거래지역
 // 이걸로 못하는거 태그, 카테고리
 function FormItem(props) {
-	const { name, errors, field, isDuplicate, setIsOpenModal, ...rest } = props
+	const {
+		name,
+		errors,
+		field,
+		isDuplicate,
+		setIsOpenModal,
+		setModalType,
+		...rest
+	} = props
 
 	return (
 		<S.Wrapper>
@@ -34,7 +42,7 @@ function FormItem(props) {
 					<Input
 						type={name.includes('password') ? 'password' : 'text'}
 						placeholder={nameToPlaceholder[name]}
-						status={errors[name] && 'error'}
+						status={errors[name] || isDuplicate?.state ? 'error' : 'default'}
 						readOnly={name === 'region'}
 						{...field}
 						{...rest}
@@ -46,16 +54,22 @@ function FormItem(props) {
 							shape={'square'}
 							variant={'default-reverse'}
 							type="button"
-							onClick={() => setIsOpenModal(true)}
+							onClick={() => {
+								setModalType('region')
+								setIsOpenModal(true)
+							}}
 						>
 							주소찾기
 						</S.StyledButton>
 					)}
 				</div>
 			</S.InputField>
-			<S.StyledAlertText type="error">
-				{errors[name] && errors[name].message}
-			</S.StyledAlertText>
+
+			{errors[name] && (
+				<S.StyledAlertText type="error">
+					{errors[name].message}
+				</S.StyledAlertText>
+			)}
 
 			{/* 중복 검사 관련 AlertText */}
 			{/* isDuplicate 인자가 넘겨졌을 때만 보여집니다 */}
@@ -70,7 +84,7 @@ function FormItem(props) {
 export default FormItem
 
 const Wrapper = styled.div`
-	margin-bottom: 2.8rem;
+	height: 8.5rem;
 `
 
 const InputField = styled.div`
@@ -101,4 +115,9 @@ const StyledButton = styled(Button)`
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 `
 
-const S = { Wrapper, InputField, StyledAlertText, StyledButton }
+const S = {
+	Wrapper,
+	InputField,
+	StyledAlertText,
+	StyledButton,
+}

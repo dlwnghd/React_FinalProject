@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 import styled from 'styled-components'
 import {
@@ -21,9 +21,13 @@ import useUser from '../../../Hooks/useUser'
 import { useRecoilValue } from 'recoil'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import UserInfoService from '../../../Utils/userInfoService'
+import MESSAGE from '../../../Consts/message'
 
 function Login() {
 	const navigate = useNavigate()
+	const location = useLocation()
+	const from = location.state?.from
+
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
 	const loginState = useRecoilValue(loginStateAtom)
@@ -50,10 +54,20 @@ function Login() {
 				// 로그인 성공 시에만 아이디 저장
 				UserInfoService.setSaveId(email)
 			}
-			navigate('/')
+			if (from) return navigate(from) // 이전 페이지 정보가 있다면 그 페이지로 돌아감
+			navigate('/') // 그게 아니라면 메인 페이지로 이동
 		} catch (err) {
-			const { message } = err.response.data
-			setError(message)
+			const { FAILURE, ERROR } = MESSAGE.LOGIN
+			try {
+				const {
+					message: { info },
+				} = err.response.data
+				setError(info === 'loginFailed' ? FAILURE : ERROR)
+			} catch (err) {
+				// setError하는 과정에서 에러가 발생할 수 있어
+				// 대비하여 ERROR로 텍스트를 띄웁니다.
+				setError(ERROR)
+			}
 		}
 	}
 
@@ -93,7 +107,9 @@ function Login() {
 					{errors.password && (
 						<AlertText type={'error'}>{errors.password.message}</AlertText>
 					)}
-					{error && <AlertText type={'error'}>{error}</AlertText>}
+					{error && (
+						<S.StyledAlertText type={'error'}>{error}</S.StyledAlertText>
+					)}
 					<div>
 						<CheckBox
 							id="saveId"
@@ -160,6 +176,10 @@ const StyledButton = styled(Button)`
 	margin-top: 1rem;
 `
 
+const StyledAlertText = styled(AlertText)`
+	text-align: center;
+`
+
 const BottomBox = styled.div`
 	${FlexBetweenCSS}
 	margin-top: 1rem;
@@ -211,6 +231,7 @@ const S = {
 	Container,
 	StyledInput,
 	StyledButton,
+	StyledAlertText,
 	BottomBox,
 	StyledLink,
 }

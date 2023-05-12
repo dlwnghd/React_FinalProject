@@ -13,26 +13,15 @@ import Login from '../Pages/Form/Login/Login'
 import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
-import MyPageNav from '../Pages/MyPage/Components/Navigation/Navigation'
-import MyPageHeader from '../Pages/MyPage/Components/Header'
+import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
+import MyPageIndex from '../Pages/MyPage/Components/Header'
+import PrivateRoute from './private'
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <Layout />,
 		children: [
-			{
-				path: '/',
-				element: <Main />,
-			},
-			{
-				path: '/list/:category',
-				element: <List />,
-			},
-			{
-				path: '/detail/:idx',
-				element: <Detail />,
-			},
 			{
 				path: '/login',
 				element: <Login />,
@@ -42,48 +31,66 @@ const router = createBrowserRouter([
 				element: <SignUp />,
 			},
 			{
-				path: '',
-				element: <MyPageHeader />,
+				path: '/',
+				element: <Main />,
+			},
+			{
+				element: <PrivateRoute />,
 				children: [
 					{
-						path: '/mypage-bank',
-						element: <MyBank />,
+						path: '/list/:category',
+						element: <List />,
 					},
 					{
-						path: '/mypage-interest',
-						element: <MyInterest />,
+						path: '/detail/:idx',
+						element: <Detail />,
+					},
+
+					{
+						path: '',
+						element: <MyPageIndex />,
+						children: [
+							{
+								path: '/mypage-bank',
+								element: <MyBank />,
+							},
+							{
+								path: '/mypage-interest',
+								element: <MyInterest />,
+							},
+							{
+								path: '/mypage-register',
+								element: <MyPrdRegister />,
+							},
+						],
 					},
 					{
-						path: '/mypage-register',
-						element: <MyPrdRegister />,
+						path: '',
+						element: <MyPageNav type={'userEdit'} />,
+						children: [
+							{
+								path: '/mypage/useredit-changepw',
+								element: <ChangePW />,
+							},
+							{
+								path: '/mypage/useredit-userinfo',
+								element: <UserInfo />,
+							},
+						],
+					},
+					{
+						path: '/recent-price',
+						element: <RecentPrice />,
+					},
+					{
+						path: '/register/:prdname',
+						element: <Register />,
+					},
+					{
+						path: '/search/:word',
+						element: <Search />,
 					},
 				],
-			},
-			{
-				path: '',
-				element: <MyPageNav type={'userEdit'} />,
-				children: [
-					{
-						path: '/mypage/useredit-changepw',
-						element: <ChangePW />,
-					},
-					{
-						path: '/mypage/useredit-userinfo',
-						element: <UserInfo />,
-					},
-				],
-			},
-			{
-				path: '/recent-price',
-				element: <RecentPrice />,
-			},
-			{
-				path: '/register/:prdname',
-				element: <Register />,
-			},
-			{
-				path: '/search/:word',
-				element: <Search />,
 			},
 		],
 	},

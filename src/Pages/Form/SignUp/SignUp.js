@@ -14,9 +14,12 @@ import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import UserInfoService from '../../../Utils/userInfoService'
+import AlertModal from '../../../Components/Modal/AlertModal/AlertModal'
+import MESSAGE from '../../../Consts/message'
 
 function SignUp() {
-	const navigate = useNavigate('/')
+	const navigate = useNavigate()
+	const [modalType, setModalType] = useState('')
 	const [isDuplicate, setIsDuplicate] = useState({
 		email: { state: null, message: '' },
 		nickname: { state: null, message: '' },
@@ -52,6 +55,8 @@ function SignUp() {
 			navigate('/login')
 		} catch (err) {
 			if (err.response.status === 400) {
+				setModalType('error')
+				setIsOpenModal(true)
 			}
 		}
 	}
@@ -108,6 +113,9 @@ function SignUp() {
 
 	return (
 		<S.Wrapper>
+			{isOpenModal && modalType === 'alert' && (
+				<AlertModal message={MESSAGE.JOIN.FAILURE} />
+			)}
 			<h1>회원가입</h1>
 			<S.Form onSubmit={handleSubmit(onSubmitSignup)}>
 				<div>
@@ -175,10 +183,13 @@ function SignUp() {
 									errors={errors}
 									field={field}
 									setIsOpenModal={setIsOpenModal}
+									setModalType={setModalType}
 								/>
 							)}
 						></Controller>
-						{isOpenModal && <RegionModal setRegion={setRegion} />}
+						{isOpenModal && modalType === 'region' && (
+							<RegionModal setRegion={setRegion} />
+						)}
 						<Controller
 							name="phone"
 							control={control}
@@ -245,7 +256,7 @@ const InputSection = styled.section`
 
 const MapSection = styled.section`
 	width: 49%;
-	height: 44rem;
+	height: 47.5rem;
 	background-color: gray;
 
 	@media screen and (max-width: 670px) {
