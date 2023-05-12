@@ -10,7 +10,7 @@ const ProductApi = {
 			},
 		})
 	},
-	delete({ prod_idx }) {
+	delete(prod_idx) {
 		return (
 			axiosInstance.delete(PATH),
 			{

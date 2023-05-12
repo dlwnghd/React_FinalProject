@@ -11,12 +11,15 @@ function MyPrdItemBox({ item }) {
 
 	const { image_url, title, price, status, idx } = item
 
+	//물품 삭제
 	// const onProductDel = async () => {
 	// 	try {
 	// 		await ProductApi.delete(idx)
-	// 	} catch (err) {
-	// 	}
+	// 	} catch (err) {}
 	// }
+
+	//물품 수정
+
 	return (
 		<S.Wrapper>
 			<S.IMGContainer posterIMG={image_url} status={status}>
