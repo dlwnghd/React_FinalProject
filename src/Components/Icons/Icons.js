@@ -19,12 +19,11 @@ import {
 	AiOutlineCamera,
 	AiOutlineExport,
 	AiOutlineMore,
-	AiOutlineClose,
 	AiFillShopping,
 	AiOutlineDollarCircle,
 	AiOutlineFund,
 	AiOutlineDown,
-	AiFillSignal
+	AiFillSignal,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 
@@ -90,7 +89,6 @@ export const Down_Icon = ({ size, color }) => (
 	<AiOutlineDown size={size} color={color} />
 )
 export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
-
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
