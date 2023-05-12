@@ -5,48 +5,37 @@ import {
 	GridCenterCSS,
 } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
-import { useEffect, useRef, useState } from 'react'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
+import { useNavigate } from 'react-router-dom'
+import { slide } from '../../../../Utils/slide'
 
-function GridBanner() {
-	const [currentX, setCurrentX] = useState(0)
-	const slider = useRef(null)
+function RecentBanner() {
+	const {
+		onTouchStart,
+		onTouchMove,
+		onTouchEnd,
+		onMouseDown,
+		onMouseMove,
+		onMouseUp,
+		slider,
+		currentIdx,
+		setCurrentIdx,
+	} = slide(productsMock.slice(0, 4))
+	// productsMock : 호출받아야하는 리스트
 
 	const nextSlide = () => {
-		if (currentX < productsMock.slice(0, 4).length - 1) {
-			setCurrentX(currentX + 1)
-			console.log(currentX)
+		if (currentIdx < productsMock.slice(0, 4).length - 1) {
+			setCurrentIdx(currentIdx + 1)
 		}
 	}
 
 	const prevSlide = () => {
-		if (currentX > 0) {
-			setCurrentX(currentX - 1)
+		if (currentIdx > 0) {
+			setCurrentIdx(currentIdx - 1)
 		}
 	}
 
-	useEffect(() => {
-		slider.current.style.transform = `translateX(-${currentX}00%)`
-	}, [currentX])
-
-	const [startX, setStartX] = useState(0)
-	const [endX, setEndX] = useState(0)
-
-	const onTouchStart = e => {
-		setStartX(e.touches[0].clientX)
-	}
-	const onTouchMove = e => {
-		setEndX(e.touches[0].clientX)
-	}
-	const onTouchEnd = () => {
-		if (endX > startX) {
-			prevSlide()
-		}
-
-		if (startX > endX) {
-			nextSlide()
-		}
-	}
+	const navigate = useNavigate()
 
 	return (
 		<S.Wrapper>
@@ -57,9 +46,9 @@ function GridBanner() {
 					onTouchStart={onTouchStart}
 					onTouchMove={onTouchMove}
 					onTouchEnd={onTouchEnd}
-					// onMouseDown={onMouseDown}
-					// onMouseMove={onMouseMove}
-					// onMouseLeave={onMouseLeave}
+					onMouseDown={onMouseDown}
+					onMouseMove={onMouseMove}
+					onMouseUp={onMouseUp}
 				>
 					{productsMock.slice(0, 4).map((item, idx) => {
 						return (
@@ -70,6 +59,7 @@ function GridBanner() {
 										<S.SlideItem
 											key={idx}
 											recentIMG={`${item.image_url}`}
+											onClick={() => navigate(`/detail/${item.idx}`)}
 										></S.SlideItem>
 									)
 								})}
@@ -90,7 +80,7 @@ function GridBanner() {
 	)
 }
 
-export default GridBanner
+export default RecentBanner
 
 const Wrapper = styled.section`
 	overflow: hidden;
@@ -113,17 +103,20 @@ const SlideList = styled.div`
 `
 
 const SlideBox = styled.ul`
+	width: 100%;
 	${GridCenterCSS}
 	${ColumnNumberCSS(6)}
     box-sizing: border-box;
 
-	& > li {
-		width: 17.4rem;
-		height: 17.4rem;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
+		${ColumnNumberCSS(3)}
+		column-gap: 1rem;
+		row-gap: 1rem;
 	}
 
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		${ColumnNumberCSS(3)}
+	& > li {
+		width: 100%;
+		height: 17.4rem;
 	}
 `
 
@@ -131,20 +124,24 @@ const SlideItem = styled.li`
 	cursor: pointer;
 	background: ${({ recentIMG }) => `url(${recentIMG})`} no-repeat center center;
 	background-size: cover;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 100%;
+	}
 `
 
 const ButtonBox = styled.div`
 	& > button {
 		position: absolute;
-		cursor: pointer;
 		top: 50%;
-		transform: translateY(-50%);
 		width: 3rem;
 		height: 6rem;
+		${FlexCenterCSS}
+		transform: translateY(-50%);
 		border: none;
 		box-sizing: border-box;
 		background: ${({ theme }) => theme.COLOR.common.white};
-		${FlexCenterCSS}
+		cursor: pointer;
 	}
 
 	& > .prev {

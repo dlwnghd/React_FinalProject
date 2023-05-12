@@ -1,5 +1,4 @@
 import {
-	AiOutlineSearch,
 	AiOutlineArrowRight,
 	AiOutlineHeart,
 	AiFillHeart,
@@ -14,13 +13,20 @@ import {
 	AiOutlineShop,
 	AiOutlineSwap,
 	AiOutlineComment,
+	AiOutlineClose,
+	AiOutlineRollback,
 	AiOutlineReddit,
 	AiOutlineCamera,
 	AiOutlineExport,
 	AiOutlineMore,
+	AiFillSignal,
 } from 'react-icons/ai'
+import { CiSearch } from 'react-icons/ci'
 
-export const Search_Icon = () => <AiOutlineSearch /> // 검색
+export const Search_Icon = ({ color, position }) => (
+	<CiSearch color={color} position={position} />
+) // 검색
+
 export const Arrow_Icon = ({ size }) => (
 	<AiOutlineArrowRight size={size ? size : 50} />
 ) // 슬라이드 화살표
@@ -34,10 +40,17 @@ export const FillHeart_Icon = ({ size, onClick }) => (
 export const Profile_Icon = ({ size }) => (
 	<AiOutlineUser size={size ? size : 50} />
 ) // 프로필
-export const DropdownArrow_Icon = () => <AiFillCaretDown /> // 드롭 다운 화살표
-export const PaginationArrowSingle_Icon = () => <AiFillCaretRight /> // 페이지네이션화살표 (>)
-export const PaginationArrowDouble_Icon = () => <AiFillForward /> // 페이지네이션화살표 (>>)
-export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
+export const DropdownArrow_Icon = ({ size }) => <AiFillCaretDown size={size} /> // 드롭 다운 화살표
+export const PaginationArrowSingle_Icon = ({ rotate }) => (
+	<AiFillCaretRight style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>)
+export const PaginationArrowDouble_Icon = ({ rotate }) => (
+	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
+) // 페이지네이션화살표 (>>)
+
+export const AddProduct_Icon = ({ size, color }) => (
+	<AiOutlinePlusCircle size={size} color={color} />
+) // 상품 등록
 export const MenuBurger_Icon = ({ size, color, cursor }) => (
 	<AiOutlineMenu size={size} color={color} cursor={cursor} />
 ) // 햄버거
@@ -49,6 +62,11 @@ export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
 export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
+export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
+export const RollBack_icon = ({ size, color, cursor }) => (
+	<AiOutlineRollback size={size} color={color} cursor={cursor} />
+) // 뒤로 가기
+export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈

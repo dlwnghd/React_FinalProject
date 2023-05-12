@@ -1,20 +1,24 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../Styles/common'
-import TopButton from './TopButton/TopButton'
+import AddProductButton from './Components/AddProductButton'
+import MobileFooter from './Components/MobileFooter'
+// import TopButton from './Components/TopButton'
 
 function Footer() {
 	return (
 		<S.FooterWrapper>
-			<S.FootSize>
-				<S.FooterContainer>
-					<TopButton />
-					<S.Description>
+			<S.FooterContainer>
+				<S.FooterContent>
+					{/* <TopButton /> */}
+					<S.DescriptionBox>
 						<S.Logo>WELCOME TO</S.Logo>
 						<h2>NEGO MARKET</h2>
-					</S.Description>
+					</S.DescriptionBox>
 					<p>Copyright by Team. Nego</p>
-				</S.FooterContainer>
-			</S.FootSize>
+				</S.FooterContent>
+			</S.FooterContainer>
+			<AddProductButton />
+			<MobileFooter />
 		</S.FooterWrapper>
 	)
 }
@@ -22,22 +26,20 @@ function Footer() {
 export default Footer
 
 const FooterWrapper = styled.footer`
+	border-top: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 	position: relative;
-	z-index: 9999;
+	z-index: 999;
 	box-sizing: border-box;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-
-	@media screen and (max-width: 440px) {
-		display: none;
-	}
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 `
 
-const FooterContainer = styled.div`
+const FooterContent = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	height: 32rem;
 	row-gap: 9rem;
+	color: ${({ theme }) => theme.COLOR.common.black};
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
@@ -46,26 +48,28 @@ const FooterContainer = styled.div`
 `
 
 const Logo = styled.h3`
-	color: black;
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 `
 
-const Description = styled.div`
-	color: black;
-
+const DescriptionBox = styled.div`
 	& > h2 {
 		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		color: ${({ theme }) => theme.COLOR.main};
 	}
 `
 
-const FootSize = styled.div`
+const FooterContainer = styled.div`
 	${WidthAutoCSS};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: none;
+	}
 `
 
 const S = {
 	FooterWrapper,
-	FooterContainer,
+	FooterContent,
 	Logo,
-	Description,
-	FootSize,
+	DescriptionBox,
+	FooterContainer,
 }
