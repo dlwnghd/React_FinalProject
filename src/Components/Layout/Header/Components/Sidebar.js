@@ -1,107 +1,88 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
-import { FlexAlignCSS } from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
+import productsMock from '../../../../__mock__/Data/Product/product.data'
+import ItemBox from '../../../ItemBox/ItemBox'
 
-function Sidebar({
-	hamburgerShow,
-	setHamburgerShow,
-	selectedNav,
-	setSelectedNav,
-}) {
+function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
 
 	useEffect(() => {
-		if (hamburgerShow === false) {
-			slideRef.current.style.transform = 'translateX(-100%)'
+		const $body = document.querySelector('body')
+		if (onSideBar === false) {
+			slideRef.current.style.transform = 'translateX(100%)'
+			$body.style.overflow = 'auto'
 		}
-		if (hamburgerShow === true) {
+		if (onSideBar === true) {
 			slideRef.current.style.transform = 'translateX(0%)'
+			$body.style.overflow = 'hidden'
 		}
 	})
 
 	return (
-		<S.HamburgerMenu>
-			<S.SideBarContainer ref={slideRef}>
-				<ul>
-					<li
-						className={selectedNav === 0 ? 'selected' : ''}
-						onClick={() => {
-							navigate('/list/무료나눔리스트')
-							setHamburgerShow(false)
-							setSelectedNav(0)
-						}}
-					>
-						FREE MARKET
-					</li>
-					<li
-						className={selectedNav === 1 ? 'selected' : ''}
-						onClick={() => {
-							navigate('/list/중고거래리스트')
-							setHamburgerShow(false)
-							setSelectedNav(1)
-						}}
-					>
-						TRADE USED
-					</li>
-					<li
-						className={selectedNav === 2 ? 'selected' : ''}
-						onClick={() => {
-							navigate('/recent-price')
-							setHamburgerShow(false)
-							setSelectedNav(2)
-						}}
-					>
-						MARKET TREND
-					</li>
-				</ul>
+		<S.SidebarWrapper ref={slideRef}>
+			<h4>관심 상품 목록</h4>
+			<S.SideBarContainer>
+				<S.ProductList>
+					{productsMock.slice(0, 8).map((item, idx) => {
+						return (
+							<ItemBox
+								title={item.title}
+								price={item.price}
+								posterPath={item.image_url}
+								context={item.script}
+								isLiked={item.liked}
+								key={idx}
+								onClick={() => navigate(`/detail/${item.idx}`)}
+							/>
+						)
+					})}
+				</S.ProductList>
 			</S.SideBarContainer>
-		</S.HamburgerMenu>
+		</S.SidebarWrapper>
 	)
 }
 
 export default Sidebar
 
-const HamburgerMenu = styled.div`
-	${FlexAlignCSS}
+const SidebarWrapper = styled.nav`
+	position: fixed;
+	top: 7.8rem;
+	left: 0;
+	z-index: 99;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	padding: 12rem 6rem;
+	color: ${({ theme }) => theme.COLOR.common.black};
+	transition: 0.5s ease-in-out;
+	transform: translateX(100%);
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
-	@media screen and (min-width: 441px) {
+	@media screen and (min-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		display: none;
 	}
 `
 
-const SideBarContainer = styled.nav`
-	position: fixed;
-	transition: 0.5s ease-in-out;
-	transform: translateX(-100%);
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
-	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-	color: black;
+const SideBarContainer = styled.ul``
+
+const ProductList = styled.li`
 	width: 100%;
-	z-index: 99;
-	height: 100%;
-	top: 0;
-	left: 0;
+	${GridCenterCSS}
+	${ColumnNumberCSS(4)};
 
-	& > ul {
-		padding: 12rem 4rem;
-	}
-
-	& > ul > li {
-		margin-bottom: 4rem;
-		cursor: pointer;
-
-		/* 선택된 항목에만 box_shadow 추가 */
-		&.selected {
-			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-			box-shadow: rgb(25, 31, 40) 0px -3px 0px inset;
-		}
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(2)}
+		column-gap: 2rem;
 	}
 `
 
 const S = {
-	HamburgerMenu,
+	SidebarWrapper,
 	SideBarContainer,
+	ProductList,
 }
