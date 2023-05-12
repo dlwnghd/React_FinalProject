@@ -129,28 +129,32 @@ function UserInfo() {
 	return (
 		<S.Wrapper>
 			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-				<S.InputBox>
-					<S.ProfileImg src={preFile} />
-					<S.ImgLabel htmlFor="profileImg">
-						<Camera_Icon />
-					</S.ImgLabel>
-					<Input
-						type="file"
-						id="profileImg"
-						accept="image/*"
-						style={{ display: 'none' }}
-						{...register('profile_img', {
-							onChange: e => {
-								saveImgFile(e)
-							},
-						})}
-					/>
-				</S.InputBox>
-				<S.InputBox>
-					<S.Label>아이디(이메일)</S.Label>
-					<Input readOnly {...register('email')} />
-				</S.InputBox>
-				<div>
+				<S.Container>
+					<S.InputBox>
+						<S.ProfileImg src={preFile} />
+						<S.ImgLabel htmlFor="profileImg">
+							<Camera_Icon />
+						</S.ImgLabel>
+						<Input
+							type="file"
+							id="profileImg"
+							accept="image/*"
+							style={{ display: 'none' }}
+							{...register('profile_img', {
+								onChange: e => {
+									saveImgFile(e)
+								},
+							})}
+						/>
+					</S.InputBox>
+				</S.Container>
+				<S.Container>
+					<S.InputBox>
+						<S.Label>아이디(이메일)</S.Label>
+						<Input readOnly {...register('email')} />
+					</S.InputBox>
+				</S.Container>
+				<S.Container>
 					<S.InputBox>
 						<S.Label>닉네임</S.Label>
 						<Input
@@ -171,31 +175,34 @@ function UserInfo() {
 						<S.StyledAlert
 							type={isDuplicate.state ? 'error' : 'success'}
 							size="default"
+							style={{ position: 'relative' }}
 						>
 							{isDuplicate.state !== null &&
 								!errors.nickName &&
 								isDuplicate.message}
 						</S.StyledAlert>
 					)}
-				</div>
-				<S.InputBox>
-					<S.Label>주소</S.Label>
-					<Input
-						{...register('region', { required: true })}
-						readOnly
-						style={{ width: '80%' }}
-					/>
-					<S.RegisterButton
-						type="button"
-						shape={'square'}
-						variant={'default-reverse'}
-						onClick={modalOpen}
-					>
-						주소 찾기
-					</S.RegisterButton>
-					{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
-				</S.InputBox>
-				<div>
+				</S.Container>
+				<S.Container>
+					<S.InputBox>
+						<S.Label>주소</S.Label>
+						<Input
+							{...register('region', { required: true })}
+							readOnly
+							style={{ width: '80%' }}
+						/>
+						<S.RegisterButton
+							type="button"
+							shape={'square'}
+							variant={'default-reverse'}
+							onClick={modalOpen}
+						>
+							주소 찾기
+						</S.RegisterButton>
+						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
+					</S.InputBox>
+				</S.Container>
+				<S.Container>
 					<S.InputBox>
 						<S.Label>연락처</S.Label>
 						<Input
@@ -213,7 +220,7 @@ function UserInfo() {
 					<S.StyledAlert type="error" size="default">
 						{errors.phone && errors.phone.message}
 					</S.StyledAlert>
-				</div>
+				</S.Container>
 				{isSubmit && isOpenModal && <AlertModal message={message} />}
 				<S.SubmitButton>변경</S.SubmitButton>
 			</form>
@@ -230,10 +237,12 @@ const Wrapper = styled.div`
 		width: 95%;
 	}
 `
-
+const Container = styled.div`
+	height: 8rem;
+`
 const InputBox = styled.div`
 	${FlexAlignCSS}
-	margin-bottom: 1.5rem;
+	margin-bottom: 0.5rem;
 `
 
 const ImgLabel = styled.label`
@@ -270,6 +279,7 @@ const ProfileImg = styled.img`
 const StyledAlert = styled(AlertText)`
 	margin-left: 20%;
 	padding-left: 0rem;
+	margin-bottom: 0;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		margin-left: 23%;
 	}
@@ -294,6 +304,7 @@ const SubmitButton = styled(Button)`
 `
 const S = {
 	Wrapper,
+	Container,
 	InputBox,
 	ImgLabel,
 	Label,

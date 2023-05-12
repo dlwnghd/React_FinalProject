@@ -44,7 +44,7 @@ function ChangePW() {
 	return (
 		<S.Wrapper>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
+				<S.Container>
 					<S.StyledInput
 						type="password"
 						placeholder={
@@ -60,8 +60,8 @@ function ChangePW() {
 							errors.newPw &&
 							errors.newPw.message}
 					</S.StyledAlert>
-				</div>
-				<div>
+				</S.Container>
+				<S.Container>
 					<S.StyledInput
 						type="password"
 						placeholder={'새로운 비밀번호 확인'}
@@ -76,7 +76,7 @@ function ChangePW() {
 					<S.StyledAlert type="error" size="default">
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
-				</div>
+				</S.Container>
 				{isOpenModal && <AlertModal message={message} />}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
@@ -95,8 +95,11 @@ const Wrapper = styled.div`
 		padding: 0;
 	}
 `
+const Container = styled.div`
+	height: 8rem;
+`
 const StyledInput = styled(Input)`
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 `
 const StyledAlert = styled(AlertText)`
 	padding-left: 0rem;
@@ -117,6 +120,7 @@ const StyledButton = styled(Button)`
 
 const S = {
 	Wrapper,
+	Container,
 	StyledInput,
 	StyledButton,
 	StyledModal,
