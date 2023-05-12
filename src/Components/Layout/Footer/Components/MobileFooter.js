@@ -4,23 +4,60 @@ import styled from 'styled-components'
 
 import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
-import { MobileNav } from '../../../../Consts/@mobileNavConfig'
 import { FlexCenterCSS } from '../../../../Styles/common'
+import {
+	Chatting_Icon,
+	FreeMarket_Icon,
+	Home_Icon,
+	MyPage_Icon,
+	TradeUsed_Icon,
+} from '../../../Icons/Icons'
 
 function MobileFooter() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
-			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
-		}
+	// 휠 이벤트
+	window.addEventListener('wheel', event => {
+		const shouldScroll =
+			event.deltaY > 0
+				? true
+				: event.deltaY < 0
+				? false
+				: document.documentElement.scrollTop > 0
+		setScroll(shouldScroll)
 	})
+
+
+
+	const MobileNav = [
+		{
+			text: '홈',
+			navigation: '/',
+			icon: <Home_Icon />,
+		},
+		{
+			text: '무료',
+			navigation: '/list/freeMarket',
+			icon: <FreeMarket_Icon />,
+		},
+		{
+			text: '네고',
+			navigation: '/list/usedTrade',
+			icon: <TradeUsed_Icon />,
+		},
+		{
+			text: '채팅',
+			navigation: '/chat인데 modal로 띄우기로 해서 흠',
+			icon: <Chatting_Icon />,
+		},
+		{
+			text: '내 정보',
+			navigation: '/mypage-bank',
+			icon: <MyPage_Icon />,
+		},
+	]
 
 	return (
 		<S.NavigationWrapper className={scroll ? 'scroll' : ''}>
