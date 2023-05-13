@@ -15,8 +15,7 @@ function MainBanner() {
 		slider,
 		currentIdx,
 	} = slide(productsMock.slice(0, 4))
-	// Utils 함수가 많아질 경우, 스타일 컴포넌트의 S처럼 U로 관리
-	// productsMock : 만들어야되는 배너
+
 	return (
 		<S.Wrapper>
 			<S.SlideList

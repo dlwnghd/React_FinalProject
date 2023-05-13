@@ -116,7 +116,13 @@ const SlideBox = styled.ul`
 
 	& > li {
 		width: 100%;
-		height: 17.4rem;
+		/* height: 17.4rem; */
+	}
+
+	& > li::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
 	}
 `
 

@@ -81,9 +81,15 @@ const IMGContainer = styled.div`
 	position: relative;
 	cursor: pointer;
 	width: 100%;
-	height: 27.6rem;
+	/* height: 27.6rem; */
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
+
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
 `
 
 const DescContainer = styled.div`
