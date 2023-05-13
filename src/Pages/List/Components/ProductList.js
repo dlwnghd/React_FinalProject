@@ -1,68 +1,45 @@
-import axios from 'axios'
-import { useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import styled from 'styled-components'
 import ItemBox from '../../../Components/ItemBox/ItemBox'
-import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
-import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
-function ProductList({
-	currentURL,
-	changeResult,
-	setChangeResult,
-	filterOption,
-	page,
-	setPage,
-}) {
-	const navigate = useNavigate()
+function ProductList({ currentURL, filterOption }) {
+	const [changeResult, setChangeResult] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [page, setPage] = useState(1)
+	const timeoutRef = useRef(null)
+	const observeRef = useRef(null) // 타겟 요소
 
-	const preventRef = useRef(false) //옵저버 중복 실행 방지
-	const obsRef = useRef(null) //observer Element
-	const timeoutRef = useRef(null) //타이머 ID
+	// api 호출
+	// 엣지 케이스 [api 중복 요청]
+	// 데이터가 입혀지지 않은 상황에서 observer의 노출이 page를 변경 그리고 호출
 
-	// 주소 변경시 Page번호 수정
+	// 유저의 경험을 향상시키기 위한 디바운싱
 	useEffect(() => {
-		setPage(1)
-	}, [currentURL, filterOption])
+		const timerID = setTimeout(() => {
+			getProducts()
+		}, 200)
 
-	useEffect(() => {
-		//옵저버 생성
-		const observer = new IntersectionObserver(onObsHandler, { threshold: 0.5 })
-		if (obsRef.current) observer.observe(obsRef.current)
-		return () => {
-			observer.disconnect()
-		}
-	}, [])
-
-	useEffect(() => {
-		// 컴포넌트가 unmount 되기 전에 timeout 함수가 실행되었다면 clear 해줍니다.
+		timeoutRef.current = timerID
+		// 언마운트 되었을 때, timerID를 클리어 시킨다 ?
+		// 데이터 호출 이후, 바로 실행 종료
 		return () => {
 			if (timeoutRef.current) clearTimeout(timeoutRef.current)
 		}
-	}, [])
-
-	// Page번호 변경시 디바운스 실행
-	useEffect(() => {
-		const timerId = setTimeout(() => {
-			getProduct()
-		}, 200) // 디바운스 시간 200ms
-		timeoutRef.current = timerId
 	}, [page])
 
-	// 옵저버 핸들러
-	const onObsHandler = entries => {
-		const target = entries[0]
-		if (target.isIntersecting && preventRef.current) {
-			preventRef.current = false
-			setPage(prev => prev + 1)
-		}
-	}
+	// 의존성 배열에 따라 list & page 초기화
+	useEffect(() => {
+		setChangeResult([])
+		setPage(0)
+	}, [currentURL, filterOption])
 
-	// 상품 불러오기
-	const getProduct = useCallback(async () => {
-		if (page === 0) return
+	// api 선언
+	const getProducts = useCallback(async () => {
+		if(page === 0) return setPage(1)
 		try {
-			console.log(filterOption)
 			const res = await axios.get('/api/products', {
 				params: {
 					page: page,
@@ -71,31 +48,53 @@ function ProductList({
 					filterOption: filterOption,
 				},
 			})
-			setChangeResult(prev => [...prev, ...res.data]) //리스트 추가
-			preventRef.current = true
-		} catch (e) {
-			console.error(e)
+			setChangeResult(prev => [...prev, ...res.data])
+			setIsLoading(true)
+		} catch (err) {
+			console.log(err)
 		}
 	}, [page])
 
+	// 옵저버 관측시, 실행
+	const observeCallback = entries => {
+		const target = entries[0]
+		if (target.isIntersecting && isLoading === true) {
+			setPage(prev => prev + 1)
+		}
+	}
+
+	// 옵저버 생성 및 관측
+	useEffect(() => {
+		if (isLoading === true) {
+			const observer = new IntersectionObserver(observeCallback, {
+				threshold: 0.5,
+			})
+			if (observeRef.current) observer.observe(observeRef.current)
+			return () => {
+				observer.disconnect()
+				setIsLoading(false)
+			}
+		}
+	}, [isLoading])
+
+	const navigate = useNavigate()
+
 	return (
 		<S.ProductListWrapper>
-			<MainSkeleton />
 			{changeResult.map((item, idx) => {
 				return (
 					<ItemBox
 						title={item.title}
 						price={item.price}
 						posterPath={item.image_url}
-						context={item.description}
+						context={item.script}
 						isLiked={item.liked}
-						createdAt={item.createdAt}
 						key={idx}
 						onClick={() => navigate(`/detail/${item.idx}`)}
 					/>
 				)
 			})}
-			<li className="" ref={obsRef} />
+			<S.Observer ref={observeRef}></S.Observer>
 		</S.ProductListWrapper>
 	)
 }
@@ -113,7 +112,9 @@ const ProductListWrapper = styled.div`
 		column-gap: 1rem;
 	}
 `
+const Observer = styled.div``
 
 const S = {
 	ProductListWrapper,
+	Observer,
 }

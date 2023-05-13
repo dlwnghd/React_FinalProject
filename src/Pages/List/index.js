@@ -1,9 +1,6 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
-import { isProductPageAtom } from '../../Atoms/productPage.atom'
 import Filter from '../../Components/Filter/Filter'
 import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import productsMock from '../../__mock__/Data/Product/product.data'
@@ -18,43 +15,19 @@ function List() {
 	]
 
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
-	const currentURL = useLocation().pathname.includes('freeMarket') ? 0 : 1
+	const currentURL = useLocation().pathname.includes('freeMarket') ? 1 : 0
 
-	// 변경되어 화면에 랜더링될 상품 데이터 리스트 State
-	const [changeResult, setChangeResult] = useState([])
+	const [totalList, setTotalList] = useState(
+		productsMock.filter(item => item.category === currentURL),
+	)
+
+	// URL이 달라질 때마다 토탈값 변경
+	useEffect(() => {
+		setTotalList(productsMock.filter(item => item.category === currentURL))
+	}, [currentURL])
 
 	// Filter 선택관리 State
 	const [filterOption, setFilterOption] = useState(listFilter[0])
-
-	// 전체 상품 리스트
-	const [totalResult, setTotalResult] = useState([])
-
-	//
-	const [page, setPage] = useRecoilState(isProductPageAtom) //현재 페이지(인피니티 스크롤링)
-
-	// 필터 변경시
-	useEffect(() => {
-		setPage(0)
-		setTotalResult(
-			productsMock
-				.filter(item => item.category === currentURL)
-				.filter(item => item.status.includes('판매중')),
-		)
-		setChangeResult([])
-	}, [filterOption])
-
-	// 주소 변경시
-	// 화면에 랜더링될 상품 데이터 리스트 비우기 []
-	useEffect(() => {
-		setPage(1)
-		setFilterOption(listFilter[0])
-		setTotalResult(
-			productsMock
-				.filter(item => item.category === currentURL)
-				.filter(item => item.status.includes('판매중')),
-		)
-		setChangeResult([])
-	}, [currentURL])
 
 	// Filter선택 실행 코드
 	const onFilter = e => {
@@ -81,20 +54,13 @@ function List() {
 			<S.ListContainer>
 				<S.MainContent>
 					<S.SearchContent>
-						<h3>{totalResult.length}개의 상품</h3>
+						<h3>{totalList.length}개의 상품</h3>
 						<Filter
-							filterArray={currentURL ? listFilter : listFilter.slice(0, 2)}
+							filterArray={!currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
 						/>
 					</S.SearchContent>
-					<ProductList
-						currentURL={currentURL}
-						changeResult={changeResult}
-						setChangeResult={setChangeResult}
-						filterOption={filterOption}
-						page={page}
-						setPage={setPage}
-					/>
+					<ProductList currentURL={currentURL} filterOption={filterOption} />
 				</S.MainContent>
 			</S.ListContainer>
 		</S.ListWrapper>
