@@ -6,10 +6,19 @@ import {
 } from '../Icons/Icons'
 import { useState } from 'react'
 import { FlexBetweenCSS } from '../../Styles/common'
+import { elapsedTime } from './timeSet'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
-function ItemBox({ posterPath, title, context, price, isLiked, ...rest }) {
+function ItemBox({
+	posterPath,
+	title,
+	context,
+	price,
+	isLiked,
+	createdAt,
+	...rest
+}) {
 	const [isHeart, setIsHeart] = useState(isLiked)
 
 	const onHeart = () => {
@@ -35,7 +44,10 @@ function ItemBox({ posterPath, title, context, price, isLiked, ...rest }) {
 						<EtcOption_Icon size="30" onClick={onEdit} />
 					)}
 				</S.DescBox>
-				<h4>{price.toLocaleString()}원</h4>
+				<S.DescBox2>
+					<h4>{price.toLocaleString()}원</h4>
+					<span>{elapsedTime(createdAt)}</span>
+				</S.DescBox2>
 			</S.DescContainer>
 		</S.Wrapper>
 	)
@@ -105,9 +117,16 @@ const DescBox = styled.div`
 	}
 `
 
+const DescBox2 = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`
+
 const S = {
 	Wrapper,
 	IMGContainer,
 	DescContainer,
 	DescBox,
+	DescBox2,
 }
