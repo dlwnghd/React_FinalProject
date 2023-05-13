@@ -9,7 +9,15 @@ import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Utils/slide'
 
-function RecentBanner() {
+function RecentBanner({ mainProduct }) {
+	// 무료나눔 리스트
+	const freeProduct = mainProduct.freeProduct
+	// 중고거래 리스트
+	const usedProduct = mainProduct.usedProduct
+
+	// 최근 등록상품 리스트
+	const recentProduct = freeProduct.concat(usedProduct)
+
 	const {
 		onTouchStart,
 		onTouchMove,
@@ -20,8 +28,7 @@ function RecentBanner() {
 		slider,
 		currentIdx,
 		setCurrentIdx,
-	} = slide(productsMock.slice(0, 4))
-	// productsMock : 호출받아야하는 리스트
+	} = slide(recentProduct.slice(0, 4))
 
 	const nextSlide = () => {
 		if (currentIdx < productsMock.slice(0, 4).length - 1) {
@@ -50,15 +57,14 @@ function RecentBanner() {
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}
 				>
-					{productsMock.slice(0, 4).map((item, idx) => {
+					{recentProduct.slice(0, 4).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{/* createdAt을 기준으로 sort */}
-								{productsMock.slice(0, 6).map((item, idx) => {
+								{recentProduct.splice(0, 6).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
-											recentIMG={`${item.image_url}`}
+											recentIMG={`${item.img_url}`}
 											onClick={() => navigate(`/detail/${item.idx}`)}
 										></S.SlideItem>
 									)
@@ -152,8 +158,8 @@ const ButtonBox = styled.div`
 
 	& > .prev {
 		left: 0;
-		border-top-right-radius: 1rem;
-		border-bottom-right-radius: 1rem;
+		/* border-top-right-radius: 1rem;
+		border-bottom-right-radius: 1rem; */
 
 		& > svg {
 			transform: rotate(180deg);
@@ -162,8 +168,8 @@ const ButtonBox = styled.div`
 
 	& > .next {
 		right: 0;
-		border-top-left-radius: 1rem;
-		border-bottom-left-radius: 1rem;
+		/* border-top-left-radius: 1rem;
+		border-bottom-left-radius: 1rem; */
 	}
 `
 
