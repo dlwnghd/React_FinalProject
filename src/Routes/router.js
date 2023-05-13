@@ -16,6 +16,7 @@ import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
 import PrivateRoute from './private'
+import Error404 from '../Components/Error/404'
 
 const router = createBrowserRouter([
 	{
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
 			{
 				path: '/',
 				element: <Main />,
+			},
+			{
+				path: '/*',
+				element: <Error404 />,
 			},
 			{
 				element: <PrivateRoute />,

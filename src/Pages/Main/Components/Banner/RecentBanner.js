@@ -5,51 +5,33 @@ import {
 	GridCenterCSS,
 } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
-import { useEffect, useRef, useState } from 'react'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router-dom'
+import { slide } from '../../../../Utils/slide'
 
 function RecentBanner() {
-	const [currentX, setCurrentX] = useState(0)
-	const slider = useRef(null)
+	const {
+		onTouchStart,
+		onTouchMove,
+		onTouchEnd,
+		onMouseDown,
+		onMouseMove,
+		onMouseUp,
+		slider,
+		currentIdx,
+		setCurrentIdx,
+	} = slide(productsMock.slice(0, 4))
+	// productsMock : 호출받아야하는 리스트
 
 	const nextSlide = () => {
-		if (currentX < productsMock.slice(0, 4).length - 1) {
-			setCurrentX(currentX + 1)
-			console.log(currentX)
+		if (currentIdx < productsMock.slice(0, 4).length - 1) {
+			setCurrentIdx(currentIdx + 1)
 		}
 	}
 
 	const prevSlide = () => {
-		if (currentX > 0) {
-			setCurrentX(currentX - 1)
-		}
-	}
-
-	useEffect(() => {
-		slider.current.style.transform = `translateX(-${currentX}00%)`
-	}, [currentX])
-
-	const [startX, setStartX] = useState(0)
-	const [endX, setEndX] = useState(0)
-
-	const onTouchStart = e => {
-		setStartX(e.touches[0].clientX)
-	}
-
-	const onTouchMove = e => {
-		setEndX(e.touches[0].clientX)
-	}
-
-	const onTouchEnd = () => {
-		const isMoved = endX - startX
-
-		if (isMoved > 100) {
-			prevSlide()
-		}
-
-		if (isMoved < -100) {
-			nextSlide()
+		if (currentIdx > 0) {
+			setCurrentIdx(currentIdx - 1)
 		}
 	}
 
@@ -64,9 +46,9 @@ function RecentBanner() {
 					onTouchStart={onTouchStart}
 					onTouchMove={onTouchMove}
 					onTouchEnd={onTouchEnd}
-					// onMouseDown={onMouseDown}
-					// onMouseMove={onMouseMove}
-					// onMouseLeave={onMouseLeave}
+					onMouseDown={onMouseDown}
+					onMouseMove={onMouseMove}
+					onMouseUp={onMouseUp}
 				>
 					{productsMock.slice(0, 4).map((item, idx) => {
 						return (
@@ -128,6 +110,8 @@ const SlideBox = styled.ul`
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(3)}
+		column-gap: 1rem;
+		row-gap: 1rem;
 	}
 
 	& > li {
