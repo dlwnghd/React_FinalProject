@@ -20,8 +20,10 @@ import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal
 import Modal from '../../../../../Components/Modal/Modal'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
+import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
 
 function UserInfo() {
+	const { data, error, status, isLoading } = useGetUserInfo()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -39,23 +41,8 @@ function UserInfo() {
 	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
 
 	useEffect(() => {
-		const getData = async () => {
-			try {
-				const { data } = await UserApi.userInfo()
-				setUserInfo({ ...data })
-				setImgFile(data.profile_url)
-				setPreFile(
-					data.profile_url ||
-						'https://static.nid.naver.com/images/web/user/default.png?type=s160',
-				)
-			} catch (err) {
-				setIsSubmit(true)
-				setMessage(MESSAGE.USERDATA.FAILURE)
-				setIsOpenModal(true)
-			}
-		}
-		getData()
-	}, [])
+		setUserInfo({ ...data })
+	}, [data])
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
@@ -120,6 +107,11 @@ function UserInfo() {
 	}
 
 	useEffect(() => {
+		setImgFile(userInfo.profile_url)
+		setPreFile(
+			userInfo.profile_url ||
+				'https://static.nid.naver.com/images/web/user/default.png?type=s160',
+		)
 		setValue('email', userInfo.email)
 		setValue('nickName', userInfo.nick_name)
 		setValue('region', userInfo.region)
@@ -164,7 +156,7 @@ function UserInfo() {
 									value: true,
 									message: '닉네임을 입력해주세요',
 								},
-								onChange: e => checkNickname(e),
+								onBlur: e => checkNickname(e),
 							})}
 						/>
 					</S.InputBox>
