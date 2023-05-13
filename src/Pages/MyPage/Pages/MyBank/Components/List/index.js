@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 `
 
 const FilterSection = styled.section`
-	width: 75%;
+	width: 68rem;
 	${FlexBetweenCSS}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {

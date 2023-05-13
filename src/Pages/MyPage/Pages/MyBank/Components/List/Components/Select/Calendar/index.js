@@ -10,6 +10,7 @@ import {
 	Right_Arrow_Icon,
 } from '../../../../../../../../../Components/Icons/Icons'
 import getFormattedDate from '../../../../../../../../../Utils/getFormattedDate'
+import { useEffect } from 'react'
 
 const month = Array(12)
 	.fill(1)
@@ -35,10 +36,10 @@ function Calendar({ type, filter, setFilter }) {
 	const onClickYear = (year, type) => {
 		switch (type) {
 			case 'prev':
-				setSelectedDate(prev => ({ ...prev, year: year - 1 }))
+				setSelectedDate(prev => ({ ...prev, year: parseInt(year) - 1 }))
 				break
 			case 'next':
-				setSelectedDate(prev => ({ ...prev, year: year + 1 }))
+				setSelectedDate(prev => ({ ...prev, year: parseInt(year) + 1 }))
 				break
 		}
 	}
@@ -51,15 +52,35 @@ function Calendar({ type, filter, setFilter }) {
 			month, // 선택한 달
 			formattedDate: getFormattedDate(new Date(prev.year, month - 1, 1)), // 선택한 달과, 선택한 날을 통해 최종적으로 선택한 text의 상태를 변경시킵니다.
 		}))
-		// 서버에게 보내질 데이터
 		setFilter(prev => ({
 			...prev,
 			[type]: getFormattedDate(
-				new Date(selectedDate.year, month - 1, type === 'start' ? 1 : 0),
+				new Date(
+					selectedDate.year,
+					type === 'start' ? month - 1 : month,
+					type === 'start' ? 1 : 0,
+				),
 				{ day: true },
 			),
 		}))
 	}
+
+	useEffect(() => {
+		const { start, end } = filter
+
+		if (start > end) {
+			const [year, month, day] = start.split('-')
+			setSelectedDate(prev => ({
+				year,
+				month,
+				formattedDate: `${year}-${month}`,
+			}))
+			setFilter(prev => ({
+				...prev,
+				end: getFormattedDate(new Date(year, month, 0), { day: true }),
+			}))
+		}
+	}, [onClickMonth])
 
 	return (
 		<S.Wrapper>
@@ -70,18 +91,28 @@ function Calendar({ type, filter, setFilter }) {
 
 			<S.SelectContainer state={isOpenOption}>
 				<S.SelectHeader>
-					<Left_Arrow_Icon
+					<S.ArrowBtn
+						type={'prev'}
 						onClick={() => onClickYear(selectedDate.year, 'prev')}
-					/>
+					>
+						<Left_Arrow_Icon />
+					</S.ArrowBtn>
 					<span>{selectedDate.year}년</span>
-					<Right_Arrow_Icon
+					<S.ArrowBtn
+						type={'next'}
+						disabled={today.year === parseInt(selectedDate.year)}
 						onClick={() => onClickYear(selectedDate.year, 'next')}
-					/>
+					>
+						<Right_Arrow_Icon />
+					</S.ArrowBtn>
 				</S.SelectHeader>
 				{month.map(mon => (
 					<S.SelectItem
 						key={mon}
-						state={mon === selectedDate.month}
+						state={mon === parseInt(selectedDate.month)}
+						disabled={
+							today.year === parseInt(selectedDate.year) && mon > today.month
+						}
 						onClick={() => onClickMonth(mon)}
 					>
 						{mon}월
@@ -145,14 +176,22 @@ const SelectHeader = styled.div`
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 `
 
+const ArrowBtn = styled.button`
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	pointer-events: ${({ type, disabled }) =>
+		type === 'next' && disabled ? 'none' : 'auto'};
+`
+
 const SelectItem = styled.li`
 	width: 100%;
 	text-align: center;
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	border-radius: 0.5rem;
+	padding: 0.5rem 0.8rem;
+	opacity: ${({ disabled }) => disabled && '0.3'};
 	background-color: ${({ theme, state }) =>
 		state ? `${theme.COLOR.main}` : `${theme.COLOR.common.white}`};
-	padding: 0.5rem 0.8rem;
+	pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 	cursor: pointer;
 
 	&:hover {
@@ -166,5 +205,6 @@ const S = {
 	BoxContainer,
 	SelectContainer,
 	SelectHeader,
+	ArrowBtn,
 	SelectItem,
 }

@@ -7,7 +7,10 @@ const getFormattedDate = (date, options = {}) => {
 	let formattedDate = `${year}-${month}`
 
 	if (options.day) {
-		const day = String(date.getDate()).padStart(2, '0')
+		const day =
+			options.day !== true
+				? String(options.day).padStart(2, '0')
+				: String(date.getDate()).padStart(2, '0')
 		formattedDate += `-${day}`
 	}
 
