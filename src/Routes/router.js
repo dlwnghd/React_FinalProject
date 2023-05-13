@@ -13,7 +13,9 @@ import Login from '../Pages/Form/Login/Login'
 import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
-import Withdrawal from '../Pages/MyPage/UserEdit/Pages/Withdrawal/Withdrawal'
+import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
+import MyPageIndex from '../Pages/MyPage/Components/Header'
+import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
 
 const router = createBrowserRouter([
@@ -21,18 +23,6 @@ const router = createBrowserRouter([
 		path: '/',
 		element: <Layout />,
 		children: [
-			{
-				path: '/',
-				element: <Main />,
-			},
-			{
-				path: '/list/:category',
-				element: <List />,
-			},
-			{
-				path: '/detail/:idx',
-				element: <Detail />,
-			},
 			{
 				path: '/login',
 				element: <Login />,
@@ -42,44 +32,70 @@ const router = createBrowserRouter([
 				element: <SignUp />,
 			},
 			{
-				path: '/mypage-bank',
-				element: <MyBank />,
-			},
-			{
-				path: '/mypage-interest',
-				element: <MyInterest />,
-			},
-			{
-				path: '/mypage-register',
-				element: <MyPrdRegister />,
-			},
-			{
-				path: '/mypage/useredit-changepw',
-				element: <ChangePW />,
-			},
-			{
-				path: '/mypage/useredit-userinfo',
-				element: <UserInfo />,
-			},
-			{
-				path: '/mypage/useredit-withdrawal',
-				element: <Withdrawal />,
-			},
-			{
-				path: '/recent-price',
-				element: <RecentPrice />,
-			},
-			{
-				path: '/register/:prdname',
-				element: <Register />,
-			},
-			{
-				path: '/search/:word',
-				element: <Search />,
+				path: '/',
+				element: <Main />,
 			},
 			{
 				path: '/*',
 				element: <Error404 />,
+			},
+			{
+				element: <PrivateRoute />,
+				children: [
+					{
+						path: '/list/:category',
+						element: <List />,
+					},
+					{
+						path: '/detail/:idx',
+						element: <Detail />,
+					},
+
+					{
+						path: '',
+						element: <MyPageIndex />,
+						children: [
+							{
+								path: '/mypage-bank',
+								element: <MyBank />,
+							},
+							{
+								path: '/mypage-interest',
+								element: <MyInterest />,
+							},
+							{
+								path: '/mypage-register',
+								element: <MyPrdRegister />,
+							},
+						],
+					},
+					{
+						path: '',
+						element: <MyPageNav type={'userEdit'} />,
+						children: [
+							{
+								path: '/mypage/useredit-changepw',
+								element: <ChangePW />,
+							},
+							{
+								path: '/mypage/useredit-userinfo',
+								element: <UserInfo />,
+							},
+						],
+					},
+					{
+						path: '/recent-price',
+						element: <RecentPrice />,
+					},
+					{
+						path: '/register/:prdname',
+						element: <Register />,
+					},
+					{
+						path: '/search/:word',
+						element: <Search />,
+					},
+				],
 			},
 		],
 	},

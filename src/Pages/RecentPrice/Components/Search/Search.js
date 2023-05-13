@@ -1,24 +1,38 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../../Styles/common'
 import { FaSearch } from 'react-icons/fa'
+import useInput from '../../../../Hooks/useInput'
 
-function RecentSearch() {
+function RecentSearch({ onSearchPrd }) {
+	const [search, onChange] = useInput('')
+
+	const onEnterSearch = event => {
+		if (event.key === 'Enter') {
+			onSearchPrd(search)
+		}
+	}
+
 	return (
-		<S.Wrapper>
+		<S.SearchWrapper>
 			<S.TitleBox>
 				<S.Title>최근 시세 동향</S.Title>
 			</S.TitleBox>
 			<S.InputBox>
-				<Input placeholder="어떤 상품의 시세가 궁금하신가요?" />
+				<Input
+					placeholder="어떤 상품의 시세가 궁금하신가요?"
+					value={search}
+					onChange={onChange}
+					onKeyDown={onEnterSearch}
+				/>
 				<FaSearch />
 			</S.InputBox>
-		</S.Wrapper>
+		</S.SearchWrapper>
 	)
 }
 
 export default RecentSearch
 
-const Wrapper = styled.div`
+const SearchWrapper = styled.div`
 	${WidthAutoCSS}
 	display: flex;
 	flex-direction: column;
@@ -54,7 +68,7 @@ const Input = styled.input`
 `
 
 const S = {
-	Wrapper,
+	SearchWrapper,
 	Title,
 	InputBox,
 	TitleBox,
