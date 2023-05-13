@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-const statusCSS = {
+export const statusCSS = {
 	success: css`
 		border: 1px solid ${({ theme }) => theme.COLOR.success};
 	`,
@@ -8,16 +8,17 @@ const statusCSS = {
 		border: 1px solid ${({ theme }) => theme.COLOR.error};
 	`,
 	default: css`
-		border: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+		border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	`,
 }
 
 export const Input = styled.input`
 	width: 100%;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	border-radius: 0.125rem;
 	background: none;
-	padding: 1rem 1.2rem;
+	padding: 1.3rem;
+	height: 5rem;
 	${({ status }) => statusCSS[status]};
 
 	&:disabled {

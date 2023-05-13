@@ -1,6 +1,7 @@
+import { forwardRef } from 'react'
 import * as S from './Input.style'
 
-function Input({ status = 'default', ...rest }) {
-	return <S.Input status={status} {...rest} />
+function Input({ status = 'default', ...rest }, ref) {
+	return <S.Input status={status} ref={ref} {...rest} />
 }
-export default Input
+export default forwardRef(Input)

@@ -1,6 +1,7 @@
 import { useSetRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
 import * as S from './Modal.style'
+import { ModalClose_icon } from '../Icons/Icons'
 
 function Modal(props) {
 	const { size, children, ...rest } = props
@@ -12,14 +13,19 @@ function Modal(props) {
 	}
 
 	return (
-		<S.Wrapper>
-			<S.Modal size={size} {...rest}>
+		<S.Wrapper className="active">
+			<S.Modal size={size} {...rest} className="active">
 				{children}
 				<span
 					onClick={onClickCloseModal}
-					style={{ position: 'absolute', top: '5px', right: '5px' }}
+					style={{
+						position: 'absolute',
+						top: '5px',
+						right: '5px',
+						cursor: 'pointer',
+					}}
 				>
-					X
+					<ModalClose_icon size={22} />
 				</span>
 			</S.Modal>
 		</S.Wrapper>
