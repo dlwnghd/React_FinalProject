@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import QUERY_KEY from '../../Consts/query.key'
-import MyPageApi from '../../Apis/myPageApi'
+import MyPageApi from '../../Apis/mypageApi'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
