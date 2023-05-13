@@ -36,6 +36,7 @@ function SignUp() {
 	} = useForm({ mode: 'onChange' })
 
 	const watchedEmail = watch('email')
+
 	const watchedNickname = watch('nickname')
 
 	const onSubmitSignup = async data => {

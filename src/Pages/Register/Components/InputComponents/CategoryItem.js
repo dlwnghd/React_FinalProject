@@ -3,7 +3,7 @@ import { FlexAlignCSS } from '../../../../Styles/common'
 import AlertText from '../../../../Components/AlertText/AlertText'
 
 function CategoryItem(props) {
-	const { errors, field, ...rest } = props
+	const { errors, field, checkedCategory, ...rest } = props
 
 	return (
 		<div>
@@ -12,24 +12,25 @@ function CategoryItem(props) {
 				<S.InputValueCheckBox>
 					<S.InputRadioWrap>
 						<S.Radio
+							id="무료"
 							type="radio"
 							name="category"
-							value={'1'}
-							// {...field}
+							{...field}
 							{...rest}
 						/>
-						<S.Label>무료나눔</S.Label>
+						<S.Label htmlFor="무료">무료나눔</S.Label>
 					</S.InputRadioWrap>
-					<S.InputRadioWrap>
+					{/* <S.InputRadioWrap>
 						<S.Radio
+							id="중고"
 							type="radio"
 							name="category"
 							value={'0'}
-							// {...field}
+							onClick={checkedCategory}
 							{...rest}
 						/>
-						<S.Label>중고거래</S.Label>
-					</S.InputRadioWrap>
+						<S.Label htmlFor="중고">중고거래</S.Label>
+					</S.InputRadioWrap> */}
 				</S.InputValueCheckBox>
 			</S.InputField>
 

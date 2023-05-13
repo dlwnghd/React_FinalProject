@@ -10,7 +10,7 @@ import { FORM_TYPE } from '../../../Consts/form.type'
 import Modal from '../../../Components/Modal/Modal'
 import ViewMap from './ViewMap'
 import DaumPostCodeAddress from '../../../Components/DaumPostCodeAddress/DaumPostCodeAddress'
-import ProductApi from '../../../Apis/productApi'
+// import ProductApi from '../../../Apis/productApi'
 import FormItem from './InputComponents/FormItem'
 import CategoryItem from './InputComponents/CategoryItem'
 import PriceItem from './InputComponents/PriceItem'
@@ -18,10 +18,14 @@ import TagsItem from './InputComponents/TagsItem'
 function Inputs({ imageList }) {
 	const {
 		control,
+		watch,
 		formState: { errors },
 		handleSubmit,
 	} = useForm()
 
+	const watchedCategory = watch('category')
+
+	console.log(watchedCategory)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const [hashReset, setHashReset] = useState()
@@ -35,12 +39,12 @@ function Inputs({ imageList }) {
 	//위도 경도
 	const [addressInfo, setAddressInfo] = useState('')
 
-	const priceToString = price => {
-		const changePrice = Number(
-			price.target.value.replaceAll(',', ''),
-		).toLocaleString()
-		setIntPrice(changePrice)
-	}
+	// const priceToString = price => {
+	// 	const changePrice = Number(
+	// 		price.target.value.replaceAll(',', ''),
+	// 	).toLocaleString()
+	// 	setIntPrice(changePrice)
+	// }
 
 	const checkedCategory = e => {
 		const checkedNum = e.target.value
@@ -48,28 +52,29 @@ function Inputs({ imageList }) {
 			setIntPrice('0')
 		}
 		setCategoryCheckedNum(checkedNum)
+		console.log(checkedNum)
 	}
 
 	const onSubmit = async data => {
-		let price = Number(data.price.replace(/,/g, ''))
-		if (data.category == '1') {
-			price = 0
-		}
-		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
-
-		const formData = new FormData()
-		formData.append('title', data.title)
-		formData.append('price', price)
-		formData.append('description', data.description)
-		formData.append('region', resultAddress)
-		formData.append('category', Number(data.category))
-		formData.append('tag', hashArr)
-		formData.append('images', imageList)
-		console.log(formData)
-		try {
-			const response = await ProductApi.register(formData)
-			console.log(response)
-		} catch (err) {}
+		// let price = Number(data.price.replace(/,/g, ''))
+		console.log(data)
+		// if (data.category == '1') {
+		// 	price = 0
+		// }
+		// if (!imageList) return alert('하나 이상 이미지 등록하세요.')
+		// const formData = new FormData()
+		// formData.append('title', data.title)
+		// formData.append('price', price)
+		// formData.append('description', data.description)
+		// formData.append('region', resultAddress)
+		// formData.append('category', Number(data.category))
+		// formData.append('tag', hashArr)
+		// formData.append('images', imageList)
+		// console.log(formData)
+		// try {
+		// 	const response = await ProductApi.register(formData)
+		// 	console.log(response)
+		// } catch (err) {}
 	}
 
 	const modalOpen = () => {
@@ -83,16 +88,14 @@ function Inputs({ imageList }) {
 			e.preventDefault()
 			setHashReset('')
 			if (e.target.value.trim().length === 0) return
-			setHashArr(prev => [
-				...prev,
-				{ value: e.target.value, id: Math.floor(Math.random() * 100000) },
-			])
+			setHashArr(prev => [...prev, e.target.value])
 		}
 	}
 
 	const deleteTagItem = e => {
 		setHashArr(hashArr.filter(el => el !== e))
 	}
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Controller
@@ -115,42 +118,38 @@ function Inputs({ imageList }) {
 						errors={errors}
 						field={field}
 						hashArr={hashArr}
-						hashReset={hashReset}
 						onKeyDown={onkeyDown}
+						onChange={e => setHashReset(e.target.value)}
 						deleteTagItem={deleteTagItem}
 						setHashReset={setHashReset}
+						value={hashReset}
 					/>
 				)}
 			></Controller>
 			<Controller
 				name="category"
 				control={control}
-				rules={FORM_TYPE.PRODUCT_CATEGORY_TYPE}
+				rules={
+					categoryCheckedNum !== '1' ||
+					(categoryCheckedNum !== '0' && {
+						required: '무료나눔 혹은 중고상품 선택해주세요',
+					})
+				}
 				render={({ field }) => (
 					<CategoryItem
 						errors={errors}
-						onClick={checkedCategory}
 						field={field}
+						value={'1'}
+						onClick={checkedCategory}
 					/>
 				)}
 			></Controller>
 			<Controller
 				name="price"
 				control={control}
-				rules={{
-					required: categoryCheckedNum !== '1' && '가격을 입력해주세요',
-				}}
+				rules={{ required: intPrice != '0' && '가격을 입력해주세요.' }}
 				render={({ field }) => (
-					<PriceItem
-						name={'price'}
-						errors={errors}
-						intPrice={intPrice}
-						setIntPrice={setIntPrice}
-						categoryCheckedNum={categoryCheckedNum}
-						field={field}
-						onChange={priceToString}
-						value={intPrice}
-					/>
+					<PriceItem errors={errors} field={field} value={intPrice} />
 				)}
 			></Controller>
 			<Controller

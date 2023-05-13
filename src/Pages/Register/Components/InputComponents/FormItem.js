@@ -16,7 +16,7 @@ const nameToPlaceholder = {
 }
 
 function FormItem(props) {
-	const { name, errors, field, setIsOpenModal, priceToString, ...rest } = props
+	const { name, errors, field, ...rest } = props
 
 	return (
 		<S.Wrapper>
@@ -26,15 +26,14 @@ function FormItem(props) {
 					{name !== 'description' ? (
 						<Input
 							placeholder={nameToPlaceholder[name]}
-							status={errors[name] && 'error'}
+							status={errors[name] ? 'error' : 'default'}
 							{...field}
 							{...rest}
-							// onChange={priceToString}
 						/>
 					) : (
 						<S.Textarea
 							placeholder={nameToPlaceholder[name]}
-							status={errors[name] && 'error'}
+							status={errors[name] ? 'error' : 'default'}
 							{...field}
 							{...rest}
 						/>
