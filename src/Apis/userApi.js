@@ -14,7 +14,7 @@ const UserApi = {
 	},
 	checkNickname({ nickname }) {
 		return axiosInstance.get(PATH + '/check/nickname', {
-			params: { re: nickname },
+			params: { nickname },
 		})
 	},
 	logout() {
