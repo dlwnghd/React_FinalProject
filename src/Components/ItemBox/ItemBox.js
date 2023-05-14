@@ -20,29 +20,49 @@ function ItemBox({
 	...rest
 }) {
 	const [isHeart, setIsHeart] = useState(isLiked)
+	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
 
 	const onHeart = () => {
 		setIsHeart(prev => !prev)
+		/*
+			if (isHoverItemBox) {
+				setIsHoverItemBox(false)
+			}
+		*/
 	}
 
-	const onEdit = () => {}
+	const onMouseEnter = e => {
+		/*
+			1. 하트가 클릭되었을 때, return
+			2. 하트 클릭을 다루는 state인 isHeart로 조건식 처리
+			3. ...
+		*/
+		setIsHoverItemBox(true)
+	}
+
+	const onMouseLeave = e => {
+		setIsHoverItemBox(false)
+	}
 
 	return (
 		<S.Wrapper>
-			{!isHeart ? (
-				<NotFillHeart_Icon size="30" onClick={onHeart} />
-			) : (
-				<FillHeart_Icon size="30" onClick={onHeart} />
-			)}
-			<S.IMGContainer posterIMG={posterPath} {...rest}></S.IMGContainer>
+			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+				{isHoverItemBox && (
+					<>
+						{!isHeart ? (
+							<NotFillHeart_Icon size="30" onClick={onHeart} />
+						) : (
+							<FillHeart_Icon size="30" onClick={onHeart} />
+						)}
+						<S.IMGHoverCover {...rest}></S.IMGHoverCover>
+					</>
+				)}
+				<S.IMGList posterIMG={posterPath}></S.IMGList>
+			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox context={context}>
 					<h4>{title}</h4>
-					{context !== '' ? (
-						<p>{context}</p>
-					) : (
-						<EtcOption_Icon size="30" onClick={onEdit} />
-					)}
+					{context !== '' ? <p>{context}</p> : <EtcOption_Icon size="30" />}
 				</S.DescBox>
 				<S.DescBox2>
 					<h4>{price.toLocaleString()}원</h4>
@@ -64,26 +84,47 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+`
+
+const IMGContainer = styled.div`
+	position: relative;
+	width: 100%;
+	height: 100%;
 
 	& > svg {
 		position: absolute;
 		z-index: 999;
 		cursor: pointer;
-		top: 1.4rem;
-		right: 1.4rem;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		color: ${({ theme }) => theme.COLOR.main};
 
 		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
 	}
 `
 
-const IMGContainer = styled.div`
+const IMGHoverCover = styled.div`
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	z-index: 998;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+`
+
+const IMGList = styled.div`
 	position: relative;
 	cursor: pointer;
 	width: 100%;
-	/* height: 27.6rem; */
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
+
+	&::hover {
+		opacity: 0.5;
+	}
 
 	&::after {
 		content: '';
@@ -132,6 +173,8 @@ const DescBox2 = styled.div`
 const S = {
 	Wrapper,
 	IMGContainer,
+	IMGHoverCover,
+	IMGList,
 	DescContainer,
 	DescBox,
 	DescBox2,
