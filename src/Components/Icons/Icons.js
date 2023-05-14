@@ -19,6 +19,10 @@ import {
 	AiOutlineCamera,
 	AiOutlineExport,
 	AiOutlineMore,
+	AiFillShopping,
+	AiOutlineDollarCircle,
+	AiOutlineFund,
+	AiOutlineDown,
 	AiFillSignal,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
@@ -48,7 +52,9 @@ export const PaginationArrowDouble_Icon = ({ rotate }) => (
 	<AiFillForward style={{ transform: `rotate(${rotate}deg)` }} />
 ) // 페이지네이션화살표 (>>)
 
-export const AddProduct_Icon = () => <AiOutlinePlusCircle /> // 상품 등록
+export const AddProduct_Icon = ({ size, color }) => (
+	<AiOutlinePlusCircle size={size} color={color} />
+) // 상품 등록
 export const MenuBurger_Icon = ({ size, color, cursor }) => (
 	<AiOutlineMenu size={size} color={color} cursor={cursor} />
 ) // 햄버거
@@ -60,10 +66,28 @@ export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
 export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
-export const ModalClose_icon = () => <AiOutlineClose /> // 모달 닫기
+export const ModalClose_icon = ({ size }) => <AiOutlineClose size={size} /> // 모달 닫기
+
 export const RollBack_icon = ({ size, color, cursor }) => (
 	<AiOutlineRollback size={size} color={color} cursor={cursor} />
 ) // 뒤로 가기
+
+// 구매 물품
+export const Shopping_Icon = ({ size, color }) => (
+	<AiFillShopping size={size} color={color} />
+)
+// 판매 물품
+export const Dollar_Icon = ({ size, color }) => (
+	<AiOutlineDollarCircle size={size} color={color} />
+)
+// 통계 아이콘
+export const Total_Icon = ({ size, color }) => (
+	<AiOutlineFund size={size} color={color} />
+)
+// 아래 꼬리없는 arrow
+export const Down_Icon = ({ size, color }) => (
+	<AiOutlineDown size={size} color={color} />
+)
 export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
 
 // 탭바
