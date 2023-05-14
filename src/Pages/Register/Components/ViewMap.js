@@ -2,10 +2,10 @@ import { useEffect } from 'react'
 
 const { kakao } = window
 
-function ViewMap({ addressInfo }) {
+function ViewMap({ LatAndLng }) {
 	useEffect(() => {
-		if (!addressInfo) return
-		const { x, y } = addressInfo
+		if (!LatAndLng) return
+		const { x, y } = LatAndLng
 		let mapContainer = document.getElementById('map')
 
 		let mapOption = {
@@ -20,11 +20,11 @@ function ViewMap({ addressInfo }) {
 		})
 
 		marker.setMap(map)
-	}, [addressInfo])
+	}, [LatAndLng])
 
 	return (
 		<>
-			{addressInfo && (
+			{LatAndLng && (
 				<div id="map" style={{ width: '100%', height: '350px' }}></div>
 			)}
 		</>

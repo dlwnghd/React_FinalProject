@@ -3,33 +3,43 @@ import { FlexAlignCSS } from '../../../../Styles/common'
 import AlertText from '../../../../Components/AlertText/AlertText'
 
 function CategoryItem(props) {
-	const { errors, field, checkedCategory, ...rest } = props
+	const { errors, name, field, checkedCategory, ...rest } = props
+
+	//name이 무료 혹은 중고 이런식으로 온다.
+	const nameToLabel = {
+		무료: '무료나눔',
+		중고: '중고거래',
+	}
+
+	// const id = {
+	// 	: '상품 제목을 입력해주세요.',
+	// 	description: '상품 설명을 입력해주세요.',
+	// }
 
 	return (
 		<div>
 			<S.InputField>
-				<label>카테고리 *</label>
+				{name === '무료' && <label>카테고리 *</label>}
 				<S.InputValueCheckBox>
 					<S.InputRadioWrap>
 						<S.Radio
-							id="무료"
+							id={name}
 							type="radio"
 							name="category"
 							{...field}
 							{...rest}
 						/>
-						<S.Label htmlFor="무료">무료나눔</S.Label>
+						<S.Label htmlFor={name}>{nameToLabel[name]}</S.Label>
 					</S.InputRadioWrap>
 					{/* <S.InputRadioWrap>
 						<S.Radio
-							id="중고"
+							id={'중고'}
 							type="radio"
 							name="category"
-							value={'0'}
-							onClick={checkedCategory}
+							{...field}
 							{...rest}
 						/>
-						<S.Label htmlFor="중고">중고거래</S.Label>
+						<S.Label htmlFor={'중고'}>중고거래</S.Label>
 					</S.InputRadioWrap> */}
 				</S.InputValueCheckBox>
 			</S.InputField>
@@ -45,7 +55,8 @@ const InputField = styled.div`
 	${FlexAlignCSS}
 
 	& > label {
-		width: 14rem;
+		width: 17rem;
+
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	}
 
@@ -78,6 +89,7 @@ const Radio = styled.input`
 `
 const Label = styled.label`
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+
 	margin-right: 2rem;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
@@ -86,7 +98,9 @@ const Label = styled.label`
 const StyledAlertText = styled(AlertText)`
 	margin-top: 0.3rem;
 	font-size: 1.5rem;
-	text-align: end;
+	/* margin-left: 60rem; */
+	/* background-color: red; */
+	width: 100%;
 `
 const S = {
 	InputValueCheckBox,
