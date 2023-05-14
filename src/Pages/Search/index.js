@@ -2,12 +2,9 @@ import styled from 'styled-components'
 import Filter from '../../Components/Filter/Filter'
 import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import SearchList from './Components/SearchList'
+import { useState, useEffect } from 'react'
 import productsMock from '../../__mock__/Data/Product/product.data'
-import { useRecoilState } from 'recoil'
-import { isProductPageAtom } from '../../Atoms/productPage.atom'
+import SearchList from './Components/SearchList'
 
 function Search() {
 	const searchFilter = [
@@ -17,29 +14,15 @@ function Search() {
 		'낮은 가격순',
 	]
 	const { word } = useParams()
-
-	// Api를 통해 들고오는... 검색한 쿼리스트링에 맞는 데이터만 호출하여 map...
-	// const { data, status, isLoading } = useSearchQuery({ word })
-	// word를 통해 호출된 data 중 status가 "판매중"인 것들만 배열에 담기
-
-	const [changeResult, setChangeResult] = useState([]) // 변경될 데이터
-	const [totalList, setTotalList] = useState([])
-
 	const [filterOption, setFilterOption] = useState(searchFilter[0])
-	const [page, setPage] = useRecoilState(isProductPageAtom)
-	
-	useEffect(() => {
-		setPage(0)
-		setTotalList(productsMock.filter(item => item.title.includes(word)))
-		setChangeResult([])
-	}, [filterOption])
-	
-	useEffect(() => {
-		setPage(1)
-		setTotalList(productsMock.filter(item => item.title.includes(word)))
-		setChangeResult([])
-	}, [word])
+	const [totalList, setTotalList] = useState(
+		productsMock.filter(item => item.title.includes(word)),
+	)
 
+	// 검색어가 달라질 때마다 토탈값 변경
+	useEffect(() => {
+		setTotalList(productsMock.filter(item => item.title.includes(word)))
+	}, [word])
 
 	const onFilter = e => {
 		switch (e.target.innerText) {
@@ -60,6 +43,10 @@ function Search() {
 		}
 	}
 
+	// Api를 통해 들고오는... 검색한 쿼리스트링에 맞는 데이터만 호출하여 map...
+	// const { data, status, isLoading } = useSearchQuery({ word })
+	// word를 통해 호출된 data 중 status가 "판매중"인 것들만 배열에 담기
+
 	return (
 		<S.Wrapper>
 			<S.SearchContainer>
@@ -69,14 +56,7 @@ function Search() {
 					</h3>
 					<Filter filterArray={searchFilter} onClick={onFilter} />
 				</S.SearchTopper>
-				<SearchList
-					changeResult={changeResult}
-					setChangeResult={setChangeResult}
-					page={page}
-					setPage={setPage}
-					word={word}
-					filterOption={filterOption}
-				/>
+				<SearchList search={word} filterOption={filterOption} />
 			</S.SearchContainer>
 		</S.Wrapper>
 	)
@@ -107,8 +87,11 @@ const SearchTopper = styled.div`
 	margin-bottom: 2rem;
 `
 
+const Observer = styled.div``
+
 const S = {
 	Wrapper,
 	SearchContainer,
 	SearchTopper,
+	Observer,
 }

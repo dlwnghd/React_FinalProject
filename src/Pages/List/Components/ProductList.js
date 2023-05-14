@@ -6,7 +6,7 @@ import ItemBox from '../../../Components/ItemBox/ItemBox'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 
-function ProductListWrapper({
+function ProductList({
 	currentURL,
 	changeResult,
 	setChangeResult,
@@ -27,7 +27,7 @@ function ProductListWrapper({
 
 	useEffect(() => {
 		//옵저버 생성
-		const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 })
+		const observer = new IntersectionObserver(onObsHandler, { threshold: 0.5 })
 		if (obsRef.current) observer.observe(obsRef.current)
 		return () => {
 			observer.disconnect()
@@ -50,7 +50,7 @@ function ProductListWrapper({
 	}, [page])
 
 	// 옵저버 핸들러
-	const obsHandler = entries => {
+	const onObsHandler = entries => {
 		const target = entries[0]
 		if (target.isIntersecting && preventRef.current) {
 			preventRef.current = false
@@ -79,7 +79,7 @@ function ProductListWrapper({
 	}, [page])
 
 	return (
-		<S.ProductList>
+		<S.ProductListWrapper>
 			<MainSkeleton />
 			{changeResult.map((item, idx) => {
 				return (
@@ -96,13 +96,13 @@ function ProductListWrapper({
 				)
 			})}
 			<li className="" ref={obsRef} />
-		</S.ProductList>
+		</S.ProductListWrapper>
 	)
 }
 
-export default ProductListWrapper
+export default ProductList
 
-const ProductList = styled.div`
+const ProductListWrapper = styled.div`
 	width: 100%;
 	margin-top: 4rem;
 	${GridCenterCSS}
@@ -115,5 +115,5 @@ const ProductList = styled.div`
 `
 
 const S = {
-	ProductList,
+	ProductListWrapper,
 }

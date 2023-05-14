@@ -7,7 +7,17 @@ import { FlexCenterCSS } from '../../../../Styles/common'
 function Graph({ dummyData }) {
 	const chartRef = useRef(null)
 	// Filter 종류
-	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년', '전체']
+	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년']
+	const filterByMonths = (data, months) => {
+		const now = new Date()
+		const from = new Date(
+			now.getFullYear(),
+			now.getMonth() - months,
+			now.getDate(),
+		)
+		return data.filter(item => item.x >= from)
+	}
+	const defaultData = filterByMonths(dummyData, 3)
 
 	// 필터버튼 클릭시
 	const onFilter = e => {
@@ -24,7 +34,7 @@ function Graph({ dummyData }) {
 	const series = [
 		{
 			name: '노트북', // 상품명
-			data: dummyData, // 데이터가 들어가야할 곳
+			data: defaultData, // 데이터가 들어가야할 곳
 		},
 	]
 
@@ -147,10 +157,10 @@ function Graph({ dummyData }) {
 		const [start, end] = dateFilter[timeline] || []
 
 		// 전체면 Reset
-		if (timeline === '전체') {
-			chart.resetSeries(true, true)
-			return
-		}
+		// if (timeline === '전체') {
+		// 	chart.resetSeries(true, true)
+		// 	return
+		// }
 
 		// Zoom 조절
 		if (start && end) {
