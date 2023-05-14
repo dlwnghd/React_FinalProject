@@ -44,9 +44,9 @@ function CategoryItem(props) {
 				</S.InputValueCheckBox>
 			</S.InputField>
 
-			<S.StyledAlertText type="error">
+			{/* <S.StyledAlertText type="error">
 				{errors.category && errors.category.message}
-			</S.StyledAlertText>
+			</S.StyledAlertText> */}
 		</div>
 	)
 }
@@ -98,8 +98,6 @@ const Label = styled.label`
 const StyledAlertText = styled(AlertText)`
 	margin-top: 0.3rem;
 	font-size: 1.5rem;
-	/* margin-left: 60rem; */
-	/* background-color: red; */
 	width: 100%;
 `
 const S = {

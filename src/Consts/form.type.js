@@ -89,12 +89,6 @@ const PRODUCT_DESCRIPTION_TYPE = {
 		message: '10,000자 이하로 입력해주세요',
 	},
 }
-const PRODUCT_HASH_TYPE = {
-	required: {
-		value: true,
-		message: '태그를 하나 이상 작성해주세요.',
-	},
-}
 
 export const FORM_TYPE = {
 	EMAIL_TYPE,
@@ -103,7 +97,6 @@ export const FORM_TYPE = {
 	PHONE_TYPE,
 	PRODUCT_DESCRIPTION_TYPE,
 	PRODUCT_TITLE_TYPE,
-	PRODUCT_HASH_TYPE,
 	PRODUCT_CATEGORY_TYPE,
 	PRODUCT_PRICE_TYPE,
 }

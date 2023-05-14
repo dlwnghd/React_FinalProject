@@ -1,20 +1,22 @@
 import styled from 'styled-components'
 import { FlexAlignCSS, FlexCenterCSS } from '../../../Styles/common'
-import Input from '../../../Components/Input/Input'
 import { Controller, useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Button from '../../../Components/Button/Button'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import ViewMap from './ViewMap'
-import ProductApi from '../../../Apis/productApi'
+// import ProductApi from '../../../Apis/productApi'
 import FormItem from './InputComponents/FormItem'
 import CategoryItem from './InputComponents/CategoryItem'
 import PriceItem from './InputComponents/PriceItem'
 import TagsItem from './InputComponents/TagsItem'
-import { useEffect } from 'react'
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
+import AlertText from '../../../Components/AlertText/AlertText'
+import { useNavigate } from 'react-router-dom'
+import Modal from '../../../Components/Modal/Modal'
+
 function Inputs({ imageList }) {
 	const {
 		control,
@@ -25,15 +27,16 @@ function Inputs({ imageList }) {
 		clearErrors,
 	} = useForm()
 
+	const navigate = useNavigate()
+
 	const watchedCategory = watch('category')
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-
-	const [hashReset, setHashReset] = useState()
+	const [isSubmit, setIsSubmit] = useState(false)
+	const [hashValue, setHashValue] = useState('')
 	const [hashArr, setHashArr] = useState([])
 	const [modalType, setModalType] = useState('')
-	const [intPrice, setIntPrice] = useState()
-	const [categoryCheckedNum, setCategoryCheckedNum] = useState()
+	const [intPrice, setIntPrice] = useState(0)
 
 	//동까지만 나오는 state
 	const [resultAddress, setResultAddress] = useState()
@@ -52,26 +55,38 @@ function Inputs({ imageList }) {
 		if (checkedNum === '1') {
 			setIntPrice('0')
 		}
-		setCategoryCheckedNum(checkedNum)
+	}
+
+	const setRegion = result => {
+		setValue('region', result)
+		clearErrors('region')
+		setResultAddress(result)
+	}
+
+	const onkeyDown = e => {
+		if (e.nativeEvent.isComposing) return
+		if (e.key === 'Enter') {
+			e.preventDefault()
+			setHashValue('')
+			if (e.target.value.trim().length === 0) return
+			setHashArr(prev => [...prev, e.target.value])
+		}
+	}
+
+	const deleteTagItem = e => {
+		setHashArr(hashArr.filter(el => el !== e))
 	}
 
 	useEffect(() => {
 		checkedCategory()
 	}, [watchedCategory])
 
-	const setRegion = result => {
-		setValue('region', result)
-		clearErrors('region')
-	}
-
 	const onSubmit = async data => {
 		let price = 0
-		if (data.category == '1') {
-			price = 0
-		} else {
-			price = Number(data.price.replace(/,/g, ''))
+		if (data.category !== '1') {
+			price = Number(intPrice.replace(/,/g, ''))
 		}
-
+		setIsSubmit(true)
 		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
 		const formData = new FormData()
 		formData.append('title', data.title)
@@ -83,30 +98,14 @@ function Inputs({ imageList }) {
 		formData.append('images', imageList)
 
 		try {
-			const response = await ProductApi.register(formData)
-			console.log(response)
+			// const response = await ProductApi.register(formData)
+			setTimeout(() => {
+				setIsSubmit(false)
+				navigate('/')
+			}, 3000)
+			console.log(response.data)
 		} catch (err) {}
 	}
-
-	const modalOpen = () => {
-		document.body.style.overflow = 'hidden'
-		setIsOpenModal(true)
-	}
-
-	const onkeyDown = e => {
-		if (e.nativeEvent.isComposing) return
-		if (e.key === 'Enter') {
-			e.preventDefault()
-			setHashReset('')
-			if (e.target.value.trim().length === 0) return
-			setHashArr(prev => [...prev, e.target.value])
-		}
-	}
-
-	const deleteTagItem = e => {
-		setHashArr(hashArr.filter(el => el !== e))
-	}
-
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Controller
@@ -130,10 +129,10 @@ function Inputs({ imageList }) {
 						field={field}
 						hashArr={hashArr}
 						onKeyDown={onkeyDown}
-						onChange={e => setHashReset(e.target.value)}
+						onChange={e => setHashValue(e.target.value)}
 						deleteTagItem={deleteTagItem}
-						setHashReset={setHashReset}
-						value={hashReset}
+						setHashValue={setHashValue}
+						value={hashValue}
 					/>
 				)}
 			></Controller>
@@ -141,31 +140,28 @@ function Inputs({ imageList }) {
 				<Controller
 					name="category"
 					control={control}
-					rules={{
-						required: '무료나눔 혹은 중고상품 선택해주세요',
-					}}
+					rules={FORM_TYPE.PRODUCT_CATEGORY_TYPE}
 					render={({ field }) => (
-						<CategoryItem
-							errors={errors}
-							name={'무료'}
-							field={field}
-							value={'1'}
-						/>
-					)}
-				></Controller>
-				<Controller
-					name="category"
-					control={control}
-					rules={{
-						required: '무료나눔 혹은 중고상품 선택해주세요',
-					}}
-					render={({ field }) => (
-						<CategoryItem
-							errors={errors}
-							name={'중고'}
-							field={field}
-							value={'0'}
-						/>
+						<>
+							<S.CategoryContainer>
+								<CategoryItem
+									errors={errors}
+									name={'무료'}
+									field={field}
+									value={'1'}
+								/>
+								<CategoryItem
+									errors={errors}
+									name={'중고'}
+									field={field}
+									value={'0'}
+								/>
+							</S.CategoryContainer>
+
+							<S.StyledAlertText type="error">
+								{errors.category && errors.category.message}
+							</S.StyledAlertText>
+						</>
 					)}
 				></Controller>
 			</S.CategortContainer>
@@ -208,9 +204,14 @@ function Inputs({ imageList }) {
 				)}
 			></Controller>
 			{isOpenModal && modalType === 'region' && (
-				<RegionModal setRegion={setRegion} setLatAndLng={setLatAndLng} />
+				<RegionModal setResultAddress={setRegion} setLatAndLng={setLatAndLng} />
 			)}
 			<ViewMap LatAndLng={LatAndLng} />
+			{isSubmit && (
+				<Modal size={'medium'}>
+					<S.ModalText>물품 등록 성공~!</S.ModalText>
+				</Modal>
+			)}
 			<S.ButtonWrap>
 				<Button type="submit" style={{ margin: '4rem' }}>
 					등록 완료
@@ -246,11 +247,6 @@ const InputValueAddress = styled.div`
 	display: flex;
 `
 
-const AddressInput = styled(Input)`
-	height: 4.8rem;
-	width: 50%;
-`
-
 const OpenMadalBtn = styled.input`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	width: 16rem;
@@ -271,10 +267,32 @@ const CategortContainer = styled.div`
 	display: flex;
 	align-items: center;
 `
+const StyledAlertText = styled(AlertText)`
+	margin-top: 0.3rem;
+	font-size: 1.5rem;
+	text-align: end;
+	width: 100%;
+`
+const CategoryContainer = styled.div`
+	width: 100%;
+	height: 7rem;
+	display: flex;
+	align-items: center;
+`
+const ModalText = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+`
 const S = {
 	InputValueAddress,
+	CategoryContainer,
 	CategortContainer,
 	OpenMadalBtn,
 	ButtonWrap,
 	InputContainer,
+	StyledAlertText,
+	ModalText,
 }

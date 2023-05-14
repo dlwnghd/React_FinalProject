@@ -15,7 +15,7 @@ import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
-import PrivateRoute from './private'
+// import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
 
 const router = createBrowserRouter([
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
 				element: <Error404 />,
 			},
 			{
-				element: <PrivateRoute />,
+				// element: <PrivateRoute />,
 				children: [
 					{
 						path: '/list/:category',
