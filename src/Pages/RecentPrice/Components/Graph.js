@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
-import Filter from '../../../../Components/Filter/Filter'
-import { FlexCenterCSS } from '../../../../Styles/common'
+import Filter from '../../../Components/Filter/Filter'
+import { FlexCenterCSS } from '../../../Styles/common'
 
 function Graph({ dummyData, avgPrice, search }) {
 	const chartRef = useRef(null)
@@ -255,8 +255,8 @@ function Graph({ dummyData, avgPrice, search }) {
 	}, [dummyData])
 
 	return (
-		<S.GraphBox id="chart">
-			<div id="chart-timeline">
+		<S.GraphWrapper>
+			<S.GraphContainer>
 				<Filter filterArray={dateFilter} onClick={onFilter} />
 				<ReactApexChart
 					name="kor"
@@ -267,14 +267,14 @@ function Graph({ dummyData, avgPrice, search }) {
 					width={chartWidth}
 					ref={chartRef}
 				/>
-			</div>
-		</S.GraphBox>
+			</S.GraphContainer>
+		</S.GraphWrapper>
 	)
 }
 
 export default Graph
 
-const GraphBox = styled.div`
+const GraphWrapper = styled.div`
 	${FlexCenterCSS}
 
 	@media screen and(max-width: ${({ theme }) => theme.MEDIA.mobile}) {
@@ -284,6 +284,9 @@ const GraphBox = styled.div`
 	}
 `
 
+const GraphContainer = styled.div``
+
 const S = {
-	GraphBox,
+	GraphWrapper,
+	GraphContainer,
 }
