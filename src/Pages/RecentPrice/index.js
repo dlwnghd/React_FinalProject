@@ -23,10 +23,12 @@ function RecentPrice() {
 
 	return (
 		<S.RecentPriceWrapper>
-			<RecentSearch onSearchPrd={onSearchPrd} />
-			{searchPrd && (
-				<Graph dummyData={searchPrd} avgPrice={avgPrice} search={search} />
-			)}
+			<S.RecentPriceContainer>
+				<RecentSearch onSearchPrd={onSearchPrd} />
+				{searchPrd && (
+					<Graph dummyData={searchPrd} avgPrice={avgPrice} search={search} />
+				)}
+			</S.RecentPriceContainer>
 			<SoldOutList soldOutList={productsMock.slice(0, 10)} />
 		</S.RecentPriceWrapper>
 	)
@@ -38,6 +40,12 @@ const RecentPriceWrapper = styled.section`
 	${WidthAutoCSS};
 `
 
+const RecentPriceContainer = styled.div`
+	margin-top: 55px;
+	margin-bottom: 125px;
+`
+
 const S = {
 	RecentPriceWrapper,
+	RecentPriceContainer,
 }
