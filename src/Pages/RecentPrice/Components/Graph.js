@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
 import Filter from '../../../Components/Filter/Filter'
@@ -6,15 +6,12 @@ import { FlexCenterCSS } from '../../../Styles/common'
 
 function Graph({ dummyData, avgPrice, search }) {
 	const chartRef = useRef(null)
-	const [chartHeight, setChartHeight] = useState(500)
-	const [chartWidth, setChartWidth] = useState(900)
+	const chartContainerRef = useRef(null)
 
 	// Filter 종류
 	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년']
 
 	const defaultData = dummyData
-
-	console.log(dummyData)
 
 	// 필터버튼 클릭시
 	const onFilter = e => {
@@ -37,6 +34,17 @@ function Graph({ dummyData, avgPrice, search }) {
 
 	// Option
 	const options = {
+		responsive: [
+			{
+				breakpoint: 414,
+				options: {
+					chart: {
+						width: 330,
+						height: 200,
+					},
+				},
+			},
+		],
 		chart: {
 			defaultLocale: 'ko',
 			locales: [
@@ -76,8 +84,8 @@ function Graph({ dummyData, avgPrice, search }) {
 			],
 			id: 'areachart-2',
 			type: 'area',
-			height: chartHeight,
-			width: chartWidth,
+			height: 500,
+			width: 900,
 			zoom: {
 				enabled: true,
 				type: 'x',
@@ -104,19 +112,27 @@ function Graph({ dummyData, avgPrice, search }) {
 				? [
 						{
 							y: Number(`${avgPrice}`),
-							strokeDashArray: 5,
+							strokeDashArray: 2,
 							borderColor: 'black',
 							label: {
 								borderColor: 'black',
-								borderWidth: 16,
+								borderWidth: 1,
 								borderRadius: 10,
 								textAnchor: 'middle',
 								offsetX: -70,
-								offsetY: 9,
+								offsetY: 7,
+								text: `평균거래 : ${avgPrice.toLocaleString()}원`,
 								style: {
 									color: 'white',
+									background: 'black',
+									fontWeight: 700,
+									padding: {
+										left: 6,
+										right: 6,
+										top: 3,
+										bottom: 5,
+									},
 								},
-								text: `평균가격 ${avgPrice.toLocaleString()}원`,
 							},
 						},
 				  ]
@@ -256,15 +272,15 @@ function Graph({ dummyData, avgPrice, search }) {
 
 	return (
 		<S.GraphWrapper>
-			<S.GraphContainer>
+			<S.GraphContainer ref={chartContainerRef}>
 				<Filter filterArray={dateFilter} onClick={onFilter} />
 				<ReactApexChart
 					name="kor"
 					options={options}
 					series={series}
-					height={chartHeight}
 					type="area"
-					width={chartWidth}
+					height={500}
+					width={900}
 					ref={chartRef}
 				/>
 			</S.GraphContainer>
