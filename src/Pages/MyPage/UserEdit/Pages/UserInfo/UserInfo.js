@@ -87,6 +87,7 @@ function UserInfo() {
 	const onSubmit = async editData => {
 		const formData = new FormData()
 		formData.append('profile_url', imgFile)
+
 		const editUser = {
 			email: editData.email,
 			nickName: editData.nickName,

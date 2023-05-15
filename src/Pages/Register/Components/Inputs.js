@@ -32,14 +32,15 @@ function Inputs({ imageList }) {
 	const watchedCategory = watch('category')
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-	const [isSubmit, setIsSubmit] = useState(false)
+	const [isSubmitModal, setIsSubmitModal] = useState(false)
+
 	const [hashValue, setHashValue] = useState('')
 	const [hashArr, setHashArr] = useState([])
 	const [modalType, setModalType] = useState('')
 	const [intPrice, setIntPrice] = useState(0)
 
 	//동까지만 나오는 state
-	const [resultAddress, setResultAddress] = useState()
+	const [resultAddress, setResultAddress] = useState('')
 	//위도 경도
 	const [LatAndLng, setLatAndLng] = useState('')
 
@@ -86,10 +87,14 @@ function Inputs({ imageList }) {
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
 		}
-		setIsSubmit(true)
-		if (!imageList) return alert('하나 이상 이미지 등록하세요.')
+
+		setIsSubmitModal(true)
+
+		console.log(imageList)
+
 		const formData = new FormData()
 		formData.append('title', data.title)
+
 		formData.append('price', price)
 		formData.append('description', data.description)
 		formData.append('region', resultAddress)
@@ -100,9 +105,9 @@ function Inputs({ imageList }) {
 		try {
 			// const response = await ProductApi.register(formData)
 			setTimeout(() => {
-				setIsSubmit(false)
+				setIsSubmitModal(false)
 				navigate('/')
-			}, 3000)
+			}, 2000)
 			console.log(response.data)
 		} catch (err) {}
 	}
@@ -207,7 +212,7 @@ function Inputs({ imageList }) {
 				<RegionModal setResultAddress={setRegion} setLatAndLng={setLatAndLng} />
 			)}
 			<ViewMap LatAndLng={LatAndLng} />
-			{isSubmit && (
+			{isSubmitModal && (
 				<Modal size={'medium'}>
 					<S.ModalText>물품 등록 성공~!</S.ModalText>
 				</Modal>

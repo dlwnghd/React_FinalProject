@@ -30,16 +30,6 @@ function Images({ imageList, setImageList }) {
 
 		setImageList(ImageUrlLists)
 	}
-	// const onAddImg = e => {
-	// 	const ImageLists = e.target.files
-	// 	console.log(ImageLists)
-
-	// const reader = new FileReader()
-	// reader.readAsDataURL(ImageLists)
-	// reader.onloadend = () => {
-	// 	setImageList(reader.result || null)
-	// }
-	// }
 
 	//이미지 삭제
 	const DelViewImg = e => {
