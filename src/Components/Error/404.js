@@ -11,10 +11,10 @@ function Error404() {
 		<S.ErrorWrapper>
 			<S.ErrorContainer>
 				<p>죄송합니다. 현재 찾을 수 없는 페이지를 요청 하셨습니다.</p>
-				<Button children={'돌아가기'}/>
+				<Button children={'돌아가기'} />
 			</S.ErrorContainer>
 			<S.ErrorImageContainer>
-				<ErrorCat /> 
+				<ErrorCat />
 			</S.ErrorImageContainer>
 		</S.ErrorWrapper>
 	)
@@ -42,13 +42,12 @@ const ErrorContainer = styled.div`
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
 
 		@media screen and (max-width: 440px) {
-			font-size: 25rem;
+			font-size: ${({ theme }) => theme.FONT_SIZE.small};
 		}
 	}
 `
 
 const ErrorImageContainer = styled.div``
-
 
 const S = {
 	ErrorWrapper,
