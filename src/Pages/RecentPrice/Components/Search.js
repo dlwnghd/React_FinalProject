@@ -9,6 +9,7 @@ function RecentSearch({ onSearchPrd }) {
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
 			onSearchPrd(search)
+			event.target.blur()
 		}
 	}
 
