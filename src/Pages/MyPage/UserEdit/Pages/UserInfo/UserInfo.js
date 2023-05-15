@@ -15,15 +15,16 @@ import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
-import axios from 'axios'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
+import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
 
 function UserInfo() {
-	const { data, error, status, isLoading } = useGetUserInfo()
+	const { data, error, status, isLoading: getLoading } = useGetUserInfo()
+	const updateUserInfo = useUpdateUserInfo()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -77,6 +78,7 @@ function UserInfo() {
 	}
 
 	const onSubmit = async editData => {
+		console.log(editData)
 		const formData = new FormData()
 		formData.append('profile_url', imgFile)
 		const editUser = {
@@ -84,13 +86,11 @@ function UserInfo() {
 			nickName: editData.nickName,
 			phone: editData.phone,
 			region: editData.region,
+			profile_url: formData,
 		}
 		setIsSubmit(true)
 		try {
-			await axios.all([
-				UserApi.userEdit(editUser),
-				UserApi.userEditProfile(formData),
-			])
+			updateUserInfo.mutateAsync(editUser)
 			setMessage(MESSAGE.USEREDIT.SUCCESS)
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
@@ -104,6 +104,24 @@ function UserInfo() {
 				setIsOpenModal(true)
 			}
 		}
+		// try {
+		// 	await axios.all([
+		// 		UserApi.userEdit(editUser),
+		// 		UserApi.userEditProfile(formData),
+		// 	])
+		// 	setMessage(MESSAGE.USEREDIT.SUCCESS)
+		// 	setIsDuplicate({ state: false, message: '' })
+		// 	setIsOpenModal(true)
+		// 	setTimeout(() => {
+		// 		setIsOpenModal(false)
+		// 		setIsSubmit(false)
+		// 	}, 3000)
+		// } catch (err) {
+		// 	if (err.response.status === 400) {
+		// 		setMessage(MESSAGE.USEREDIT.FAILURE)
+		// 		setIsOpenModal(true)
+		// 	}
+		// }
 	}
 
 	useEffect(() => {
