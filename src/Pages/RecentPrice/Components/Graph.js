@@ -11,6 +11,21 @@ function Graph({ dummyData, avgPrice, search }) {
 	// Filter 종류
 	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년']
 
+	const korMonth = [
+		'1월',
+		'2월',
+		'3월',
+		'4월',
+		'5월',
+		'6월',
+		'7월',
+		'8월',
+		'9월',
+		'10월',
+		'11월',
+		'12월',
+	]
+
 	const defaultData = dummyData
 
 	// 필터버튼 클릭시
@@ -51,34 +66,8 @@ function Graph({ dummyData, avgPrice, search }) {
 				{
 					name: 'ko',
 					options: {
-						months: [
-							'1월',
-							'2월',
-							'3월',
-							'4월',
-							'5월',
-							'6월',
-							'7월',
-							'8월',
-							'9월',
-							'10월',
-							'11월',
-							'12월',
-						],
-						shortMonths: [
-							'1월',
-							'2월',
-							'3월',
-							'4월',
-							'5월',
-							'6월',
-							'7월',
-							'8월',
-							'9월',
-							'10월',
-							'11월',
-							'12월',
-						],
+						months: korMonth,
+						shortMonths: korMonth,
 					},
 				},
 			],
