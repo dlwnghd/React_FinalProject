@@ -8,18 +8,24 @@ import RecentSearch from './Components/Search/Search'
 
 function RecentPrice() {
 	const [dummyData, setDummyData] = useState(recentPriceMock)
+	const [search, setSearch] = useState('')
 	const [searchPrd, setSearchPrd] = useState([])
+	const [avgPrice, setAvgPrice] = useState(0)
 
 	const onSearchPrd = search => {
-		const searchList = dummyData.filter(item => item.name === search)
+		const searchList = dummyData.data.filter(item => item.name === search)
 
 		setSearchPrd(searchList)
+		setSearch(search)
+		setAvgPrice(dummyData.avgPrice[search])
 	}
 
 	return (
 		<S.RecentPriceWrapper>
 			<RecentSearch onSearchPrd={onSearchPrd} />
-			{searchPrd && <Graph dummyData={searchPrd} />}
+			{searchPrd && (
+				<Graph dummyData={searchPrd} avgPrice={avgPrice} search={search} />
+			)}
 		</S.RecentPriceWrapper>
 	)
 }
