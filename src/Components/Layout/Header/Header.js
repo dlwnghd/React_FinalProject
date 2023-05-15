@@ -39,6 +39,24 @@ function Header() {
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 1 : 0)
 	}, [currentURL])
 
+	let touchStart = 0
+	let touchEnd = 0
+
+	// 모바일 터치 이벤트리스너
+	window.addEventListener('touchstart', function (event) {
+		touchStart = event.changedTouches[0].clientY
+	})
+
+	window.addEventListener('touchend', function (event) {
+		touchEnd = event.changedTouches[0].clientY
+
+		if (touchEnd - touchStart > -10) {
+			setScroll(false)
+		} else if (touchEnd - touchStart < -10) {
+			setScroll(true)
+		}
+	})
+
 	// 스크롤 이벤트리스너
 	window.addEventListener('wheel', function (event) {
 		if (event.deltaY > 0) {

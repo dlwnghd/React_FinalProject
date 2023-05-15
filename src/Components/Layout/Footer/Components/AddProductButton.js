@@ -9,6 +9,23 @@ function AddProductButton() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 
+	let touchStart = 0
+	let touchEnd = 0
+
+	window.addEventListener('touchstart', function (event) {
+		touchStart = event.changedTouches[0].clientY
+	})
+
+	window.addEventListener('touchend', function (event) {
+		touchEnd = event.changedTouches[0].clientY
+
+		if (touchEnd - touchStart > -10) {
+			setScroll(false)
+		} else if (touchEnd - touchStart < -10) {
+			setScroll(true)
+		}
+	})
+
 	window.addEventListener('wheel', function (event) {
 		if (event.deltaY > 0) {
 			setScroll(true)

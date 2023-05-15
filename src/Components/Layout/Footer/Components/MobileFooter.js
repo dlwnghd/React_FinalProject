@@ -18,6 +18,23 @@ function MobileFooter() {
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
+	let touchStart = 0
+	let touchEnd = 0
+
+	window.addEventListener('touchstart', function (event) {
+		touchStart = event.changedTouches[0].clientY
+	})
+
+	window.addEventListener('touchend', function (event) {
+		touchEnd = event.changedTouches[0].clientY
+
+		if (touchEnd - touchStart > -10) {
+			setScroll(false)
+		} else if (touchEnd - touchStart < -10) {
+			setScroll(true)
+		}
+	})
+
 	// 휠 이벤트
 	window.addEventListener('wheel', event => {
 		const shouldScroll =
