@@ -5,14 +5,9 @@ import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { isProductPageAtom } from '../../Atoms/productPage.atom'
 import Filter from '../../Components/Filter/Filter'
-import {
-	ColumnNumberCSS,
-	FlexBetweenCSS,
-	GridCenterCSS,
-	WidthAutoCSS,
-} from '../../Styles/common'
+import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import productsMock from '../../__mock__/Data/Product/product.data'
-import ProductListWrapper from './Components/ProductList'
+import ProductList from './Components/ProductList'
 
 function List() {
 	const listFilter = [
@@ -42,7 +37,7 @@ function List() {
 		setPage(0)
 		setTotalResult(
 			productsMock
-				.filter(item => item.category == currentURL)
+				.filter(item => item.category === currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
@@ -55,7 +50,7 @@ function List() {
 		setFilterOption(listFilter[0])
 		setTotalResult(
 			productsMock
-				.filter(item => item.category == currentURL)
+				.filter(item => item.category === currentURL)
 				.filter(item => item.status.includes('판매중')),
 		)
 		setChangeResult([])
@@ -82,17 +77,17 @@ function List() {
 	}
 
 	return (
-		<S.Wrapper>
-			<S.ListWrapper>
-				<S.Main>
-					<S.SearchTopper>
+		<S.ListWrapper>
+			<S.ListContainer>
+				<S.MainContent>
+					<S.SearchContent>
 						<h3>{totalResult.length}개의 상품</h3>
 						<Filter
 							filterArray={currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
 						/>
-					</S.SearchTopper>
-					<ProductListWrapper
+					</S.SearchContent>
+					<ProductList
 						currentURL={currentURL}
 						changeResult={changeResult}
 						setChangeResult={setChangeResult}
@@ -100,62 +95,38 @@ function List() {
 						page={page}
 						setPage={setPage}
 					/>
-				</S.Main>
-			</S.ListWrapper>
-		</S.Wrapper>
+				</S.MainContent>
+			</S.ListContainer>
+		</S.ListWrapper>
 	)
 }
 
 export default List
 
-const Wrapper = styled.section`
+const ListWrapper = styled.section`
 	position: relative;
 	${WidthAutoCSS}
 `
 
-const ListWrapper = styled.div`
+const ListContainer = styled.div`
 	margin: 12rem 0;
 	margin-bottom: 12rem;
-	display: flex;
-	justify-content: space-between;
+	${FlexBetweenCSS}
 `
 
-const Main = styled.div`
+const MainContent = styled.div`
 	width: 100%;
 `
 
-const SearchTopper = styled.div`
+const SearchContent = styled.div`
 	position: relative;
 	${FlexBetweenCSS};
 	margin-bottom: 2rem;
 `
 
-const Items = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(3)}
-	row-gap: 2rem;
-`
-const Item = styled.div`
-	width: fit-content;
-	background-color: rgb(207 207 207);
-`
-
-const ImageContainer = styled.div`
-	position: relative;
-
-	& > button {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
-`
-
 const S = {
-	Wrapper,
 	ListWrapper,
-	Main,
-	SearchTopper,
-	Items,
-	Item,
-	ImageContainer,
+	ListContainer,
+	MainContent,
+	SearchContent,
 }
