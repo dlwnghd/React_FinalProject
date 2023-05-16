@@ -26,16 +26,6 @@ function AddProductButton() {
 		}
 	})
 
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
-			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
-		}
-	})
-
 	/**
 	 * 상품 추가 기능
 	 */

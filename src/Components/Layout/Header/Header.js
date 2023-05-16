@@ -57,17 +57,6 @@ function Header() {
 		}
 	})
 
-	// 스크롤 이벤트리스너
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
-			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
-		}
-	})
-
 	// url 변경시 스크롤 최상단으로 이동
 	useEffect(() => {
 		window.scrollTo(0, 0)

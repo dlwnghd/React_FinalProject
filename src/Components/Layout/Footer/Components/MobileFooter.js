@@ -35,19 +35,6 @@ function MobileFooter() {
 		}
 	})
 
-	// 휠 이벤트
-	window.addEventListener('wheel', event => {
-		const shouldScroll =
-			event.deltaY > 0
-				? true
-				: event.deltaY < 0
-				? false
-				: document.documentElement.scrollTop > 0
-		setScroll(shouldScroll)
-	})
-
-
-
 	const MobileNav = [
 		{
 			text: '홈',
