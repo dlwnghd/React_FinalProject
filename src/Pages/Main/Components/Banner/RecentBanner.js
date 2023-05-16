@@ -9,14 +9,14 @@ import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Utils/slide'
 
-function RecentBanner({ mainProduct }) {
-	// 무료나눔 리스트
-	const freeProduct = mainProduct.freeProduct
-	// 중고거래 리스트
-	const usedProduct = mainProduct.usedProduct
+function RecentBanner() {
+	// // 무료나눔 리스트
+	// const freeProduct = mainProduct.freeProduct
+	// // 중고거래 리스트
+	// const usedProduct = mainProduct.usedProduct
 
-	// 최근 등록상품 리스트
-	const recentProduct = freeProduct.concat(usedProduct)
+	// // 최근 등록상품 리스트
+	// const recentProduct = freeProduct.concat(usedProduct)
 
 	const {
 		onTouchStart,
@@ -28,7 +28,7 @@ function RecentBanner({ mainProduct }) {
 		slider,
 		currentIdx,
 		setCurrentIdx,
-	} = slide(recentProduct.slice(0, 4))
+	} = slide(productsMock.slice(0, 4))
 
 	const nextSlide = () => {
 		if (currentIdx < productsMock.slice(0, 4).length - 1) {
@@ -57,14 +57,14 @@ function RecentBanner({ mainProduct }) {
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}
 				>
-					{recentProduct.slice(0, 4).map((item, idx) => {
+					{productsMock.slice(0, 4).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{recentProduct.splice(0, 6).map((item, idx) => {
+								{productsMock.slice(0, 6).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
-											recentIMG={`${item.img_url}`}
+											recentIMG={`${item.image_url}`}
 											onClick={() => navigate(`/detail/${item.idx}`)}
 										></S.SlideItem>
 									)
@@ -112,7 +112,9 @@ const SlideBox = styled.ul`
 	width: 100%;
 	${GridCenterCSS}
 	${ColumnNumberCSS(6)}
-    box-sizing: border-box;
+	column-gap: 2rem;
+
+	box-sizing: border-box;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(3)}
