@@ -10,6 +10,7 @@ import {
 	FlexBetweenCSS,
 	FlexCenterCSS,
 } from '../../../../Styles/common'
+import Button from '../../../../Components/Button/Button'
 
 function Description({ product }) {
 	const { title, price, description, ProductsTags, category, status } = product
@@ -38,8 +39,12 @@ function Description({ product }) {
 					)}
 				</S.HeartBox>
 				<S.ButtonBox>
-					<button>채팅</button>
-					<button>결제</button>
+					<Button variant={'detail'} shape={'roundSquare'} size={'full'}>
+						채팅
+					</Button>
+					<Button variant={'detail'} shape={'roundSquare'} size={'full'}>
+						결제
+					</Button>
 				</S.ButtonBox>
 			</S.OptionContainer>
 			<hr />
@@ -144,15 +149,9 @@ const ButtonBox = styled.div`
 	width:100%;
 
 	& > button {
-		width: 100%;
 		height: 6rem;
-		border-radius: 1rem;
-		cursor: pointer;
+		border: none;
 		box-sizing: border-box;
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-		background: ${({ theme }) => theme.COLOR.common.black};
-		color: ${({ theme }) => theme.COLOR.common.white};
 	}
 
 	& > button:first-of-type {
