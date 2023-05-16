@@ -39,12 +39,12 @@ function Description({ product }) {
 					)}
 				</S.HeartBox>
 				<S.ButtonBox>
-					<Button variant={'detail'} shape={'roundSquare'} size={'full'}>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						채팅
-					</Button>
-					<Button variant={'detail'} shape={'roundSquare'} size={'full'}>
+					</S.StyledButton>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						결제
-					</Button>
+					</S.StyledButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
 			<hr />
@@ -116,6 +116,7 @@ const OptionContainer = styled.div`
 const HeartBox = styled.div`
 	${FlexAlignCSS}
 	margin-right:1rem;
+	cursor: pointer;
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
@@ -147,14 +148,17 @@ const TagItem = styled.li`
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
 	width:100%;
+`
 
-	& > button {
-		height: 6rem;
-		border: none;
-		box-sizing: border-box;
-	}
+const StyledButton = styled(Button)`
+	background: ${({ theme }) => theme.COLOR.common.black};
+	color: ${({ theme }) => theme.COLOR.common.white};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	height: 6rem;
+	border: none;
+	box-sizing: border-box;
 
-	& > button:first-of-type {
+	&:first-of-type {
 		margin-right: 1rem;
 	}
 `
@@ -166,6 +170,7 @@ const S = {
 	OptionContainer,
 	HeartBox,
 	ButtonBox,
+	StyledButton,
 	TagBox,
 	TagItem,
 }
