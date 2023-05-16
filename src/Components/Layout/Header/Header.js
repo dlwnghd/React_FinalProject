@@ -43,11 +43,11 @@ function Header() {
 	let touchEnd = 0
 
 	// 모바일 터치 이벤트리스너
-	window.addEventListener('touchstart', function (event) {
+	window.addEventListener('touchstart', event => {
 		touchStart = event.changedTouches[0].clientY
 	})
 
-	window.addEventListener('touchend', function (event) {
+	window.addEventListener('touchend', event => {
 		touchEnd = event.changedTouches[0].clientY
 
 		if (touchEnd - touchStart > -10) {
@@ -56,6 +56,7 @@ function Header() {
 			setScroll(true)
 		}
 	})
+
 
 	// url 변경시 스크롤 최상단으로 이동
 	useEffect(() => {

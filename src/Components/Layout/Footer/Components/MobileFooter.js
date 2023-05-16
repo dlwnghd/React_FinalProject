@@ -21,11 +21,12 @@ function MobileFooter() {
 	let touchStart = 0
 	let touchEnd = 0
 
-	window.addEventListener('touchstart', function (event) {
+	// 모바일 터치 이벤트리스너
+	window.addEventListener('touchstart', event => {
 		touchStart = event.changedTouches[0].clientY
 	})
 
-	window.addEventListener('touchend', function (event) {
+	window.addEventListener('touchend', event => {
 		touchEnd = event.changedTouches[0].clientY
 
 		if (touchEnd - touchStart > -10) {
@@ -34,6 +35,7 @@ function MobileFooter() {
 			setScroll(true)
 		}
 	})
+
 
 	const MobileNav = [
 		{
