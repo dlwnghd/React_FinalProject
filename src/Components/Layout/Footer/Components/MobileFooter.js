@@ -80,6 +80,11 @@ function MobileFooter() {
 							>
 								<div>
 									<span className="icon">{nav.icon}</span>
+									{idx === 3 && (
+										<S.IssueBox
+											className={`${footerSelect === idx ? 'active' : ''}`}
+										/>
+									)}
 									<span className="text">{nav.text}</span>
 								</div>
 							</S.NavBox>
@@ -185,6 +190,22 @@ const NavBox = styled.li`
 		)}
 `
 
+const IssueBox = styled.span`
+	position: absolute;
+	transform: translate(1.1rem, -1.8rem);
+	background: red;
+	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
+	border-radius: 2rem;
+	padding: 0.5rem;
+	color: ${({ theme }) => theme.COLOR.common.white};
+	transition: 0.5s;
+
+	&.active {
+		transform: translate(1.1rem, -5.8rem);
+		color: ${({ theme }) => theme.COLOR.common.black};
+	}
+`
+
 const Indicator = styled.div`
 	position: absolute;
 	top: -50%;
@@ -226,5 +247,6 @@ const S = {
 	Navigation,
 	NavList,
 	NavBox,
+	IssueBox,
 	Indicator,
 }
