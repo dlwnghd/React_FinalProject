@@ -209,7 +209,7 @@ function Inputs({ imageList }) {
 
 			{isOpenModal && modalType === 'isSuccess' && (
 				<Modal size={'medium'}>
-					<S.ModalText>물품 등록 성공~!</S.ModalText>
+					<S.ModalText>물품 수정 성공~!</S.ModalText>
 				</Modal>
 			)}
 			<S.ButtonWrap>
