@@ -7,9 +7,25 @@ import {
 } from '../../../../Styles/common'
 import ItemBox from '../../../../Components/ItemBox/ItemBox'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import useGetMyInterest from '../../../../Hooks/Queries/get-myInterest'
 
 function MyInterest() {
-	const [myInterest, setMyInterest] = useState()
+	const { data, error, status, isLoading, isError } = useGetMyInterest()
+	const [myInterest, setMyInterest] = useState({ ...data })
+	const navigate = useNavigate()
+
+	// useEffect(() => {
+	// 	const getData = async () => {
+	// 		try {
+	// 			const { data } = await MyPageApi.likeProduct({ page: 1 })
+	// 			setMyInterest({ ...data })
+	// 		} catch (err) {
+	// 			console.log(err)
+	// 		}
+	// 	}
+	// 	getData()
+	// }, [])
 
 	return (
 		<S.Wrapper>
