@@ -1,14 +1,11 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../../Styles/common'
-import {
-	FlexBetweenCSS,
-	ColumnNumberCSS,
-	GridCenterCSS,
-} from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
 import MypageApi from '../../../../Apis/mypageApi'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import TypeSelectBox from './Components/TypeSelectBox'
 
 function MyPrdRegister() {
 	//일단 땜빵용으로 map돌리는 dummyData입니다.
@@ -75,6 +72,7 @@ function MyPrdRegister() {
 			category: 0,
 		},
 	]
+
 	const listArr = []
 	for (let i = 0; i < 10; i++) {
 		listArr.push(...dummyProduct)
@@ -82,6 +80,7 @@ function MyPrdRegister() {
 
 	const [category, setCategory] = useState(0)
 
+	//등록상품 리스트 들고오기
 	useEffect(() => {
 		const myPrdApi = async () => {
 			try {
@@ -94,15 +93,13 @@ function MyPrdRegister() {
 		}
 		myPrdApi()
 	}, [category])
+	console.log(category)
 
 	return (
 		<S.Wrapper>
 			<S.TotalNumAndFilter>
 				<div>전체 {listArr.length}개</div>
-				<select onChange={e => setCategory(e.target.value)}>
-					<option value={0}>중고상품</option>
-					<option value={1}>무료상품</option>
-				</select>
+				<TypeSelectBox setCategory={setCategory} />
 			</S.TotalNumAndFilter>
 			<S.PrdList>
 				{listArr.map((item, idx) => {
@@ -119,8 +116,10 @@ const Wrapper = styled.div`
 	${WidthAutoCSS}
 `
 const TotalNumAndFilter = styled.div`
-	${FlexBetweenCSS}
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium}
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 `
 
 const PrdList = styled.div`

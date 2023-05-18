@@ -17,6 +17,7 @@ import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
 import RegisterEdit from '../Pages/RegisterEdit'
+import MyPageIndex from '../Pages/MyPage/Components/Header/index'
 
 const router = createBrowserRouter([
 	{
@@ -53,7 +54,8 @@ const router = createBrowserRouter([
 
 					{
 						path: '',
-						element: <MyPrdRegister />,
+						element: <MyPageIndex />,
+
 						children: [
 							{
 								path: '/mypage-bank',
