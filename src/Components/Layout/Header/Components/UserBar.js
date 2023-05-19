@@ -153,7 +153,6 @@ const UserDropDownMenu = styled.div`
 			scale: 1.1;
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
-			border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 			color: ${({ theme }) => theme.COLOR.common.white};
 		}
 	}
