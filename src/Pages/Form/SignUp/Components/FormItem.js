@@ -21,7 +21,8 @@ const nameToPlaceholder = {
 	region: '주소 검색을 해주세요',
 	phone: '휴대폰 번호를 입력해주세요',
 }
-
+// 상품명, 가격, 상품설명, 거래지역
+// 이걸로 못하는거 태그, 카테고리
 function FormItem(props) {
 	const {
 		name,
