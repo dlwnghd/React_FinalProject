@@ -12,6 +12,7 @@ import Modal from '../../../../../Components/Modal/Modal'
 import MESSAGE from '../../../../../Consts/message'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 
 function ChangePW() {
 	const {
@@ -27,19 +28,38 @@ function ChangePW() {
 	const [message, setMessage] = useState(MESSAGE.PWEDIT.SUCCESS)
 
 	const onSubmit = async data => {
-		try {
-			await UserApi.userEditPw({ pw: data.newPw })
-			setMessage(MESSAGE.PWEDIT.SUCCESS)
-			setIsOpenModal(true)
-			setTimeout(() => setIsOpenModal(false), 3000)
-			setValue('newPw', '')
-			setValue('newPwConfirm', '')
-		} catch (err) {
-			if (err.response.status === 400) {
-				setMessage(MESSAGE.PWEDIT.FAILURE)
-				setIsOpenModal(true)
-			}
-		}
+		const { mutate } = useMutation(
+			() => UserApi.userEditPw({ pw: data.newPw }),
+			{
+				onSuccess: () => {
+					setMessage(MESSAGE.PWEDIT.SUCCESS)
+					setIsOpenModal(true)
+					setTimeout(() => setIsOpenModal(false), 3000)
+					setValue('newPw', '')
+					setValue('newPwConfirm', '')
+				},
+				onError: err => {
+					if (err.response.status === 400) {
+						setMessage(MESSAGE.PWEDIT.FAILURE)
+						setIsOpenModal(true)
+					}
+				},
+			},
+		)
+
+		// try {
+		// 	await UserApi.userEditPw({ pw: data.newPw })
+		// 	setMessage(MESSAGE.PWEDIT.SUCCESS)
+		// 	setIsOpenModal(true)
+		// 	setTimeout(() => setIsOpenModal(false), 3000)
+		// 	setValue('newPw', '')
+		// 	setValue('newPwConfirm', '')
+		// } catch (err) {
+		// 	if (err.response.status === 400) {
+		// 		setMessage(MESSAGE.PWEDIT.FAILURE)
+		// 		setIsOpenModal(true)
+		// 	}
+		// }
 	}
 	return (
 		<S.Wrapper>
