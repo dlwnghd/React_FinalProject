@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Filter from '../../../Components/Filter/Filter'
 import { FlexCenterCSS } from '../../../Styles/common'
 
-function Graph({ dummyData, avgPrice, search }) {
+function Graph({ searchPrd, avgPrice, search }) {
 	const chartRef = useRef(null)
 	const chartContainerRef = useRef(null)
 
@@ -26,7 +26,7 @@ function Graph({ dummyData, avgPrice, search }) {
 		'12월',
 	]
 
-	const defaultData = dummyData
+	const defaultData = searchPrd
 
 	// 필터버튼 클릭시
 	const onFilter = e => {
@@ -277,7 +277,7 @@ function Graph({ dummyData, avgPrice, search }) {
 
 	useEffect(() => {
 		updateData('최근 3개월')
-	}, [dummyData])
+	}, [searchPrd])
 
 	return (
 		<S.GraphWrapper>
