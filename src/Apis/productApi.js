@@ -18,9 +18,6 @@ const ProductApi = {
 			}
 		)
 	},
-	like(prod_idx) {
-		return axiosInstance.post(PATH + '/like', prod_idx)
-	},
 }
 
 export default ProductApi
