@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../../Styles/common'
+import { WidthAutoCSS } from '../../../Styles/common'
 import { FaSearch } from 'react-icons/fa'
-import useInput from '../../../../Hooks/useInput'
+import useInput from '../../../Hooks/useInput'
 
 function RecentSearch({ onSearchPrd }) {
 	const [search, onChange] = useInput('')
@@ -9,6 +9,7 @@ function RecentSearch({ onSearchPrd }) {
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
 			onSearchPrd(search)
+			event.target.blur()
 		}
 	}
 
