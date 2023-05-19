@@ -51,7 +51,7 @@ function Graph({ dummyData, avgPrice, search }) {
 	const options = {
 		responsive: [
 			{
-				breakpoint: 414,
+				breakpoint: 414, // 414px 이하
 				options: {
 					chart: {
 						width: 330,
@@ -59,8 +59,28 @@ function Graph({ dummyData, avgPrice, search }) {
 					},
 				},
 			},
+			{
+				breakpoint: 820, // 820px 이하
+				options: {
+					chart: {
+						width: 660,
+						height: 400,
+					},
+				},
+			},
+			{
+				breakpoint: 10000, // 10000px 이하
+				options: {
+					chart: {
+						width: 900,
+						height: 500,
+					},
+				},
+			},
 		],
 		chart: {
+			redrawOnWindowResize: true,
+			redrawOnParentResize: false,
 			defaultLocale: 'ko',
 			locales: [
 				{
