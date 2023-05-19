@@ -10,7 +10,12 @@ const ProductApi = {
 			},
 		})
 	},
-	delete(prod_idx) {
+	detail({ prod_idx }) {
+		return axiosInstance.get(PATH + '/detail', {
+			params: { prod_idx },
+		})
+	},
+	delete({ prod_idx }) {
 		return (
 			axiosInstance.delete(PATH),
 			{

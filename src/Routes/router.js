@@ -93,7 +93,7 @@ const router = createBrowserRouter([
 						element: <Register />,
 					},
 					{
-						path: '/register/:prdname',
+						path: '/register/:prod_idx',
 						element: <Register />,
 					},
 					{
