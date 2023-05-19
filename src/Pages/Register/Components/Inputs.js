@@ -7,7 +7,7 @@ import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../Atoms/modal.atom'
 import { FORM_TYPE } from '../../../Consts/form.type'
 import ViewMap from './ViewMap'
-// import ProductApi from '../../../Apis/productApi'
+import ProductApi from '../../../Apis/productApi'
 import FormItem from './InputComponents/FormItem'
 import CategoryItem from './InputComponents/CategoryItem'
 import PriceItem from './InputComponents/PriceItem'
@@ -79,7 +79,6 @@ function Inputs({ imageList }) {
 	}, [watchedCategory])
 
 	const onSubmit = async data => {
-		console.log('dd')
 		let price = 0
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
@@ -99,16 +98,9 @@ function Inputs({ imageList }) {
 		}
 		// formData.append('images', imageList)
 
-		for (let key of formData.keys()) {
-			console.log(key)
-		}
-
-		// FormData의 value 확인
-		for (let value of formData.values()) {
-			console.log(value)
-		}
 		try {
-			console.log(response.data)
+			const response = await ProductApi.register(formData)
+			console.log(response)
 			setIsOpenModal(true)
 		} catch (err) {}
 	}

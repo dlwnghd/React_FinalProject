@@ -16,7 +16,6 @@ import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 // import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
-import RegisterEdit from '../Pages/RegisterEdit'
 
 const router = createBrowserRouter([
 	{
@@ -95,7 +94,7 @@ const router = createBrowserRouter([
 					},
 					{
 						path: '/register/:prdname',
-						element: <RegisterEdit />,
+						element: <Register />,
 					},
 					{
 						path: '/search/:word',
