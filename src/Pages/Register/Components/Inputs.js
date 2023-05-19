@@ -14,7 +14,6 @@ import PriceItem from './InputComponents/PriceItem'
 import TagsItem from './InputComponents/TagsItem'
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
-import { useNavigate, useParams } from 'react-router-dom'
 import Modal from '../../../Components/Modal/Modal'
 
 function Inputs({ imageList }) {
@@ -26,15 +25,11 @@ function Inputs({ imageList }) {
 		setValue,
 		clearErrors,
 	} = useForm()
-	const params = useParams()
-
-	const navigate = useNavigate()
 
 	const watchedCategory = watch('category')
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [modalType, setModalType] = useState('')
-	const [isSubmitModal, setIsSubmitModal] = useState(false)
 
 	const [hashValue, setHashValue] = useState('')
 	const [hashArr, setHashArr] = useState([])
@@ -84,6 +79,7 @@ function Inputs({ imageList }) {
 	}, [watchedCategory])
 
 	const onSubmit = async data => {
+		console.log('dd')
 		let price = 0
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
@@ -98,8 +94,19 @@ function Inputs({ imageList }) {
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
-		formData.append('images', imageList)
+		for (let i = 0; i < imageList.length; i++) {
+			formData.append('images', imageList[i])
+		}
+		// formData.append('images', imageList)
 
+		for (let key of formData.keys()) {
+			console.log(key)
+		}
+
+		// FormData의 value 확인
+		for (let value of formData.values()) {
+			console.log(value)
+		}
 		try {
 			console.log(response.data)
 			setIsOpenModal(true)

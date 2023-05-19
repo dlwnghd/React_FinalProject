@@ -11,7 +11,7 @@ const useGetMyPagePrdRegisterData = () => {
 	const { data, error, status, isLoading, isError } = useQuery(
 		[QUERY_KEY.GET_MYPAGE_REGISTER_DATA],
 		() => getMyPagePrdRegisterData(),
-		{ staleTime: 1000 * 60 * 50 },
+		{ staleTime: 1000 * 60 * 5 },
 	)
 	return { data, error, status, isLoading, isError }
 }

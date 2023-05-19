@@ -15,7 +15,7 @@ function MyPrdRegister() {
 			ProductImages: [
 				{
 					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1487317448822l0.jpg',
+						'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA5MDNfMjkx%2FMDAxNjMwNjM0MTAxNDI0.hy27U5BfUOjhg7_KRJwmwBkPPSFQPkbEzDyWvGitMHog.f_U_POWjwDLkn9mniEIULWf0wVnFEPaHfOkAUUS4R6gg.JPEG.rammme%2Foutput_3600092550.jpg&type=sc960_832',
 				},
 				{
 					imgUrl:
@@ -27,12 +27,13 @@ function MyPrdRegister() {
 				},
 				{
 					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1624267363401l0.jpg',
+						'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA5MDNfMjkx%2FMDAxNjMwNjM0MTAxNDI0.hy27U5BfUOjhg7_KRJwmwBkPPSFQPkbEzDyWvGitMHog.f_U_POWjwDLkn9mniEIULWf0wVnFEPaHfOkAUUS4R6gg.JPEG.rammme%2Foutput_3600092550.jpg&type=sc960_832',
 				},
 			],
 			ProductsTags: [{ tag: '태그1' }, { tag: '태그2' }, { tag: '태그3' }],
 			createdAt: new Date(),
-			image_url: 'https://img-cf.kurly.com/shop/data/goods/1649403816159l0.jpg',
+			image_url:
+				'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA5MDNfMjkx%2FMDAxNjMwNjM0MTAxNDI0.hy27U5BfUOjhg7_KRJwmwBkPPSFQPkbEzDyWvGitMHog.f_U_POWjwDLkn9mniEIULWf0wVnFEPaHfOkAUUS4R6gg.JPEG.rammme%2Foutput_3600092550.jpg&type=sc960_832',
 			liked: 0,
 			price: 0,
 			status: '판매중',
@@ -62,7 +63,8 @@ function MyPrdRegister() {
 			],
 			ProductsTags: [{ tag: '태그1' }, { tag: '태그2' }, { tag: '태그3' }],
 			createdAt: new Date(),
-			image_url: 'https://img-cf.kurly.com/shop/data/goods/1487317448822l0.jpg',
+			image_url:
+				'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjEwMjhfMjUg%2FMDAxNjY2OTE5NzgyNjY5.oHBZFQ8uu2OBDHBnNe85KCZTmI9X4hSyj-ZvkrlqNHUg.e_F6FM6zklDJ8EptMLBwt3OSBZROg6fqDDRutMygwsUg.JPEG.rkdls7710%2FIMG_0657.jpg&type=sc960_832',
 			liked: 1,
 			price: 0,
 			status: '판매완료',

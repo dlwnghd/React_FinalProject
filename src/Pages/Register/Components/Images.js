@@ -14,18 +14,36 @@ function Images({ imageList, setImageList }) {
 		pictureInput.current.click()
 	}
 
+	// const onAddImg = e => {
+	// 	const ImageLists = e.target.files
+	// 	let ImageUrlLists = [...imageList]
+
+	// 	for (let i = 0; i < ImageLists.length; i++) {
+	// 		const ImageLists = ImageLists[i]
+	// 		const currentImageUrl = URL.createObjectURL(ImageLists[i])
+	// 		ImageUrlLists.push(currentImageUrl)
+	// 	}
+
+	// 	setImgNum(() => false)
+	// 	if (ImageUrlLists.length > 5) {
+	// 		ImageUrlLists = ImageUrlLists.slice(0, 5)
+	// 		setImgNum(() => true)
+	// 	}
+
+	// 	setImageList(ImageUrlLists)
+	// }
+
 	const onAddImg = e => {
 		const ImageLists = e.target.files
 		let ImageUrlLists = [...imageList]
-		console.log(ImageUrlLists)
+
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
 		}
-		setImgNum(() => false)
+
 		if (ImageUrlLists.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
-			setImgNum(() => true)
 		}
 
 		setImageList(ImageUrlLists)
@@ -59,6 +77,7 @@ function Images({ imageList, setImageList }) {
 		//update state value
 		setImageList(imgItems)
 	}
+
 	return (
 		<S.TotalWrapper>
 			<MobileTitle>
