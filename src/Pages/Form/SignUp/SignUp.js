@@ -16,6 +16,8 @@ import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import UserInfoService from '../../../Utils/userInfoService'
 import AlertModal from '../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../Consts/message'
+import { useMutation } from '@tanstack/react-query'
+import { CircularProgress } from '@mui/material'
 
 function SignUp() {
 	const navigate = useNavigate()
@@ -38,9 +40,12 @@ function SignUp() {
 	const watchedEmail = watch('email')
 	const watchedNickname = watch('nickname')
 
+	const { mutateAsync, isLoading } = useMutation(newUser =>
+		UserApi.signup(newUser),
+	)
+
 	const onSubmitSignup = async data => {
 		if (isDuplicate.email.state || isDuplicate.nickname.state) return
-
 		const newUser = {
 			email: data.email,
 			pw: data.password,
@@ -48,13 +53,12 @@ function SignUp() {
 			phone: data.phone,
 			region: data.region,
 		}
-
 		try {
-			await UserApi.signup(newUser)
+			await mutateAsync(newUser)
 			UserInfoService.setSaveId(newUser.email)
 			navigate('/login')
 		} catch (err) {
-			if (err.response.status === 400) {
+			if (err.status === 400) {
 				setModalType('error')
 				setIsOpenModal(true)
 			}
@@ -209,7 +213,9 @@ function SignUp() {
 					<S.MapSection></S.MapSection>
 				</div>
 				<div>
-					<Button>회원가입</Button>
+					<Button>
+						{isLoading ? <CircularProgress size={25} /> : '회원가입'}
+					</Button>
 				</div>
 			</S.Form>
 		</S.Wrapper>
