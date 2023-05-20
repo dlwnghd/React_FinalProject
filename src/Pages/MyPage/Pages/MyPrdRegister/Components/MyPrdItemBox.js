@@ -11,7 +11,7 @@ function MyPrdItemBox({ item }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
 
-	const { image_url, title, price, status, idx } = item
+	const { img_url, title, price, status, idx } = item
 
 	//물품 삭제
 	const onProductDel = async () => {
@@ -33,7 +33,7 @@ function MyPrdItemBox({ item }) {
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer posterIMG={image_url} status={status}>
+			<S.IMGContainer posterIMG={img_url} status={status}>
 				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
 			</S.IMGContainer>
 			<S.DescContainer>
