@@ -16,7 +16,7 @@ import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
 
-function Inputs({ imageList }) {
+function Inputs({ imageFile }) {
 	const {
 		control,
 		watch,
@@ -93,10 +93,9 @@ function Inputs({ imageList }) {
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
-		for (let i = 0; i < imageList.length; i++) {
-			formData.append('images', imageList[i])
+		for (let i = 0; i < imageFile.length; i++) {
+			formData.append('images', imageFile[i])
 		}
-		// formData.append('images', imageList)
 
 		try {
 			const response = await ProductApi.register(formData)

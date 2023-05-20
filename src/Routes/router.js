@@ -14,8 +14,9 @@ import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
-// import PrivateRoute from './private'
+import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
+import MyPageIndex from '../Pages/MyPage/Components/Header'
 
 const router = createBrowserRouter([
 	{
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
 				element: <Error404 />,
 			},
 			{
-				// element: <PrivateRoute />,
+				element: <PrivateRoute />,
 				children: [
 					{
 						path: '/list/:category',
@@ -52,8 +53,7 @@ const router = createBrowserRouter([
 
 					{
 						path: '',
-						// element: <MyPageIndex />,
-						element: <MyPrdRegister />,
+						element: <MyPageIndex />,
 
 						children: [
 							{

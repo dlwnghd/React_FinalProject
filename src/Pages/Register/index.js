@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 // import ProductApi from '../../Apis/productApi'
 
 function Register() {
-	const [imageList, setImageList] = useState([])
+	const [imageFile, setImageFiles] = useState()
 	// const [detailData, setDetailData] = useState('')
 
 	const { prod_idx } = useParams()
@@ -22,10 +22,11 @@ function Register() {
 	useEffect(() => {
 		if (!prod_idx) return
 	}, [])
+
 	return (
 		<S.Wrapper>
-			<Images imageList={imageList} setImageList={setImageList} />
-			<Inputs imageList={imageList} />
+			<Images setImageFiles={setImageFiles} />
+			<Inputs imageFile={imageFile} />
 		</S.Wrapper>
 	)
 }
