@@ -18,12 +18,11 @@ import AlertText from '../../../Components/AlertText/AlertText'
 
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
-import { useRecoilValue } from 'recoil'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import UserInfoService from '../../../Utils/userInfoService'
 import MESSAGE from '../../../Consts/message'
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
+import TokenService from '../../../Utils/tokenService'
 
 function Login() {
 	const navigate = useNavigate()
@@ -32,7 +31,7 @@ function Login() {
 
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const loginState = useRecoilValue(loginStateAtom)
+	const loginState = TokenService.getAccessToken()
 	const user = useUser()
 
 	const {
