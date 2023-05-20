@@ -46,7 +46,7 @@ function MyPrdItemBox({ item }) {
 						/>
 						{editOption && (
 							<S.EditBox>
-								<div onClick={() => navigate(`register/${item.idx}`)}>수정</div>
+								<div onClick={() => navigate(`${item.idx}`)}>수정</div>
 								<div onClick={onProductDel}>삭제</div>
 							</S.EditBox>
 						)}

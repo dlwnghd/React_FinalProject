@@ -1,27 +1,35 @@
 import styled from 'styled-components'
 import Images from './Components/Images'
 import { WidthAutoCSS } from '../../Styles/common'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Inputs from './Components/Inputs'
 import { useParams } from 'react-router-dom'
-// import ProductApi from '../../Apis/productApi'
+import ProductApi from '../../Apis/productApi'
+import { useQuery } from '@tanstack/react-query'
+import QUERY_KEY from '../../Consts/query.key'
 
 function Register() {
 	const [imageFile, setImageFiles] = useState()
-	// const [detailData, setDetailData] = useState('')
+	const [detailData, setDetailData] = useState('')
 
 	const { prod_idx } = useParams()
 
-	// try {
-	// 	const res = ProductApi.detail({ prod_idx })
-	// 	setDetailData(res.data)
-	// 	console.log({ res })
-	// 	console.log({ prod_idx })
-	// } catch (err) {}
+	const getProductDetailData = async () => {
+		const res = await ProductApi.detail({ prod_idx })
+		return res.data
+	}
 
-	useEffect(() => {
-		if (!prod_idx) return
-	}, [])
+	const useGetProductDetailData = () => {
+		const { data, error, status, isLoading, isError } = useQuery(
+			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
+			() => getProductDetailData(),
+			// { staleTime: 1000 * 60 * 5 },
+		)
+		return { data, error, status, isLoading, isError }
+	}
+	const { data, error } = useGetProductDetailData()
+
+	console.log(data)
 
 	return (
 		<S.Wrapper>
