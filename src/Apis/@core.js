@@ -40,10 +40,10 @@ axiosInstance.interceptors.response.use(
 		return response
 	},
 	async error => {
-		if (error.response.status === 417) {
-			// access token 재발급 필요
-			await UserApi.logout()
-			TokenService.removeAccessToken()
+		const originalRequest = error.config
+
+		if (error.message === 'Network Error') {
+			return Promise.reject(error)
 		}
 
 		if (error.response.status === 403) {
