@@ -3,15 +3,35 @@ import TypeSelectBox from './Type'
 import Calendar from './Calendar'
 import { FlexBetweenCSS } from '../../../../../../../../Styles/common'
 import Button from '../../../../../../../../Components/Button/Button'
+import { useState, useEffect } from 'react'
 
-function FilterSection({ filter, setFilter, payList }) {
+function FilterSection({ filter, setFilter, onSearch }) {
+	const [category, setCategory] = useState(filter.category)
+	const [start, setStart] = useState(filter.start)
+	const [end, setEnd] = useState(filter.end)
+
+	const onClickGetBankList = () => {
+		// 조회 버튼을 눌렀을 때 일괄적으로 setFilter
+		setFilter({ category, start, end })
+		onSearch() // refetch
+	}
+
+	useEffect(() => {
+		// 날짜 선택 유효성 체크
+		if (start > end) {
+			setEnd(start)
+		}
+	}, [start, end])
+
 	return (
 		<S.Wrapper>
-			<TypeSelectBox filter={filter} setFilter={setFilter} />
-			<Calendar type={'start'} filter={filter} setFilter={setFilter} />
+			<TypeSelectBox category={category} setCategory={setCategory} />
+			<Calendar type={'start'} date={start} setDate={setStart} />
 			<span>~</span>
-			<Calendar type={'end'} filter={filter} setFilter={setFilter} />
-			<S.StyledButton shape={'soft'}>조회</S.StyledButton>
+			<Calendar type={'end'} date={end} setDate={setEnd} />
+			<S.StyledButton shape={'soft'} onClick={onClickGetBankList}>
+				조회
+			</S.StyledButton>
 		</S.Wrapper>
 	)
 }

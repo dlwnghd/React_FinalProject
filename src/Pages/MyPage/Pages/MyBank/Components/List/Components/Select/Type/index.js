@@ -6,16 +6,13 @@ import { FlexBetweenCSS } from '../../../../../../../../../Styles/common'
 const sellerText = '판매 내역'
 const buyerText = '구매 내역'
 
-function TypeSelectBox({ filter, setFilter }) {
-	const type = filter.category === 'seller' ? sellerText : buyerText
+function TypeSelectBox({ category, setCategory }) {
+	const type = category === 'seller' ? sellerText : buyerText
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
 
 	const onClickType = e => {
 		const selected = e.target.textContent
-		setFilter(prev => ({
-			...prev,
-			category: selected === sellerText ? 'seller' : 'buyer',
-		}))
+		setCategory(selected === sellerText ? 'seller' : 'buyer')
 	}
 
 	return (

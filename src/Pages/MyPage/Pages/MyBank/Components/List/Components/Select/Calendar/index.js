@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import {
 	FlexBetweenCSS,
@@ -12,11 +13,12 @@ import {
 import getFormattedDate from '../../../../../../../../../Utils/getFormattedDate'
 import { useEffect } from 'react'
 
-const month = Array(12)
+const monthArr = Array(12)
 	.fill(1)
 	.map((num, i) => (num += i))
 
-function Calendar({ type, filter, setFilter }) {
+function Calendar({ type, date, setDate }) {
+	const [year, month, day] = date.split('-')
 	const [isOpenOption, setIsOpenOption] = useState(false)
 
 	// 기본 세팅을 오늘 기준 year, month로 하기 위해
@@ -28,9 +30,9 @@ function Calendar({ type, filter, setFilter }) {
 
 	// select한 year와 month에 해당
 	const [selectedDate, setSelectedDate] = useState({
-		year: today.year,
-		month: today.month,
-		formattedDate: getFormattedDate(today.origin),
+		year,
+		month,
+		formattedDate: `${year}-${month}`,
 	})
 
 	const onClickYear = (year, type) => {
@@ -47,14 +49,8 @@ function Calendar({ type, filter, setFilter }) {
 	const onClickMonth = month => {
 		// month text를 눌렀을 때 결과적으로 선택한 날짜의 텍스트가 변경됩니다.
 		setIsOpenOption(false) // selectContainer 닫기
-		setSelectedDate(prev => ({
-			...prev,
-			month, // 선택한 달
-			formattedDate: getFormattedDate(new Date(prev.year, month - 1, 1)), // 선택한 달과, 선택한 날을 통해 최종적으로 선택한 text의 상태를 변경시킵니다.
-		}))
-		setFilter(prev => ({
-			...prev,
-			[type]: getFormattedDate(
+		setDate(
+			getFormattedDate(
 				new Date(
 					selectedDate.year,
 					type === 'start' ? month - 1 : month,
@@ -62,25 +58,17 @@ function Calendar({ type, filter, setFilter }) {
 				),
 				{ day: true },
 			),
-		}))
+		)
 	}
 
 	useEffect(() => {
-		const { start, end } = filter
-
-		if (start > end) {
-			const [year, month, day] = start.split('-')
-			setSelectedDate(prev => ({
-				year,
-				month,
-				formattedDate: `${year}-${month}`,
-			}))
-			setFilter(prev => ({
-				...prev,
-				end: getFormattedDate(new Date(year, month, 0), { day: true }),
-			}))
-		}
-	}, [onClickMonth])
+		const [year, month, day] = date.split('-')
+		setSelectedDate({
+			year,
+			month,
+			formattedDate: `${year}-${month}`,
+		})
+	}, [date])
 
 	return (
 		<S.Wrapper>
@@ -106,7 +94,7 @@ function Calendar({ type, filter, setFilter }) {
 						<Right_Arrow_Icon />
 					</S.ArrowBtn>
 				</S.SelectHeader>
-				{month.map(mon => (
+				{monthArr.map(mon => (
 					<S.SelectItem
 						key={mon}
 						state={mon === parseInt(selectedDate.month)}
