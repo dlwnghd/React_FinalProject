@@ -1,49 +1,51 @@
 import styled from 'styled-components'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
 import {
 	ColumnNumberCSS,
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../../../Styles/common'
 import ItemBox from '../../../../Components/ItemBox/ItemBox'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useEffect } from 'react'
+import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 import useGetMyInterest from '../../../../Hooks/Queries/get-myInterest'
 
 function MyInterest() {
-	const { data, error, status, isLoading, isError } = useGetMyInterest()
-	const [myInterest, setMyInterest] = useState({ ...data })
-	const navigate = useNavigate()
+	const arr = Array.from('0123456789')
 
-	// useEffect(() => {
-	// 	const getData = async () => {
-	// 		try {
-	// 			const { data } = await MyPageApi.likeProduct({ page: 1 })
-	// 			setMyInterest({ ...data })
-	// 		} catch (err) {
-	// 			console.log(err)
-	// 		}
-	// 	}
-	// 	getData()
-	// }, [])
+	const { data, error, status, isLoading, isError, isRefetching } =
+		useGetMyInterest({ page: 1 })
 
 	return (
 		<S.Wrapper>
 			<S.Container>
-				{productsMock.map((item, index) => {
-					// myInterest.map((item, index) => {
+				{arr.map(_ => {
 					return (
-						<ItemBox
-							title={item.title}
-							price={item.price}
-							posterPath={item.image_url}
-							context={item.description}
-							isLiked={item.liked}
-							key={index}
-							onClick={() => navigate(`/detail/${item.idx}`)}
-						/>
+						<>
+							{isRefetching && <MainSkeleton />}
+							{isLoading && <MainSkeleton />}
+						</>
 					)
 				})}
+
+				{data?.LikeList?.map(item => {
+					return (
+						<>
+							{!isRefetching && !isLoading && (
+								<ItemBox
+									title={item.Product.title}
+									price={item.Product.price}
+									posterPath={item.Product.img_url}
+									// context={item.description}
+									isLiked={item.Product.liked}
+									key={item.Product.idx}
+									onClick={() => navigate(`/detail/${item.Product.idx}`)}
+									prod_idx={item.Product.idx}
+								/>
+							)}
+						</>
+					)
+				})}
+				{/* } */}
 			</S.Container>
 		</S.Wrapper>
 	)
@@ -57,6 +59,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
+	margin: 4rem auto;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
 		gap: 3rem 1rem;
