@@ -4,19 +4,18 @@ import {
 	FlexCenterCSS,
 	GridCenterCSS,
 } from '../../../../Styles/common'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router-dom'
-import { slide } from '../../../../Utils/slide'
+import { slide } from '../../../../Hooks/useSlide'
 
-function RecentBanner() {
-	// // 무료나눔 리스트
-	// const freeProduct = mainProduct.freeProduct
-	// // 중고거래 리스트
-	// const usedProduct = mainProduct.usedProduct
+function RecentBanner({ mainProduct }) {
+	const freeProduct = mainProduct.freeProduct
+	const usedProduct = mainProduct.usedProduct
 
-	// // 최근 등록상품 리스트
-	// const recentProduct = freeProduct.concat(usedProduct)
+	// 최근 등록상품 리스트
+	const recentProduct = usedProduct.concat(freeProduct)
+	const recentFilter = [...recentProduct]
+	recentFilter.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
 	const {
 		onTouchStart,
@@ -26,21 +25,9 @@ function RecentBanner() {
 		onMouseMove,
 		onMouseUp,
 		slider,
-		currentIdx,
-		setCurrentIdx,
-	} = slide(productsMock.slice(0, 4))
-
-	const nextSlide = () => {
-		if (currentIdx < productsMock.slice(0, 4).length - 1) {
-			setCurrentIdx(currentIdx + 1)
-		}
-	}
-
-	const prevSlide = () => {
-		if (currentIdx > 0) {
-			setCurrentIdx(currentIdx - 1)
-		}
-	}
+		nextSlide,
+		prevSlide,
+	} = slide(recentFilter.slice(0, 4))
 
 	const navigate = useNavigate()
 
@@ -57,14 +44,14 @@ function RecentBanner() {
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}
 				>
-					{productsMock.slice(0, 4).map((item, idx) => {
+					{recentFilter.slice(0, 4).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{productsMock.slice(0, 6).map((item, idx) => {
+								{recentFilter.slice(1, 7).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
-											recentIMG={`${item.image_url}`}
+											recentIMG={`${item.img_url}`}
 											onClick={() => navigate(`/detail/${item.idx}`)}
 										></S.SlideItem>
 									)
@@ -75,10 +62,10 @@ function RecentBanner() {
 				</S.SlideList>
 				<S.ButtonBox>
 					<button className="prev" onClick={prevSlide}>
-						<Arrow_Icon size="15" />
+						<Arrow_Icon size="15" color="white" />
 					</button>
 					<button className="next" onClick={nextSlide}>
-						<Arrow_Icon size="15" />
+						<Arrow_Icon size="15" color="white" />
 					</button>
 				</S.ButtonBox>
 			</S.SlideContainer>
@@ -154,7 +141,7 @@ const ButtonBox = styled.div`
 		transform: translateY(-50%);
 		border: none;
 		box-sizing: border-box;
-		background: ${({ theme }) => theme.COLOR.common.white};
+		background: ${({ theme }) => theme.COLOR.main};
 		cursor: pointer;
 	}
 
