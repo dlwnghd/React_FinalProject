@@ -4,36 +4,32 @@ import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-// import ProductApi from '../../../../../Apis/productApi'
+import ProductApi from '../../../../../Apis/productApi'
+import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
+import { useRecoilState } from 'recoil'
+import Modal from '../../../../../Components/Modal/Modal'
 
 function MyPrdItemBox({ item }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
-
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const { img_url, title, price, status, idx } = item
 
 	//물품 삭제
 	const onProductDel = async () => {
-		// try {
-		// 	await ProductApi.delete(idx)
-		// } catch (err) {}
-		console.log('삭제')
+		try {
+			const res = await ProductApi.delete(idx)
+			setIsOpenModal(true)
+		} catch (err) {}
 	}
-
-	//물품 수정
-
-	/*
-	1. 수정 및 삭제 뜨는 state가 onBlur일때는 false로 할수있는 로직
-	
-	채팅에 관한거
-	판매중을 눌렀을때 채팅하는 사람들의 목록이 떠야함
-	채팅 버튼은 채팅이 왔으면 표시를 해줄 예정
-	*/
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer posterIMG={img_url} status={status}>
+			<S.IMGContainer
+				posterIMG={img_url}
+				status={status}
+				onClick={() => navigate(`/detail/${idx}`)}
+			>
 				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
 			</S.IMGContainer>
 			<S.DescContainer>
@@ -49,6 +45,11 @@ function MyPrdItemBox({ item }) {
 								<div onClick={() => navigate(`${item.idx}`)}>수정</div>
 								<div onClick={onProductDel}>삭제</div>
 							</S.EditBox>
+						)}
+						{isOpenModal && (
+							<Modal size={'medium'}>
+								<S.ModalText>물품 삭제 성공~!</S.ModalText>
+							</Modal>
 						)}
 					</S.IconContainer>
 				</S.DescBox>
@@ -169,6 +170,13 @@ const EditBox = styled.div`
 		width: 6rem;
 	}
 `
+const ModalText = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+`
 const S = {
 	Wrapper,
 	IMGContainer,
@@ -178,4 +186,5 @@ const S = {
 	ButtonContainer,
 	IconContainer,
 	EditBox,
+	ModalText,
 }

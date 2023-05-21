@@ -22,13 +22,10 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	delete({ prod_idx }) {
-		return (
-			axiosInstance.delete(PATH),
-			{
-				params: { prod_idx },
-			}
-		)
+	delete(prod_idx) {
+		return axiosInstance.delete(PATH, {
+			params: { prod_idx },
+		})
 	},
 }
 

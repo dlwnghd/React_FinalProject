@@ -31,7 +31,7 @@ function MyPrdRegister() {
 	}
 
 	const { data, isLoading, error } = useGetMyPagePrdRegisterData()
-	console.log(data)
+
 	return (
 		<>
 			<S.Wrapper>
