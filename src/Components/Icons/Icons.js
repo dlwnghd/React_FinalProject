@@ -31,8 +31,8 @@ export const Search_Icon = ({ color, position }) => (
 	<CiSearch color={color} position={position} />
 ) // 검색
 
-export const Arrow_Icon = ({ size }) => (
-	<AiOutlineArrowRight size={size ? size : 50} />
+export const Arrow_Icon = ({ size, color }) => (
+	<AiOutlineArrowRight size={size ? size : 50} color={color} />
 ) // 슬라이드 화살표
 
 export const NotFillHeart_Icon = ({ size, onClick }) => (

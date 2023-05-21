@@ -1,12 +1,31 @@
 import styled from 'styled-components'
-import {
-	FlexAlignCSS,
-	FlexBetweenCSS,
-	FlexCenterCSS,
-} from '../../../../Styles/common'
+import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import Pagination from './Components/Pagination'
-import { slide } from '../../../../Utils/slide'
+import { slide } from '../../../../Hooks/useSlide'
+
+const bannerList = [
+	{
+		title: '지금 아니면 언제사?',
+		subTitle: '가득 들어갑니다. 첫 거래 POINT 완충',
+		img_url: '',
+	},
+	{
+		title: 'FREE MARKET',
+		subTitle: '역대급! 고대하던 네모난 고양이의 나눔',
+		img_url: '',
+	},
+	{
+		title: 'TRADE USED',
+		subTitle: '내께 너한테 가서 새로워진다!',
+		img_url: '',
+	},
+	{
+		title: '지금 사면 냥이득',
+		subTitle: '최근 3개월 전보다 50% 떨어진 건 처음이야!',
+		img_url: '',
+	},
+]
 
 function SlideBanner() {
 	const {
@@ -32,16 +51,16 @@ function SlideBanner() {
 					onMouseUp={onMouseUp}
 					ref={slider}
 				>
-					<S.SlideItems>
-						<div>
-							<h2>지금 아니면 언제사?</h2>
-							<p>가득 들어갑니다. 첫 거래 POINT 완충</p>
-						</div>
-						<S.DesignContainer>
-							<div></div>
-							<div></div>
-						</S.DesignContainer>
-					</S.SlideItems>
+					{bannerList.map((bnr, idx) => {
+						return (
+							<S.SlideItems key={idx}>
+								<div>
+									<h2>{bnr.title}</h2>
+									<p>{bnr.subTitle}</p>
+								</div>
+							</S.SlideItems>
+						)
+					})}
 				</S.SlideBox>
 				<Pagination currentIdx={currentIdx} />
 			</S.SlideList>
@@ -91,29 +110,9 @@ const SlideItems = styled.li`
 	}
 `
 
-const DesignContainer = styled.div`
-	position: absolute;
-	z-index: 1;
-	top: 0;
-	right: 0;
-	${FlexCenterCSS}
-	height: 100%;
-
-	& > div {
-		width: 13.8rem;
-		height: 100%;
-		background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	}
-
-	& > div:first-of-type {
-		background: ${({ theme }) => theme.COLOR.main};
-	}
-`
-
 const S = {
 	Wrapper,
 	SlideList,
 	SlideBox,
-	DesignContainer,
 	SlideItems,
 }

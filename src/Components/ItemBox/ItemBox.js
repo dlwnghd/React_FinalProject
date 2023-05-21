@@ -8,8 +8,6 @@ import { useState } from 'react'
 import { FlexBetweenCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
 
-// 컴포넌트 불러올 때, props로
-// 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
 function ItemBox({
 	posterPath,
 	title,
@@ -24,19 +22,9 @@ function ItemBox({
 
 	const onHeart = () => {
 		setIsHeart(prev => !prev)
-		/*
-			if (isHoverItemBox) {
-				setIsHoverItemBox(false)
-			}
-		*/
 	}
 
 	const onMouseEnter = e => {
-		/*
-			1. 하트가 클릭되었을 때, return
-			2. 하트 클릭을 다루는 state인 isHeart로 조건식 처리
-			3. ...
-		*/
 		setIsHoverItemBox(true)
 	}
 
@@ -99,8 +87,6 @@ const IMGContainer = styled.div`
 		left: 50%;
 		transform: translate(-50%, -50%);
 		color: ${({ theme }) => theme.COLOR.main};
-
-		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
 	}
 `
 
@@ -140,7 +126,6 @@ const DescContainer = styled.div`
 	flex-direction: column;
 	align-items: baseline;
 	margin-top: 2rem;
-	/* background: red; */
 `
 
 const DescBox = styled.div`

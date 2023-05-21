@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import Pagination from './Components/Pagination'
-import { slide } from '../../../../Utils/slide'
+import { slide } from '../../../../Hooks/useSlide'
 
 const bannerList = [
 	{
