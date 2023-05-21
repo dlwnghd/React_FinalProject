@@ -6,8 +6,7 @@ import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { useState } from 'react'
 
-function Images({ setImageFiles }) {
-	const [imageList, setImageList] = useState([])
+function Images({ setImageFiles, imageList, setImageList }) {
 	const [imgNum, setImgNum] = useState(false)
 	const pictureInput = useRef()
 

@@ -31,22 +31,8 @@ function CategoryItem(props) {
 						/>
 						<S.Label htmlFor={name}>{nameToLabel[name]}</S.Label>
 					</S.InputRadioWrap>
-					{/* <S.InputRadioWrap>
-						<S.Radio
-							id={'중고'}
-							type="radio"
-							name="category"
-							{...field}
-							{...rest}
-						/>
-						<S.Label htmlFor={'중고'}>중고거래</S.Label>
-					</S.InputRadioWrap> */}
 				</S.InputValueCheckBox>
 			</S.InputField>
-
-			{/* <S.StyledAlertText type="error">
-				{errors.category && errors.category.message}
-			</S.StyledAlertText> */}
 		</div>
 	)
 }

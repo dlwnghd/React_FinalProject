@@ -9,8 +9,8 @@ import { useQuery } from '@tanstack/react-query'
 import QUERY_KEY from '../../Consts/query.key'
 
 function Register() {
-	const [imageFile, setImageFiles] = useState()
-	const [detailData, setDetailData] = useState('')
+	const [imageFile, setImageFiles] = useState('')
+	const [imageList, setImageList] = useState([])
 
 	const { prod_idx } = useParams()
 
@@ -23,18 +23,24 @@ function Register() {
 		const { data, error, status, isLoading, isError } = useQuery(
 			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
 			() => getProductDetailData(),
-			// { staleTime: 1000 * 60 * 5 },
 		)
 		return { data, error, status, isLoading, isError }
 	}
-	const { data, error } = useGetProductDetailData()
 
-	console.log(data)
+	const { data: DetailData, isLoading, error } = useGetProductDetailData()
 
 	return (
 		<S.Wrapper>
-			<Images setImageFiles={setImageFiles} />
-			<Inputs imageFile={imageFile} />
+			<Images
+				setImageFiles={setImageFiles}
+				setImageList={setImageList}
+				imageList={imageList}
+			/>
+			<Inputs
+				imageFile={imageFile}
+				DetailData={DetailData}
+				setImageList={setImageList}
+			/>
 		</S.Wrapper>
 	)
 }

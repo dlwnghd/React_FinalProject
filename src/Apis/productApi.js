@@ -10,6 +10,13 @@ const ProductApi = {
 			},
 		})
 	},
+	editProduct(registerList) {
+		return axiosInstance.patch(PATH, registerList, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+	},
 	detail({ prod_idx }) {
 		return axiosInstance.get(PATH + '/detail', {
 			params: { prod_idx },

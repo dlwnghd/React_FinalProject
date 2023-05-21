@@ -15,8 +15,9 @@ import TagsItem from './InputComponents/TagsItem'
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
+import { useNavigate } from 'react-router-dom'
 
-function Inputs({ imageFile }) {
+function Inputs({ imageFile, DetailData, setImageList }) {
 	const {
 		control,
 		watch,
@@ -25,9 +26,9 @@ function Inputs({ imageFile }) {
 		setValue,
 		clearErrors,
 	} = useForm()
-
+	const navigate = useNavigate()
 	const watchedCategory = watch('category')
-
+	const [submitType, setSubmitType] = useState('등록')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [modalType, setModalType] = useState('')
 
@@ -37,15 +38,50 @@ function Inputs({ imageFile }) {
 
 	//동까지만 나오는 state
 	const [resultAddress, setResultAddress] = useState('')
+
 	//위도 경도
 	const [LatAndLng, setLatAndLng] = useState('')
 
 	//가격 콤마 찍는 함수
 	const priceToString = e => {
-		const price = e.target.value
-		const changePrice = Number(price.replaceAll(',', '')).toLocaleString()
-		setIntPrice(changePrice)
+		if (!isNaN(e)) {
+			const price = String(e)
+			const changePrice = Number(price.replaceAll(',', '')).toLocaleString()
+			setIntPrice(changePrice)
+		} else {
+			const price = e.target.value
+			const changePrice = Number(price.replaceAll(',', '')).toLocaleString()
+			setIntPrice(changePrice)
+		}
 	}
+
+	//수정
+	if (DetailData) {
+		const {
+			title,
+			price,
+			region,
+			category,
+			ProductsTags,
+			description,
+			img_url,
+			ProductImages,
+		} = DetailData.searchProduct
+
+		setValue('title', title)
+		setValue('description', description)
+		setValue('region', region)
+		if (hashArr.length === 0) {
+			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			setImageList(img => [...img, img_url])
+			ProductImages.map(Imgs => setImageList(img => [...img, Imgs.img_url]))
+			priceToString(price)
+			setResultAddress(() => region)
+			setValue('category', category ? '1' : '0')
+			setSubmitType(() => '수정')
+		}
+	}
+	console.log(DetailData)
 
 	const checkedCategory = () => {
 		const checkedNum = watchedCategory
@@ -80,6 +116,7 @@ function Inputs({ imageFile }) {
 
 	const onSubmit = async data => {
 		let price = 0
+
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
 		}
@@ -97,11 +134,26 @@ function Inputs({ imageFile }) {
 			formData.append('images', imageFile[i])
 		}
 
-		try {
-			const response = await ProductApi.register(formData)
-			console.log(response)
-			setIsOpenModal(true)
-		} catch (err) {}
+		if (submitType === '등록') {
+			for (let value of formData.values()) {
+				console.log({ value })
+			}
+			try {
+				const response = await ProductApi.register(formData)
+				console.log(response)
+				setIsOpenModal(true)
+			} catch (err) {}
+		}
+		if (submitType === '수정') {
+			formData.append('main_url', DetailData.searchProduct.img_url)
+			formData.append('img_url', DetailData.searchProduct.ProductImages)
+
+			try {
+				const response = await ProductApi.editProduct(formData)
+				console.log(response)
+				setIsOpenModal(true)
+			} catch (err) {}
+		}
 	}
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -145,12 +197,14 @@ function Inputs({ imageFile }) {
 									errors={errors}
 									name={'무료'}
 									field={field}
+									checked={watchedCategory === '1'}
 									value={'1'}
 								/>
 								<CategoryItem
 									errors={errors}
 									name={'중고'}
 									field={field}
+									checked={watchedCategory === '0'}
 									value={'0'}
 								/>
 							</S.CategoryContainer>
@@ -207,12 +261,14 @@ function Inputs({ imageFile }) {
 
 			{isOpenModal && modalType === 'isSuccess' && (
 				<Modal size={'medium'}>
-					<S.ModalText>물품 등록 성공~!</S.ModalText>
+					<S.ModalText>
+						{DetailData ? '물품 수정 성공~!' : '물품 등록 성공~!'}
+					</S.ModalText>
 				</Modal>
 			)}
 			<S.ButtonWrap>
 				<Button type="submit" style={{ margin: '4rem' }}>
-					수정 완료
+					{DetailData ? '수정 완료' : '등록 완료'}
 				</Button>
 				<Button style={{ margin: '4rem' }}>취소</Button>
 			</S.ButtonWrap>
