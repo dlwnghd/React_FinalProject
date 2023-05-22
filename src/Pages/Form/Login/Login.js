@@ -18,10 +18,11 @@ import AlertText from '../../../Components/AlertText/AlertText'
 
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
-import { useRecoilValue } from 'recoil'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import UserInfoService from '../../../Utils/userInfoService'
 import MESSAGE from '../../../Consts/message'
+import { useMutation } from '@tanstack/react-query'
+import { CircularProgress } from '@mui/material'
+import TokenService from '../../../Utils/tokenService'
 
 function Login() {
 	const navigate = useNavigate()
@@ -30,7 +31,7 @@ function Login() {
 
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const loginState = useRecoilValue(loginStateAtom)
+	const loginState = TokenService.getAccessToken()
 	const user = useUser()
 
 	const {
@@ -44,31 +45,37 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
+	const { mutateAsync, isLoading } = useMutation(
+		({ email, pw }) => UserApi.login({ email, pw }),
+		{
+			onSuccess: ({ data }) => {
+				user.login(data.tokenForHeader, data.user)
+				if (isSaveId) {
+					// 로그인 성공 시에만 아이디 저장
+					UserInfoService.setSaveId(email)
+				}
+				if (from) return navigate(from) // 이전 페이지 정보가 있다면 그 페이지로 돌아감
+				navigate('/') // 그게 아니라면 메인 페이지로 이동
+			},
+			onError: err => {
+				const { FAILURE, ERROR } = MESSAGE.LOGIN
+				try {
+					const {
+						message: { info },
+					} = err.response.data
+					setError(info === 'loginFailed' ? FAILURE : ERROR)
+				} catch (err) {
+					// setError하는 과정에서 에러가 발생할 수 있어
+					// 대비하여 ERROR로 텍스트를 띄웁니다.
+					setError(ERROR)
+				}
+			},
+		},
+	)
+
 	const onSubmit = async data => {
 		const { email, password: pw } = data
-
-		try {
-			const { data } = await UserApi.login({ email, pw })
-			user.login(data.tokenForHeader, data.user)
-			if (isSaveId) {
-				// 로그인 성공 시에만 아이디 저장
-				UserInfoService.setSaveId(email)
-			}
-			if (from) return navigate(from) // 이전 페이지 정보가 있다면 그 페이지로 돌아감
-			navigate('/') // 그게 아니라면 메인 페이지로 이동
-		} catch (err) {
-			const { FAILURE, ERROR } = MESSAGE.LOGIN
-			try {
-				const {
-					message: { info },
-				} = err.response.data
-				setError(info === 'loginFailed' ? FAILURE : ERROR)
-			} catch (err) {
-				// setError하는 과정에서 에러가 발생할 수 있어
-				// 대비하여 ERROR로 텍스트를 띄웁니다.
-				setError(ERROR)
-			}
-		}
+		await mutateAsync({ email, pw })
 	}
 
 	useEffect(() => {
@@ -119,7 +126,7 @@ function Login() {
 						<label htmlFor="saveId">아이디 저장</label>
 					</div>
 					<S.StyledButton type="submit" size={'full'} shape={'square'}>
-						로그인
+						{isLoading ? <CircularProgress size={25} /> : '로그인'}
 					</S.StyledButton>
 				</form>
 				<S.BottomBox>
@@ -173,6 +180,7 @@ const StyledInput = styled(Input)`
 `
 
 const StyledButton = styled(Button)`
+	${FlexCenterCSS}
 	margin-top: 1rem;
 `
 

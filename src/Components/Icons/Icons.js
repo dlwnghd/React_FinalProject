@@ -23,6 +23,7 @@ import {
 	AiOutlineDollarCircle,
 	AiOutlineFund,
 	AiOutlineDown,
+	AiOutlineCalendar,
 	AiFillSignal,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
@@ -87,6 +88,28 @@ export const Total_Icon = ({ size, color }) => (
 // 아래 꼬리없는 arrow
 export const Down_Icon = ({ size, color }) => (
 	<AiOutlineDown size={size} color={color} />
+)
+// 꼬리 없는 왼쪽 arrow
+export const Left_Arrow_Icon = ({ size, color, ...rest }) => (
+	<AiOutlineDown
+		size={size}
+		color={color}
+		style={{ transform: 'rotate(90deg)', cursor: 'pointer' }}
+		{...rest}
+	/>
+)
+// 꼬리 없는 오른쪽 arrow
+export const Right_Arrow_Icon = ({ size, color, ...rest }) => (
+	<AiOutlineDown
+		size={size}
+		color={color}
+		style={{ transform: 'rotate(-90deg)', cursor: 'pointer' }}
+		{...rest}
+	/>
+)
+// 캘린더
+export const Calendar_Icon = ({ size, color }) => (
+	<AiOutlineCalendar size={size} color={color} />
 )
 export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
 
