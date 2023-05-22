@@ -6,7 +6,7 @@ import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { useState } from 'react'
 
-function Images({ imageList, setImageList }) {
+function Images({ setImageFiles, imageList, setImageList }) {
 	const [imgNum, setImgNum] = useState(false)
 	const pictureInput = useRef()
 
@@ -16,30 +16,20 @@ function Images({ imageList, setImageList }) {
 
 	const onAddImg = e => {
 		const ImageLists = e.target.files
+		setImageFiles(ImageLists)
 		let ImageUrlLists = [...imageList]
-		console.log(ImageUrlLists)
+
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
 		}
-		setImgNum(() => false)
+
 		if (ImageUrlLists.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
-			setImgNum(() => true)
 		}
 
 		setImageList(ImageUrlLists)
 	}
-	// const onAddImg = e => {
-	// 	const ImageLists = e.target.files
-	// 	console.log(ImageLists)
-
-	// const reader = new FileReader()
-	// reader.readAsDataURL(ImageLists)
-	// reader.onloadend = () => {
-	// 	setImageList(reader.result || null)
-	// }
-	// }
 
 	//이미지 삭제
 	const DelViewImg = e => {
@@ -69,6 +59,7 @@ function Images({ imageList, setImageList }) {
 		//update state value
 		setImageList(imgItems)
 	}
+
 	return (
 		<S.TotalWrapper>
 			<MobileTitle>

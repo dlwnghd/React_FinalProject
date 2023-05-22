@@ -23,7 +23,7 @@ function AddProductButton() {
 	 * 상품 추가 기능
 	 */
 	const onAddProduct = () => {
-		navigate(`/register/지금라우팅이뭔가받아야하는상태이긴해서`)
+		navigate(`/register`)
 	}
 
 	return (

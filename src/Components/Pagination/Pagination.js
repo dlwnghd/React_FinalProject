@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {
@@ -12,6 +11,7 @@ import {
  * @param page - 현재페이지
  * @사용예시 - `<Pagination total={300} page={2} />`
  */
+
 function Pagination({ total, limit, page }) {
 	const numPages = Math.ceil(total / limit)
 
@@ -113,6 +113,5 @@ const Button = styled.button`
 		transform: revert;
 	}
 `
-
 
 export default Pagination

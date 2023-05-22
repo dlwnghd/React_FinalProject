@@ -83,10 +83,20 @@ function UserInfo() {
 			console.log(err)
 		}
 	}
-
 	const onSubmit = async editData => {
 		const formData = new FormData()
 		formData.append('profile_url', imgFile)
+
+		// FormData의 key 확인
+		for (let key of formData.keys()) {
+			console.log(key)
+		}
+
+		// FormData의 value 확인
+		for (let value of formData.values()) {
+			console.log(value)
+		}
+
 		const editUser = {
 			email: editData.email,
 			nickName: editData.nickName,

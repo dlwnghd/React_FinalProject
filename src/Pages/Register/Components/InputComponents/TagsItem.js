@@ -6,15 +6,7 @@ import Input from '../../../../Components/Input/Input'
 import AlertText from '../../../../Components/AlertText/AlertText'
 
 function TagsItem(props) {
-	const {
-		errors,
-		field,
-		hashArr,
-		hashReset,
-		deleteTagItem,
-		setHashReset,
-		onKeyDown,
-	} = props
+	const { errors, field, hashArr, deleteTagItem, ...rest } = props
 
 	return (
 		<div>
@@ -23,7 +15,7 @@ function TagsItem(props) {
 				<S.TagBox>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
-							<div>{hash.value}</div>
+							<div>{hash}</div>
 							<S.DelButton onClick={() => deleteTagItem(hash)}>
 								<ModalClose_icon size={17} />
 							</S.DelButton>
@@ -31,10 +23,9 @@ function TagsItem(props) {
 					))}
 					<S.StyledInput
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
-						field={field}
-						onKeyDown={onKeyDown}
-						value={hashReset}
-						onChange={e => setHashReset(e.target.value)}
+						status={errors.hash ? 'error' : 'default'}
+						{...field}
+						{...rest}
 					/>
 				</S.TagBox>
 			</S.InputField>
