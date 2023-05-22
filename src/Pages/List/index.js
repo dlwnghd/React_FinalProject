@@ -1,30 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Filter from '../../Components/Filter/Filter'
+import useGetProductList from '../../Hooks/Queries/get-productlist'
 import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
-import productsMock from '../../__mock__/Data/Product/product.data'
 import ProductList from './Components/ProductList'
 
 function List() {
+	// 현재 URL 기억 State (0: 무료, 1: 중고)
+	const currentURL = useLocation().pathname.includes('freeMarket') ? 1 : 0
+	// use-query 시작
+	const {
+		data,
+		isSuccess,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+		isFetching,
+	} = useGetProductList({
+		category: currentURL,
+	})
+
 	const listFilter = [
 		'최근 등록순',
 		'인기 높은순',
 		'높은 가격순',
 		'낮은 가격순',
 	]
-
-	// 현재 URL 기억 State (0: 무료, 1: 중고)
-	const currentURL = useLocation().pathname.includes('freeMarket') ? 1 : 0
-
-	const [totalList, setTotalList] = useState(
-		productsMock.filter(item => item.category === currentURL),
-	)
-
-	// URL이 달라질 때마다 토탈값 변경
-	useEffect(() => {
-		setTotalList(productsMock.filter(item => item.category === currentURL))
-	}, [currentURL])
 
 	// Filter 선택관리 State
 	const [filterOption, setFilterOption] = useState(listFilter[0])
@@ -54,13 +56,22 @@ function List() {
 			<S.ListContainer>
 				<S.MainContent>
 					<S.SearchContent>
-						<h3>{totalList.length}개의 상품</h3>
+						<h3>{isSuccess && data.pages[0].product.length}개의 상품</h3>
 						<Filter
 							filterArray={!currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
 						/>
 					</S.SearchContent>
-					<ProductList currentURL={currentURL} filterOption={filterOption} />
+					<ProductList
+						currentURL={currentURL}
+						filterOption={filterOption}
+						data={data}
+						isSuccess={isSuccess}
+						fetchNextPage={fetchNextPage}
+						isFetchingNextPage={isFetchingNextPage}
+						hasNextPage={hasNextPage}
+						isFetching={isFetching}
+					/>
 				</S.MainContent>
 			</S.ListContainer>
 		</S.ListWrapper>

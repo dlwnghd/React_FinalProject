@@ -18,8 +18,10 @@ const ProductApi = {
 			}
 		)
 	},
-	like(prod_idx) {
-		return axiosInstance.post(PATH + '/like', prod_idx)
+	readProductList(page, category = 0) {
+		return axiosInstance.get(`${PATH}/search`, {
+			params: { page, category, keyword: '' },
+		})
 	},
 }
 
