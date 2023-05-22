@@ -7,26 +7,31 @@ export const slide = products => {
 	const [startX, setStartX] = useState(0)
 	const [endX, setEndX] = useState(0)
 	const slider = useRef(null)
+	console.log(currentIdx)
 
 	// 슬라이딩 거리 제어
 	const onMove = () => {
 		const isMoved = endX - startX
 
-		if (isMoved > 100 && currentIdx > 0) {
+		if (isMoved > 100) {
 			prevSlide()
 		}
 
-		if (isMoved < -100 && currentIdx < products.length - 1) {
+		if (isMoved < -100) {
 			nextSlide()
 		}
 	}
 
 	// current 인덱스 상태관리
 	const nextSlide = () => {
-		setCurrentIdx(currentIdx + 1)
+		if (currentIdx < products.length - 1) {
+			setCurrentIdx(currentIdx + 1)
+		}
 	}
 	const prevSlide = () => {
-		setCurrentIdx(currentIdx - 1)
+		if (currentIdx > 0) {
+			setCurrentIdx(currentIdx - 1)
+		}
 	}
 
 	// 터치 및 마우스 clientX 상태관리

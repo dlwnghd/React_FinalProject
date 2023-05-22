@@ -38,7 +38,7 @@ const PaginationBox = styled.div`
 	}
 
 	& > .active {
-		background: ${({ theme }) => theme.COLOR.common.white};
+		background: ${({ theme }) => theme.COLOR.common.gray[100]};
 	}
 `
 

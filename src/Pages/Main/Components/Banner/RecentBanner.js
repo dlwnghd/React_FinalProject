@@ -5,10 +5,13 @@ import {
 	GridCenterCSS,
 } from '../../../../Styles/common'
 import { Arrow_Icon } from '../../../../Components/Icons/Icons'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Hooks/useSlide'
 
 function RecentBanner({ mainProduct }) {
+	const location = useLocation()
+	const validLocation = location?.pathname.split('/')[1]
+
 	const freeProduct = mainProduct.freeProduct
 	const usedProduct = mainProduct.usedProduct
 
@@ -27,13 +30,13 @@ function RecentBanner({ mainProduct }) {
 		slider,
 		nextSlide,
 		prevSlide,
-	} = slide(recentFilter.slice(0, 4))
+	} = slide(recentFilter.slice(0, 2))
 
 	const navigate = useNavigate()
 
 	return (
 		<S.Wrapper>
-			<S.Title>최근 등록 상품</S.Title>
+			<S.Title alignDetail={validLocation}>최근 상품 보러가기</S.Title>
 			<S.SlideContainer>
 				<S.SlideList
 					ref={slider}
@@ -44,10 +47,10 @@ function RecentBanner({ mainProduct }) {
 					onMouseMove={onMouseMove}
 					onMouseUp={onMouseUp}
 				>
-					{recentFilter.slice(0, 4).map((item, idx) => {
+					{recentFilter.slice(0, 2).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{recentFilter.slice(1, 7).map((item, idx) => {
+								{recentFilter.splice(0, 6).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
@@ -80,7 +83,8 @@ const Wrapper = styled.section`
 `
 
 const Title = styled.h3`
-	text-align: center;
+	text-align: ${({ alignDetail }) =>
+		alignDetail === 'detail' ? 'left' : 'center'};
 `
 
 const SlideContainer = styled.div`
