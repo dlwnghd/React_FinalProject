@@ -4,6 +4,7 @@ import Calendar from './Calendar'
 import { FlexBetweenCSS } from '../../../../../../../../Styles/common'
 import Button from '../../../../../../../../Components/Button/Button'
 import { useState, useEffect } from 'react'
+import getFormattedDate from '../../../../../../../../Utils/getFormattedDate'
 
 function FilterSection({ filter, setFilter, onSearch }) {
 	const [category, setCategory] = useState(filter.category)
@@ -13,13 +14,17 @@ function FilterSection({ filter, setFilter, onSearch }) {
 	const onClickGetBankList = () => {
 		// 조회 버튼을 눌렀을 때 일괄적으로 setFilter
 		setFilter({ category, start, end })
-		onSearch() // refetch
 	}
+
+	useEffect(() => {
+		onSearch() // refetch
+	}, [filter])
 
 	useEffect(() => {
 		// 날짜 선택 유효성 체크
 		if (start > end) {
-			setEnd(start)
+			const [year, month] = start.split('-')
+			setEnd(getFormattedDate(new Date(year, month, 0), { day: true }))
 		}
 	}, [start, end])
 
