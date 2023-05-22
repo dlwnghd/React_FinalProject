@@ -9,7 +9,7 @@ const bankMock = {
 	count: 0,
 }
 // 2023년 5월 데이터
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
 	bankMock.payList.push({
 		idx: Math.floor(Math.random() * 100000),
 		createdAt: '2023-05-22',
@@ -37,7 +37,7 @@ for (let i = 0; i < 5; i++) {
 	})
 }
 // 2023년 3월 데이터
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 30; i++) {
 	bankMock.payList.push({
 		idx: Math.floor(Math.random() * 100000),
 		createdAt: '2023-03-22',

@@ -11,7 +11,7 @@ export const getBankList = rest.get(
 
 		const filteredPayList = bankMock.payList
 			.filter(data => data.createdAt >= start && data.createdAt <= end)
-			.slice((page - 1) * 10, (page - 1) * 10 + 10)
+			.slice((page - 1) * 20, (page - 1) * 20 + 20)
 
 		const makeData = {
 			...bankMock,
