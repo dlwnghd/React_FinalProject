@@ -10,6 +10,9 @@ const ProductApi = {
 			},
 		})
 	},
+	confirm() {
+		return axiosInstance.get(PATH)
+	},
 	delete(prod_idx) {
 		return (
 			axiosInstance.delete(PATH),
@@ -17,6 +20,9 @@ const ProductApi = {
 				params: { prod_idx },
 			}
 		)
+	},
+	searchList({ keyword, page }) {
+		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
 	},
 }
 
