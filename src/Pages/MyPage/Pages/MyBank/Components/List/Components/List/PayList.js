@@ -1,10 +1,13 @@
 import styled from 'styled-components'
 import PayListItem from './ItemBox/PayListItem'
-import { FlexCenterCSS } from '../../../../../../../../Styles/common'
+import {
+	ColumnNumberCSS,
+	FlexCenterCSS,
+	GridCenterCSS,
+} from '../../../../../../../../Styles/common'
 
 function PayList({ status, category, payList }) {
 	const categoryText = category === 'seller' ? '판매내역' : '구매내역'
-	console.log(payList)
 
 	if (status === 'loading')
 		return (
@@ -33,7 +36,7 @@ function PayList({ status, category, payList }) {
 			) : (
 				<S.Container>
 					{payList.map((item, i) => (
-						<PayListItem item={item} />
+						<PayListItem key={i} item={item} category={category} />
 					))}
 				</S.Container>
 			)}
@@ -50,7 +53,17 @@ const Wrapper = styled.div`
 	border-radius: 0.6rem;
 `
 
-const Container = styled.div``
+const Container = styled.div`
+	width: 100%;
+	padding: 1rem;
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(1)}
+		column-gap: 1rem;
+	}
+`
 
 const EmptyListText = styled.div`
 	margin: auto;

@@ -4,9 +4,12 @@ import AmountSection from './Components/Amount'
 
 import { useState } from 'react'
 import getFormattedDate from '../../../../Utils/getFormattedDate'
-import useGetMyPageBankList from '../../../../Hooks/Queries/get-myPageBank'
+// import useGetMyPageBankList from '../../../../Hooks/Queries/get-myPageBank'
 import FilterSection from './Components/List/Components/Select'
 import PayList from './Components/List/Components/List/PayList'
+import { useEffect } from 'react'
+import axios from 'axios'
+import { useCallback } from 'react'
 
 function MyBank() {
 	// 처음 세팅은 오늘 날짜를 기준으로
@@ -19,11 +22,37 @@ function MyBank() {
 		end: getFormattedDate(today, { day: true }),
 	})
 
-	const { data, status, refetch } = useGetMyPageBankList(filter)
+	// const { data, status, refetch } = useGetMyPageBankList(filter)
+
+	// const getNewBankList = () => {
+	// 	refetch()
+	// }
+
+	// Mock----------------------------------------------------
+	const [data, setData] = useState({})
+
+	console.log('filter ----->', filter)
+
+	const getData = useCallback(async () => {
+		try {
+			const { data } = await axios.get('/api/user/my-page/account-book', {
+				params: filter,
+			})
+			console.log(data)
+			setData(data)
+		} catch (err) {
+			console.log(err)
+		}
+	}, [filter])
+
+	useEffect(() => {
+		getData()
+	}, [])
 
 	const getNewBankList = () => {
-		refetch()
+		getData()
 	}
+	// ----------------------------------------------------------------
 
 	return (
 		<S.Wrapper>
