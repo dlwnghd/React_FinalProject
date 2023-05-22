@@ -26,6 +26,8 @@ function SearchResult({
 		}
 	}
 
+	console.log(hasNextPage)
+
 	useEffect(() => {
 		const observer = new IntersectionObserver(observerCallback, {
 			threshold: 1,
@@ -69,8 +71,9 @@ const Wrapper = styled.div`
 	position: relative;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)}
+	row-gap: 6rem;
 
-	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;
 	}

@@ -23,7 +23,9 @@ const useGetSearchResultData = word => {
 			// allPages : 현재 pages 데이터(배열)에 담긴 총량
 			getNextPageParam: (lastPage, allPages) => {
 				const nextPage = allPages.length + 1
-				return lastPage.product.length !== 0 ? nextPage : undefined
+				const totalPage = lastPage.pagination.totalPage
+
+				return nextPage > totalPage ? undefined : nextPage
 			},
 		},
 	)
