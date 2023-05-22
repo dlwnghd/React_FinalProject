@@ -12,12 +12,11 @@ import { useRecoilState } from 'recoil'
 import { isOnSideBar } from '../../Atoms/sideBar.atom'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Detail() {
 	//서버로부터 상품들을 요청하고 idx값과 일치하는 것 찾기
 	const { idx } = useParams()
-
-	// ex ) const findproduct = productsMock.find(item => item.idx === idx)
 
 	const [product, setProduct] = useState(productsMock[0])
 	const { ProductImages } = product
@@ -26,6 +25,11 @@ function Detail() {
 	useEffect(() => {
 		setOnSideBar(false)
 	}, [idx])
+
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
+
+	if (isLoading && status === 'loading') return
+	if (error) return
 
 	return (
 		<S.Wrapper>
@@ -39,7 +43,7 @@ function Detail() {
 			<S.PrdListBox>
 				<RecentPrdList>
 					<span>최근 본 상품 보러가기</span>
-					<RecentBanner />
+					<RecentBanner mainProduct={mainProduct} />
 				</RecentPrdList>
 				<AnotherPrdList>
 					<span>다른 상품 보러가기</span>

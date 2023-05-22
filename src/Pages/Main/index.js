@@ -9,24 +9,12 @@ import MainBanner from './Components/Banner/MainBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
 import RecentBanner from './Components/Banner/RecentBanner'
-import ProductApi from '../../Apis/productApi'
-import { useQuery } from '@tanstack/react-query'
-import QUERY_KEY from '../../Consts/query.key'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Main() {
 	const navigate = useNavigate()
 
-	const getMainPageData = async () => {
-		const res = await ProductApi.confirm()
-		return res.data
-	}
-
-	const {
-		data: mainProduct,
-		error,
-		status,
-		isLoading,
-	} = useQuery([QUERY_KEY.GET_MAINPAGE_MAIN_DATA], () => getMainPageData(), {})
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
 	if (isLoading && status === 'loading') return
 	if (error) return
