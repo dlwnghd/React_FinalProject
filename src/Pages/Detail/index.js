@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil'
 import { isOnSideBar } from '../../Atoms/sideBar.atom'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Detail() {
 	//서버로부터 상품들을 요청하고 idx값과 일치하는 것 찾기
@@ -27,6 +28,11 @@ function Detail() {
 		setOnSideBar(false)
 	}, [idx])
 
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
+
+	if (isLoading && status === 'loading') return
+	if (error) return
+
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
@@ -38,10 +44,10 @@ function Detail() {
 			</Maps>
 			<S.PrdListBox>
 				<RecentPrdList>
-					<RecentBanner />
+					<RecentBanner mainProduct={mainProduct} />
 				</RecentPrdList>
 				<AnotherPrdList>
-					<span>다른 상품 보러가기</span>
+					<h3>다른 상품 보러가기</h3>
 					<div>다른 상품 리스트 영역</div>
 				</AnotherPrdList>
 			</S.PrdListBox>
@@ -73,7 +79,6 @@ const MainContainer = styled.section`
 const Maps = styled.div`
 	width: 100%;
 	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-
 	height: 25rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
@@ -94,23 +99,14 @@ const PrdListBox = styled.div`
 const RecentPrdList = styled.div`
 	width: 100%;
 	margin-bottom: 6rem;
-
-	& > span {
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	}
-	& > div {
-		width: 100%;
-		height: 20rem;
-		border: 1px solid black;
-	}
 `
 const AnotherPrdList = styled.div`
 	width: 100%;
-	& > span {
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+
+	& > h3 {
+		margin-bottom: 1rem;
 	}
+
 	& > div {
 		width: 100%;
 		height: 20rem;

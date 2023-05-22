@@ -87,12 +87,13 @@ const Wrapper = styled.section`
 `
 
 const Title = styled.h3`
-	text-align: center;
+	text-align: ${({ alignDetail }) =>
+		alignDetail === 'detail' ? 'left' : 'center'};
+	margin-bottom: 1rem;
 `
 
 const SlideContainer = styled.div`
 	position: relative;
-	margin-top: 4rem;
 `
 
 const SlideList = styled.div`
@@ -147,7 +148,6 @@ const ButtonBox = styled.div`
 	& > .prev {
 		left: 0;
 		border-top-right-radius: 1rem;
-		border-bottom-right-radius: 1rem;
 
 		& > svg {
 			transform: rotate(180deg);
@@ -156,8 +156,6 @@ const ButtonBox = styled.div`
 
 	& > .next {
 		right: 0;
-		border-top-left-radius: 1rem;
-		border-bottom-left-radius: 1rem;
 	}
 `
 

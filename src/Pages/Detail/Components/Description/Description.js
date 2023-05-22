@@ -42,9 +42,6 @@ function Description({ product }) {
 					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						채팅
 					</S.StyledButton>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
-						결제
-					</S.StyledButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
 			<hr />
@@ -157,10 +154,6 @@ const StyledButton = styled(Button)`
 	height: 6rem;
 	border: none;
 	box-sizing: border-box;
-
-	&:first-of-type {
-		margin-right: 1rem;
-	}
 `
 
 const S = {
