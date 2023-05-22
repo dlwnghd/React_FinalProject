@@ -76,37 +76,38 @@ function Calendar({ type, date, setDate }) {
 				<span>{selectedDate.formattedDate}</span>
 				<Calendar_Icon size={16} />
 			</S.BoxContainer>
-
-			<S.SelectContainer state={isOpenOption}>
-				<S.SelectHeader>
-					<S.ArrowBtn
-						type={'prev'}
-						onClick={() => onClickYear(selectedDate.year, 'prev')}
-					>
-						<Left_Arrow_Icon />
-					</S.ArrowBtn>
-					<span>{selectedDate.year}년</span>
-					<S.ArrowBtn
-						type={'next'}
-						disabled={today.year === parseInt(selectedDate.year)}
-						onClick={() => onClickYear(selectedDate.year, 'next')}
-					>
-						<Right_Arrow_Icon />
-					</S.ArrowBtn>
-				</S.SelectHeader>
-				{monthArr.map(mon => (
-					<S.SelectItem
-						key={mon}
-						state={mon === parseInt(selectedDate.month)}
-						disabled={
-							today.year === parseInt(selectedDate.year) && mon > today.month
-						}
-						onClick={() => onClickMonth(mon)}
-					>
-						{mon}월
-					</S.SelectItem>
-				))}
-			</S.SelectContainer>
+			{isOpenOption && (
+				<S.SelectContainer state={isOpenOption}>
+					<S.SelectHeader>
+						<S.ArrowBtn
+							type={'prev'}
+							onClick={() => onClickYear(selectedDate.year, 'prev')}
+						>
+							<Left_Arrow_Icon />
+						</S.ArrowBtn>
+						<span>{selectedDate.year}년</span>
+						<S.ArrowBtn
+							type={'next'}
+							disabled={today.year === parseInt(selectedDate.year)}
+							onClick={() => onClickYear(selectedDate.year, 'next')}
+						>
+							<Right_Arrow_Icon />
+						</S.ArrowBtn>
+					</S.SelectHeader>
+					{monthArr.map(mon => (
+						<S.SelectItem
+							key={mon}
+							state={mon === parseInt(selectedDate.month)}
+							disabled={
+								today.year === parseInt(selectedDate.year) && mon > today.month
+							}
+							onClick={() => onClickMonth(mon)}
+						>
+							{mon}월
+						</S.SelectItem>
+					))}
+				</S.SelectContainer>
+			)}
 		</S.Wrapper>
 	)
 }
@@ -139,8 +140,10 @@ const BoxContainer = styled.div`
 const SelectContainer = styled.ul`
 	display: ${({ state }) => (state ? 'grid' : 'none')};
 	position: absolute;
+	z-index: 10;
 	top: 3.5rem;
 	width: 100%;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 0.5rem;
 	margin-top: 0.8rem;
