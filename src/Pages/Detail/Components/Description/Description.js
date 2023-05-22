@@ -6,10 +6,13 @@ import {
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
 import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
+import useChatModal from '../../../../Hooks/useChatModal'
 
 function Description({ product }) {
 	const { title, price, description, ProductsTags, category, status } = product
 	const [like, setLike] = useState(false)
+	const { openChat } = useChatModal()
+
 	const navigate = useNavigate()
 
 	const onClick = () => {
@@ -51,7 +54,7 @@ function Description({ product }) {
 				</S.HeartBox>
 
 				<S.ButtonBox>
-					<button>채팅</button>
+					<button onClick={openChat}>채팅</button>
 					<button>결제</button>
 				</S.ButtonBox>
 			</S.OptionContainer>
