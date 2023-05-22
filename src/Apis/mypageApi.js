@@ -7,7 +7,6 @@ const MyPageApi = {
 		return axiosInstance.get(PATH)
 	},
 	productList({ page, category }) {
-		console.log(page, category)
 		return axiosInstance.get(PATH + '/product-list', {
 			params: { page, category },
 		})

@@ -29,7 +29,6 @@ function Images({ setImageFiles, imageList, setImageList }) {
 		}
 
 		setImageList(ImageUrlLists)
-		console.log(imageList)
 	}
 
 	//이미지 삭제

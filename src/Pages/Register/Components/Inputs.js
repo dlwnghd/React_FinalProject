@@ -81,7 +81,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 			setSubmitType(() => '수정')
 		}
 	}
-	console.log(DetailData)
 
 	const checkedCategory = () => {
 		const checkedNum = watchedCategory
@@ -116,7 +115,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 
 	const onSubmit = async data => {
 		let price = 0
-
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
 		}
@@ -125,7 +123,7 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 
 		const formData = new FormData()
 		formData.append('title', data.title)
-		formData.append('price', price)
+		formData.append('price', Number(price))
 		formData.append('description', data.description)
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
@@ -135,9 +133,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		}
 
 		if (submitType === '등록') {
-			for (let value of formData.values()) {
-				console.log({ value })
-			}
 			try {
 				const response = await ProductApi.register(formData)
 				console.log(response)

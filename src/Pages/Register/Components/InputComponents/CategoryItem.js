@@ -5,16 +5,10 @@ import AlertText from '../../../../Components/AlertText/AlertText'
 function CategoryItem(props) {
 	const { errors, name, field, checkedCategory, ...rest } = props
 
-	//name이 무료 혹은 중고 이런식으로 온다.
 	const nameToLabel = {
 		무료: '무료나눔',
 		중고: '중고거래',
 	}
-
-	// const id = {
-	// 	: '상품 제목을 입력해주세요.',
-	// 	description: '상품 설명을 입력해주세요.',
-	// }
 
 	return (
 		<div>

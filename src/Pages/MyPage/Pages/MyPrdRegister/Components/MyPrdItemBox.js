@@ -4,10 +4,11 @@ import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ProductApi from '../../../../../Apis/productApi'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import { useRecoilState } from 'recoil'
 import Modal from '../../../../../Components/Modal/Modal'
+// import { useMutation } from '@tanstack/react-query'
+import ProductApi from '../../../../../Apis/productApi'
 
 function MyPrdItemBox({ item }) {
 	const navigate = useNavigate()
@@ -15,14 +16,30 @@ function MyPrdItemBox({ item }) {
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const { img_url, title, price, status, idx } = item
 
+	// const deletProductData = async idx => {
+	// 	const res = await ProductApi.delete(idx)
+	// 	return res.data
+	// }
+
+	// const useDeletProductData = idx => {
+	// 	const { data, error, status, isLoading, isError } = useMutation(() =>
+	// 		deletProductData(idx),
+	// 	)
+	// 	return { data, error, status, isLoading, isError }
+	// }
+
 	//물품 삭제
+	//useMutation 같은 경우는 잠깐 중지
+	// const onProductDel = () => {
+	// 	const { isLoading } = useDeletProductData(idx)
+	// 	console.log(isLoading)
+	// }
 	const onProductDel = async () => {
 		try {
-			const res = await ProductApi.delete(idx)
+			await ProductApi.delete(idx)
 			setIsOpenModal(true)
 		} catch (err) {}
 	}
-
 	return (
 		<S.Wrapper>
 			<S.IMGContainer
