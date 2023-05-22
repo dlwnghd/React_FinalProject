@@ -58,35 +58,36 @@ export default Detail
 
 const Wrapper = styled.section`
 	${WidthAutoCSS}
-	margin: 12rem auto;
-	${GridCenterCSS}
-	${ColumnNumberCSS(1)}
+	margin: 6rem auto;
 
-	@media screen and (max-width:${({ theme }) => theme.MEDIA.tablet}) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		margin: 3rem auto;
 	}
 `
 
 const MainContainer = styled.section`
+	width: 100%;
 	${GridCenterCSS}
 	${ColumnNumberCSS(2)}
+	margin-bottom:6rem;
 
-	@media screen and (max-width:${({ theme }) => theme.MEDIA.tablet}) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(1)}
 	}
 `
 const Maps = styled.div`
 	width: 100%;
-	/* border: 1px solid black; */
 	background: ${({ theme }) => theme.COLOR.common.gray[100]};
+
 	height: 25rem;
+
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 100%;
 	}
 `
 const PrdListBox = styled.div`
 	width: 100%;
-	/* border: 1px solid black; */
+	margin: 6rem 0;
 
 	${GridCenterCSS}
 	${ColumnNumberCSS(1)}
@@ -97,6 +98,7 @@ const PrdListBox = styled.div`
 `
 const RecentPrdList = styled.div`
 	width: 100%;
+	margin-bottom: 6rem;
 
 	& > span {
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
