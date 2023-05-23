@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { PaginationArrowSingle_Icon } from '../Icons/Icons'
+import { FlexCenterCSS } from '../../Styles/common'
 
 /**
  * @param total - 전체 물품 수
@@ -85,11 +86,9 @@ function Pagination({ total, limit, perPageItemCount, setPage }) {
 }
 
 const Nav = styled.nav`
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	${FlexCenterCSS}
 	gap: 4px;
-	margin: 16px;
+	margin-top: 4rem;
 `
 
 const Button = styled.button`
