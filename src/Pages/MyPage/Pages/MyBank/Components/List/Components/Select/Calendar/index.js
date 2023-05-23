@@ -140,7 +140,7 @@ const BoxContainer = styled.div`
 const SelectContainer = styled.ul`
 	display: ${({ state }) => (state ? 'grid' : 'none')};
 	position: absolute;
-	z-index: 10;
+	z-index: 9999;
 	top: 3.5rem;
 	width: 100%;
 	background-color: ${({ theme }) => theme.COLOR.common.white};
