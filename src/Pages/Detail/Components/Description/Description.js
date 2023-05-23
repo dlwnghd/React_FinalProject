@@ -5,9 +5,11 @@ import {
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
 import {
+	ColumnNumberCSS,
 	FlexAlignCSS,
 	FlexBetweenCSS,
 	FlexCenterCSS,
+	GridCenterCSS,
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 
@@ -94,6 +96,8 @@ const TitleContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
+	width: 100%;
+
 	& > div {
 		margin-bottom: 3rem;
 	}
@@ -124,14 +128,17 @@ const HeartBox = styled.div`
 `
 
 const TagBox = styled.ul`
-	${FlexAlignCSS}
+	${GridCenterCSS}
+	${ColumnNumberCSS(3)}
+	gap:1rem;
 `
 
 const TagItem = styled.li`
 	cursor: pointer;
-	padding: 0.5rem 2rem;
+	width: 100%;
+	height: 4rem;
+	${FlexCenterCSS}
 	border-radius: 2rem;
-	margin-right: 1rem;
 	background: ${({ theme }) => theme.COLOR.common.gray[100]};
 	color: ${({ theme }) => theme.COLOR.common.black};
 
