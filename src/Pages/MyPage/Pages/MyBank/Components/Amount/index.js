@@ -3,23 +3,23 @@ import { ColumnNumberCSS, FlexAlignCSS } from '../../../../../../Styles/common'
 import AmountItemBox from './Components/Box/ItemBox'
 import AmountTotalBox from './Components/Box/TotalBox'
 
-function AmountSection() {
-	const amount = {
-		totalSaleAmount: '10000',
-		totalPurchaseAmount: '30000',
-		thisMonthSaleAmount: '3000',
-		thisMonthPurchaseAmount: '5000',
-	}
-
+function AmountSection({ status, amount }) {
 	const totalDifferenceAmount =
 		parseInt(amount?.totalSaleAmount || 0) -
-		parseInt(amount?.totalPurchaseAmount || 0)
+		parseInt(amount?.totalPurchaseAmount || 0) // 총 거래 차액
 
 	const totalPrice = {
 		sale: amount?.totalSaleAmount || 0,
 		purchase: amount?.totalPurchaseAmount || 0,
 		difference: totalDifferenceAmount,
-	}
+	} // 거래 금액 정보(판매 금액, 구매 금액, 차액)
+
+	if (status === 'loading')
+		return (
+			<S.Wrapper>
+				<div>{/* 로딩 중 보여줄 컴포넌트 */}</div>
+			</S.Wrapper>
+		)
 
 	return (
 		<S.Wrapper>

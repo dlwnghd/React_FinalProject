@@ -16,6 +16,11 @@ const MyPageApi = {
 			params: { page },
 		})
 	},
+	getBankList({ page, category, start, end }) {
+		return axiosInstance.get(PATH + '/account-book', {
+			params: { page, category, start, end },
+		})
+	},
 }
 
 export default MyPageApi
