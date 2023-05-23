@@ -15,7 +15,6 @@ function List() {
 		isSuccess,
 		hasNextPage,
 		fetchNextPage,
-		isFetchingNextPage,
 		isFetching,
 	} = useGetProductList({
 		category: currentURL,
@@ -63,13 +62,10 @@ function List() {
 						/>
 					</S.SearchContent>
 					<ProductList
-						currentURL={currentURL}
-						filterOption={filterOption}
 						data={data}
 						isSuccess={isSuccess}
-						fetchNextPage={fetchNextPage}
-						isFetchingNextPage={isFetchingNextPage}
 						hasNextPage={hasNextPage}
+						fetchNextPage={fetchNextPage}
 						isFetching={isFetching}
 					/>
 				</S.MainContent>

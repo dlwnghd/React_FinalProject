@@ -5,16 +5,16 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 
+// 스켈레톤의 갯수
+// 	전체물품 수 - 현재 화면에 랜더링된 물품 수 = Skeleton으로 나타낼 수 있는 수
+// 	=> 첫번째 페이지를 호출할때는 몇개의 데이터가 올지 모름(고정 갯수 지정❓)
 const lengthArray = new Array(20).fill(0)
 
 function ProductList({
-	currentURL,
-	filterOption,
 	data,
 	isSuccess,
-	fetchNextPage,
-	isFetchingNextPage,
 	hasNextPage,
+	fetchNextPage,
 	isFetching,
 }) {
 	const observerElem = useRef(null) // 타겟 요소
@@ -41,8 +41,6 @@ function ProductList({
 
 	const navigate = useNavigate()
 
-	console.log('isFetching', isFetching)
-
 	return (
 		<S.ProductListWrapper>
 			{isSuccess &&
@@ -61,7 +59,7 @@ function ProductList({
 						)
 					}),
 				)}
-			{hasNextPage && isFetching ? (
+			{isFetching ? (
 				<>
 					{lengthArray.map((i, idx) => {
 						return <MainSkeleton key={idx} />

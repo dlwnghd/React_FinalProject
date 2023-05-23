@@ -8,7 +8,7 @@ const getProductsInfo = async ({ page, category }) => {
 }
 
 const useGetProductList = ({ category }) => {
-	const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
+	const { data, isSuccess, hasNextPage, fetchNextPage, isFetching } =
 		useInfiniteQuery(
 			[QUERY_KEY.GET_PRODUCT_LIST, { category }],
 			({ pageParam = 1 }) => getProductsInfo({ page: pageParam, category }),
@@ -21,7 +21,13 @@ const useGetProductList = ({ category }) => {
 				},
 			},
 		)
-	return { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage }
+	return {
+		data,
+		isSuccess,
+		hasNextPage,
+		fetchNextPage,
+		isFetching,
+	}
 }
 
 export default useGetProductList
