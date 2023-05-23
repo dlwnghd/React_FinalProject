@@ -18,6 +18,7 @@ function MyPrdRegister() {
 
 	const { data, isLoading, error } = useGetMyPagePrdRegisterData(category)
 
+	console.log(category, '무료면 1임')
 	return (
 		<>
 			{isLoading ? (
@@ -32,7 +33,9 @@ function MyPrdRegister() {
 
 						<S.PrdList>
 							{data?.products.map((item, idx) => {
-								return <MyPrdItemBox key={idx} item={item} />
+								return (
+									<MyPrdItemBox key={idx} item={item} category={category} />
+								)
 							})}
 						</S.PrdList>
 					</S.Wrapper>

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import { Down_Icon } from '../../../../../Components/Icons/Icons'
 
@@ -14,8 +14,9 @@ function TypeSelectBox({ setCategory }) {
 		const selected = e.target.textContent
 		setType(selected)
 		setCategory(selected === '무료상품' ? 1 : 0)
+		console.log(selected)
 	}
-
+	useEffect(() => {}, [])
 	return (
 		<S.Wrapper onClick={() => setIsOpenSlide(prev => !prev)}>
 			<S.BoxContainer>

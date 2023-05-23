@@ -7,39 +7,34 @@ import { useNavigate } from 'react-router-dom'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import { useRecoilState } from 'recoil'
 import Modal from '../../../../../Components/Modal/Modal'
-// import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../../Apis/productApi'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import QUERY_KEY from '../../../../../Consts/query.key'
+// import { useMutation } from '@tanstack/react-query'
 
-function MyPrdItemBox({ item }) {
+function MyPrdItemBox({ item, category }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const { img_url, title, price, status, idx } = item
 
-	// const deletProductData = async idx => {
-	// 	const res = await ProductApi.delete(idx)
-	// 	return res.data
-	// }
+	const queryClient = useQueryClient()
 
-	// const useDeletProductData = idx => {
-	// 	const { data, error, status, isLoading, isError } = useMutation(() =>
-	// 		deletProductData(idx),
-	// 	)
-	// 	return { data, error, status, isLoading, isError }
-	// }
+	const { mutate, isLoading } = useMutation(idx => ProductApi.delete(idx), {
+		onSuccess: () => {
+			setIsOpenModal(() => true)
+			queryClient.invalidateQueries([
+				QUERY_KEY.GET_MYPAGE_REGISTER_DATA,
+				category,
+			])
+		},
+		onError: () => {},
+	})
 
-	//물품 삭제
-	//useMutation 같은 경우는 잠깐 중지
-	// const onProductDel = () => {
-	// 	const { isLoading } = useDeletProductData(idx)
-	// 	console.log(isLoading)
-	// }
-	const onProductDel = async () => {
-		try {
-			await ProductApi.delete(idx)
-			setIsOpenModal(true)
-		} catch (err) {}
+	const onProductDel = () => {
+		mutate(idx)
 	}
+
 	return (
 		<S.Wrapper>
 			<S.IMGContainer
@@ -59,7 +54,9 @@ function MyPrdItemBox({ item }) {
 						/>
 						{editOption && (
 							<S.EditBox>
-								<div onClick={() => navigate(`${item.idx}`)}>수정</div>
+								<div onClick={() => navigate(`/register/${item.idx}`)}>
+									수정
+								</div>
 								<div onClick={onProductDel}>삭제</div>
 							</S.EditBox>
 						)}

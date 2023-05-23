@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { FlexAlignCSS, FlexCenterCSS } from '../../../Styles/common'
+import { FlexCenterCSS } from '../../../Styles/common'
 import { Controller, useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import Button from '../../../Components/Button/Button'
@@ -16,6 +16,7 @@ import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
 import { useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 
 function Inputs({ imageFile, DetailData, setImageList }) {
 	const {
@@ -113,6 +114,21 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		checkedCategory()
 	}, [watchedCategory])
 
+	const { mutate, isLoading } =
+		submitType === '등록'
+			? useMutation(formData => ProductApi.register(formData), {
+					onSuccess: () => {
+						setIsOpenModal(() => true)
+					},
+					onError: () => {},
+			  })
+			: useMutation(formData => ProductApi.editProduct(formData), {
+					onSuccess: () => {
+						setIsOpenModal(() => true)
+					},
+					onError: () => {},
+			  })
+
 	const onSubmit = async data => {
 		let price = 0
 		if (data.category !== '1') {
@@ -133,21 +149,18 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		}
 
 		if (submitType === '등록') {
-			try {
-				const response = await ProductApi.register(formData)
-				console.log(response)
-				setIsOpenModal(true)
-			} catch (err) {}
+			mutate(formData)
 		}
 		if (submitType === '수정') {
 			formData.append('main_url', DetailData.searchProduct.img_url)
 			formData.append('img_url', DetailData.searchProduct.ProductImages)
 
-			try {
-				const response = await ProductApi.editProduct(formData)
-				console.log(response)
-				setIsOpenModal(true)
-			} catch (err) {}
+			// try {
+			// 	const response = await ProductApi.editProduct(formData)
+			// 	console.log(response)
+			// 	setIsOpenModal(true)
+			// } catch (err) {}
+			mutate(formData)
 		}
 	}
 	return (
@@ -272,28 +285,8 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 }
 export default Inputs
 
-const InputContainer = styled.div`
-	${FlexAlignCSS}
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	& > h6 {
-		width: 14rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	}
-`
-
 const ButtonWrap = styled.div`
 	${FlexCenterCSS}
-`
-
-const InputValueAddress = styled.div`
-	grid-column-start: 2;
-	grid-column-end: 11;
-	width: 100%;
-	display: flex;
 `
 
 const OpenMadalBtn = styled.input`
@@ -340,12 +333,10 @@ const ModalText = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
 `
 const S = {
-	InputValueAddress,
 	CategoryContainer,
 	CategortContainer,
 	OpenMadalBtn,
 	ButtonWrap,
-	InputContainer,
 	StyledAlertText,
 	ModalText,
 }
