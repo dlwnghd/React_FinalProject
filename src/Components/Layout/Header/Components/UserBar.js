@@ -2,12 +2,13 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
-import { Chatting_Icon } from '../../../Icons/Icons'
-// import { Profile_Icon } from '../../../Icons/Icons'
+import { Chatting_Icon, Profile_Icon } from '../../../Icons/Icons'
+import useUser from '../../../../Hooks/useUser'
 
-function UserBar({ setSelectedNav }) {
+function UserBar({ setSelectedNav, userInfo }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
+	const user = useUser()
 
 	return (
 		<S.UserWrapper>
@@ -17,12 +18,11 @@ function UserBar({ setSelectedNav }) {
 				</span>
 				<S.IssueBox />
 				<S.UserBox ref={userMenu}>
-					{/* <Profile_Icon size="28" /> */}
-					<S.ProfileIMG
-						posterIMG={
-							'https://img-cf.kurly.com/shop/data/goods/1649403816159l0.jpg'
-						}
-					/>
+					{userInfo.profileUrl ? (
+						<S.ProfileIMG posterIMG={userInfo.profileUrl} />
+					) : (
+						<Profile_Icon size="28" />
+					)}
 					<p>회원명</p>
 					<S.UserDropDownMenu className="dropdown">
 						<span
@@ -44,7 +44,8 @@ function UserBar({ setSelectedNav }) {
 						<span
 							onClick={() => {
 								navigate('/')
-								setSelectedNav(4)
+								user.logout()
+								setSelectedNav(0)
 							}}
 						>
 							LOGOUT
