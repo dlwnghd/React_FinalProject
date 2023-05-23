@@ -7,20 +7,20 @@ function SoldOutList({ soldOutList }) {
 		<S.SoldOutListWrapper>
 			<h3>최근 거래 종료 품목</h3>
 			<S.SoldOutListContainer>
-				{soldOutList.map((item, idx) => {
-					return (
-						<ItemBox
-							title={item.title}
-							price={item.price}
-							posterPath={item.image_url}
-							context={item.description}
-							isLiked={item.liked}
-							createdAt={item.createdAt}
-							key={idx}
-							// onClick={() => navigate(`/detail/${item.idx}`)}
-						/>
-					)
-				})}
+				{soldOutList &&
+					soldOutList.prod_idx.products.product.map((item, idx) => {
+						return (
+							<ItemBox
+								title={item.title}
+								price={item.price}
+								posterPath={item.img_url}
+								isLiked={item.liked}
+								createdAt={item.createdAt}
+								key={idx}
+								// onClick={() => navigate(`/detail/${item.idx}`)}
+							/>
+						)
+					})}
 			</S.SoldOutListContainer>
 		</S.SoldOutListWrapper>
 	)
