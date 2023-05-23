@@ -6,12 +6,12 @@ import {
 import { useNavigate } from 'react-router'
 import {
 	ColumnNumberCSS,
-	FlexAlignCSS,
 	FlexBetweenCSS,
 	FlexCenterCSS,
 	GridCenterCSS,
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
+import TagsItem from '../../../../Components/TagItem/TagsItem'
 
 function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
@@ -53,12 +53,15 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 				<S.TagBox>
 					{ProductsTags.map((item, idx) => {
 						return (
-							<S.TagItem
+							<TagsItem
 								key={idx}
 								onClick={() => navigate(`/search/${item.Tag.tag}`)}
+								size={'default'}
+								shape={'round'}
+								color={'default'}
 							>
 								<p>#{item.Tag.tag}</p>
-							</S.TagItem>
+							</TagsItem>
 						)
 					})}
 				</S.TagBox>
@@ -108,13 +111,17 @@ const DescriptionContainer = styled.div`
 
 const OptionContainer = styled.div`
 	width: 100%;
-
-	${FlexCenterCSS}
+	${FlexBetweenCSS}
 `
 
 const HeartBox = styled.div`
-	${FlexAlignCSS}
-	margin-right:1rem;
+	${FlexCenterCSS}
+	width:50%;
+	height: 100%;
+	border-radius: 1rem;
+	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+
+	margin-right: 1rem;
 	cursor: pointer;
 
 	& > p {
@@ -127,29 +134,15 @@ const HeartBox = styled.div`
 	}
 `
 
-const TagBox = styled.ul`
+const TagBox = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(3)}
 	gap:1rem;
 `
 
-const TagItem = styled.li`
-	cursor: pointer;
-	width: 100%;
-	height: 4rem;
-	${FlexCenterCSS}
-	border-radius: 2rem;
-	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	color: ${({ theme }) => theme.COLOR.common.black};
-
-	&:last-of-type {
-		margin-right: 0;
-	}
-`
-
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
-	width:100%;
+	width:50%;
 `
 
 const StyledButton = styled(Button)`
@@ -170,5 +163,4 @@ const S = {
 	ButtonBox,
 	StyledButton,
 	TagBox,
-	TagItem,
 }
