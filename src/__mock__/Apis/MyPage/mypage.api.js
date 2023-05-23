@@ -9,13 +9,19 @@ export const getBankList = rest.get(
 		const start = req.url.searchParams.get('start')
 		const end = req.url.searchParams.get('end')
 
-		const filteredPayList = bankMock.payList
-			.filter(data => data.createdAt >= start && data.createdAt <= end)
-			.slice((page - 1) * 20, (page - 1) * 20 + 20)
+		const filteredPayList = bankMock.payList.filter(
+			data => data.createdAt >= start && data.createdAt <= end,
+		)
+
+		const slicePayList = filteredPayList.slice(
+			(page - 1) * 20,
+			(page - 1) * 20 + 20,
+		)
 
 		const makeData = {
 			...bankMock,
-			payList: filteredPayList,
+			payList: slicePayList,
+			count: filteredPayList.length,
 		}
 
 		return res(ctx.status(200), ctx.json(makeData))

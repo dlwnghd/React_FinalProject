@@ -50,6 +50,19 @@ for (let i = 0; i < 30; i++) {
 		},
 	})
 }
+// 2023년 2월 데이터
+for (let i = 0; i < 200; i++) {
+	bankMock.payList.push({
+		idx: Math.floor(Math.random() * 100000),
+		createdAt: '2023-02-22',
+		product: {
+			idx: Math.floor(Math.random() * 100000),
+			createdAt: '2023-05-21',
+			price: 4000,
+			img_url: 'https://img-cf.kurly.com/shop/data/goods/1652772661272l0.jpg',
+		},
+	})
+}
 
 bankMock.count = bankMock.payList.length
 
