@@ -7,7 +7,6 @@ export const slide = products => {
 	const [startX, setStartX] = useState(0)
 	const [endX, setEndX] = useState(0)
 	const slider = useRef(null)
-	console.log(currentIdx)
 
 	// 슬라이딩 거리 제어
 	const onMove = () => {

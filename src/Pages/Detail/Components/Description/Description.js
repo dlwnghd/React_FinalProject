@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { useState } from 'react'
 import {
 	FillHeart_Icon,
 	NotFillHeart_Icon,
@@ -12,14 +11,13 @@ import {
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 
-function Description({ product }) {
-	const { title, price, description, ProductsTags, category, status } = product
-	const [like, setLike] = useState(false)
+function Description({ detailProduct, detailIsLoading, detailStatus }) {
+	if (detailIsLoading && detailStatus === 'loading') return
+
+	const { title, status, price, liked, category, description, ProductsTags } =
+		detailProduct.searchProduct
 	const navigate = useNavigate()
 
-	const onClick = () => {
-		setLike(prev => !prev)
-	}
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -27,12 +25,12 @@ function Description({ product }) {
 					<h3>{title}</h3>
 					<p>{status}</p>
 				</div>
-				<h2>{price}원</h2>
+				<h2>{price.toLocaleString()}원</h2>
 			</S.TitleContainer>
 			<S.OptionContainer>
-				<S.HeartBox onClick={onClick}>
+				<S.HeartBox>
 					<p>찜</p>
-					{like ? (
+					{liked ? (
 						<FillHeart_Icon size="30" />
 					) : (
 						<NotFillHeart_Icon size="30" />
@@ -55,9 +53,9 @@ function Description({ product }) {
 						return (
 							<S.TagItem
 								key={idx}
-								onClick={() => navigate(`/search/${item.Tag}`)}
+								onClick={() => navigate(`/search/${item.Tag.tag}`)}
 							>
-								<p>#{item.tag}</p>
+								<p>#{item.Tag.tag}</p>
 							</S.TagItem>
 						)
 					})}

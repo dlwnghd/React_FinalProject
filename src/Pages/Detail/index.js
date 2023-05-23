@@ -4,22 +4,18 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import productsMock from '../../__mock__/Data/Product/product.data'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import RecentBanner from '../Main/Components/Banner/RecentBanner'
 import { useParams } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { isOnSideBar } from '../../Atoms/sideBar.atom'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
+import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
-import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Detail() {
-	//서버로부터 상품들을 요청하고 idx값과 일치하는 것 찾기
 	const { idx } = useParams()
-
-	const [product, setProduct] = useState(productsMock[0])
-	const { ProductImages } = product
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar)
 
 	useEffect(() => {
@@ -28,14 +24,29 @@ function Detail() {
 
 	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
+	const {
+		data: detailProduct,
+		status: detailStatus,
+		error: detailError,
+		isLoading: detailIsLoading,
+	} = useGetDetailData(idx)
+
 	if (isLoading && status === 'loading') return
-	if (error) return
+	if (error && detailError) return
 
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
-				<Thumbnail productImages={ProductImages} />
-				<Description product={product} />
+				<Thumbnail
+					detailProduct={detailProduct}
+					detailIsLoading={detailIsLoading}
+					detailStatus={detailStatus}
+				/>
+				<Description
+					detailProduct={detailProduct}
+					detailIsLoading={detailIsLoading}
+					detailStatus={detailStatus}
+				/>
 			</S.MainContainer>
 			<Maps>
 				<div>지도</div>
