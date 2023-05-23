@@ -6,16 +6,13 @@ import { FlexBetweenCSS } from '../../../../../../../../../Styles/common'
 const sellerText = '판매 내역'
 const buyerText = '구매 내역'
 
-function TypeSelectBox({ filter, setFilter }) {
-	const type = filter.category === 'seller' ? sellerText : buyerText
+function TypeSelectBox({ category, setCategory }) {
+	const type = category === 'seller' ? sellerText : buyerText
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
 
 	const onClickType = e => {
 		const selected = e.target.textContent
-		setFilter(prev => ({
-			...prev,
-			category: selected === sellerText ? 'seller' : 'buyer',
-		}))
+		setCategory(selected === sellerText ? 'seller' : 'buyer')
 	}
 
 	return (
@@ -64,9 +61,11 @@ const BoxContainer = styled.div`
 
 const SelectContainer = styled.ul`
 	position: absolute;
+	z-index: 10;
 	width: 100%;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 0.5rem;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 	margin-top: 0.8rem;
 `
 
