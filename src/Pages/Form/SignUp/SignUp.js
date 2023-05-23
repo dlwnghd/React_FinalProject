@@ -117,7 +117,7 @@ function SignUp() {
 
 	return (
 		<S.Wrapper>
-			{isOpenModal && modalType === 'alert' && (
+			{isOpenModal && modalType === 'error' && (
 				<AlertModal message={MESSAGE.JOIN.FAILURE} />
 			)}
 			<h1>회원가입</h1>
