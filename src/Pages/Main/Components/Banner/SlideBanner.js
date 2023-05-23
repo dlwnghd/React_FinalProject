@@ -1,8 +1,31 @@
 import styled from 'styled-components'
-import { FlexAlignCSS } from '../../../../Styles/common'
+import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
 import productsMock from '../../../../__mock__/Data/Product/product.data'
 import Pagination from './Components/Pagination'
-import { slide } from '../../../../Utils/slide'
+import { slide } from '../../../../Hooks/useSlide'
+
+const bannerList = [
+	{
+		title: '지금 아니면 언제사?',
+		subTitle: '가득 들어갑니다. 첫 거래 POINT 완충',
+		img_url: '',
+	},
+	{
+		title: 'FREE MARKET',
+		subTitle: '역대급! 고대하던 네모난 고양이의 나눔',
+		img_url: '',
+	},
+	{
+		title: 'TRADE USED',
+		subTitle: '내께 너한테 가서 새로워진다!',
+		img_url: '',
+	},
+	{
+		title: '지금 사면 냥이득',
+		subTitle: '최근 3개월 전보다 50% 떨어진 건 처음이야!',
+		img_url: '',
+	},
+]
 
 function SlideBanner() {
 	const {
@@ -28,8 +51,15 @@ function SlideBanner() {
 					onMouseUp={onMouseUp}
 					ref={slider}
 				>
-					{productsMock.slice(0, 4).map((item, idx) => {
-						return <S.SlideItems key={idx}></S.SlideItems>
+					{bannerList.map((bnr, idx) => {
+						return (
+							<S.SlideItems key={idx}>
+								<div>
+									<h2>{bnr.title}</h2>
+									<p>{bnr.subTitle}</p>
+								</div>
+							</S.SlideItems>
+						)
 					})}
 				</S.SlideBox>
 				<Pagination currentIdx={currentIdx} />
@@ -61,10 +91,23 @@ const SlideBox = styled.ul`
 `
 
 const SlideItems = styled.li`
+	position: relative;
 	flex-shrink: 0;
+	${FlexBetweenCSS}
 	width: 100%;
 	height: 100%;
-	background: ${({ theme }) => theme.COLOR.common.gray[300]};
+	background: ${({ theme }) => theme.COLOR.common.black};
+	color: ${({ theme }) => theme.COLOR.common.white};
+
+	& > div:first-of-type {
+		position: relative;
+		margin-left: 6rem;
+		z-index: 3;
+	}
+
+	& > :first-of-type > p {
+		color: ${({ theme }) => theme.COLOR.main};
+	}
 `
 
 const S = {

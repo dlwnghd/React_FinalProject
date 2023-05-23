@@ -26,8 +26,6 @@ function SearchResult({
 		}
 	}
 
-	console.log(hasNextPage)
-
 	useEffect(() => {
 		const observer = new IntersectionObserver(observerCallback, {
 			threshold: 1,

@@ -38,7 +38,7 @@ const PaginationBox = styled.div`
 	}
 
 	& > .active {
-		background: ${({ theme }) => theme.COLOR.common.gray[200]};
+		background: ${({ theme }) => theme.COLOR.common.gray[100]};
 	}
 `
 
@@ -46,7 +46,7 @@ const PaginationItems = styled.div`
 	width: 1rem;
 	height: 1rem;
 	border-radius: 50%;
-	background: ${({ theme }) => theme.COLOR.common.gray[400]};
+	background: ${({ theme }) => theme.COLOR.common.gray[200]};
 `
 
 const S = {

@@ -10,6 +10,9 @@ const ProductApi = {
 			},
 		})
 	},
+	confirm() {
+		return axiosInstance.get(PATH)
+	},
 	delete(prod_idx) {
 		return (
 			axiosInstance.delete(PATH),
