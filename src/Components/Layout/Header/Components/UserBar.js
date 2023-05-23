@@ -141,7 +141,8 @@ const UserDropDownMenu = styled.div`
 	border-radius: 5%;
 	top: 25%;
 	z-index: 9999;
-	width: 12rem;
+	width: 9%;
+	max-width: 12rem;
 
 	& > span {
 		padding: 1rem;
