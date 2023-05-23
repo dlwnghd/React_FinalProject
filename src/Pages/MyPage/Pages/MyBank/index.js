@@ -2,36 +2,50 @@ import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../../Styles/common'
 import AmountSection from './Components/Amount'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import getFormattedDate from '../../../../Utils/getFormattedDate'
 // import useGetMyPageBankList from '../../../../Hooks/Queries/get-myPageBank'
 import FilterSection from './Components/List/Components/Select'
 import PayList from './Components/List/Components/List/PayList'
-import { useEffect } from 'react'
 import axios from 'axios'
-import { useCallback } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import Pagination from '../../../../Components/Pagination/Pagination'
 
 function MyBank() {
+	const navigate = useNavigate()
+	const location = useLocation()
+	const [searchParams, setSearchParams] = useSearchParams()
+	const params = {
+		page: searchParams.get('page'),
+		category: searchParams.get('category'),
+		start: searchParams.get('start'),
+		end: searchParams.get('end'),
+	}
 	// 처음 세팅은 오늘 날짜를 기준으로
 	// 해당 연도와 달, 1일 ~ 해당 연도와 달, 오늘날짜로 설정합니다.
 	const today = new Date()
 	const [filter, setFilter] = useState({
-		page: 1,
-		category: 'seller',
-		start: getFormattedDate(today, { day: 1 }),
-		end: getFormattedDate(today, { day: true }),
+		page: params.page || 1,
+		category: params.category || 'seller',
+		start: params.start || getFormattedDate(today, { day: 1 }),
+		end: params.end || getFormattedDate(today, { day: true }),
 	})
 
 	// const { data, status, refetch } = useGetMyPageBankList(filter)
 
+	// const setPage = page => {
+	// 	setFilter(prev => ({ ...prev, page }))
+	// }
+
 	// const getNewBankList = () => {
+	// navigate(
+	// 	`${location.pathname}?category=${filter.category}?start=${filter.start}?end=${filter.end}`,
+	// )
 	// 	refetch()
 	// }
 
 	// Mock----------------------------------------------------
 	const [data, setData] = useState({})
-
-	console.log('filter ----->', filter)
 
 	const getData = useCallback(async () => {
 		try {
@@ -49,9 +63,17 @@ function MyBank() {
 		getData()
 	}, [])
 
+	const setPage = page => {
+		setFilter(prev => ({ ...prev, page }))
+	}
+
 	const getNewBankList = () => {
+		navigate(
+			`${location.pathname}?page=${filter.page}&category=${filter.category}&start=${filter.start}&end=${filter.end}`,
+		)
 		getData()
 	}
+
 	// ----------------------------------------------------------------
 
 	return (
@@ -76,6 +98,12 @@ function MyBank() {
 				status={status}
 				category={filter.category}
 				payList={data?.payList ?? []}
+			/>
+			<Pagination
+				total={data?.count || 0}
+				limit={10}
+				perPageItemCount={20}
+				setPage={setPage}
 			/>
 		</S.Wrapper>
 	)

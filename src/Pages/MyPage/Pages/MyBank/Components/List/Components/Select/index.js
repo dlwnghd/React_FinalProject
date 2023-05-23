@@ -13,7 +13,7 @@ function FilterSection({ filter, setFilter, onSearch }) {
 
 	const onClickGetBankList = () => {
 		// 조회 버튼을 눌렀을 때 일괄적으로 setFilter
-		setFilter({ category, start, end })
+		setFilter({ page: 1, category, start, end })
 	}
 
 	useEffect(() => {
