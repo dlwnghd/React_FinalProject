@@ -17,7 +17,7 @@ const useUser = () => {
 
 	const logout = () => {
 		TokenService.removeAccessToken()
-		UserInfoService.removeUserInfo(userInfo)
+		UserInfoService.removeUserInfo()
 		setUserInfo({})
 		loginState(false)
 	}
