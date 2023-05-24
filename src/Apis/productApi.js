@@ -30,7 +30,15 @@ const ProductApi = {
 	},
 	readViewedList() {
 		return axiosInstance.get(`${PATH}/viewed-list`, {})
-	}
+	},
+	addViewedList(prod_idx) {
+		return axiosInstance.post(`${PATH}/viewed-list`, { prod_idx })
+	},
+	deleteViewedList(prod_idx) {
+		return axiosInstance.delete(`${PATH}/viewed-list`, {
+			params: { prod_idx },
+		})
+	},
 }
 
 export default ProductApi
