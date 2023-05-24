@@ -34,6 +34,9 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	border-radius: 0.3rem;
+	padding: 1rem;
 `
 
 const IMGContainer = styled.div`
