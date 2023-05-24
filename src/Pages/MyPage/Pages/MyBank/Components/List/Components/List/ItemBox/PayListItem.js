@@ -1,20 +1,24 @@
 import styled from 'styled-components'
 import { FlexBetweenCSS } from '../../../../../../../../../Styles/common'
 import Button from '../../../../../../../../../Components/Button/Button'
+import getFormattedDate from '../../../../../../../../../Utils/getFormattedDate'
 
 function PayListItem({ item, category }) {
 	const categoryText = category === 'seller' ? '판매완료' : '구매완료'
-	const { idx, createdAt, product } = item
+	const { idx, title, createdAt, Product } = item
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer posterIMG={product.img_url} />
+			<S.IMGContainer posterIMG={Product.img_url} />
 			<S.DescContainer>
 				<S.DescBox>
 					<div>
 						<p>{categoryText}</p>
-						<p>{createdAt}</p>
-						<h4>{product.price.toLocaleString()}원</h4>
+						<p>{getFormattedDate(new Date(createdAt))}</p>
+						<div>
+							<p>{Product.title}</p>
+							<h4>{Product.price.toLocaleString()}원</h4>
+						</div>
 					</div>
 					{category === 'buyer' && (
 						<S.StyledButton shape={'square'}>리뷰 남기기</S.StyledButton>
@@ -69,7 +73,7 @@ const DescBox = styled.div`
 		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	}
 
-	& > div > h4 {
+	& > div > div {
 		margin-top: 2rem;
 	}
 `

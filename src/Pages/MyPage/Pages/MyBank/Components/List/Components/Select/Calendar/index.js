@@ -56,7 +56,6 @@ function Calendar({ type, date, setDate }) {
 					type === 'start' ? month - 1 : month,
 					type === 'start' ? 1 : 0,
 				),
-				{ day: true },
 			),
 		)
 	}
