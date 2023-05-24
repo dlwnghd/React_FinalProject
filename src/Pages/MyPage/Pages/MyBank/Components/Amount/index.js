@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ColumnNumberCSS, FlexAlignCSS } from '../../../../../../Styles/common'
+import { ColumnNumberCSS, FlexCenterCSS } from '../../../../../../Styles/common'
 import AmountItemBox from './Components/Box/ItemBox'
 import AmountTotalBox from './Components/Box/TotalBox'
 import LoadingSkeleton from '../../../../../../Components/Skeleton/Skeleton'
@@ -26,6 +26,14 @@ function AmountSection({ status, amount }) {
 			</S.Wrapper>
 		)
 
+	if (status === 'error') {
+		return (
+			<S.Wrapper>
+				<p>조회에 실패했습니다.</p>
+			</S.Wrapper>
+		)
+	}
+
 	return (
 		<S.Wrapper>
 			<AmountItemBox title={'sale'} price={amount?.totalSaleAmount || 0} />
@@ -46,7 +54,7 @@ const Wrapper = styled.div`
 	padding: 2rem;
 	border-radius: 0.3rem;
 	${ColumnNumberCSS(4)}
-	${FlexAlignCSS}
+	${FlexCenterCSS}
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {

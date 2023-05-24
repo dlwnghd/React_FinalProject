@@ -6,6 +6,7 @@ import {
 	GridCenterCSS,
 } from '../../../../../../../../Styles/common'
 import LoadingSkeleton from '../../../../../../../../Components/Skeleton/Skeleton'
+import Button from '../../../../../../../../Components/Button/Button'
 
 function PayList({ status, category, payList }) {
 	const categoryText = category === 'seller' ? '판매내역' : '구매내역'
@@ -26,20 +27,25 @@ function PayList({ status, category, payList }) {
 	if (status === 'error')
 		return (
 			<S.Wrapper>
-				<S.EmptyListText>
+				<S.AlertTextContainer>
 					<p>조회에 실패했습니다.</p>
 					<p>잠시 후 다시 시도해주세요</p>
-				</S.EmptyListText>
+					<div>
+						<Button shape={'soft'} onClick={() => window.location.reload()}>
+							새로고침
+						</Button>
+					</div>
+				</S.AlertTextContainer>
 			</S.Wrapper>
 		)
 
 	return (
 		<S.Wrapper>
 			{payList.length === 0 ? (
-				<S.EmptyListText>
+				<S.AlertTextContainer>
 					<p>{categoryText} 내역이 없습니다.</p>
 					<p>주문기간을 변경하여 확인해보세요!</p>
-				</S.EmptyListText>
+				</S.AlertTextContainer>
 			) : (
 				<S.Container>
 					{payList.map((item, i) => (
@@ -70,7 +76,7 @@ const Container = styled.div`
 	}
 `
 
-const EmptyListText = styled.div`
+const AlertTextContainer = styled.div`
 	margin: auto;
 	height: 50rem;
 	${FlexCenterCSS}
@@ -80,6 +86,10 @@ const EmptyListText = styled.div`
 		margin-top: 0.3rem;
 		color: ${({ theme }) => theme.COLOR.common.gray[200]};
 	}
+
+	& > div {
+		margin-top: 1rem;
+	}
 `
 
-const S = { Wrapper, Container, EmptyListText }
+const S = { Wrapper, Container, AlertTextContainer }
