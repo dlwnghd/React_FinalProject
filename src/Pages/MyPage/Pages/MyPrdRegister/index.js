@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../../Styles/common'
+import { FlexCenterCSS, WidthAutoCSS } from '../../../../Styles/common'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
 // import MypageApi from '../../../../Apis/mypageApi'
@@ -10,15 +10,40 @@ import TypeSelectBox from './Components/TypeSelectBox'
 // import QUERY_KEY from '../../../../Consts/query.key'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import useGetMyPagePrdRegisterData from '../../../../Hooks/Queries/get-myPagePrdRegister'
+import Modal from '../../../../Components/Modal/Modal'
+import { isOpenModalAtom } from '../../../../Atoms/modal.atom'
+import { useRecoilState } from 'recoil'
+import Button from '../../../../Components/Button/Button'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import ProductApi from '../../../../Apis/productApi'
+import QUERY_KEY from '../../../../Consts/query.key'
 
 function MyPrdRegister() {
-	const [registerData, setRegisterData] = useState()
-
+	const [ProductIdx, setProductIdx] = useState()
 	const [category, setCategory] = useState(0)
+
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const { data, isLoading, error } = useGetMyPagePrdRegisterData(category)
 
 	console.log(category, '무료면 1임')
+
+	const queryClient = useQueryClient()
+
+	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
+		onSuccess: () => {
+			queryClient.invalidateQueries([
+				QUERY_KEY.GET_MYPAGE_REGISTER_DATA,
+				category,
+			])
+			setIsOpenModal(false)
+		},
+		onError: err => {},
+	})
+
+	const onProductDeleteCheck = () => {
+		mutate(ProductIdx)
+	}
 	return (
 		<>
 			{isLoading ? (
@@ -31,10 +56,32 @@ function MyPrdRegister() {
 							<TypeSelectBox setCategory={setCategory} />
 						</S.TotalNumAndFilter>
 
+						{isOpenModal && (
+							<Modal size={'small'}>
+								<S.ModalTextWrap>
+									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
+									<S.ButtonsWrap>
+										<Button onClick={onProductDeleteCheck}>삭제</Button>
+										<Button
+											variant={'default-reverse'}
+											onClick={() => setIsOpenModal(false)}
+										>
+											취소
+										</Button>
+									</S.ButtonsWrap>
+								</S.ModalTextWrap>
+							</Modal>
+						)}
 						<S.PrdList>
-							{data?.products.map((item, idx) => {
+							{data?.products.map(item => {
 								return (
-									<MyPrdItemBox key={idx} item={item} category={category} />
+									<MyPrdItemBox
+										key={item.idx}
+										item={item}
+										category={category}
+										setIsOpenModal={setIsOpenModal}
+										setProductIdx={setProductIdx}
+									/>
 								)
 							})}
 						</S.PrdList>
@@ -69,4 +116,28 @@ const PrdList = styled.div`
 		column-gap: 1rem;
 	}
 `
-const S = { Wrapper, TotalNumAndFilter, PrdList }
+
+const ModalText = styled.div`
+	height: 100%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	margin-top: 3rem;
+`
+const ModalTextWrap = styled.div`
+	${FlexCenterCSS}
+	flex-direction: column;
+`
+const ButtonsWrap = styled.div`
+	display: flex;
+	margin-top: 3rem;
+	* {
+		margin: 0 1rem;
+	}
+`
+const S = {
+	Wrapper,
+	TotalNumAndFilter,
+	PrdList,
+	ModalText,
+	ModalTextWrap,
+	ButtonsWrap,
+}

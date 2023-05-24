@@ -99,7 +99,7 @@ const StyledButton = styled(Button)`
 const Textarea = styled.textarea`
 	width: 100%;
 	height: 30rem;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	padding: 1rem 1.2rem;
 	${({ status }) => statusCSS[status]};
 `

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import { Down_Icon } from '../../../../../Components/Icons/Icons'
+import { useRef } from 'react'
 
 const secondhandText = '중고상품'
 const FreeText = '무료상품'
@@ -10,13 +11,20 @@ function TypeSelectBox({ setCategory }) {
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
 	const [type, setType] = useState(secondhandText)
 
+	let refCategory = useRef()
+
 	const onClickType = e => {
-		const selected = e.target.textContent
+		let selected = e.target.textContent
+		refCategory = e.target.textContent
 		setType(selected)
 		setCategory(selected === '무료상품' ? 1 : 0)
-		console.log(selected)
+		console.log({ refCategory })
 	}
-	useEffect(() => {}, [])
+
+	useEffect(() => {
+		setType(prev => prev)
+		console.log(type)
+	}, [type])
 	return (
 		<S.Wrapper onClick={() => setIsOpenSlide(prev => !prev)}>
 			<S.BoxContainer>
