@@ -5,9 +5,8 @@ import { FlexCenterCSS } from '../../Styles/common'
 import scrollToTop from '../../Utils/scrollToTop'
 
 /**
- * @param total - 전체 물품 수
  * @param limit - 페이지네이션 몇 개씩 할 것인지
- * @param perPageItemCount - 한 페이지의 아이템 갯수
+ * @param totalPage -  총 페이지 갯수
  * @param setPage - page 관련 state를 변경시키는 로직의 함수
  * @param scroll - 페이지네이션 클릭 시 이동될 위치
  * @사용예시 - `<Pagination total={300} page={2} />`
@@ -17,15 +16,14 @@ import scrollToTop from '../../Utils/scrollToTop'
 	setPage는 page의 state를 변경시키는 함수이고,
 	goPage는 쿼리 스트링만을 변경시키는 함수입니다.
 */
-function Pagination({ total, limit, perPageItemCount, setPage, scroll }) {
+function Pagination({ limit, totalPage, setPage, scroll }) {
 	const [searchParams, setSearchParams] = useSearchParams()
 
-	const nowPage = parseInt(searchParams.get('page')) || 1
-	const numPages = Math.ceil(total / perPageItemCount)
+	const nowPage = parseInt(searchParams.get('page')) || 1 // 지금 페이지 number
 
-	const startPage = Math.floor((nowPage - 1) / limit) * limit + 1 // 시작페이지번호
-	let endPage = startPage + limit - 1 // 끝 페이지 번호
-	if (endPage >= numPages) endPage = numPages // 끝 페이지 번호 수정용
+	const startPage = Math.floor((nowPage - 1) / limit) * limit + 1 // 시작 페이지 number. ex. 지금 14페이지라면 시작 페이지는 11입니다.
+	let endPage = startPage + limit - 1 // 끝 페이지 번호. ex. 지금 14페이지라면 끝 페이지는 20입니다.
+	if (endPage >= totalPage) endPage = totalPage // 끝 페이지 번호 수정용. ex. 최종 마지막 페이지가 19라면 20이 끝 페이지가 아니라 19가 됩니다.
 
 	const createArray = (start, end) => {
 		return Array(end - start + 1)
@@ -54,17 +52,17 @@ function Pagination({ total, limit, perPageItemCount, setPage, scroll }) {
 			case 'start':
 				return Math.floor((nowPage - 1) / limit) === 0
 			case 'end':
-				return Math.ceil(nowPage / limit) === Math.ceil(numPages / limit)
+				return Math.ceil(nowPage / limit) === Math.ceil(totalPage / limit)
 		}
 	}
 
-	if (!total) return // total이 0으로 온 경우 아무 것도 return X
+	if (!endPage) return // endPage이 0으로 온 경우 아무 것도 return X
 
 	return (
 		<S.Nav>
 			<S.Button
 				onClick={() => {
-					goPage(Math.floor(nowPage / limit) * limit)
+					goPage(Math.floor((nowPage - 1) / limit) * limit)
 					scrollToTop(scroll)
 				}}
 				disabled={isDisabled('start')}
