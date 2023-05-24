@@ -10,9 +10,14 @@ import MainBanner from './Components/Banner/MainBanner'
 import GridBanner from './Components/Banner/RecentBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
+import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
+import { useRecoilState } from 'recoil'
 
 function Main() {
 	const navigate = useNavigate()
+
+	const roomChat = useRecoilState(myChatRoomList)
+	console.log(roomChat)
 
 	return (
 		<S.Wrapper>

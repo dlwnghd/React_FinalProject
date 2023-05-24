@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 
-function MessagesBox() {
+function MessagesBox({ msg }) {
+	console.log(msg)
 	return (
 		<S.MessagesContainer>
-			<S.Messages>안녕하세요 반가워요</S.Messages>
+			<S.Messages>{msg.message}</S.Messages>
 			<S.Time>오후 7:26</S.Time>
 		</S.MessagesContainer>
 	)

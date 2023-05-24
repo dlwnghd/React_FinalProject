@@ -4,18 +4,12 @@ import { useEffect } from 'react'
 import { ModalClose_icon } from '../Icons/Icons'
 import { WidthAutoCSS } from '../../Styles/common'
 import ChatList from './Components/List'
-import { io } from 'socket.io-client'
-
-// const socket = io.connect('https://topdragon.co.kr/api/chat')
+import { useRecoilState } from 'recoil'
+import { userInfoAtom } from '../../Atoms/userInfo.atom'
 
 function ChatModal() {
 	const { chatModalOpen, closeChat } = useChatModal()
-
-	const socket = io.connect('http://localhost:3001')
-
-	socket.on('connection', () => {
-		console.log(`user conneted :${socket.id}`)
-	})
+	const userInfo = useRecoilState(userInfoAtom)
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY

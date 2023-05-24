@@ -2,8 +2,11 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import ChatItemBox from './ItemBox/ItemBox'
 import ChatView from '../View'
+import { useRecoilState } from 'recoil'
+import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
 
 function ChatList() {
+	const userInfo = useRecoilState(userInfoAtom)
 	const [chatRoom, setChatRoom] = useState(false)
 
 	const onClickChatRoom = () => {
