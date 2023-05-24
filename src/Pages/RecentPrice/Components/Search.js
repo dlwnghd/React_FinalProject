@@ -1,14 +1,15 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../../Styles/common'
+import { WidthAutoCSS } from '../../../Styles/common'
 import { FaSearch } from 'react-icons/fa'
-import useInput from '../../../../Hooks/useInput'
+import useInput from '../../../Hooks/useInput'
 
-function RecentSearch({ onSearchPrd }) {
-	const [search, onChange] = useInput('')
+function RecentSearch({ onSearchQuoteList }) {
+	const [searchQuote, onChange] = useInput('')
 
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
-			onSearchPrd(search)
+			onSearchQuoteList(searchQuote)
+			event.target.blur()
 		}
 	}
 
@@ -20,7 +21,7 @@ function RecentSearch({ onSearchPrd }) {
 			<S.InputBox>
 				<Input
 					placeholder="어떤 상품의 시세가 궁금하신가요?"
-					value={search}
+					value={searchQuote}
 					onChange={onChange}
 					onKeyDown={onEnterSearch}
 				/>

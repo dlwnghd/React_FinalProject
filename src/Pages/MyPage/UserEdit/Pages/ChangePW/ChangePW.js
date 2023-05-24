@@ -9,6 +9,10 @@ import UserApi from '../../../../../Apis/userApi'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import Modal from '../../../../../Components/Modal/Modal'
+import MESSAGE from '../../../../../Consts/message'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 
 function ChangePW() {
 	const {
@@ -21,22 +25,46 @@ function ChangePW() {
 		mode: 'onChange',
 	})
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [message, setMessage] = useState(MESSAGE.PWEDIT.SUCCESS)
 
 	const onSubmit = async data => {
-		try {
-			await UserApi.userEditPw({ pw: data.newPw })
-			setIsOpenModal(true)
-			setTimeout(() => setIsOpenModal(false), 3000)
-			setValue('newPw', '')
-			setValue('newPwConfirm', '')
-		} catch (err) {
-			console.log(err)
-		}
+		const { mutate } = useMutation(
+			() => UserApi.userEditPw({ pw: data.newPw }),
+			{
+				onSuccess: () => {
+					setMessage(MESSAGE.PWEDIT.SUCCESS)
+					setIsOpenModal(true)
+					setTimeout(() => setIsOpenModal(false), 3000)
+					setValue('newPw', '')
+					setValue('newPwConfirm', '')
+				},
+				onError: err => {
+					if (err.response.status === 400) {
+						setMessage(MESSAGE.PWEDIT.FAILURE)
+						setIsOpenModal(true)
+					}
+				},
+			},
+		)
+
+		// try {
+		// 	await UserApi.userEditPw({ pw: data.newPw })
+		// 	setMessage(MESSAGE.PWEDIT.SUCCESS)
+		// 	setIsOpenModal(true)
+		// 	setTimeout(() => setIsOpenModal(false), 3000)
+		// 	setValue('newPw', '')
+		// 	setValue('newPwConfirm', '')
+		// } catch (err) {
+		// 	if (err.response.status === 400) {
+		// 		setMessage(MESSAGE.PWEDIT.FAILURE)
+		// 		setIsOpenModal(true)
+		// 	}
+		// }
 	}
 	return (
 		<S.Wrapper>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
+				<S.Container>
 					<S.StyledInput
 						type="password"
 						placeholder={
@@ -52,8 +80,8 @@ function ChangePW() {
 							errors.newPw &&
 							errors.newPw.message}
 					</S.StyledAlert>
-				</div>
-				<div>
+				</S.Container>
+				<S.Container>
 					<S.StyledInput
 						type="password"
 						placeholder={'새로운 비밀번호 확인'}
@@ -68,12 +96,8 @@ function ChangePW() {
 					<S.StyledAlert type="error" size="default">
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
-				</div>
-				{isOpenModal && (
-					<S.StyledModal size="medium">
-						<S.Text>비밀번호 변경이 완료되었습니다</S.Text>
-					</S.StyledModal>
-				)}
+				</S.Container>
+				{isOpenModal && <AlertModal message={message} />}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
 		</S.Wrapper>
@@ -91,8 +115,11 @@ const Wrapper = styled.div`
 		padding: 0;
 	}
 `
+const Container = styled.div`
+	height: 8rem;
+`
 const StyledInput = styled(Input)`
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 `
 const StyledAlert = styled(AlertText)`
 	padding-left: 0rem;
@@ -113,6 +140,7 @@ const StyledButton = styled(Button)`
 
 const S = {
 	Wrapper,
+	Container,
 	StyledInput,
 	StyledButton,
 	StyledModal,
