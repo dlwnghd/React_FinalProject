@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { ColumnNumberCSS, FlexAlignCSS } from '../../../../../../Styles/common'
 import AmountItemBox from './Components/Box/ItemBox'
 import AmountTotalBox from './Components/Box/TotalBox'
+import LoadingSkeleton from '../../../../../../Components/Skeleton/Skeleton'
 
 function AmountSection({ status, amount }) {
 	const totalDifferenceAmount =
@@ -17,7 +18,11 @@ function AmountSection({ status, amount }) {
 	if (status === 'loading')
 		return (
 			<S.Wrapper>
-				<div>{/* 로딩 중 보여줄 컴포넌트 */}</div>
+				{Array(4)
+					.fill()
+					.map(i => (
+						<LoadingSkeleton key={i} width={'100%'} height={'100%'} />
+					))}
 			</S.Wrapper>
 		)
 
@@ -37,6 +42,7 @@ export default AmountSection
 
 const Wrapper = styled.div`
 	width: 100%;
+	height: 13rem;
 	padding: 2rem;
 	border-radius: 0.3rem;
 	${ColumnNumberCSS(4)}

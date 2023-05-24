@@ -5,6 +5,7 @@ import {
 	FlexCenterCSS,
 	GridCenterCSS,
 } from '../../../../../../../../Styles/common'
+import LoadingSkeleton from '../../../../../../../../Components/Skeleton/Skeleton'
 
 function PayList({ status, category, payList }) {
 	const categoryText = category === 'seller' ? '판매내역' : '구매내역'
@@ -12,7 +13,13 @@ function PayList({ status, category, payList }) {
 	if (status === 'loading')
 		return (
 			<S.Wrapper>
-				<div>{/* 로딩 중 보여줄 컴포넌트 */}</div>
+				<S.Container>
+					{Array(4)
+						.fill()
+						.map(i => (
+							<LoadingSkeleton key={i} width={'100%'} height={'27.5rem'} />
+						))}
+				</S.Container>
 			</S.Wrapper>
 		)
 
@@ -46,8 +53,6 @@ function PayList({ status, category, payList }) {
 export default PayList
 
 const Wrapper = styled.div`
-	${FlexCenterCSS}
-	min-height: 50vh;
 	margin-top: 1rem;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 0.6rem;
@@ -67,7 +72,9 @@ const Container = styled.div`
 
 const EmptyListText = styled.div`
 	margin: auto;
-	text-align: center;
+	height: 50rem;
+	${FlexCenterCSS}
+	flex-direction: column;
 
 	& > p:last-child {
 		margin-top: 0.3rem;

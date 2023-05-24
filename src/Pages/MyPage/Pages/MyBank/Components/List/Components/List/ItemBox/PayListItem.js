@@ -5,7 +5,7 @@ import getFormattedDate from '../../../../../../../../../Utils/getFormattedDate'
 
 function PayListItem({ item, category }) {
 	const categoryText = category === 'seller' ? '판매완료' : '구매완료'
-	const { idx, title, createdAt, Product } = item
+	const { idx, createdAt, Product } = item
 
 	return (
 		<S.Wrapper>
