@@ -2,12 +2,14 @@ import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { PaginationArrowSingle_Icon } from '../Icons/Icons'
 import { FlexCenterCSS } from '../../Styles/common'
+import scrollToTop from '../../Utils/scrollToTop'
 
 /**
  * @param total - 전체 물품 수
  * @param limit - 페이지네이션 몇 개씩 할 것인지
  * @param perPageItemCount - 한 페이지의 아이템 갯수
  * @param setPage - page 관련 state를 변경시키는 로직의 함수
+ * @param scroll - 페이지네이션 클릭 시 이동될 위치
  * @사용예시 - `<Pagination total={300} page={2} />`
  */
 
@@ -15,7 +17,7 @@ import { FlexCenterCSS } from '../../Styles/common'
 	setPage는 page의 state를 변경시키는 함수이고,
 	goPage는 쿼리 스트링만을 변경시키는 함수입니다.
 */
-function Pagination({ total, limit, perPageItemCount, setPage }) {
+function Pagination({ total, limit, perPageItemCount, setPage, scroll }) {
 	const [searchParams, setSearchParams] = useSearchParams()
 
 	const nowPage = parseInt(searchParams.get('page')) || 1
@@ -61,7 +63,10 @@ function Pagination({ total, limit, perPageItemCount, setPage }) {
 	return (
 		<S.Nav>
 			<S.Button
-				onClick={() => goPage(Math.floor(nowPage / limit) * limit)}
+				onClick={() => {
+					goPage(Math.floor(nowPage / limit) * limit)
+					scrollToTop(scroll)
+				}}
 				disabled={isDisabled('start')}
 			>
 				<PaginationArrowSingle_Icon rotate={180} />
@@ -69,14 +74,20 @@ function Pagination({ total, limit, perPageItemCount, setPage }) {
 			{createArray(startPage, endPage).map((_, i) => (
 				<S.NumBtn
 					key={i}
-					onClick={() => goPage(i + startPage)}
+					onClick={() => {
+						goPage(i + startPage)
+						scrollToTop(scroll)
+					}}
 					aria-current={nowPage === i + startPage ? 'page' : null}
 				>
 					{i + startPage}
 				</S.NumBtn>
 			))}
 			<S.Button
-				onClick={() => goPage(Math.ceil(nowPage / limit) * limit + 1)}
+				onClick={() => {
+					goPage(Math.ceil(nowPage / limit) * limit + 1)
+					scrollToTop(scroll)
+				}}
 				disabled={isDisabled('end')}
 			>
 				<PaginationArrowSingle_Icon />

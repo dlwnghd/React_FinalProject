@@ -104,6 +104,7 @@ function MyBank() {
 				limit={10}
 				perPageItemCount={20}
 				setPage={setPage}
+				scroll={570}
 			/>
 		</S.Wrapper>
 	)
