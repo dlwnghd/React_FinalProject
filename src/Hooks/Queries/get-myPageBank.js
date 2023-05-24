@@ -9,7 +9,7 @@ const getMyPageBankList = async params => {
 
 const useGetMyPageBankList = ({ page, category, start, end }) => {
 	const { data, error, status, refetch } = useQuery(
-		[QUERY_KEY.GET_MYPAGE_BANK_LIST, category, start, end],
+		[QUERY_KEY.GET_MYPAGE_BANK_LIST, page, category, start, end],
 		() => getMyPageBankList({ page, category, start, end }),
 		{
 			cacheTime: 1000 * 60 * 5, // 5분
