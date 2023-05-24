@@ -23,7 +23,7 @@ function Sidebar({ onSideBar }) {
 
 	return (
 		<S.SidebarWrapper ref={slideRef}>
-			<h4>관심 상품 목록</h4>
+			<h4>최근 본 상품</h4>
 			<S.SideBarContainer>
 				<S.ProductList>
 					{productsMock.slice(0, 8).map((item, idx) => {
@@ -62,9 +62,10 @@ const SidebarWrapper = styled.nav`
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	display: none;
 
-	@media screen and (min-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: none;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: block;
 	}
 `
 

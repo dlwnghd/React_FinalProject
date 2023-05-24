@@ -14,7 +14,7 @@ import {
 	TradeUsed_Icon,
 } from '../../../Icons/Icons'
 
-function MobileFooter() {
+function MobileFooterNavigation() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
@@ -106,7 +106,7 @@ function MobileFooter() {
 		</S.NavigationWrapper>
 	)
 }
-export default MobileFooter
+export default MobileFooterNavigation
 
 const NavigationWrapper = styled.div`
 	display: none;
