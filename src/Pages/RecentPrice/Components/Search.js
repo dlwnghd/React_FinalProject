@@ -3,12 +3,12 @@ import { WidthAutoCSS } from '../../../Styles/common'
 import { FaSearch } from 'react-icons/fa'
 import useInput from '../../../Hooks/useInput'
 
-function RecentSearch({ onSearchQuoteList }) {
+function RecentSearch({ setSearchQuote }) {
 	const [searchQuote, onChange] = useInput('')
 
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
-			onSearchQuoteList(searchQuote)
+			setSearchQuote(searchQuote)
 			event.target.blur()
 		}
 	}

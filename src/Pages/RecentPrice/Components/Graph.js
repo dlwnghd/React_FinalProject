@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Filter from '../../../Components/Filter/Filter'
 import { FlexCenterCSS } from '../../../Styles/common'
 
-function Graph({ quoteList, searchQuote}) {
+function Graph({ quoteList, searchQuote }) {
 	const chartRef = useRef(null)
 	const chartContainerRef = useRef(null)
 
@@ -52,8 +52,6 @@ function Graph({ quoteList, searchQuote}) {
 		const sum = nonZeroData.reduce((acc, curr) => acc + curr.y, 0)
 		const avg = sum / nonZeroData.length
 		setAvgPrice(avg)
-
-		// updateData('최근 일주일')
 	}, quoteDataList)
 
 	// 필터버튼 클릭시
@@ -75,36 +73,58 @@ function Graph({ quoteList, searchQuote}) {
 		},
 	]
 
+	// 반응형 그래프 데이터 function화
+	function createBreakpoint(breakpoint, width, height, offsetX) {
+		return {
+			breakpoint: breakpoint,
+			options: {
+				chart: {
+					width: width,
+					height: height,
+				},
+				annotations: {
+					yaxis: avgPrice
+						? [
+								{
+									y: Number(`${Math.round(avgPrice)}`),
+									strokeDashArray: 2,
+									borderColor: 'black',
+									label: {
+										borderColor: 'black',
+										borderWidth: 1,
+										borderRadius: 10,
+										textAnchor: 'middle',
+										offsetX: offsetX,
+										offsetY: 7,
+										text: `최근 1년 평균거래 : ${Math.round(
+											avgPrice,
+										).toLocaleString()}원`,
+										style: {
+											color: 'white',
+											background: 'black',
+											fontWeight: 700,
+											padding: {
+												left: 6,
+												right: 6,
+												top: 3,
+												bottom: 5,
+											},
+										},
+									},
+								},
+						  ]
+						: undefined,
+				},
+			},
+		}
+	}
+
 	// Option
 	const options = {
 		responsive: [
-			{
-				breakpoint: 414, // 414px 이하
-				options: {
-					chart: {
-						width: 330,
-						height: 200,
-					},
-				},
-			},
-			{
-				breakpoint: 820, // 820px 이하
-				options: {
-					chart: {
-						width: 660,
-						height: 400,
-					},
-				},
-			},
-			{
-				breakpoint: 10000, // 10000px 이하
-				options: {
-					chart: {
-						width: 900,
-						height: 500,
-					},
-				},
-			},
+			createBreakpoint(414, 330, 200, -150),
+			createBreakpoint(820, 660, 400, -450),
+			createBreakpoint(10000, 900, 500, -700),
 		],
 		chart: {
 			redrawOnWindowResize: true,
@@ -119,14 +139,14 @@ function Graph({ quoteList, searchQuote}) {
 					},
 				},
 			],
-			id: 'areachart-2',
+			id: 'quoteGraph',
 			type: 'area',
 			height: 500,
 			width: 900,
 			zoom: {
-				enabled: true,
+				enabled: false,
 				type: 'x',
-				autoScaleYaxis: false,
+				autoScaleYaxis: true,
 				zoomedArea: {
 					fill: {
 						color: '#90CAF9',
@@ -156,9 +176,9 @@ function Graph({ quoteList, searchQuote}) {
 								borderWidth: 1,
 								borderRadius: 10,
 								textAnchor: 'middle',
-								offsetX: -70,
+								offsetX: -700,
 								offsetY: 7,
-								text: `기간 내 평균거래 : ${Math.round(
+								text: `최근 1년 평균거래 : ${Math.round(
 									avgPrice,
 								).toLocaleString()}원`,
 								style: {
@@ -234,6 +254,7 @@ function Graph({ quoteList, searchQuote}) {
 		xaxis: {
 			type: 'datetime',
 			tickAmount: 100,
+			range: 7 * 24 * 60 * 60 * 1000, // 확대 최소 범위 7일 ➡️ 첫번째 랜더링 될때 내가 원하는 범위로 zoom을 해줌 다만 그 기간의 범위가 고정되는 문제가 있음
 			labels: {
 				datetimeFormatter: {
 					year: 'yyyy년 MMM',
@@ -241,21 +262,20 @@ function Graph({ quoteList, searchQuote}) {
 					day: 'MMM dd일',
 				},
 			},
+			enabled: false,
 		},
 		tooltip: {
 			shared: true,
 			followCursor: true,
 			intersect: false,
+			fillSeriesColor: true,
 			style: {
-				fontSize: '20px',
+				fontSize: '1.4rem',
 			},
 			x: {
-				format: 'yy년 MM월 dd일',
+				format: 'yyyy년 MM월 dd일',
 			},
 			y: {
-				style: {
-					fontSize: '50px',
-				},
 				formatter: function (val) {
 					return Math.round(val).toLocaleString() + '원'
 				},
@@ -265,38 +285,20 @@ function Graph({ quoteList, searchQuote}) {
 
 	// ApexFilter zoom-in, zoom-out 적용
 	function updateData(timeline) {
-		const today = new Date() // 오늘 날짜
-
-		// Filter되는 날짜 데이터 연산 후 저장
-		// 기준일로부터 일정 개월 전의 날짜 계산
-		const getDateMinusMonths = (date, months) => {
-			const newDate = new Date(date)
-			newDate.setMonth(date.getMonth() - months)
-			return newDate.getTime()
-		}
-
 		const dateFilter = {
-			'최근 일주일': [
-				new Date(
-					today.getFullYear(),
-					today.getMonth(),
-					today.getDate() - 6,
-				).getTime(),
-				today.getTime(),
-			],
-			'최근 1개월': [getDateMinusMonths(today, 1), today.getTime()],
-			'최근 3개월': [getDateMinusMonths(today, 3), today.getTime()],
-			'최근 6개월': [getDateMinusMonths(today, 6), today.getTime()],
-			'최근 1년': [getDateMinusMonths(today, 12), today.getTime()],
+			'최근 일주일': 7,
+			'최근 1개월': 30,
+			'최근 3개월': 90,
+			'최근 6개월': 270,
+			'최근 1년': 365,
 		}
-
-		// ex)  2/8 ~ 5/8 (3개월 전)
-		const [start, end] = dateFilter[timeline] || []
 
 		// Zoom 조절
-		if (start && end) {
-			return ApexCharts.exec('areachart-2', 'zoomX', start, end)
-		}
+		return ApexCharts.exec('quoteGraph', 'updateOptions', {
+			xaxis: {
+				range: dateFilter[timeline] * 24 * 60 * 60 * 1000,
+			},
+		})
 	}
 
 	return (
@@ -326,6 +328,17 @@ const GraphWrapper = styled.div`
 		& > div {
 			width: 350px;
 		}
+	}
+
+	// Apexchart클래스명에 직접적으로 주기
+	& .apexcharts-xaxistooltip {
+		display: none;
+	}
+
+	& .apexcharts-tooltip-text-y-value,
+	.apexcharts-tooltip-text-y-label {
+		font-size: 2.5rem;
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	}
 `
 
