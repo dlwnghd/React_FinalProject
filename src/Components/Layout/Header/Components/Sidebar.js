@@ -2,12 +2,13 @@ import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
+import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ItemBox from '../../../ItemBox/ItemBox'
 
 function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
+	const { data, error, status, isLoading, isError } = useGetViewedProductsList()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
@@ -19,26 +20,25 @@ function Sidebar({ onSideBar }) {
 			slideRef.current.style.transform = 'translateX(0%)'
 			$body.style.overflow = 'hidden'
 		}
-	})
+	}, [onSideBar])
 
 	return (
 		<S.SidebarWrapper ref={slideRef}>
 			<h4>최근 본 상품</h4>
 			<S.SideBarContainer>
 				<S.ProductList>
-					{productsMock.slice(0, 8).map((item, idx) => {
-						return (
-							<ItemBox
-								title={item.title}
-								price={item.price}
-								posterPath={item.image_url}
-								context={item.script}
-								isLiked={item.liked}
-								key={idx}
-								onClick={() => navigate(`/detail/${item.idx}`)}
-							/>
-						)
-					})}
+					{data &&
+						data.productList.map(item => {
+							return (
+								<ItemBox
+									title={item.Product.title}
+									price={item.Product.price}
+									posterPath={item.Product.img_url}
+									key={item.idx}
+									onClick={() => navigate(`/detail/${item.Product.idx}`)}
+								/>
+							)
+						})}
 				</S.ProductList>
 			</S.SideBarContainer>
 		</S.SidebarWrapper>

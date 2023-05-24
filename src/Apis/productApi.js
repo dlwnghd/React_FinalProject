@@ -27,6 +27,9 @@ const ProductApi = {
 		return axiosInstance.get(`${PATH}/quote`, {
 			params: { keyword, start, end },
 		})
+	},
+	readViewedList() {
+		return axiosInstance.get(`${PATH}/viewed-list`, {})
 	}
 }
 
