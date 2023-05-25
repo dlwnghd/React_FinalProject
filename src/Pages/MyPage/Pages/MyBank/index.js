@@ -4,7 +4,7 @@ import useGetMyPageBankList from '../../../../Hooks/Queries/get-myPageBank'
 
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../../Styles/common'
-import AmountSection from './Components/Amount'
+// import AmountSection from './Components/Amount'
 
 // import { useState, useEffect, useCallback } from 'react'
 // import axios from 'axios'
@@ -82,7 +82,7 @@ function MyBank() {
 
 	return (
 		<S.Wrapper>
-			<AmountSection
+			{/* <AmountSection
 				status={status}
 				amount={
 					data?.amount ?? {
@@ -92,7 +92,7 @@ function MyBank() {
 						thisMonthPurchaseAmount: 0,
 					}
 				}
-			/>
+			/> */}
 			<FilterSection
 				filter={filter}
 				setFilter={setFilter}

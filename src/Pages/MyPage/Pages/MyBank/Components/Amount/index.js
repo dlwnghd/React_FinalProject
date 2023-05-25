@@ -51,11 +51,12 @@ export default AmountSection
 const Wrapper = styled.div`
 	width: 100%;
 	height: 13rem;
-	padding: 2rem;
+	padding: 2rem 2rem 5rem;
+	margin-bottom: 5rem;
 	border-radius: 0.3rem;
 	${ColumnNumberCSS(4)}
 	${FlexCenterCSS}
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		padding: 1rem;
