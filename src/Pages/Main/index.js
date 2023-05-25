@@ -4,50 +4,54 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import productsMock from '../../__mock__/Data/Product/product.data'
 import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
-import GridBanner from './Components/Banner/RecentBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
+import RecentBanner from './Components/Banner/RecentBanner'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Main() {
 	const navigate = useNavigate()
 
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
+
+	if (isLoading && status === 'loading') return
+	if (error) return
+
 	return (
 		<S.Wrapper>
-			<MainBanner />
+			<MainBanner mainProduct={mainProduct} />
 			<S.Container>
-				<GridBanner />
+				<RecentBanner mainProduct={mainProduct} />
 				<S.FreeMarketList>
 					<S.Title>FREE MARKET</S.Title>
 					<S.ProductList>
-						{productsMock.slice(0, 8).map((item, idx) => {
+						{mainProduct.freeProduct.map((item, idx) => {
 							return (
 								<ItemBox
 									title={item.title}
 									price={item.price}
-									posterPath={item.image_url}
+									posterPath={item.img_url}
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
 									onClick={() => navigate(`/detail/${item.idx}`)}
-									// hover 되었을 경우, 투명도 있는 검정 바탕 위에 하트 표시하는 것으로 변경 예정
 								/>
 							)
 						})}
 					</S.ProductList>
 				</S.FreeMarketList>
-				<SlideBanner />
+				<SlideBanner mainProduct={mainProduct} />
 				<S.TradeUsedList>
 					<S.Title>TRADE USED</S.Title>
 					<S.ProductList>
-						{productsMock.slice(0, 8).map((item, idx) => {
+						{mainProduct.usedProduct.map((item, idx) => {
 							return (
 								<ItemBox
 									title={item.title}
 									price={item.price}
-									posterPath={item.image_url}
+									posterPath={item.img_url}
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
@@ -93,6 +97,8 @@ const ProductList = styled.div`
 	margin-top: 4rem;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
+	column-gap: 2rem;
+	row-gap: 6rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}

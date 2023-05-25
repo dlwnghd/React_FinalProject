@@ -1,24 +1,37 @@
 import styled from 'styled-components'
-import { ColumnNumberCSS, FlexAlignCSS } from '../../../../../../Styles/common'
+import { ColumnNumberCSS, FlexCenterCSS } from '../../../../../../Styles/common'
 import AmountItemBox from './Components/Box/ItemBox'
 import AmountTotalBox from './Components/Box/TotalBox'
+import LoadingSkeleton from '../../../../../../Components/Skeleton/Skeleton'
 
-function AmountSection() {
-	const amount = {
-		totalSaleAmount: '10000',
-		totalPurchaseAmount: '30000',
-		thisMonthSaleAmount: '3000',
-		thisMonthPurchaseAmount: '5000',
-	}
-
+function AmountSection({ status, amount }) {
 	const totalDifferenceAmount =
 		parseInt(amount?.totalSaleAmount || 0) -
-		parseInt(amount?.totalPurchaseAmount || 0)
+		parseInt(amount?.totalPurchaseAmount || 0) // 총 거래 차액
 
 	const totalPrice = {
 		sale: amount?.totalSaleAmount || 0,
 		purchase: amount?.totalPurchaseAmount || 0,
 		difference: totalDifferenceAmount,
+	} // 거래 금액 정보(판매 금액, 구매 금액, 차액)
+
+	if (status === 'loading')
+		return (
+			<S.Wrapper>
+				{Array(4)
+					.fill()
+					.map(i => (
+						<LoadingSkeleton key={i} width={'100%'} height={'100%'} />
+					))}
+			</S.Wrapper>
+		)
+
+	if (status === 'error') {
+		return (
+			<S.Wrapper>
+				<p>조회에 실패했습니다.</p>
+			</S.Wrapper>
+		)
 	}
 
 	return (
@@ -37,10 +50,11 @@ export default AmountSection
 
 const Wrapper = styled.div`
 	width: 100%;
+	height: 13rem;
 	padding: 2rem;
 	border-radius: 0.3rem;
 	${ColumnNumberCSS(4)}
-	${FlexAlignCSS}
+	${FlexCenterCSS}
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {

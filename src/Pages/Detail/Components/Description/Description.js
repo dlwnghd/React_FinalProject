@@ -5,7 +5,12 @@ import {
 	NotFillHeart_Icon,
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
-import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
+import {
+	FlexAlignCSS,
+	FlexBetweenCSS,
+	FlexCenterCSS,
+} from '../../../../Styles/common'
+import Button from '../../../../Components/Button/Button'
 
 function Description({ product }) {
 	const { title, price, description, ProductsTags, category, status } = product
@@ -24,22 +29,6 @@ function Description({ product }) {
 				</div>
 				<h2>{price}원</h2>
 			</S.TitleContainer>
-			<S.DescriptionContainer>
-				<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
-				<p>{description}</p>
-				<S.TagBox>
-					{ProductsTags.map((item, idx) => {
-						return (
-							<S.TagItem
-								key={idx}
-								onClick={() => navigate(`/search/${item.Tag}`)}
-							>
-								<span>#{item.Tag}</span>
-							</S.TagItem>
-						)
-					})}
-				</S.TagBox>
-			</S.DescriptionContainer>
 			<S.OptionContainer>
 				<S.HeartBox onClick={onClick}>
 					<p>찜</p>
@@ -49,12 +38,34 @@ function Description({ product }) {
 						<NotFillHeart_Icon size="30" />
 					)}
 				</S.HeartBox>
-
 				<S.ButtonBox>
-					<button>채팅</button>
-					<button>결제</button>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+						채팅
+					</S.StyledButton>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+						결제
+					</S.StyledButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
+			<hr />
+			<S.DescriptionContainer>
+				<div>
+					<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
+					<p>{description}</p>
+				</div>
+				<S.TagBox>
+					{ProductsTags.map((item, idx) => {
+						return (
+							<S.TagItem
+								key={idx}
+								onClick={() => navigate(`/search/${item.Tag}`)}
+							>
+								<p>#{item.tag}</p>
+							</S.TagItem>
+						)
+					})}
+				</S.TagBox>
+			</S.DescriptionContainer>
 		</S.Wrapper>
 	)
 }
@@ -64,14 +75,22 @@ export default Description
 const Wrapper = styled.section`
 	width: 100%;
 	height: 100%;
-	${FlexBetweenCSS}
+	padding: 2rem 2rem 0;
+	${FlexCenterCSS}
+	justify-content: flex-start;
 	flex-direction: column;
 	align-items: flex-start;
+
+	& > hr {
+		width: 100%;
+		height: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
+		margin: 4rem 0;
+	}
 `
 
 const TitleContainer = styled.div`
 	width: 100%;
-	padding: 2rem;
+	margin-bottom: 3rem;
 
 	& > div {
 		${FlexBetweenCSS}
@@ -80,16 +99,24 @@ const TitleContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
-	padding: 2rem;
+	& > div {
+		margin-bottom: 3rem;
+	}
+	& > div > h4 {
+		margin-bottom: 1rem;
+	}
 `
 
 const OptionContainer = styled.div`
 	width: 100%;
+
+	${FlexCenterCSS}
 `
 
 const HeartBox = styled.div`
 	${FlexAlignCSS}
-	margin-bottom:2rem;
+	margin-right:1rem;
+	cursor: pointer;
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
@@ -104,19 +131,34 @@ const HeartBox = styled.div`
 const TagBox = styled.ul`
 	${FlexAlignCSS}
 `
-const TagItem = styled.li``
+
+const TagItem = styled.li`
+	cursor: pointer;
+	padding: 0.5rem 2rem;
+	border-radius: 2rem;
+	margin-right: 1rem;
+	background: ${({ theme }) => theme.COLOR.common.gray[100]};
+	color: ${({ theme }) => theme.COLOR.common.black};
+
+	&:last-of-type {
+		margin-right: 0;
+	}
+`
 
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
+	width:100%;
+`
 
-	& > button {
-		width: 100%;
-		height: 6rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	}
+const StyledButton = styled(Button)`
+	background: ${({ theme }) => theme.COLOR.common.black};
+	color: ${({ theme }) => theme.COLOR.common.white};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	height: 6rem;
+	border: none;
+	box-sizing: border-box;
 
-	& > button:first-of-type {
+	&:first-of-type {
 		margin-right: 1rem;
 	}
 `
@@ -128,6 +170,7 @@ const S = {
 	OptionContainer,
 	HeartBox,
 	ButtonBox,
+	StyledButton,
 	TagBox,
 	TagItem,
 }
