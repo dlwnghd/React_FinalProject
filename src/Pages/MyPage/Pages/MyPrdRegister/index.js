@@ -2,9 +2,9 @@ import styled from 'styled-components'
 import { FlexCenterCSS, WidthAutoCSS } from '../../../../Styles/common'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
-// import MypageApi from '../../../../Apis/mypageApi'
 import { useState } from 'react'
 import TypeSelectBox from './Components/TypeSelectBox'
+// import MypageApi from '../../../../Apis/mypageApi'
 // import MyPageApi from '../../../../Apis/mypageApi'
 // import { useQuery } from '@tanstack/react-query'
 // import QUERY_KEY from '../../../../Consts/query.key'
@@ -30,6 +30,7 @@ function MyPrdRegister() {
 
 	const queryClient = useQueryClient()
 
+	console.log({ category })
 	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
 			queryClient.invalidateQueries([

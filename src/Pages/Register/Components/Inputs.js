@@ -114,7 +114,7 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		checkedCategory()
 	}, [watchedCategory])
 
-	const { mutate, isLoading } =
+	const { mutate } =
 		submitType === '등록'
 			? useMutation(formData => ProductApi.register(formData), {
 					onSuccess: () => {
