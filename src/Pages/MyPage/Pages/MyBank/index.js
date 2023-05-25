@@ -93,16 +93,17 @@ function MyBank() {
 					}
 				}
 			/> */}
-			<FilterSection
-				filter={filter}
-				setFilter={setFilter}
-				onSearch={getNewBankList}
-			/>
 			<StackedBar
 				status={status}
 				sale={data?.amount.thisMonthSaleAmount || 0}
 				purchase={data?.amount.thisMonthPurchaseAmount || 0}
 			/>
+			<FilterSection
+				filter={filter}
+				setFilter={setFilter}
+				onSearch={getNewBankList}
+			/>
+
 			<PayList
 				status={status}
 				category={filter.category}
@@ -114,7 +115,7 @@ function MyBank() {
 					totalPage={data?.pagination.totalPage}
 					setPage={setPage}
 					limit={10}
-					scroll={750}
+					scroll={765}
 				/>
 			)}
 		</S.Wrapper>

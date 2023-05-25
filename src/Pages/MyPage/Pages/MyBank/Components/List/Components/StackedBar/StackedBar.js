@@ -41,11 +41,11 @@ function StackedBar({ status, sale, purchase }) {
 				colors: ['#fff'],
 			},
 			title: {
-				text: '선택한 달의 내역',
+				text: '이번 달 내역',
 			},
 			xaxis: {
 				title: {
-					text: '총 소비+지출',
+					text: '소비+지출',
 				},
 				categories: [''],
 				labels: {
@@ -106,6 +106,6 @@ const Wrapper = styled.div`
 	box-shadow: 0 4px 14px rgba(48, 52, 65, 0.12);
 	border-radius: 0.8rem;
 	padding: 3rem 0;
-	margin: 2rem 0 6rem;
+	margin: 0 0 6.5rem;
 `
 const S = { Wrapper }
