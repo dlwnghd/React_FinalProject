@@ -1,21 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
-import Filter from '../../../Components/Filter/Filter'
 import { FlexCenterCSS } from '../../../Styles/common'
 
 function Graph({ quoteList, searchQuote }) {
 	const chartRef = useRef(null)
 	const chartContainerRef = useRef(null)
-
-	// Filter 종류
-	const dateFilter = [
-		'최근 일주일',
-		'최근 1개월',
-		'최근 3개월',
-		'최근 6개월',
-		'최근 1년',
-	]
 
 	const korMonth = [
 		'1월',
@@ -53,17 +43,6 @@ function Graph({ quoteList, searchQuote }) {
 		const avg = sum / nonZeroData.length
 		setAvgPrice(avg)
 	}, quoteDataList)
-
-	// 필터버튼 클릭시
-	const onFilter = e => {
-		dateFilter.some(item => {
-			if (e.target.innerText == item) {
-				updateData(item)
-				return true
-			}
-			return false
-		})
-	}
 
 	// Series(데이터가 들어가야할 곳!)
 	const series = [
@@ -201,8 +180,22 @@ function Graph({ quoteList, searchQuote }) {
 			enabled: false,
 		},
 		markers: {
-			size: 0,
-			style: 'hollow',
+			size: 5,
+			colors: undefined,
+			strokeColors: '#fff',
+			strokeWidth: 2,
+			strokeOpacity: 0.9,
+			strokeDashArray: 5,
+			fillOpacity: 1,
+			shape: 'circle',
+			offsetX: 0,
+			offsetY: 0,
+			onClick: undefined,
+			onDblClick: undefined,
+			showNullDataPoints: true,
+			hover: {
+				size: 10,
+			},
 		},
 		title: {
 			text: `${searchQuote ? searchQuote : '전체 상품'} 시세 동향`,
@@ -283,28 +276,9 @@ function Graph({ quoteList, searchQuote }) {
 		},
 	}
 
-	// ApexFilter zoom-in, zoom-out 적용
-	function updateData(timeline) {
-		const dateFilter = {
-			'최근 일주일': 7,
-			'최근 1개월': 30,
-			'최근 3개월': 90,
-			'최근 6개월': 270,
-			'최근 1년': 365,
-		}
-
-		// Zoom 조절
-		return ApexCharts.exec('quoteGraph', 'updateOptions', {
-			xaxis: {
-				range: dateFilter[timeline] * 24 * 60 * 60 * 1000,
-			},
-		})
-	}
-
 	return (
 		<S.GraphWrapper>
 			<S.GraphContainer ref={chartContainerRef}>
-				<Filter filterArray={dateFilter} onClick={onFilter} />
 				<ReactApexChart
 					name="kor"
 					options={options}
