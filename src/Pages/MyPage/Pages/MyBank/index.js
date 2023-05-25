@@ -114,7 +114,7 @@ function MyBank() {
 					totalPage={data?.pagination.totalPage}
 					setPage={setPage}
 					limit={10}
-					scroll={570}
+					scroll={750}
 				/>
 			)}
 		</S.Wrapper>
