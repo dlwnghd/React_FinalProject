@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../Styles/common'
 import { FaSearch } from 'react-icons/fa'
 import useInput from '../../../Hooks/useInput'
 
@@ -34,12 +33,12 @@ function RecentSearch({ setSearchQuote }) {
 export default RecentSearch
 
 const SearchWrapper = styled.div`
-	${WidthAutoCSS}
+	width: 85%;
 	display: flex;
 	flex-direction: column;
 	margin-top: 3rem;
 	padding-bottom: 1rem;
-	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
+	justify-content: center;
 `
 const TitleBox = styled.div``
 const Title = styled.span`
