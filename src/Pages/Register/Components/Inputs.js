@@ -18,7 +18,7 @@ import Modal from '../../../Components/Modal/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 
-function Inputs({ imageFile, DetailData, setImageList, refetch }) {
+function Inputs({ imageFile, DetailData, setImageList }) {
 	const {
 		control,
 		watch,
@@ -128,7 +128,6 @@ function Inputs({ imageFile, DetailData, setImageList, refetch }) {
 			: useMutation(formData => ProductApi.editProduct(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
-						refetch()
 					},
 					onError: () => {},
 			  })

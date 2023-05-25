@@ -20,18 +20,19 @@ function Register() {
 	}
 
 	const useGetProductDetailData = () => {
-		const { data, error, status, isLoading, isError, refetch } = useQuery(
+		const { data, error, status, isLoading, isError } = useQuery(
 			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
 			() => getProductDetailData(),
 			{
 				enabled: !!prod_idx,
 			},
 		)
-		return { data, error, status, isLoading, isError, refetch }
+		return { data, error, status, isLoading, isError }
 	}
 
-	const { data: DetailData, refetch } = useGetProductDetailData()
+	const { data: DetailData } = useGetProductDetailData()
 
+	console.log(DetailData)
 	return (
 		<S.Wrapper>
 			<Images
@@ -44,7 +45,6 @@ function Register() {
 				imageFile={imageFile}
 				DetailData={DetailData}
 				setImageList={setImageList}
-				refetch={refetch}
 			/>
 		</S.Wrapper>
 	)

@@ -18,8 +18,8 @@ function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 		setEditOption(false)
 	}
 
-	const productChange = () => {
-		navigate(`/register/${item.idx}`)
+	const productChange = idx => {
+		navigate(`/register/${idx}`)
 		setEditOption(false)
 	}
 
@@ -43,7 +43,7 @@ function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 
 						{editOption && (
 							<S.EditBox>
-								<div onClick={productChange}>수정</div>
+								<div onClick={() => productChange(idx)}>수정</div>
 								<div onClick={() => onProductDelete(idx)}>삭제</div>
 							</S.EditBox>
 						)}
