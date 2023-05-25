@@ -1,43 +1,37 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import UserApi from '../../Apis/userApi'
 import QUERY_KEY from '../../Consts/query.key'
-import axios from 'axios'
 
-const useUpdateUserInfo = () => {
+export const useUpdateUserInfo = data => {
 	const client = useQueryClient()
 	const { mutateAsync, isLoading } = useMutation(
-		async ({ email, nickName, phone, region, profile_url }) =>
-			await axios.all([
-				UserApi.userEdit({ email, nickName, phone, region }),
-				UserApi.userEditProfile(profile_url),
-			]),
+		({ email, nickName, phone, region }) =>
+			UserApi.userEdit({ email, nickName, phone, region }),
 		{
-			onSuccess: data => {
-				// const { data } = res.data
+			onSuccess: () => {
 				client.cancelQueries([
 					QUERY_KEY.GET_MYPAGE_MAIN_DATA,
 					QUERY_KEY.GET_USER_INFO,
 				])
 				client.setQueryData([QUERY_KEY.GET_USER_INFO], oldData => {
 					console.log(oldData)
-					console.log(email)
+					console.log(data)
 					let updateData = oldData.find(user => {
-						user.email === email
+						console.log(user)
+						user.email === data.email
 					})
+					updateData.nickName = data.nickName
+					updateData.phone = data.phone
+					updateData.region = data.region
 					console.log(updateData)
-					updateData.nickName = nickName
-					updateData.phone = phone
-					updateData.region = region
-					updateData.profile_url = profile_url
 					return oldData
 				})
 				client.setQueryData([QUERY_KEY.GET_MYPAGE_MAIN_DATA], oldData => {
 					console.log(oldData)
 					let updateData = oldData.find(user => {
 						console.log(user)
-						user.nickName === nickName
+						user.nickName === data.nickName
 					})
-					updateData.profile_url = profile_url
 					return oldData
 				})
 			},
@@ -46,4 +40,35 @@ const useUpdateUserInfo = () => {
 	return { mutateAsync, isLoading }
 }
 
-export default useUpdateUserInfo
+export const useUpdateProfileImg = data => {
+	const client = useQueryClient()
+	const { mutateAsync, isLoading } = useMutation(
+		({ profile_url }) => UserApi.userEditProfile(profile_url),
+		{
+			onSuccess: () => {
+				client.cancelQueries([
+					QUERY_KEY.GET_MYPAGE_MAIN_DATA,
+					QUERY_KEY.GET_USER_INFO,
+				])
+				client.setQueryData([QUERY_KEY.GET_USER_INFO], oldData => {
+					let updateData = oldData.find(user => {
+						console.log(user)
+						user.email === data.email
+					})
+					updateData.profile_url = data.profile_url
+					return oldData
+				})
+				client.setQueryData([QUERY_KEY.GET_MYPAGE_MAIN_DATA], oldData => {
+					console.log(oldData)
+					let updateData = oldData.find(user => {
+						console.log(user)
+						user.nickName === data.nickName
+					})
+					updateData.profile_url = data.profile_url
+					return oldData
+				})
+			},
+		},
+	)
+	return { mutateAsync, isLoading }
+}

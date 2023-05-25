@@ -20,11 +20,16 @@ import Modal from '../../../../../Components/Modal/Modal'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
-import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
+import {
+	useUpdateUserInfo,
+	useUpdateProfileImg,
+} from '../../../../../Hooks/Queries/update-userInfo'
 
 function UserInfo() {
-	const { data, error, status, isLoading: getLoading } = useGetUserInfo()
+	const { data, error, status, isLoading } = useGetUserInfo()
+	console.log(data)
 	const updateUserInfo = useUpdateUserInfo()
+	const updateProfileImg = useUpdateProfileImg()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -40,6 +45,7 @@ function UserInfo() {
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
 	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
+	const [isChangeImg, setIsChangeImg] = useState(false)
 
 	useEffect(() => {
 		setUserInfo({ ...data })
@@ -86,11 +92,13 @@ function UserInfo() {
 			nickName: editData.nickName,
 			phone: editData.phone,
 			region: editData.region,
-			profile_url: formData,
 		}
 		setIsSubmit(true)
 		try {
 			updateUserInfo.mutateAsync(editUser)
+			if (isChangeImg) {
+				updateProfileImg.mutateAsync({ profile_url: formData })
+			}
 			setMessage(MESSAGE.USEREDIT.SUCCESS)
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
@@ -99,29 +107,9 @@ function UserInfo() {
 				setIsSubmit(false)
 			}, 3000)
 		} catch (err) {
-			if (err.response.status === 400) {
-				setMessage(MESSAGE.USEREDIT.FAILURE)
-				setIsOpenModal(true)
-			}
+			setMessage(MESSAGE.USEREDIT.FAILURE)
+			setIsOpenModal(true)
 		}
-		// try {
-		// 	await axios.all([
-		// 		UserApi.userEdit(editUser),
-		// 		UserApi.userEditProfile(formData),
-		// 	])
-		// 	setMessage(MESSAGE.USEREDIT.SUCCESS)
-		// 	setIsDuplicate({ state: false, message: '' })
-		// 	setIsOpenModal(true)
-		// 	setTimeout(() => {
-		// 		setIsOpenModal(false)
-		// 		setIsSubmit(false)
-		// 	}, 3000)
-		// } catch (err) {
-		// 	if (err.response.status === 400) {
-		// 		setMessage(MESSAGE.USEREDIT.FAILURE)
-		// 		setIsOpenModal(true)
-		// 	}
-		// }
 	}
 
 	useEffect(() => {
@@ -134,7 +122,9 @@ function UserInfo() {
 		setValue('nickName', userInfo.nick_name)
 		setValue('region', userInfo.region)
 		setValue('phone', userInfo.phone)
+		setIsChangeImg(false)
 	}, [userInfo])
+	console.log(isChangeImg)
 
 	return (
 		<S.Wrapper>
@@ -153,6 +143,7 @@ function UserInfo() {
 							{...register('profile_img', {
 								onChange: e => {
 									saveImgFile(e)
+									setIsChangeImg(true)
 								},
 							})}
 						/>
