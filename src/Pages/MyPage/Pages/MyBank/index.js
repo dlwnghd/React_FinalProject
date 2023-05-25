@@ -13,6 +13,7 @@ import getFormattedDate from '../../../../Utils/getFormattedDate'
 import FilterSection from './Components/List/Components/Select'
 import PayList from './Components/List/Components/List/PayList'
 import Pagination from '../../../../Components/Pagination/Pagination'
+import StackedBar from './Components/List/Components/StackedBar/StackedBar'
 
 function MyBank() {
 	const navigate = useNavigate()
@@ -96,6 +97,11 @@ function MyBank() {
 				filter={filter}
 				setFilter={setFilter}
 				onSearch={getNewBankList}
+			/>
+			<StackedBar
+				status={status}
+				sale={data?.amount.thisMonthSaleAmount || 0}
+				purchase={data?.amount.thisMonthPurchaseAmount || 0}
 			/>
 			<PayList
 				status={status}
