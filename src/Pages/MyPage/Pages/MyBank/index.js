@@ -31,8 +31,10 @@ function MyBank() {
 	const [filter, setFilter] = useState({
 		page: params.page || 1,
 		category: params.category || 'seller',
-		start: params.start || getFormattedDate(today, { day: 1 }),
-		end: params.end || getFormattedDate(today, { day: true }),
+		start:
+			params.start ||
+			getFormattedDate(new Date(today.getFullYear(), today.getMonth(), 1)),
+		end: params.end || getFormattedDate(today),
 	})
 
 	const { data, status, refetch } = useGetMyPageBankList(filter)
