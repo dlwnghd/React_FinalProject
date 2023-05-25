@@ -60,7 +60,8 @@ export default PayList
 
 const Wrapper = styled.div`
 	margin-top: 1rem;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	/* border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]}; */
+	box-shadow: 0 4px 14px rgba(48, 52, 65, 0.12);
 	border-radius: 0.6rem;
 `
 
