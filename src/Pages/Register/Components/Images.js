@@ -6,7 +6,7 @@ import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { useState } from 'react'
 
-function Images({ setImageFiles, imageList, setImageList }) {
+function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 	const [imgNum, setImgNum] = useState(false)
 	const pictureInput = useRef()
 
@@ -18,7 +18,6 @@ function Images({ setImageFiles, imageList, setImageList }) {
 		const ImageLists = e.target.files
 		setImageFiles(ImageLists)
 		let ImageUrlLists = [...imageList]
-
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)

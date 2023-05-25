@@ -15,10 +15,10 @@ import TagsItem from './InputComponents/TagsItem'
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 
-function Inputs({ imageFile, DetailData, setImageList }) {
+function Inputs({ imageFile, DetailData, setImageList, refetch }) {
 	const {
 		control,
 		watch,
@@ -27,7 +27,10 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		setValue,
 		clearErrors,
 	} = useForm()
+
 	const navigate = useNavigate()
+	const params = useParams()
+
 	const watchedCategory = watch('category')
 	const [submitType, setSubmitType] = useState('등록')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
@@ -125,6 +128,7 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 			: useMutation(formData => ProductApi.editProduct(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
+						refetch()
 					},
 					onError: () => {},
 			  })
@@ -144,6 +148,7 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
+
 		for (let i = 0; i < imageFile.length; i++) {
 			formData.append('images', imageFile[i])
 		}
@@ -153,16 +158,18 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		}
 		if (submitType === '수정') {
 			formData.append('main_url', DetailData.searchProduct.img_url)
+			formData.append('idx', params.prod_idx)
 			formData.append('img_url', DetailData.searchProduct.ProductImages)
 
-			// try {
-			// 	const response = await ProductApi.editProduct(formData)
-			// 	console.log(response)
-			// 	setIsOpenModal(true)
-			// } catch (err) {}
+			// FormData의 value 확인
+			for (let value of formData.values()) {
+				console.log({ value })
+			}
+
 			mutate(formData)
 		}
 	}
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Controller

@@ -6,7 +6,6 @@ import { useState } from 'react'
 import TypeSelectBox from './Components/TypeSelectBox'
 // import MypageApi from '../../../../Apis/mypageApi'
 // import MyPageApi from '../../../../Apis/mypageApi'
-// import { useQuery } from '@tanstack/react-query'
 // import QUERY_KEY from '../../../../Consts/query.key'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import useGetMyPagePrdRegisterData from '../../../../Hooks/Queries/get-myPagePrdRegister'
@@ -26,11 +25,8 @@ function MyPrdRegister() {
 
 	const { data, isLoading, error } = useGetMyPagePrdRegisterData(category)
 
-	console.log(category, '무료면 1임')
-
 	const queryClient = useQueryClient()
 
-	console.log({ category })
 	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
 			queryClient.invalidateQueries([
@@ -45,6 +41,8 @@ function MyPrdRegister() {
 	const onProductDeleteCheck = () => {
 		mutate(ProductIdx)
 	}
+
+	console.log(category)
 	return (
 		<>
 			{isLoading ? (
@@ -54,7 +52,7 @@ function MyPrdRegister() {
 					<S.Wrapper>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.products.length}개</div>
-							<TypeSelectBox setCategory={setCategory} />
+							<TypeSelectBox setCategory={setCategory} category={category} />
 						</S.TotalNumAndFilter>
 
 						{isOpenModal && (
