@@ -124,16 +124,16 @@ const OptionContainer = styled.div`
 `
 
 const SkeletonBox = styled.div`
-	height: 556px;
+	height: 515px;
 	width: 900px;
 	margin: auto;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
-		height: 448px;
+		height: 415px;
 		width: 660px;
 	}
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		height: 248px;
+		height: 215px;
 		width: 330px;
 	}
 `
