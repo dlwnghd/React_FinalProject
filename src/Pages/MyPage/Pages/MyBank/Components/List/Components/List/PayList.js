@@ -18,7 +18,7 @@ function PayList({ status, category, payList }) {
 					{Array(4)
 						.fill()
 						.map(i => (
-							<LoadingSkeleton key={i} width={'100%'} height={'27.5rem'} />
+							<LoadingSkeleton key={i} width={'100%'} height={'20rem'} />
 						))}
 				</S.Container>
 			</S.Wrapper>
