@@ -2,20 +2,20 @@ import QUERY_KEY from '../../Consts/query.key'
 import MyPageApi from '../../Apis/mypageApi'
 import { useQuery } from '@tanstack/react-query'
 
-const getMyPagePrdRegisterData = async category => {
+const getMyPagePrdRegisterData = async (page, category) => {
 	const res = await MyPageApi.productList({
-		page: 1,
+		page,
 		category,
 	})
+	console.log(page)
 	return res.data
 }
 
-const useGetMyPagePrdRegisterData = category => {
-	const { data, error, status, isLoading, isError } = useQuery(
+const useGetMyPagePrdRegisterData = (page, category) => {
+	const { data, error, status, isLoading, isError, refetch } = useQuery(
 		[QUERY_KEY.GET_MYPAGE_REGISTER_DATA, category],
-		() => getMyPagePrdRegisterData(category),
-		// { staleTime: 1000 * 60 * 5 },
+		() => getMyPagePrdRegisterData(page, category),
 	)
-	return { data, error, status, isLoading, isError }
+	return { data, error, status, isLoading, isError, refetch }
 }
 export default useGetMyPagePrdRegisterData

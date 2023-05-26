@@ -36,7 +36,6 @@ const InputField = styled.div`
 
 	& > label {
 		width: 17rem;
-
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	}
 
