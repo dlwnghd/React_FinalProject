@@ -8,7 +8,7 @@ import ViewedItemBox from './ViewedItemBox'
 function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
-	const { data, error, status, isLoading, isError } = useGetViewedProductsList()
+	const { data, error, status, isLoading, isError, refetch } = useGetViewedProductsList()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
@@ -38,6 +38,7 @@ function Sidebar({ onSideBar }) {
 							return (
 								<>
 									<ViewedItemBox
+										refetch={refetch}
 										title={item.Product.title}
 										price={item.Product.price}
 										status={item.Product.status}

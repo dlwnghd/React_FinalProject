@@ -8,14 +8,14 @@ const getViewedProductsInfo = async () => {
 }
 
 const useGetViewedProductsList = () => {
-	const { data, error, status, isLoading, isError } = useQuery(
+	const { data, error, status, isLoading, isError, refetch } = useQuery(
 		[QUERY_KEY.GET_VIEWED_PRODUCT_LIST],
 		() => getViewedProductsInfo(),
 		{
 			cacheTime: 1000 * 60 * 5,
 		},
 	)
-	return { data, error, status, isLoading, isError }
+	return { data, error, status, isLoading, isError, refetch }
 }
 
 export default useGetViewedProductsList

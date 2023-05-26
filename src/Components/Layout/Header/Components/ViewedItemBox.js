@@ -1,11 +1,13 @@
 import styled from 'styled-components'
 import { DeleteProduct_Icon } from '../../../Icons/Icons'
 import { elapsedTime } from '../../../ItemBox/timeSet'
+import ProductApi from '../../../../Apis/productApi'
 import { FlexBetweenCSS } from '../../../../Styles/common'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
 function ViewedItemBox({
+	refetch,
 	posterPath,
 	title,
 	price,
@@ -15,7 +17,14 @@ function ViewedItemBox({
 	prod_idx,
 	...rest
 }) {
-	const onDeleteView = async prod_idx => {}
+	const onDeleteView = async prod_idx => {
+		try {
+			await ProductApi.deleteViewedList(prod_idx)
+			refetch()
+		} catch (error) {
+			console.error('아이템 삭제에 실패했습니다ㅠㅠ', error)
+		}
+	}
 
 	return (
 		<S.Wrapper>
