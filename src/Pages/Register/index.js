@@ -13,6 +13,7 @@ function Register() {
 	const [imageList, setImageList] = useState([])
 
 	const { prod_idx } = useParams()
+	console.log(prod_idx)
 
 	const getProductDetailData = async () => {
 		const res = await ProductApi.detail({ prod_idx })
@@ -20,19 +21,18 @@ function Register() {
 	}
 
 	const useGetProductDetailData = () => {
-		const { data, error, status, isLoading, isError } = useQuery(
+		const { data } = useQuery(
 			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
 			() => getProductDetailData(),
 			{
 				enabled: !!prod_idx,
 			},
 		)
-		return { data, error, status, isLoading, isError }
+		return { data }
 	}
 
 	const { data: DetailData } = useGetProductDetailData()
 
-	console.log(DetailData)
 	return (
 		<S.Wrapper>
 			<Images
@@ -45,6 +45,7 @@ function Register() {
 				imageFile={imageFile}
 				DetailData={DetailData}
 				setImageList={setImageList}
+				imageList={imageList}
 			/>
 		</S.Wrapper>
 	)

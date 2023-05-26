@@ -6,12 +6,12 @@ import router from './Routes/router'
 
 import { RecoilRoot } from 'recoil'
 
-import { worker } from './__mock__/browser'
+// import { worker } from './__mock__/browser'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
-	worker.start()
+	// worker.start()
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {

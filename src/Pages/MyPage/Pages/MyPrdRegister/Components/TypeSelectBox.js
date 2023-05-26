@@ -3,8 +3,11 @@ import { useState } from 'react'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import { Down_Icon } from '../../../../../Components/Icons/Icons'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function TypeSelectBox({ setCategory, category }) {
+	const navigate = useNavigate()
+
 	const secondhandText = '중고상품'
 	const FreeText = '무료상품'
 
@@ -21,6 +24,7 @@ function TypeSelectBox({ setCategory, category }) {
 	useEffect(() => {
 		setCategory(prev => prev)
 		setType(category == 0 ? '중고상품' : '무료상품')
+		navigate(`/mypage-register?category=${type}`)
 	}, [type])
 
 	return (

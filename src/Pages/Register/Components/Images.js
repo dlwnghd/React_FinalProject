@@ -5,6 +5,7 @@ import Button from '../../../Components/Button/Button'
 import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
 import { useState } from 'react'
+import { useEffect } from 'react'
 
 function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 	const [imgNum, setImgNum] = useState(false)
@@ -13,6 +14,14 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 	const handleClick = () => {
 		pictureInput.current.click()
 	}
+
+	useEffect(() => {
+		if (DetailData) {
+			const { img_url, ProductImages } = DetailData.searchProduct
+			setImageList([img_url])
+			setImageList(prev => [...prev, ...ProductImages.map(img => img.img_url)])
+		}
+	}, [DetailData])
 
 	const onAddImg = e => {
 		const ImageLists = e.target.files

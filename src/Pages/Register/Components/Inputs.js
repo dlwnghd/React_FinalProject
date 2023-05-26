@@ -59,33 +59,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		}
 	}
 
-	//수정
-	if (DetailData) {
-		const {
-			title,
-			price,
-			region,
-			category,
-			ProductsTags,
-			description,
-			img_url,
-			ProductImages,
-		} = DetailData.searchProduct
-
-		setValue('title', title)
-		setValue('description', description)
-		setValue('region', region)
-		if (hashArr.length === 0) {
-			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
-			setImageList(img => [...img, img_url])
-			ProductImages.map(Imgs => setImageList(img => [...img, Imgs.img_url]))
-			priceToString(price)
-			setResultAddress(() => region)
-			setValue('category', category ? '1' : '0')
-			setSubmitType(() => '수정')
-		}
-	}
-
 	const checkedCategory = () => {
 		const checkedNum = watchedCategory
 		if (checkedNum === '1') {
@@ -112,10 +85,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 	const deleteTagItem = e => {
 		setHashArr(hashArr.filter(el => el !== e))
 	}
-
-	useEffect(() => {
-		checkedCategory()
-	}, [watchedCategory])
 
 	const { mutate } =
 		submitType === '등록'
@@ -160,14 +129,28 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 			formData.append('idx', params.prod_idx)
 			formData.append('img_url', DetailData.searchProduct.ProductImages)
 
-			// FormData의 value 확인
-			for (let value of formData.values()) {
-				console.log({ value })
-			}
-
 			mutate(formData)
 		}
 	}
+
+	useEffect(() => {
+		checkedCategory()
+	}, [watchedCategory])
+
+	useEffect(() => {
+		if (DetailData) {
+			const { title, price, region, category, ProductsTags, description } =
+				DetailData.searchProduct
+
+			setValue('title', title)
+			setValue('description', description)
+			setValue('region', region)
+			setValue('category', category ? '1' : '0')
+			priceToString(price)
+			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			setSubmitType(() => '수정')
+		}
+	}, [DetailData])
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -295,22 +278,6 @@ const ButtonWrap = styled.div`
 	${FlexCenterCSS}
 `
 
-const OpenMadalBtn = styled.input`
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
-	width: 16rem;
-	height: 4.8rem;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
-
-	border: none;
-	&:hover {
-		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
-		transition: all 0.2s ease-in-out;
-	}
-
-	&:disabled {
-		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
-	}
-`
 const CategortContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -341,7 +308,6 @@ const ModalText = styled.div`
 const S = {
 	CategoryContainer,
 	CategortContainer,
-	OpenMadalBtn,
 	ButtonWrap,
 	StyledAlertText,
 	ModalText,
