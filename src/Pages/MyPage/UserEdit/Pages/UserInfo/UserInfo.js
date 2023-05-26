@@ -27,7 +27,6 @@ import {
 
 function UserInfo() {
 	const { data, error, status, isLoading } = useGetUserInfo()
-	console.log(data)
 	const updateUserInfo = useUpdateUserInfo()
 	const updateProfileImg = useUpdateProfileImg()
 	const [userInfo, setUserInfo] = useState({})
@@ -84,7 +83,6 @@ function UserInfo() {
 	}
 
 	const onSubmit = async editData => {
-		console.log(editData)
 		const formData = new FormData()
 		formData.append('profile_url', imgFile)
 		const editUser = {
@@ -109,6 +107,10 @@ function UserInfo() {
 		} catch (err) {
 			setMessage(MESSAGE.USEREDIT.FAILURE)
 			setIsOpenModal(true)
+			setTimeout(() => {
+				setIsOpenModal(false)
+				setIsSubmit(false)
+			}, 3000)
 		}
 	}
 
@@ -124,7 +126,6 @@ function UserInfo() {
 		setValue('phone', userInfo.phone)
 		setIsChangeImg(false)
 	}, [userInfo])
-	console.log(isChangeImg)
 
 	return (
 		<S.Wrapper>
