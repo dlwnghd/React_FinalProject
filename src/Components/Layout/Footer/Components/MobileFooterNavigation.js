@@ -1,22 +1,24 @@
 import { useNavigate } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 
 import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
+import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
 import { FlexCenterCSS } from '../../../../Styles/common'
 import {
 	Chatting_Icon,
 	FreeMarket_Icon,
 	Home_Icon,
-	MyPage_Icon,
+	Profile_Icon,
 	TradeUsed_Icon,
 } from '../../../Icons/Icons'
 
-function MobileFooter() {
+function MobileFooterNavigation() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
+	const userInfo = useRecoilValue(userInfoAtom)
 
 	let touchStart = 0
 	let touchEnd = 0
@@ -35,7 +37,6 @@ function MobileFooter() {
 			setScroll(true)
 		}
 	})
-
 
 	const MobileNav = [
 		{
@@ -61,7 +62,15 @@ function MobileFooter() {
 		{
 			text: '내 정보',
 			navigation: '/mypage-bank',
-			icon: <MyPage_Icon />,
+			icon:
+				Object.keys(userInfo).length !== 0 && userInfo.profileUrl ? (
+					<img
+						style={{ width: '28px', borderRadius: '50%' }}
+						src={userInfo.profileUrl}
+					/>
+				) : (
+					<Profile_Icon size="28" />
+				),
 		},
 	]
 
@@ -72,6 +81,7 @@ function MobileFooter() {
 					{MobileNav.map((nav, idx) => {
 						return (
 							<S.NavBox
+								key={idx}
 								className={`list ${footerSelect === idx ? 'active' : ''}`}
 								onClick={() => {
 									navigate(`${nav.navigation}`)
@@ -96,7 +106,7 @@ function MobileFooter() {
 		</S.NavigationWrapper>
 	)
 }
-export default MobileFooter
+export default MobileFooterNavigation
 
 const NavigationWrapper = styled.div`
 	display: none;

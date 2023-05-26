@@ -25,41 +25,30 @@ function ChangePW() {
 		mode: 'onChange',
 	})
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-	const [message, setMessage] = useState(MESSAGE.PWEDIT.SUCCESS)
+	const [message, setMessage] = useState('')
 
-	const onSubmit = async data => {
-		const { mutate } = useMutation(
-			() => UserApi.userEditPw({ pw: data.newPw }),
-			{
-				onSuccess: () => {
-					setMessage(MESSAGE.PWEDIT.SUCCESS)
-					setIsOpenModal(true)
-					setTimeout(() => setIsOpenModal(false), 3000)
-					setValue('newPw', '')
-					setValue('newPwConfirm', '')
-				},
-				onError: err => {
-					if (err.response.status === 400) {
-						setMessage(MESSAGE.PWEDIT.FAILURE)
-						setIsOpenModal(true)
-					}
-				},
+	const { mutateAsync } = useMutation(
+		newPw => UserApi.userEditPw({ pw: newPw }),
+		{
+			onSuccess: () => {
+				setMessage(MESSAGE.PWEDIT.SUCCESS)
+				setIsOpenModal(true)
+				setTimeout(() => setIsOpenModal(false), 3000)
+				setValue('newPw', '')
+				setValue('newPwConfirm', '')
 			},
-		)
-
-		// try {
-		// 	await UserApi.userEditPw({ pw: data.newPw })
-		// 	setMessage(MESSAGE.PWEDIT.SUCCESS)
-		// 	setIsOpenModal(true)
-		// 	setTimeout(() => setIsOpenModal(false), 3000)
-		// 	setValue('newPw', '')
-		// 	setValue('newPwConfirm', '')
-		// } catch (err) {
-		// 	if (err.response.status === 400) {
-		// 		setMessage(MESSAGE.PWEDIT.FAILURE)
-		// 		setIsOpenModal(true)
-		// 	}
-		// }
+			onError: err => {
+				console.log(err)
+				setMessage(MESSAGE.PWEDIT.FAILURE)
+				setIsOpenModal(true)
+				setTimeout(() => setIsOpenModal(false), 3000)
+				setValue('newPw', '')
+				setValue('newPwConfirm', '')
+			},
+		},
+	)
+	const onSubmit = async data => {
+		mutateAsync(data.newPw)
 	}
 	return (
 		<S.Wrapper>
