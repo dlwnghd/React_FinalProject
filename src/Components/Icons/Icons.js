@@ -26,6 +26,7 @@ import {
 	AiFillSignal,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
+import {TbTrashX} from 'react-icons/tb'
 
 export const Search_Icon = ({ color, position }) => (
 	<CiSearch color={color} position={position} />
@@ -96,3 +97,7 @@ export const FreeMarket_Icon = () => <AiOutlineShop /> // 프리마켓
 export const TradeUsed_Icon = () => <AiOutlineSwap /> // 트레이드 유즈
 export const Chatting_Icon = ({ size, color}) => <AiOutlineComment size={size} color={color}/> // 채팅
 export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
+
+export const DeleteProduct_Icon = ({ size, color, onClick }) => (
+	<TbTrashX size={size} color={color} onClick={onClick} />
+) // 최근 본 상품 삭제
