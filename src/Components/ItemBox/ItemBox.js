@@ -9,7 +9,6 @@ import { FlexBetweenCSS, GridCenterCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
 import ProductApi from '../../Apis/productApi'
 import { useMutation } from '@tanstack/react-query'
-import { useLocation } from 'react-router-dom'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
@@ -20,11 +19,12 @@ function ItemBox({
 	price,
 	isLiked,
 	createdAt,
+	status,
+	prod_idx,
 	...rest
-	// prod_idx도 받아오기
 }) {
 	const [isHeart, setIsHeart] = useState(isLiked)
-	const currentURL = useLocation().pathname.includes('recent-price')
+	const statusValue = String(status).includes('판매완료')
 
 	const { mutate: addLike, isLoading } = useMutation(prod_idx =>
 		ProductApi.like(prod_idx),
@@ -37,17 +37,19 @@ function ItemBox({
 
 	const onEdit = () => {}
 
+	console.log(status)
+
 	return (
 		<S.Wrapper>
-			{!currentURL &&
+			{status !== '판매완료' &&
 				(!isHeart ? (
 					<NotFillHeart_Icon size="30" onClick={onHeart} />
 				) : (
 					<FillHeart_Icon size="30" onClick={onHeart} />
 				))}
 			<S.SoldOutContainer />
-			<S.IMGContainer posterIMG={posterPath} currentURL={currentURL} {...rest}>
-				{currentURL && <h1>SOLD OUT</h1>}
+			<S.IMGContainer posterIMG={posterPath} statusValue={statusValue} {...rest}>
+				{statusValue && <h1>SOLD OUT</h1>}
 			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox context={context}>
@@ -99,14 +101,14 @@ const SoldOutContainer = styled.div`
 
 const IMGContainer = styled.div`
 	position: relative;
-	cursor: ${({ currentURL }) => !currentURL && 'pointer'};
+	cursor: ${({ statusValue }) => !statusValue && 'pointer'};
 	width: 100%;
 	height: 27.6rem;
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
-		${({ currentURL }) => currentURL && ',rgba(0, 0, 0, 0.5)'};
+		${({ statusValue }) => statusValue && ',rgba(0, 0, 0, 0.5)'};
 	background-blend-mode: multiply;
 	background-size: cover;
-	${({ currentURL }) => currentURL && GridCenterCSS}
+	${({ statusValue }) => statusValue && GridCenterCSS}
 	color: ${({ theme }) => theme.COLOR.common.white};
 
 	// 드래그 방지

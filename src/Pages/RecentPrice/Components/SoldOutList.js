@@ -17,6 +17,7 @@ function SoldOutList({ soldOutList }) {
 								isLiked={item.liked}
 								createdAt={item.createdAt}
 								key={idx}
+								status={item.status}
 								// onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
