@@ -7,8 +7,6 @@ import {
 import { useState } from 'react'
 import { FlexBetweenCSS, GridCenterCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
-import ProductApi from '../../Apis/productApi'
-import { useMutation } from '@tanstack/react-query'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
@@ -26,12 +24,7 @@ function ItemBox({
 	const [isHeart, setIsHeart] = useState(isLiked)
 	const statusValue = String(status).includes('판매완료')
 
-	const { mutate: addLike, isLoading } = useMutation(prod_idx =>
-		ProductApi.like(prod_idx),
-	)
-
 	const onHeart = () => {
-		// addLike(prod_idx)
 		setIsHeart(prev => !prev)
 	}
 
