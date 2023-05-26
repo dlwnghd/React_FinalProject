@@ -1,15 +1,21 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import styled from 'styled-components'
 import Filter from '../../../Components/Filter/Filter'
 import { FlexCenterCSS } from '../../../Styles/common'
 
-function Graph({ searchPrd, avgPrice, search }) {
+function Graph({ quoteList, searchQuote}) {
 	const chartRef = useRef(null)
 	const chartContainerRef = useRef(null)
 
 	// Filter 종류
-	const dateFilter = ['최근 3개월', '최근 6개월', '최근 1년']
+	const dateFilter = [
+		'최근 일주일',
+		'최근 1개월',
+		'최근 3개월',
+		'최근 6개월',
+		'최근 1년',
+	]
 
 	const korMonth = [
 		'1월',
@@ -26,7 +32,29 @@ function Graph({ searchPrd, avgPrice, search }) {
 		'12월',
 	]
 
-	const defaultData = searchPrd
+	let quoteDataList = []
+
+	const [avgPrice, setAvgPrice] = useState(0)
+
+	if (quoteList) {
+		quoteDataList = quoteList.prod_idx.cumulativeAvgPrice.map(item => {
+			return {
+				x: item.date,
+				y: Number(item.avgPrice),
+			}
+		})
+	}
+
+	// 전체 데이터 변화 할때 마다
+	useEffect(() => {
+		// 평균값을 저장합니다.
+		const nonZeroData = quoteDataList.filter(item => item.y !== 0)
+		const sum = nonZeroData.reduce((acc, curr) => acc + curr.y, 0)
+		const avg = sum / nonZeroData.length
+		setAvgPrice(avg)
+
+		// updateData('최근 일주일')
+	}, quoteDataList)
 
 	// 필터버튼 클릭시
 	const onFilter = e => {
@@ -42,8 +70,8 @@ function Graph({ searchPrd, avgPrice, search }) {
 	// Series(데이터가 들어가야할 곳!)
 	const series = [
 		{
-			name: search, // 상품명
-			data: defaultData, // 데이터가 들어가야할 곳
+			name: searchQuote, // 검색명
+			data: quoteDataList, // 데이터가 들어가야할 곳
 		},
 	]
 
@@ -120,7 +148,7 @@ function Graph({ searchPrd, avgPrice, search }) {
 			yaxis: avgPrice
 				? [
 						{
-							y: Number(`${avgPrice}`),
+							y: Number(`${Math.round(avgPrice)}`),
 							strokeDashArray: 2,
 							borderColor: 'black',
 							label: {
@@ -130,7 +158,9 @@ function Graph({ searchPrd, avgPrice, search }) {
 								textAnchor: 'middle',
 								offsetX: -70,
 								offsetY: 7,
-								text: `평균거래 : ${avgPrice.toLocaleString()}원`,
+								text: `기간 내 평균거래 : ${Math.round(
+									avgPrice,
+								).toLocaleString()}원`,
 								style: {
 									color: 'white',
 									background: 'black',
@@ -155,7 +185,7 @@ function Graph({ searchPrd, avgPrice, search }) {
 			style: 'hollow',
 		},
 		title: {
-			text: `${search} 시세 동향`,
+			text: `${searchQuote ? searchQuote : '전체 상품'} 시세 동향`,
 			align: 'center',
 			style: {
 				fontSize: '30',
@@ -220,7 +250,6 @@ function Graph({ searchPrd, avgPrice, search }) {
 				fontSize: '20px',
 			},
 			x: {
-				// format: 'yy년 MM월 dd일 HH시 mm분 ss초',
 				format: 'yy년 MM월 dd일',
 			},
 			y: {
@@ -228,7 +257,7 @@ function Graph({ searchPrd, avgPrice, search }) {
 					fontSize: '50px',
 				},
 				formatter: function (val) {
-					return val.toLocaleString() + '원'
+					return Math.round(val).toLocaleString() + '원'
 				},
 			},
 		},
@@ -239,31 +268,26 @@ function Graph({ searchPrd, avgPrice, search }) {
 		const today = new Date() // 오늘 날짜
 
 		// Filter되는 날짜 데이터 연산 후 저장
+		// 기준일로부터 일정 개월 전의 날짜 계산
+		const getDateMinusMonths = (date, months) => {
+			const newDate = new Date(date)
+			newDate.setMonth(date.getMonth() - months)
+			return newDate.getTime()
+		}
+
 		const dateFilter = {
-			'최근 3개월': [
+			'최근 일주일': [
 				new Date(
 					today.getFullYear(),
-					today.getMonth() - 2,
-					today.getDate(),
-				).getTime(),
-				today.getTime(),
-			],
-			'최근 6개월': [
-				new Date(
-					today.getFullYear(),
-					today.getMonth() - 5,
-					today.getDate(),
-				).getTime(),
-				today.getTime(),
-			],
-			'최근 1년': [
-				new Date(
-					today.getFullYear() - 1,
 					today.getMonth(),
-					today.getDate(),
+					today.getDate() - 6,
 				).getTime(),
 				today.getTime(),
 			],
+			'최근 1개월': [getDateMinusMonths(today, 1), today.getTime()],
+			'최근 3개월': [getDateMinusMonths(today, 3), today.getTime()],
+			'최근 6개월': [getDateMinusMonths(today, 6), today.getTime()],
+			'최근 1년': [getDateMinusMonths(today, 12), today.getTime()],
 		}
 
 		// ex)  2/8 ~ 5/8 (3개월 전)
@@ -274,10 +298,6 @@ function Graph({ searchPrd, avgPrice, search }) {
 			return ApexCharts.exec('areachart-2', 'zoomX', start, end)
 		}
 	}
-
-	useEffect(() => {
-		updateData('최근 3개월')
-	}, [searchPrd])
 
 	return (
 		<S.GraphWrapper>
