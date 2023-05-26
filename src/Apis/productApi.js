@@ -18,9 +18,9 @@ const ProductApi = {
 			}
 		)
 	},
-	readProductList(page, category = 0) {
+	readProductList(page = 1, category = 0) {
 		return axiosInstance.get(`${PATH}/search`, {
-			params: { page, category, keyword: '' },
+			params: { page, category, keyword: '', status: '판매중' },
 		})
 	},
 	readQuoteList(keyword, start, end) {
