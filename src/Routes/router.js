@@ -17,6 +17,7 @@ import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
 import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
+import MyReview from '../Pages/MyPage/Pages/MyReview'
 
 const router = createBrowserRouter([
 	{
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
 							{
 								path: '/mypage-register',
 								element: <MyPrdRegister />,
+							},
+							{
+								path: '/mypage-review',
+								element: <MyReview />,
 							},
 						],
 					},
