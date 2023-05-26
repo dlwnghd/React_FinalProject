@@ -4,66 +4,23 @@ import styled from 'styled-components'
 
 import { isNavigationAtom } from '../../../../Atoms/navigation.atom'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
+import { MobileNav } from '../../../../Consts/@mobileNavConfig'
 import { FlexCenterCSS } from '../../../../Styles/common'
-import {
-	Chatting_Icon,
-	FreeMarket_Icon,
-	Home_Icon,
-	MyPage_Icon,
-	TradeUsed_Icon,
-} from '../../../Icons/Icons'
 
 function MobileFooter() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 	const [footerSelect, setFooterSelect] = useRecoilState(isNavigationAtom)
 
-	let touchStart = 0
-	let touchEnd = 0
-
-	// 모바일 터치 이벤트리스너
-	window.addEventListener('touchstart', event => {
-		touchStart = event.changedTouches[0].clientY
-	})
-
-	window.addEventListener('touchend', event => {
-		touchEnd = event.changedTouches[0].clientY
-
-		if (touchEnd - touchStart > -10) {
-			setScroll(false)
-		} else if (touchEnd - touchStart < -10) {
+	window.addEventListener('wheel', function (event) {
+		if (event.deltaY > 0) {
 			setScroll(true)
+		} else if (event.deltaY < 0) {
+			setScroll(false)
+		} else if (document.documentElement.scrollTop <= 0) {
+			setScroll(false)
 		}
 	})
-
-
-	const MobileNav = [
-		{
-			text: '홈',
-			navigation: '/',
-			icon: <Home_Icon />,
-		},
-		{
-			text: '무료',
-			navigation: '/list/freeMarket',
-			icon: <FreeMarket_Icon />,
-		},
-		{
-			text: '네고',
-			navigation: '/list/usedTrade',
-			icon: <TradeUsed_Icon />,
-		},
-		{
-			text: '채팅',
-			navigation: '/chat인데 modal로 띄우기로 해서 흠',
-			icon: <Chatting_Icon />,
-		},
-		{
-			text: '내 정보',
-			navigation: '/mypage-bank',
-			icon: <MyPage_Icon />,
-		},
-	]
 
 	return (
 		<S.NavigationWrapper className={scroll ? 'scroll' : ''}>
@@ -80,11 +37,6 @@ function MobileFooter() {
 							>
 								<div>
 									<span className="icon">{nav.icon}</span>
-									{idx === 3 && (
-										<S.IssueBox
-											className={`${footerSelect === idx ? 'active' : ''}`}
-										/>
-									)}
 									<span className="text">{nav.text}</span>
 								</div>
 							</S.NavBox>
@@ -190,22 +142,6 @@ const NavBox = styled.li`
 		)}
 `
 
-const IssueBox = styled.span`
-	position: absolute;
-	transform: translate(1.1rem, -1.8rem);
-	background: red;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
-	border-radius: 2rem;
-	padding: 0.5rem;
-	color: ${({ theme }) => theme.COLOR.common.white};
-	transition: 0.5s;
-
-	&.active {
-		transform: translate(1.1rem, -5.8rem);
-		color: ${({ theme }) => theme.COLOR.common.black};
-	}
-`
-
 const Indicator = styled.div`
 	position: absolute;
 	top: -50%;
@@ -247,6 +183,5 @@ const S = {
 	Navigation,
 	NavList,
 	NavBox,
-	IssueBox,
 	Indicator,
 }

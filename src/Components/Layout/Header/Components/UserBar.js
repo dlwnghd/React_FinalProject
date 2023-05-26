@@ -1,57 +1,72 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
-import { Chatting_Icon } from '../../../Icons/Icons'
-// import { Profile_Icon } from '../../../Icons/Icons'
+import { Profile_Icon } from '../../../Icons/Icons'
 
 function UserBar({ setSelectedNav }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 
+	const [dropdown, setDropdown] = useState(false) // 사용자 드롭다운 관리용
+	/**
+	 * 드롭다운 닫기 핸들러
+	 */
+	const dropdownCloseHandler = ({ target }) => {
+		if (dropdown && userMenu.current && !userMenu.current.contains(target)) {
+			setDropdown(false)
+		}
+	}
+
+	// 회원정보 드롭다운 관리
+	useEffect(() => {
+		window.addEventListener('click', dropdownCloseHandler)
+		return () => {
+			window.removeEventListener('click', dropdownCloseHandler)
+		}
+	})
+
 	return (
 		<S.UserWrapper>
-			<S.UserContainer>
-				<span onClick={() => navigate('/chating')}>
-					<Chatting_Icon size="28" color={'black'} />
-				</span>
-				<S.IssueBox />
-				<S.UserBox ref={userMenu}>
-					{/* <Profile_Icon size="28" /> */}
-					<S.ProfileIMG
-						posterIMG={
-							'https://img-cf.kurly.com/shop/data/goods/1649403816159l0.jpg'
-						}
-					/>
-					<p>회원명</p>
-					<S.UserDropDownMenu className="dropdown">
-						<span
-							onClick={() => {
-								navigate('/mypage-bank')
-								setSelectedNav(5)
-							}}
-						>
-							마이페이지
-						</span>
-						<span
-							onClick={() => {
-								navigate('/mypage/useredit-userinfo')
-								setSelectedNav(5)
-							}}
-						>
-							회원정보 수정
-						</span>
-						<span
-							onClick={() => {
-								navigate('/')
-								setSelectedNav(4)
-							}}
-						>
-							LOGOUT
-						</span>
-					</S.UserDropDownMenu>
-				</S.UserBox>
-			</S.UserContainer>
+			<S.UserBox
+				ref={userMenu}
+				onClick={() => {
+					setDropdown(prev => !prev)
+				}}
+			>
+				<Profile_Icon size="28" />
+				<span>99+</span>
+				<p>회원명</p>
+			</S.UserBox>
+			{dropdown && (
+				<S.UserDropDownMenu>
+					<span
+						onClick={() => {
+							navigate('/mypage-bank')
+							setSelectedNav(5)
+						}}
+					>
+						마이페이지
+					</span>
+					<span
+						onClick={() => {
+							navigate('/mypage/useredit-userinfo')
+							setSelectedNav(5)
+						}}
+					>
+						회원정보 수정
+					</span>
+					<span>채팅목록</span>
+					<span
+						onClick={() => {
+							navigate('/')
+							setSelectedNav(4)
+						}}
+					>
+						LOGOUT
+					</span>
+				</S.UserDropDownMenu>
+			)}
 		</S.UserWrapper>
 	)
 }
@@ -73,69 +88,34 @@ const UserWrapper = styled.div`
 	}
 `
 
-const UserContainer = styled.div`
-	display: flex;
-	column-gap: 8px;
-`
-
 const UserBox = styled.div`
-	${FlexAlignCSS}
+	${FlexAlignCSS};
 	height: 100%;
 	color: ${({ theme }) => theme.COLOR.common.black};
-	column-gap: 1rem;
-	z-index: 600;
-	border-radius: 1rem;
-	padding: 2px;
-	transition: 0.1s ease;
 
-	&:hover {
-		&:hover:before {
-			content: '';
-			position: absolute;
-			border-color: transparent transparent
-				${({ theme }) => theme.COLOR.common.gray[300]};
-			border-style: solid;
-			border-width: 0px 20px 11px;
-			width: 0rem;
-			height: 1rem;
-			top: 41px;
-			z-index: 20;
-			margin-left: 4rem;
-		}
-
-		& > .dropdown {
-			display: grid;
-		}
+	& > svg {
+		margin-right: 1rem;
 	}
-`
 
-const IssueBox = styled.span`
-	position: absolute;
-	transform: translateX(1.7rem);
-	background: red;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
-	border-radius: 2rem;
-	padding: 0.4rem;
-	color: ${({ theme }) => theme.COLOR.common.white};
-
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
-		padding: 0.5rem;
+	& > span {
+		position: absolute;
 		transform: translate(2.2rem, -1rem);
+		background: red;
+		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
+		border-radius: 50rem;
+		padding: 0px 5px;
+		color: ${({ theme }) => theme.COLOR.common.white};
 	}
-`
 
-const ProfileIMG = styled.div`
-	position: relative;
-	width: 2.8rem;
-	height: 2.8rem;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
-	background-size: cover;
-	border-radius: 2rem;
+	& > p {
+		margin-left: 2.5rem;
+	}
 `
 
 const UserDropDownMenu = styled.div`
 	position: absolute;
-	display: none;
+	display: grid;
+	background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
 	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 	border-radius: 5%;
 	top: 25%;
@@ -146,23 +126,18 @@ const UserDropDownMenu = styled.div`
 		padding: 1rem;
 		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 		cursor: pointer;
-		border-radius: 1rem;
-		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
+		border-radius: 5%;
 
 		:hover {
-			scale: 1.1;
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
-			color: ${({ theme }) => theme.COLOR.common.white};
+			border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 		}
 	}
 `
 
 const S = {
 	UserWrapper,
-	UserContainer,
 	UserBox,
-	IssueBox,
-	ProfileIMG,
 	UserDropDownMenu,
 }

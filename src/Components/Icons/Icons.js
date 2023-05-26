@@ -94,5 +94,5 @@ export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
 export const Home_Icon = () => <AiOutlineHome /> // 홈
 export const FreeMarket_Icon = () => <AiOutlineShop /> // 프리마켓
 export const TradeUsed_Icon = () => <AiOutlineSwap /> // 트레이드 유즈
-export const Chatting_Icon = ({ size, color}) => <AiOutlineComment size={size} color={color}/> // 채팅
+export const Chatting_Icon = () => <AiOutlineComment /> // 채팅
 export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
