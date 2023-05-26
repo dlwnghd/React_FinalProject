@@ -4,7 +4,7 @@ import useGetMyPageBankList from '../../../../Hooks/Queries/get-myPageBank'
 
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../../Styles/common'
-// import AmountSection from './Components/Amount'
+import AmountSection from './Components/Amount'
 
 // import { useState, useEffect, useCallback } from 'react'
 // import axios from 'axios'
@@ -13,7 +13,6 @@ import getFormattedDate from '../../../../Utils/getFormattedDate'
 import FilterSection from './Components/List/Components/Select'
 import PayList from './Components/List/Components/List/PayList'
 import Pagination from '../../../../Components/Pagination/Pagination'
-import StackedBar from './Components/List/Components/StackedBar/StackedBar'
 
 function MyBank() {
 	const navigate = useNavigate()
@@ -84,22 +83,8 @@ function MyBank() {
 
 	return (
 		<S.Wrapper>
-			{/* <AmountSection
-				status={status}
-				amount={
-					data?.amount ?? {
-						totalSaleAmount: 0,
-						totalPurchaseAmount: 0,
-						thisMonthSaleAmount: 0,
-						thisMonthPurchaseAmount: 0,
-					}
-				}
-			/> */}
-			<StackedBar
-				status={status}
-				sale={data?.amount.thisMonthSaleAmount || 0}
-				purchase={data?.amount.thisMonthPurchaseAmount || 0}
-			/>
+			<AmountSection status={status} amount={data?.amount} />
+
 			<FilterSection
 				filter={filter}
 				setFilter={setFilter}
