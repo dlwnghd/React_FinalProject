@@ -2,37 +2,33 @@ import styled from 'styled-components'
 import { FlexCenterCSS, WidthAutoCSS } from '../../../../Styles/common'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TypeSelectBox from './Components/TypeSelectBox'
-// import MypageApi from '../../../../Apis/mypageApi'
-// import MyPageApi from '../../../../Apis/mypageApi'
-// import QUERY_KEY from '../../../../Consts/query.key'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import useGetMyPagePrdRegisterData from '../../../../Hooks/Queries/get-myPagePrdRegister'
 import Modal from '../../../../Components/Modal/Modal'
 import { isOpenModalAtom } from '../../../../Atoms/modal.atom'
 import { useRecoilState } from 'recoil'
 import Button from '../../../../Components/Button/Button'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
-import QUERY_KEY from '../../../../Consts/query.key'
 
 function MyPrdRegister() {
 	const [ProductIdx, setProductIdx] = useState()
 	const [category, setCategory] = useState(0)
 
+	const [page, setPage] = useState(1)
+
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
-	const { data, isLoading, error } = useGetMyPagePrdRegisterData(category)
-
-	const queryClient = useQueryClient()
+	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
+		page,
+		category,
+	)
 
 	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
-			queryClient.invalidateQueries([
-				QUERY_KEY.GET_MYPAGE_REGISTER_DATA,
-				category,
-			])
+			refetch()
 			setIsOpenModal(false)
 		},
 		onError: err => {},
@@ -42,7 +38,9 @@ function MyPrdRegister() {
 		mutate(ProductIdx)
 	}
 
-	console.log(category)
+	useEffect(() => {
+		refetch()
+	}, [page])
 	return (
 		<>
 			{isLoading ? (
@@ -51,8 +49,13 @@ function MyPrdRegister() {
 				<>
 					<S.Wrapper>
 						<S.TotalNumAndFilter>
-							<div>전체 {data.products.length}개</div>
-							<TypeSelectBox setCategory={setCategory} category={category} />
+							<div>전체 {data.pagination.count}개</div>
+							<TypeSelectBox
+								setCategory={setCategory}
+								category={category}
+								setPage={setPage}
+								page={page}
+							/>
 						</S.TotalNumAndFilter>
 
 						{isOpenModal && (
@@ -85,7 +88,12 @@ function MyPrdRegister() {
 							})}
 						</S.PrdList>
 					</S.Wrapper>
-					<Pagination total={data?.count} limit={10} page={1} />
+					<Pagination
+						totalPage={data?.pagination.totalPage}
+						setPage={setPage}
+						limit={10}
+						scroll={300}
+					/>
 				</>
 			)}
 		</>

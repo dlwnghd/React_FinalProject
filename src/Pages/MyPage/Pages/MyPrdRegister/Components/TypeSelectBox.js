@@ -5,7 +5,7 @@ import { Down_Icon } from '../../../../../Components/Icons/Icons'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function TypeSelectBox({ setCategory, category }) {
+function TypeSelectBox({ setCategory, category, page, setPage }) {
 	const navigate = useNavigate()
 
 	const secondhandText = '중고상품'
@@ -19,12 +19,14 @@ function TypeSelectBox({ setCategory, category }) {
 		let selected = e.target.textContent
 		setCategory(selected === '무료상품' ? 1 : 0)
 		setType(() => selected)
+		setPage(1)
 	}
 
 	useEffect(() => {
+		console.log({ category })
 		setCategory(prev => prev)
 		setType(category == 0 ? '중고상품' : '무료상품')
-		navigate(`/mypage-register?category=${type}`)
+		navigate(`/mypage-register?category=${category}&page=${page}`)
 	}, [type])
 
 	return (

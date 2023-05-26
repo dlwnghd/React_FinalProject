@@ -44,7 +44,6 @@ function Register() {
 			<Inputs
 				imageFile={imageFile}
 				DetailData={DetailData}
-				setImageList={setImageList}
 				imageList={imageList}
 			/>
 		</S.Wrapper>

@@ -31,11 +31,9 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
 		}
-
 		if (ImageUrlLists.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
 		}
-
 		setImageList(ImageUrlLists)
 	}
 
@@ -70,12 +68,12 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 
 	return (
 		<S.TotalWrapper>
-			<MobileTitle>
-				<Left>상품 등록</Left>
-				<Right>
-					<BoldTxt>*필수항목</BoldTxt>은 꼭 입력해주세요
-				</Right>
-			</MobileTitle>
+			<S.MobileTitle>
+				<S.Left>상품 등록</S.Left>
+				<div>
+					<S.BoldTxt>*필수항목</S.BoldTxt>은 꼭 입력해주세요
+				</div>
+			</S.MobileTitle>
 			<S.Title>
 				<S.ImgTitle>상품 이미지 * ({imageList.length}/5)</S.ImgTitle>
 				<Button
@@ -168,7 +166,6 @@ const Img = styled.img`
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 `
 const Del = styled.span`
-	font-size: 20px;
 	position: absolute;
 	top: 0.5rem;
 	right: 0.2rem;
@@ -208,7 +205,7 @@ const MobileTitle = styled.div`
 const Left = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.big};
 `
-const Right = styled.div``
+
 const BoldTxt = styled.span`
 	font-size: ${({ theme }) => theme.FONT_SIZE.small};
 	font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
@@ -231,4 +228,7 @@ const S = {
 	Title,
 	MainImg,
 	Error,
+	Left,
+	MobileTitle,
+	BoldTxt,
 }

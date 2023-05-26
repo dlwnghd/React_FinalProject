@@ -1,117 +1,149 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
-import {
-	PaginationArrowDouble_Icon,
-	PaginationArrowSingle_Icon,
-} from '../Icons/Icons'
+import { PaginationArrowSingle_Icon } from '../Icons/Icons'
+import { FlexCenterCSS } from '../../Styles/common'
+import scrollToTop from '../../Utils/scrollToTop'
 
 /**
- * @param total - 전체 물품 수
- * @param limit - 몇개씩 볼것인가
- * @param page - 현재페이지
+ * @param limit - 페이지네이션 몇 개씩 할 것인지
+ * @param totalPage -  총 페이지 갯수
+ * @param setPage - page 관련 state를 변경시키는 로직의 함수
+ * @param scroll - 페이지네이션 클릭 시 이동될 위치
  * @사용예시 - `<Pagination total={300} page={2} />`
  */
 
-function Pagination({ total, limit, page }) {
-	const numPages = Math.ceil(total / limit)
+/*
+	setPage는 page의 state를 변경시키는 함수이고,
+	goPage는 쿼리 스트링만을 변경시키는 함수입니다.
+*/
+function Pagination({ limit, totalPage, setPage, scroll }) {
+	const [searchParams, setSearchParams] = useSearchParams()
 
-	const startPage = Math.floor((page - 1) / 10) * 10 + 1 // 시작페이지번호
-	let endPage = startPage + 10 - 1 // 끝 페이지 번호
-	if (endPage >= numPages) endPage = numPages // 끝 페이지 번호 수정용
+	const nowPage = parseInt(searchParams.get('page')) || 1 // 지금 페이지 number
 
-	const navigate = useNavigate() // url 경로 이동용 내비게이션
+	const startPage = Math.floor((nowPage - 1) / limit) * limit + 1 // 시작 페이지 number. ex. 지금 14페이지라면 시작 페이지는 11입니다.
+	let endPage = startPage + limit - 1 // 끝 페이지 번호. ex. 지금 14페이지라면 끝 페이지는 20입니다.
+	if (endPage >= totalPage) endPage = totalPage // 끝 페이지 번호 수정용. ex. 최종 마지막 페이지가 19라면 20이 끝 페이지가 아니라 19가 됩니다.
 
-	function createArray(start, end) {
-		var arr = []
-		for (var i = start; i <= end; i++) {
-			arr.push(i)
+	const createArray = (start, end) => {
+		return Array(end - start + 1)
+			.fill()
+			.map((_, i) => start + i)
+	}
+
+	const goPage = number => {
+		setPage(number)
+		// 기존 쿼리 스트링을 유지
+		const queryString = {}
+		searchParams
+			.toString()
+			.split('&')
+			.forEach(query => {
+				const [key, value] = query.split('=')
+				queryString[key] = value
+			})
+
+		queryString['page'] = number // 쿼리 스트링 값 중 'page'만 변경
+		setSearchParams(queryString)
+	}
+
+	const isDisabled = type => {
+		switch (type) {
+			case 'start':
+				return Math.floor((nowPage - 1) / limit) === 0
+			case 'end':
+				return Math.ceil(nowPage / limit) === Math.ceil(totalPage / limit)
 		}
-		return arr
 	}
 
-	// 페이지네이션 이동 관련 코드 <= 추후 페이지네이션에 맞게 수정하면 됨
-	const currentLocation = useLocation()
-		.pathname.split('/')
-		.slice(0, 3)
-		.join('/')
-
-	const setPage = number => {
-		navigate(`${currentLocation}/${number}/${limit}`)
-	}
+	if (!endPage) return // endPage이 0으로 온 경우 아무 것도 return X
 
 	return (
-		<>
-			<Nav>
-				<Button onClick={() => setPage(1)} disabled={Number(page) === 1}>
-					<PaginationArrowDouble_Icon rotate={180} />
-				</Button>
-				<Button onClick={() => setPage(page - 1)} disabled={Number(page) === 1}>
-					<PaginationArrowSingle_Icon rotate={180} />
-				</Button>
-				{createArray(startPage, endPage)
-					.fill()
-					.map((_, i) => (
-						<Button
-							key={i + startPage}
-							id={i + 1}
-							onClick={() => setPage(i + startPage)}
-							aria-current={Number(page) === i + startPage ? 'page' : null}
-						>
-							{i + startPage}
-						</Button>
-					))}
-				<Button
-					onClick={() => setPage(Number(page) + 1)}
-					disabled={Number(page) === numPages}
+		<S.Nav>
+			<S.Button
+				onClick={() => {
+					goPage(Math.floor((nowPage - 1) / limit) * limit)
+					scrollToTop(scroll)
+				}}
+				disabled={isDisabled('start')}
+			>
+				<PaginationArrowSingle_Icon rotate={180} />
+			</S.Button>
+			{createArray(startPage, endPage).map((_, i) => (
+				<S.NumBtn
+					key={i}
+					onClick={() => {
+						goPage(i + startPage)
+						scrollToTop(scroll)
+					}}
+					aria-current={nowPage === i + startPage ? 'page' : null}
 				>
-					<PaginationArrowSingle_Icon />
-				</Button>
-				<Button
-					onClick={() => setPage(numPages)}
-					disabled={Number(page) === numPages}
-				>
-					<PaginationArrowDouble_Icon />
-				</Button>
-			</Nav>
-		</>
+					{i + startPage}
+				</S.NumBtn>
+			))}
+			<S.Button
+				onClick={() => {
+					goPage(Math.ceil(nowPage / limit) * limit + 1)
+					scrollToTop(scroll)
+				}}
+				disabled={isDisabled('end')}
+			>
+				<PaginationArrowSingle_Icon />
+			</S.Button>
+		</S.Nav>
 	)
 }
 
 const Nav = styled.nav`
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	${FlexCenterCSS}
 	gap: 4px;
-	margin: 16px;
+	margin-top: 4rem;
 `
 
 const Button = styled.button`
-	border: none;
-	border-radius: 8px;
-	padding: 8px;
-	margin: 0;
-	background: black;
-	color: white;
-	font-size: 1rem;
+	padding: 0.4rem;
+	margin: 0 0.2rem;
+	font-size: 1.2rem;
+	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 
 	&:hover {
 		background-color: ${({ theme }) => theme.COLOR.hover};
+		transition: all 0.2s ease-in-out;
 		cursor: pointer;
-		transform: translateY(-2px);
 	}
 
 	&[disabled] {
-		background: grey;
+		background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 		cursor: revert;
 		transform: revert;
 	}
+`
+
+const NumBtn = styled.button`
+	margin: 0 1rem;
+	border: none;
+	font-size: 1.3rem;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	cursor: pointer;
+
+	&:hover {
+		color: ${({ theme }) => theme.COLOR.main};
+		border-bottom: 1px solid ${({ theme }) => theme.COLOR.main};
+	}
 
 	&[aria-current] {
-		background-color: ${({ theme }) => theme.COLOR.main};
+		color: ${({ theme }) => theme.COLOR.main};
 		font-weight: bold;
 		cursor: revert;
 		transform: revert;
 	}
 `
+
+const S = {
+	Nav,
+	Button,
+	NumBtn,
+}
 
 export default Pagination

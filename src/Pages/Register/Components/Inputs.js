@@ -18,7 +18,7 @@ import Modal from '../../../Components/Modal/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 
-function Inputs({ imageFile, DetailData, setImageList }) {
+function Inputs({ imageFile, DetailData }) {
 	const {
 		control,
 		watch,
@@ -91,6 +91,7 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 			? useMutation(formData => ProductApi.register(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
+						navigate(-1)
 					},
 					onError: () => {},
 			  })
@@ -141,7 +142,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		if (DetailData) {
 			const { title, price, region, category, ProductsTags, description } =
 				DetailData.searchProduct
-
 			setValue('title', title)
 			setValue('description', description)
 			setValue('region', region)
