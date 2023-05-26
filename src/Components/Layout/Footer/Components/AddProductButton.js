@@ -9,15 +9,24 @@ function AddProductButton() {
 	const navigate = useNavigate()
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
+	let touchStart = 0
+	let touchEnd = 0
+
+	// 모바일 터치 이벤트리스너
+	window.addEventListener('touchstart', event => {
+		touchStart = event.changedTouches[0].clientY
+	})
+
+	window.addEventListener('touchend', event => {
+		touchEnd = event.changedTouches[0].clientY
+
+		if (touchEnd - touchStart > -10) {
+			setScroll(false)
+		} else if (touchEnd - touchStart < -10) {
 			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
 		}
 	})
+
 
 	/**
 	 * 상품 추가 기능
