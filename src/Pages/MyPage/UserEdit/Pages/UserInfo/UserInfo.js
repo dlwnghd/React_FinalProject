@@ -6,7 +6,7 @@ import {
 } from '../../../../../Styles/common'
 import Input from '../../../../../Components/Input/Input'
 import Button from '../../../../../Components/Button/Button'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
@@ -15,16 +15,11 @@ import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
+import axios from 'axios'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
-import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
-import MESSAGE from '../../../../../Consts/message'
-import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
-import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
 
 function UserInfo() {
-	const { data, error, status, isLoading: getLoading } = useGetUserInfo()
-	const updateUserInfo = useUpdateUserInfo()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -39,11 +34,23 @@ function UserInfo() {
 	const [isSubmit, setIsSubmit] = useState(false)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
-	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
 
 	useEffect(() => {
-		setUserInfo({ ...data })
-	}, [data])
+		const getData = async () => {
+			try {
+				const { data } = await UserApi.userInfo()
+				setUserInfo({ ...data })
+				setImgFile(data.profile_url)
+				setPreFile(
+					data.profile_url ||
+						'https://static.nid.naver.com/images/web/user/default.png?type=s160',
+				)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		getData()
+	}, [])
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
@@ -57,7 +64,6 @@ function UserInfo() {
 
 	const modalOpen = () => {
 		document.body.style.overflow = 'hidden'
-		setIsSubmit(false)
 		setIsOpenModal(true)
 	}
 
@@ -74,11 +80,11 @@ function UserInfo() {
 			if (err.response.status === 400) {
 				setIsDuplicate({ state: true, message: err.response.data.message })
 			}
+			console.log(err)
 		}
 	}
 
 	const onSubmit = async editData => {
-		console.log(editData)
 		const formData = new FormData()
 		formData.append('profile_url', imgFile)
 		const editUser = {
@@ -86,12 +92,13 @@ function UserInfo() {
 			nickName: editData.nickName,
 			phone: editData.phone,
 			region: editData.region,
-			profile_url: formData,
 		}
 		setIsSubmit(true)
 		try {
-			updateUserInfo.mutateAsync(editUser)
-			setMessage(MESSAGE.USEREDIT.SUCCESS)
+			await axios.all([
+				UserApi.userEdit(editUser),
+				UserApi.userEditProfile(formData),
+			])
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
 			setTimeout(() => {
@@ -99,37 +106,11 @@ function UserInfo() {
 				setIsSubmit(false)
 			}, 3000)
 		} catch (err) {
-			if (err.response.status === 400) {
-				setMessage(MESSAGE.USEREDIT.FAILURE)
-				setIsOpenModal(true)
-			}
+			console.log(err)
 		}
-		// try {
-		// 	await axios.all([
-		// 		UserApi.userEdit(editUser),
-		// 		UserApi.userEditProfile(formData),
-		// 	])
-		// 	setMessage(MESSAGE.USEREDIT.SUCCESS)
-		// 	setIsDuplicate({ state: false, message: '' })
-		// 	setIsOpenModal(true)
-		// 	setTimeout(() => {
-		// 		setIsOpenModal(false)
-		// 		setIsSubmit(false)
-		// 	}, 3000)
-		// } catch (err) {
-		// 	if (err.response.status === 400) {
-		// 		setMessage(MESSAGE.USEREDIT.FAILURE)
-		// 		setIsOpenModal(true)
-		// 	}
-		// }
 	}
 
 	useEffect(() => {
-		setImgFile(userInfo.profile_url)
-		setPreFile(
-			userInfo.profile_url ||
-				'https://static.nid.naver.com/images/web/user/default.png?type=s160',
-		)
 		setValue('email', userInfo.email)
 		setValue('nickName', userInfo.nick_name)
 		setValue('region', userInfo.region)
@@ -138,8 +119,8 @@ function UserInfo() {
 
 	return (
 		<S.Wrapper>
-			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-				<S.Container>
+			<FormProvider>
+				<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 					<S.InputBox>
 						<S.ProfileImg src={preFile} />
 						<S.ImgLabel htmlFor="profileImg">
@@ -157,43 +138,42 @@ function UserInfo() {
 							})}
 						/>
 					</S.InputBox>
-				</S.Container>
-				<S.Container>
 					<S.InputBox>
 						<S.Label>아이디(이메일)</S.Label>
-						<Input readOnly {...register('email')} />
-					</S.InputBox>
-				</S.Container>
-				<S.Container>
-					<S.InputBox>
-						<S.Label>닉네임</S.Label>
 						<Input
-							status={errors.nickName && 'error'}
-							{...register('nickName', {
-								required: {
-									value: true,
-									message: '닉네임을 입력해주세요',
-								},
-								onBlur: e => checkNickname(e),
-							})}
+							readOnly
+							{...register('email')}
+							defaultValue={userInfo.email}
 						/>
 					</S.InputBox>
-					<S.StyledAlert type="error" size="default">
-						{errors.nickName && errors.nickName.message}
-					</S.StyledAlert>
-					{isDuplicate && (
-						<S.StyledAlert
-							type={isDuplicate.state ? 'error' : 'success'}
-							size="default"
-							style={{ position: 'relative' }}
-						>
-							{isDuplicate.state !== null &&
-								!errors.nickName &&
-								isDuplicate.message}
+					<div>
+						<S.InputBox>
+							<S.Label>닉네임</S.Label>
+							<Input
+								status={errors.nickName && 'error'}
+								{...register('nickName', {
+									required: {
+										value: true,
+										message: '닉네임을 입력해주세요',
+									},
+									onChange: e => checkNickname(e),
+								})}
+							/>
+						</S.InputBox>
+						<S.StyledAlert type="error" size="default">
+							{errors.nickName && errors.nickName.message}
 						</S.StyledAlert>
-					)}
-				</S.Container>
-				<S.Container>
+						{isDuplicate && (
+							<S.StyledAlert
+								type={isDuplicate.state ? 'error' : 'success'}
+								size="default"
+							>
+								{isDuplicate.state !== null &&
+									!errors.nickName &&
+									isDuplicate.message}
+							</S.StyledAlert>
+						)}
+					</div>
 					<S.InputBox>
 						<S.Label>주소</S.Label>
 						<Input
@@ -211,29 +191,33 @@ function UserInfo() {
 						</S.RegisterButton>
 						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
 					</S.InputBox>
-				</S.Container>
-				<S.Container>
-					<S.InputBox>
-						<S.Label>연락처</S.Label>
-						<Input
-							status={errors.phone && 'error'}
-							{...register('phone', {
-								required: {
-									value: true,
-									message: '연락처를 입력해주세요',
-								},
-								onChange: e =>
-									setValue('phone', addHyphenToPhoneNum(e.target.value)),
-							})}
-						/>
-					</S.InputBox>
-					<S.StyledAlert type="error" size="default">
-						{errors.phone && errors.phone.message}
-					</S.StyledAlert>
-				</S.Container>
-				{isSubmit && isOpenModal && <AlertModal message={message} />}
-				<S.SubmitButton>변경</S.SubmitButton>
-			</form>
+					<div>
+						<S.InputBox>
+							<S.Label>연락처</S.Label>
+							<Input
+								status={errors.phone && 'error'}
+								{...register('phone', {
+									required: {
+										value: true,
+										message: '연락처를 입력해주세요',
+									},
+									onChange: e =>
+										setValue('phone', addHyphenToPhoneNum(e.target.value)),
+								})}
+							/>
+						</S.InputBox>
+						<S.StyledAlert type="error" size="default">
+							{errors.phone && errors.phone.message}
+						</S.StyledAlert>
+					</div>
+					{isSubmit && isOpenModal && (
+						<S.StyledModal size="medium">
+							<S.Text>프로필 수정이 완료되었습니다</S.Text>
+						</S.StyledModal>
+					)}
+					<S.SubmitButton>변경</S.SubmitButton>
+				</form>
+			</FormProvider>
 		</S.Wrapper>
 	)
 }
@@ -247,12 +231,10 @@ const Wrapper = styled.div`
 		width: 95%;
 	}
 `
-const Container = styled.div`
-	height: 8rem;
-`
+
 const InputBox = styled.div`
 	${FlexAlignCSS}
-	margin-bottom: 0.5rem;
+	margin-bottom: 1.5rem;
 `
 
 const ImgLabel = styled.label`
@@ -289,7 +271,6 @@ const ProfileImg = styled.img`
 const StyledAlert = styled(AlertText)`
 	margin-left: 20%;
 	padding-left: 0rem;
-	margin-bottom: 0;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		margin-left: 23%;
 	}
@@ -314,7 +295,6 @@ const SubmitButton = styled(Button)`
 `
 const S = {
 	Wrapper,
-	Container,
 	InputBox,
 	ImgLabel,
 	Label,

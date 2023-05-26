@@ -10,7 +10,8 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 	]
 	const page = req.url.searchParams.get('page') || 1
 	const pageSize = req.url.searchParams.get('pageSize') || 10
-	const category = req.url.searchParams.get('category') || 0
+	const search = req.url.searchParams.get('search') || ''
+	const category = req.url.searchParams.get('category') || ''
 	const filterOption =
 		req.url.searchParams.get('filterOption') || searchFilter[0]
 	const status = req.url.searchParams.get('status') || '판매중'
@@ -32,9 +33,14 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 		- page, pageSize로 slice((page - 1) * 10,(page - 1) * 10 Number(pageSize),)
 	 */
 
+	console.log('🔴🔴🔴🔴', filterOption === searchFilter[0])
+	console.log('🟡🟡🟡🟡', filterOption === searchFilter[1])
+	console.log('🟢🟢🟢🟢', filterOption === searchFilter[2])
+	console.log('🔵🔵🔵🔵', filterOption === searchFilter[3])
 	const sliceProducts = productsMock
 		.filter(item => item.status.includes(status))
-		.filter(item => item.category === Number(category))
+		.filter(item => item.title.includes(search))
+		.filter(item => item.category == category)
 		.sort((a, b) => {
 			if (filterOption === searchFilter[0]) {
 				return new Date(a.createdAt) - new Date(b.createdAt)

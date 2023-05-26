@@ -36,6 +36,10 @@ const router = createBrowserRouter([
 				element: <Main />,
 			},
 			{
+				path: '/*',
+				element: <Error404 />,
+			},
+			{
 				element: <PrivateRoute />,
 				children: [
 					{
@@ -94,10 +98,6 @@ const router = createBrowserRouter([
 				],
 			},
 		],
-	},
-	{
-		path: '/*',
-		element: <Error404 />,
 	},
 ])
 

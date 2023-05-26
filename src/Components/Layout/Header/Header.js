@@ -39,24 +39,16 @@ function Header() {
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 1 : 0)
 	}, [currentURL])
 
-	let touchStart = 0
-	let touchEnd = 0
-
-	// 모바일 터치 이벤트리스너
-	window.addEventListener('touchstart', event => {
-		touchStart = event.changedTouches[0].clientY
-	})
-
-	window.addEventListener('touchend', event => {
-		touchEnd = event.changedTouches[0].clientY
-
-		if (touchEnd - touchStart > -10) {
-			setScroll(false)
-		} else if (touchEnd - touchStart < -10) {
+	// 스크롤 이벤트리스너
+	window.addEventListener('wheel', function (event) {
+		if (event.deltaY > 0) {
 			setScroll(true)
+		} else if (event.deltaY < 0) {
+			setScroll(false)
+		} else if (document.documentElement.scrollTop <= 0) {
+			setScroll(false)
 		}
 	})
-
 
 	// url 변경시 스크롤 최상단으로 이동
 	useEffect(() => {
