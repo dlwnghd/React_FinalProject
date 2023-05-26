@@ -69,7 +69,7 @@ function Header() {
 
 	return (
 		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
-			<Sidebar onSideBar={onSideBar} />
+			<Sidebar onSideBar={onSideBar} setOnSideBar={setOnSideBar} />
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
 					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />

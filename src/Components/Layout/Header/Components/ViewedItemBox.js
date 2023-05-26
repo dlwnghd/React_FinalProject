@@ -75,20 +75,29 @@ const Wrapper = styled.div`
 const IMGContainer = styled.div`
 	position: relative;
 	cursor: pointer;
-	width: 17rem;
-	height: 17rem;
+	width: 7.2rem;
+	height: 7.2rem;
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
+	
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 17rem;
+		height: 17rem;
+	}
 `
 
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
-	width:50%;
+	width:62%;
 	height: 100%;
 	padding: 0 1rem;
 	flex-direction: column;
 	align-items: baseline;
-	/* background: red; */
+	font-size: 50%
+	
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width:50%;
+	}
 `
 
 const DescBox = styled.div`

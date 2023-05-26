@@ -1,26 +1,28 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
-import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
+import { ColumnNumberCSS, FlexCenterCSS, GridCenterCSS } from '../../../../Styles/common'
 import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ViewedItemBox from './ViewedItemBox'
 
-function Sidebar({ onSideBar }) {
+function Sidebar({ onSideBar, setOnSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
-	const { data, error, status, isLoading, isError, refetch } = useGetViewedProductsList()
+	const { data, error, status, isLoading, isError, refetch } =
+		useGetViewedProductsList()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
-		if (onSideBar === false) {
-			slideRef.current.style.transform = 'translateX(100%)'
+
+		if (window.innerWidth > 414) {
+			slideRef.current.style.transform = 'translateX(0%)'
 			$body.style.overflow = 'auto'
-			return
-		}
-		if (onSideBar === true) {
+		} else if (onSideBar === true) {
 			slideRef.current.style.transform = 'translateX(0%)'
 			$body.style.overflow = 'hidden'
-			return
+		} else if (onSideBar === false) {
+			slideRef.current.style.transform = 'translateX(100%)'
+			$body.style.overflow = 'auto'
 		}
 	}, [onSideBar])
 
@@ -64,38 +66,56 @@ export default Sidebar
 
 const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 7.8rem;
-	left: 0;
+	top: 28.8rem;
 	z-index: 99;
-	width: 100%;
 	height: 100%;
 	overflow-y: auto;
-	padding: 6rem 6rem 12rem 6rem;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	transition: 0.5s ease-in-out;
-	transform: translateX(100%);
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-	display: none;
+	height: 50%;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	transform: translateX(0%);
+	width: 21rem;
+	right: 5px;
+	left: 84%;
+	padding: 0rem 1rem 1rem;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		top: 7.8rem;
 		display: block;
+		transform: translateX(100%);
+		width: 100%;
+		left: 0;
+		padding: 0rem 6rem 12rem 6rem;
+		height: 100%;
 	}
 `
 
 const SideBarTitleContainer = styled.div`
-	margin: 2rem 0;
+	padding: 2rem 0;
+	position: sticky;
+	top: 0px;
+	z-index: 99999;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 `
 
 const SideBarContainer = styled.ul``
 
 const ProductList = styled.li`
 	width: 100%;
-	${GridCenterCSS}
+	${FlexCenterCSS}
 	${ColumnNumberCSS(4)};
+	flex-direction: column;
+	row-gap: 1rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${GridCenterCSS}
 		${ColumnNumberCSS(1)}
 		column-gap: 2rem;
 	}
