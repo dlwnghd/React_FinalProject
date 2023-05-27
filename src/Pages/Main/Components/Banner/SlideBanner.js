@@ -62,7 +62,7 @@ function SlideBanner() {
 						)
 					})}
 				</S.SlideBox>
-				<Pagination currentIdx={currentIdx} />
+				<Pagination bannerList={bannerList} currentIdx={currentIdx} />
 			</S.SlideList>
 		</S.Wrapper>
 	)

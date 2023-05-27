@@ -16,7 +16,7 @@ function RecentBanner({ mainProduct }) {
 	const usedProduct = mainProduct.usedProduct
 
 	// 최근 등록상품 리스트
-	const recentProduct = usedProduct.concat(freeProduct)
+	const recentProduct = [...freeProduct, ...usedProduct]
 	const recentFilter = [...recentProduct]
 	recentFilter.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
@@ -36,7 +36,10 @@ function RecentBanner({ mainProduct }) {
 
 	return (
 		<S.Wrapper>
-			<S.Title alignDetail={validLocation}>최근 상품 보러가기</S.Title>
+			<S.Title alignDetail={validLocation}>
+				<h3>최근 상품 보러가기</h3>
+				<span>오늘 새롭게 등록된 상품을 보러오세요</span>
+			</S.Title>
 			<S.SlideContainer>
 				<S.SlideList
 					ref={slider}
@@ -50,7 +53,7 @@ function RecentBanner({ mainProduct }) {
 					{recentFilter.slice(0, 2).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{recentFilter.splice(0, 6).map((item, idx) => {
+								{recentFilter.splice(0, 5).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
@@ -65,10 +68,10 @@ function RecentBanner({ mainProduct }) {
 				</S.SlideList>
 				<S.ButtonBox>
 					<button className="prev" onClick={prevSlide}>
-						<Arrow_Icon size="15" color="white" />
+						<Arrow_Icon size="15" color="black" />
 					</button>
 					<button className="next" onClick={nextSlide}>
-						<Arrow_Icon size="15" color="white" />
+						<Arrow_Icon size="15" color="black" />
 					</button>
 				</S.ButtonBox>
 			</S.SlideContainer>
@@ -82,9 +85,15 @@ const Wrapper = styled.section`
 	overflow: hidden;
 `
 
-const Title = styled.h3`
+const Title = styled.div`
 	text-align: ${({ alignDetail }) =>
 		alignDetail === 'detail' ? 'left' : 'center'};
+	margin-bottom: ${({ alignDetail }) =>
+		alignDetail === 'detail' ? '1rem' : '3rem'};
+
+	& > h3 {
+		margin-bottom: 1rem;
+	}
 `
 
 const SlideContainer = styled.div`
@@ -102,7 +111,7 @@ const SlideList = styled.div`
 const SlideBox = styled.ul`
 	width: 100%;
 	${GridCenterCSS}
-	${ColumnNumberCSS(6)}
+	${ColumnNumberCSS(5)}
 	column-gap: 2rem;
 
 	box-sizing: border-box;
@@ -115,7 +124,6 @@ const SlideBox = styled.ul`
 
 	& > li {
 		width: 100%;
-		/* height: 17.4rem; */
 	}
 
 	& > li::after {
@@ -151,8 +159,6 @@ const ButtonBox = styled.div`
 
 	& > .prev {
 		left: 0;
-		/* border-top-right-radius: 1rem;
-		border-bottom-right-radius: 1rem; */
 
 		& > svg {
 			transform: rotate(180deg);
@@ -161,8 +167,6 @@ const ButtonBox = styled.div`
 
 	& > .next {
 		right: 0;
-		/* border-top-left-radius: 1rem;
-		border-bottom-left-radius: 1rem; */
 	}
 `
 

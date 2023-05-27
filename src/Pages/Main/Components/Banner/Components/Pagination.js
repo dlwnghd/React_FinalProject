@@ -1,18 +1,15 @@
 import styled from 'styled-components'
-import productsMock from '../../../../../__mock__/Data/Product/product.data'
 import { FlexAlignCSS } from '../../../../../Styles/common'
 
-function Pagination({ currentIdx }) {
+function Pagination({ currentIdx, bannerList }) {
 	return (
 		<S.Wrapper>
-			{productsMock.slice(0, 4).map((prd, idx) => {
+			{bannerList?.map((prd, idx) => {
 				return (
 					<S.PaginationBox>
-						{currentIdx === idx ? (
-							<PaginationItems className="active"></PaginationItems>
-						) : (
-							<PaginationItems></PaginationItems>
-						)}
+						<PaginationItems
+							className={currentIdx === idx && 'active'}
+						></PaginationItems>
 					</S.PaginationBox>
 				)
 			})}
