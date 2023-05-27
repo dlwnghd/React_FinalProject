@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client'
 
 // 소켓 생성
-const socket = io('https://topdragon.co.kr')
+export const socket = io('https://topdragon.co.kr')
 
 // 최초 소켓 연결
 export const firstConnect = userSocketId => {
@@ -9,10 +9,9 @@ export const firstConnect = userSocketId => {
 	connectSocket.emit('connect-user', {
 		socket: userSocketId,
 	})
-
 	console.log(`연결 성공  : ${userSocketId}님`)
 
-	return connectSocket
+	return true
 }
 
 //일단 이거는 내일 한번 내가 확인해보겠음.
