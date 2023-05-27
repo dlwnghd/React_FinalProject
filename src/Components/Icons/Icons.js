@@ -25,6 +25,8 @@ import {
 	AiOutlineDown,
 	AiOutlineCalendar,
 	AiFillSignal,
+	AiFillStar,
+	AiOutlineStar,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 
@@ -119,3 +121,12 @@ export const FreeMarket_Icon = () => <AiOutlineShop /> // 프리마켓
 export const TradeUsed_Icon = () => <AiOutlineSwap /> // 트레이드 유즈
 export const Chatting_Icon = () => <AiOutlineComment /> // 채팅
 export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
+
+// 빈 별
+export const Star_Fill = ({ size, color }) => (
+	<AiFillStar size={size} color={color} />
+)
+// 채워진 별
+export const Star_Empty = ({ size, color }) => (
+	<AiOutlineStar size={size} color={color} />
+)
