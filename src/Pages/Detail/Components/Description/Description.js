@@ -12,13 +12,34 @@ import {
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
+import { useState } from 'react'
+import useGetHeartInterestData from '../../../../Hooks/Queries/get-heartInterest'
+import { useEffect } from 'react'
 
-function Description({ detailProduct, detailIsLoading, detailStatus }) {
+function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
-
-	const { title, status, price, liked, category, description, ProductsTags } =
+	console.log(liked)
+	const { title, idx, status, price, category, description, ProductsTags } =
 		detailProduct.searchProduct
+
 	const navigate = useNavigate()
+	const [isLiked, setIsLiked] = useState(liked)
+
+	const {
+		data: heartData,
+		status: heartStatus,
+		refetch,
+	} = useGetHeartInterestData(idx, isLiked)
+
+	const onHeart = () => {
+		setIsLiked(prev => !prev)
+	}
+
+	useEffect(() => {
+		refetch()
+	}, [isLiked])
+
+	if (heartStatus === 'loading') return
 
 	return (
 		<S.Wrapper>
@@ -27,15 +48,15 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 					<h3>{title}</h3>
 					<p>{status}</p>
 				</div>
-				<h2>{price.toLocaleString()}원</h2>
+				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
 			<S.OptionContainer>
-				<S.HeartBox>
+				<S.HeartBox onClick={onHeart}>
 					<p>찜</p>
-					{liked ? (
-						<FillHeart_Icon size="30" />
+					{heartData.message ? (
+						<FillHeart_Icon size="24" />
 					) : (
-						<NotFillHeart_Icon size="30" />
+						<NotFillHeart_Icon size="24" />
 					)}
 				</S.HeartBox>
 				<S.ButtonBox>
@@ -51,19 +72,21 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 					<p>{description}</p>
 				</div>
 				<S.TagBox>
-					{ProductsTags.map((item, idx) => {
-						return (
-							<TagsItem
-								key={idx}
-								onClick={() => navigate(`/search/${item.Tag.tag}`)}
-								size={'default'}
-								shape={'round'}
-								color={'default'}
-							>
-								<p>#{item.Tag.tag}</p>
-							</TagsItem>
-						)
-					})}
+					<>
+						{ProductsTags.map((item, idx) => {
+							return (
+								<TagsItem
+									key={idx}
+									onClick={() => navigate(`/search/${item.Tag.tag}`)}
+									size={'default'}
+									shape={'round'}
+									color={'default'}
+								>
+									<p>#{item.Tag.tag}</p>
+								</TagsItem>
+							)
+						})}
+					</>
 				</S.TagBox>
 			</S.DescriptionContainer>
 		</S.Wrapper>

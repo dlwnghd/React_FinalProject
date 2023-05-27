@@ -16,16 +16,17 @@ function Thumbnail({ detailProduct, detailIsLoading, detailStatus }) {
 		<S.Wrapper>
 			<S.MainIMGContainer images={mainImage}></S.MainIMGContainer>
 			<S.SubIMGContainer>
-				{ProductImages.map((item, idx) => {
-					console.log(item)
-					return (
-						<S.SubImages
-							images={item.img_url}
-							key={idx}
-							onClick={() => onClickMainImage(item.img_url)}
-						/>
-					)
-				})}
+				<>
+					{ProductImages.map((item, idx) => {
+						return (
+							<S.SubImages
+								images={item.img_url}
+								key={idx}
+								onClick={() => onClickMainImage(item.img_url)}
+							/>
+						)
+					})}
+				</>
 			</S.SubIMGContainer>
 		</S.Wrapper>
 	)

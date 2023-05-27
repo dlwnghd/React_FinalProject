@@ -5,18 +5,22 @@ import {
 	WidthAutoCSS,
 } from '../../Styles/common'
 import { useEffect } from 'react'
-import RecentBanner from '../Main/Components/Banner/RecentBanner'
-import { useParams } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
+import { useLocation, useParams } from 'react-router-dom'
+import { useSetRecoilState } from 'recoil'
 import { isOnSideBar } from '../../Atoms/sideBar.atom'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
+import Contents from './Components/Contents/Contents'
 
 function Detail() {
 	const { idx } = useParams()
-	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar)
+	const location = useLocation()
+	const { state: liked } = location
+
+
+	const setOnSideBar = useSetRecoilState(isOnSideBar)
 
 	useEffect(() => {
 		setOnSideBar(false)
@@ -31,35 +35,26 @@ function Detail() {
 		isLoading: detailIsLoading,
 	} = useGetDetailData(idx)
 
-	if (isLoading && status === 'loading') return
+	const detailProductList = {
+		detailProduct,
+		detailStatus,
+		detailError,
+	}
+
+	if (status === 'loading') return
+	if (detailStatus === 'loading') return
 	if (error && detailError) return
 
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
-				<Thumbnail
-					detailProduct={detailProduct}
-					detailIsLoading={detailIsLoading}
-					detailStatus={detailStatus}
-				/>
-				<Description
-					detailProduct={detailProduct}
-					detailIsLoading={detailIsLoading}
-					detailStatus={detailStatus}
-				/>
+				<Thumbnail {...detailProductList} />
+				<Description {...detailProductList} liked={liked} />
 			</S.MainContainer>
 			<Maps>
 				<div>지도</div>
 			</Maps>
-			<S.PrdListBox>
-				<RecentPrdList>
-					<RecentBanner mainProduct={mainProduct} />
-				</RecentPrdList>
-				<AnotherPrdList>
-					<h3>다른 상품 보러가기</h3>
-					<div>다른 상품 리스트 영역</div>
-				</AnotherPrdList>
-			</S.PrdListBox>
+			<Contents mainProduct={mainProduct} />
 		</S.Wrapper>
 	)
 }
@@ -94,36 +89,8 @@ const Maps = styled.div`
 		width: 100%;
 	}
 `
-const PrdListBox = styled.div`
-	width: 100%;
-	margin: 6rem 0;
 
-	${GridCenterCSS}
-	${ColumnNumberCSS(1)}
-
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 95%;
-	}
-`
-const RecentPrdList = styled.div`
-	width: 100%;
-	margin-bottom: 6rem;
-`
-const AnotherPrdList = styled.div`
-	width: 100%;
-
-	& > h3 {
-		margin-bottom: 1rem;
-	}
-
-	& > div {
-		width: 100%;
-		height: 20rem;
-		background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	}
-`
 const S = {
 	Wrapper,
 	MainContainer,
-	PrdListBox,
 }
