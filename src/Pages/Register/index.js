@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Images from './Components/Images'
 import { WidthAutoCSS } from '../../Styles/common'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Inputs from './Components/Inputs'
 import { useParams } from 'react-router-dom'
 import ProductApi from '../../Apis/productApi'
@@ -11,9 +11,10 @@ import QUERY_KEY from '../../Consts/query.key'
 function Register() {
 	const [imageFile, setImageFiles] = useState('')
 	const [imageList, setImageList] = useState([])
-
+	const [imgNum, setImgNum] = useState(false)
 	const { prod_idx } = useParams()
 	console.log(prod_idx)
+	console.log({ imageFile })
 
 	const getProductDetailData = async () => {
 		const res = await ProductApi.detail({ prod_idx })
@@ -21,18 +22,21 @@ function Register() {
 	}
 
 	const useGetProductDetailData = () => {
-		const { data } = useQuery(
+		const { data, refetch } = useQuery(
 			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
 			() => getProductDetailData(),
 			{
 				enabled: !!prod_idx,
 			},
 		)
-		return { data }
+		return { data, refetch }
 	}
 
-	const { data: DetailData } = useGetProductDetailData()
+	const { data: DetailData, refetch } = useGetProductDetailData()
 
+	useEffect(() => {
+		refetch()
+	}, [prod_idx])
 	return (
 		<S.Wrapper>
 			<Images
@@ -40,11 +44,15 @@ function Register() {
 				setImageList={setImageList}
 				imageList={imageList}
 				DetailData={DetailData}
+				imageFile={imageFile}
+				setImgNum={setImgNum}
+				imgNum={imgNum}
 			/>
 			<Inputs
 				imageFile={imageFile}
 				DetailData={DetailData}
 				imageList={imageList}
+				setImgNum={setImgNum}
 			/>
 		</S.Wrapper>
 	)

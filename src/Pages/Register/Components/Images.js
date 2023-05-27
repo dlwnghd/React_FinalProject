@@ -4,11 +4,16 @@ import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import Button from '../../../Components/Button/Button'
 import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
-import { useState } from 'react'
 import { useEffect } from 'react'
 
-function Images({ setImageFiles, imageList, setImageList, DetailData }) {
-	const [imgNum, setImgNum] = useState(false)
+function Images({
+	setImageFiles,
+	imageList,
+	setImageList,
+	DetailData,
+	imgNum,
+	setImgNum,
+}) {
 	const pictureInput = useRef()
 
 	const handleClick = () => {
@@ -24,15 +29,16 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 	}, [DetailData])
 
 	const onAddImg = e => {
-		const ImageLists = e.target.files
-		setImageFiles(ImageLists)
-		let ImageUrlLists = [...imageList]
-		for (let i = 0; i < ImageLists.length; i++) {
-			const currentImageUrl = URL.createObjectURL(ImageLists[i])
+		setImgNum(false)
+		const targetFile = e.target.files
+		if (targetFile.length > 5) return setImgNum(true)
+
+		setImageFiles(targetFile)
+		let ImageUrlLists = []
+
+		for (let i = 0; i < targetFile.length; i++) {
+			const currentImageUrl = URL.createObjectURL(targetFile[i])
 			ImageUrlLists.push(currentImageUrl)
-		}
-		if (ImageUrlLists.length > 5) {
-			ImageUrlLists = ImageUrlLists.slice(0, 5)
 		}
 		setImageList(ImageUrlLists)
 	}

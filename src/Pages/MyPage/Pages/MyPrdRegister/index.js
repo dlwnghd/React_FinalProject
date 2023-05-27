@@ -20,7 +20,7 @@ function MyPrdRegister() {
 	const [page, setPage] = useState(1)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-
+	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
 	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
 		page,
 		category,
@@ -36,6 +36,11 @@ function MyPrdRegister() {
 
 	const onProductDeleteCheck = () => {
 		mutate(ProductIdx)
+	}
+
+	const closeModal = () => {
+		setIsOpenModal(() => false)
+		setDeleteOpenModal(() => false)
 	}
 
 	useEffect(() => {
@@ -58,16 +63,13 @@ function MyPrdRegister() {
 							/>
 						</S.TotalNumAndFilter>
 
-						{isOpenModal && (
+						{isOpenModal && deleteOpenModal && (
 							<Modal size={'small'}>
 								<S.ModalTextWrap>
 									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
 									<S.ButtonsWrap>
 										<Button onClick={onProductDeleteCheck}>삭제</Button>
-										<Button
-											variant={'default-reverse'}
-											onClick={() => setIsOpenModal(false)}
-										>
+										<Button variant={'default-reverse'} onClick={closeModal}>
 											취소
 										</Button>
 									</S.ButtonsWrap>
@@ -82,6 +84,7 @@ function MyPrdRegister() {
 										item={item}
 										category={category}
 										setIsOpenModal={setIsOpenModal}
+										setDeleteOpenModal={setDeleteOpenModal}
 										setProductIdx={setProductIdx}
 									/>
 								)

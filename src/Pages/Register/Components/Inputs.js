@@ -17,8 +17,9 @@ import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import scrollToTop from '../../../Utils/scrollToTop'
 
-function Inputs({ imageFile, DetailData }) {
+function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 	const {
 		control,
 		watch,
@@ -27,6 +28,8 @@ function Inputs({ imageFile, DetailData }) {
 		setValue,
 		clearErrors,
 	} = useForm()
+
+	console.log(DetailData)
 
 	const navigate = useNavigate()
 	const params = useParams()
@@ -103,6 +106,9 @@ function Inputs({ imageFile, DetailData }) {
 			  })
 
 	const onSubmit = async data => {
+		if (!imageFile.length && submitType == '등록')
+			return setImgNum(true), scrollToTop(0)
+
 		let price = 0
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
@@ -260,6 +266,13 @@ function Inputs({ imageFile, DetailData }) {
 				<Modal size={'medium'}>
 					<S.ModalText>
 						{DetailData ? '물품 수정 성공~!' : '물품 등록 성공~!'}
+						<Button
+							size={'full'}
+							variant={'default-reverse'}
+							onClick={() => navigate('/mypage-register')}
+						>
+							이전 페이지로 돌아가기
+						</Button>
 					</S.ModalText>
 				</Modal>
 			)}
@@ -300,10 +313,11 @@ const CategoryContainer = styled.div`
 `
 const ModalText = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	justify-content: space-around;
 	align-items: center;
 	height: 100%;
-	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	font-size: ${({ theme }) => theme.FONT_SIZE.big};
 `
 const S = {
 	CategoryContainer,
