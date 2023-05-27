@@ -22,7 +22,7 @@ const ProductApi = {
 		)
 	},
 	interest({ prod_idx }) {
-		return axiosInstance.post(PATH + 'like', { prod_idx })
+		return axiosInstance.post(PATH + '/like', { prod_idx })
 	},
 	searchList({ keyword, page }) {
 		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
