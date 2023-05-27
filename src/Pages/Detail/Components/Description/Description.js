@@ -33,6 +33,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 
 	const onHeart = () => {
 		setIsLiked(prev => !prev)
+
 	}
 
 	useEffect(() => {

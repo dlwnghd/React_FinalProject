@@ -34,16 +34,14 @@ export default MobileHeader
 const MobileHeaderWrapper = styled.div`
 	${FlexAlignCSS}
 
-	&:first-of-type {
-		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		&:first-of-type {
 			width: 100%;
 			height: 6rem;
 			${FlexBetweenCSS}
 		}
-	}
 
-	&:last-of-type {
-		@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		&:last-of-type {
 			width: 100%;
 			top: 6rem;
 		}

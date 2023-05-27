@@ -8,6 +8,7 @@ import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
+
 import RecentBanner from './Components/Banner/RecentBanner'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 

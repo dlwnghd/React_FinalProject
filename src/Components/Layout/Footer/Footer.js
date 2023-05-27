@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { WidthAutoCSS } from '../../../Styles/common'
 import AddProductButton from './Components/AddProductButton'
-import MobileFooter from './Components/MobileFooter'
+import MobileFooterNavigation from './Components/MobileFooterNavigation'
 // import TopButton from './Components/TopButton'
 
 function Footer() {
@@ -18,7 +18,7 @@ function Footer() {
 				</S.FooterContent>
 			</S.FooterContainer>
 			<AddProductButton />
-			<MobileFooter />
+			<MobileFooterNavigation />
 		</S.FooterWrapper>
 	)
 }
@@ -60,10 +60,6 @@ const DescriptionBox = styled.div`
 
 const FooterContainer = styled.div`
 	${WidthAutoCSS};
-
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: none;
-	}
 `
 
 const S = {

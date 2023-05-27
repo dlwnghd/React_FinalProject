@@ -7,7 +7,7 @@ import {
 } from '../../../Styles/common'
 import { useEffect, useState } from 'react'
 import Sidebar from './Components/Sidebar'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
 import { isOnSideBar } from '../../../Atoms/sideBar.atom'
 import { isScrollAtom } from '../../../Atoms/scrollState.atom'
@@ -16,11 +16,15 @@ import NonUserBar from './Components/NonUserBar'
 import HeaderSearchBar from './Components/Search'
 import MobileHeader from './Components/MobileHeader'
 import Navigation from './Components/Navigation'
+import useChatModal from '../../../Hooks/useChatModal'
+import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 
 function Header() {
 	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage'] // 네비게이션 Filter
 
 	const navigate = useNavigate() // 네비게이션 추가
+
+	const userInfo = useRecoilValue(userInfoAtom)
 
 	const currentURL = useLocation().pathname // 현재 URL 기억 State (0: 무료, 1: 중고)
 
@@ -29,6 +33,7 @@ function Header() {
 	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
+	const { chatModalOpen } = useChatModal()
 
 	// 현재 URL 변경시
 	useEffect(() => {
@@ -39,16 +44,25 @@ function Header() {
 		setSelectedNav(foundIndex !== -1 ? foundIndex + 1 : 0)
 	}, [currentURL])
 
-	// 스크롤 이벤트리스너
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
-			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
-		}
-	})
+	let touchStart = 0
+	let touchEnd = 0
+
+	// 모바일 터치 이벤트리스너
+	if (onSideBar === false) {
+		window.addEventListener('touchstart', event => {
+			touchStart = event.changedTouches[0].clientY
+		})
+
+		window.addEventListener('touchend', event => {
+			touchEnd = event.changedTouches[0].clientY
+
+			if (touchEnd - touchStart > -10) {
+				setScroll(false)
+			} else if (touchEnd - touchStart < -10) {
+				setScroll(true)
+			}
+		})
+	}
 
 	// url 변경시 스크롤 최상단으로 이동
 	useEffect(() => {
@@ -56,11 +70,14 @@ function Header() {
 	}, [navigate])
 
 	return (
-		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
+		<S.HeaderWrapper
+			className={scroll ? 'scroll' : ''}
+			chatModalOpen={chatModalOpen}
+		>
 			<Sidebar onSideBar={onSideBar} />
 			<S.HeaderContainer>
-				{login ? (
-					<UserBar setSelectedNav={setSelectedNav} />
+				{Object.keys(userInfo).length !== 0 ? (
+					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />
 				) : (
 					<NonUserBar setSelectedNav={setSelectedNav} />
 				)}
@@ -84,7 +101,7 @@ export default Header
  */
 const HeaderWrapper = styled.header`
 	position: relative;
-	z-index: 9999;
+	z-index: 9998;
 	width: 100%;
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};

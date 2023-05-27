@@ -13,26 +13,38 @@ import Button from '../../../Components/Button/Button'
 import CheckBox from '../../../Components/CheckBox/CheckBox'
 
 import { useForm } from 'react-hook-form'
-import { FORM_TYPE } from '../../../Consts/form.type'
 import AlertText from '../../../Components/AlertText/AlertText'
 
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
+
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { loginStateAtom } from '../../../Atoms/loginState.atom'
+
+import TokenService from '../../../Utils/tokenService'
 import UserInfoService from '../../../Utils/userInfoService'
+
+import { FORM_TYPE } from '../../../Consts/form.type'
 import MESSAGE from '../../../Consts/message'
+
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
-import TokenService from '../../../Utils/tokenService'
+
+import { firstConnect } from '../../../Socket/socketIo'
+import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
+import ChatApi from '../../../Apis/chatApi'
 
 function Login() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const from = location.state?.from
 
+  const user = useUser()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
+  const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+
 	const loginState = TokenService.getAccessToken()
-	const user = useUser()
 
 	const {
 		register,
@@ -45,11 +57,36 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
+	useEffect(() => {
+		console.log(roomList)
+	}, [setRoomList])
+
+	const getChatRoomList = async () => {
+		try {
+			const res = await ChatApi.chatRoomList()
+
+			console.log(res.data)
+
+			setRoomList(res.data)
+		} catch (err) {
+			console.log('에러발생', err)
+		}
+	}
+
 	const { mutateAsync, isLoading } = useMutation(
 		({ email, pw }) => UserApi.login({ email, pw }),
 		{
 			onSuccess: ({ data }) => {
 				user.login(data.tokenForHeader, data.user)
+
+				if (data.tokenForHeader && data.user.socket) {
+					if (firstConnect(data.user.socket)) {
+						getChatRoomList()
+
+						console.log(roomList)
+					}
+				}
+
 				if (isSaveId) {
 					// 로그인 성공 시에만 아이디 저장
 					UserInfoService.setSaveId(email)

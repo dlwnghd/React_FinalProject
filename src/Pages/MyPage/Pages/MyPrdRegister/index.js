@@ -1,115 +1,102 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../../Styles/common'
-import {
-	FlexBetweenCSS,
-	ColumnNumberCSS,
-	GridCenterCSS,
-} from '../../../../Styles/common'
+import { FlexCenterCSS, WidthAutoCSS } from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import MyPrdItemBox from './Components/MyPrdItemBox'
-import MypageApi from '../../../../Apis/mypageApi'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import TypeSelectBox from './Components/TypeSelectBox'
+import Pagination from '../../../../Components/Pagination/Pagination'
+import useGetMyPagePrdRegisterData from '../../../../Hooks/Queries/get-myPagePrdRegister'
+import Modal from '../../../../Components/Modal/Modal'
+import { isOpenModalAtom } from '../../../../Atoms/modal.atom'
+import { useRecoilState } from 'recoil'
+import Button from '../../../../Components/Button/Button'
+import { useMutation } from '@tanstack/react-query'
+import ProductApi from '../../../../Apis/productApi'
 
 function MyPrdRegister() {
-	//일단 땜빵용으로 map돌리는 dummyData입니다.
-	const dummyProduct = [
-		{
-			idx: Math.floor(Math.random() * 10000),
-			ProductImages: [
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1487317448822l0.jpg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1653037121952l0.jpeg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1618795789687l0.jpg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1624267363401l0.jpg',
-				},
-			],
-			ProductsTags: [{ tag: '태그1' }, { tag: '태그2' }, { tag: '태그3' }],
-			createdAt: new Date(),
-			image_url: 'https://img-cf.kurly.com/shop/data/goods/1649403816159l0.jpg',
-			liked: 0,
-			price: 0,
-			status: '판매중',
-			title: '네모난 고양이',
-			description: '테스트는 고양이입니다. 고양이의 색깔은 무엇일까요? 하하',
-			category: 0,
-		},
-		{
-			idx: Math.floor(Math.random() * 10000),
-			ProductImages: [
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1653037121952l0.jpeg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1618795789687l0.jpg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1649403816159l0.jpg',
-				},
-				{
-					imgUrl:
-						'https://img-cf.kurly.com/shop/data/goods/1624267363401l0.jpg',
-				},
-			],
-			ProductsTags: [{ tag: '태그1' }, { tag: '태그2' }, { tag: '태그3' }],
-			createdAt: new Date(),
-			image_url: 'https://img-cf.kurly.com/shop/data/goods/1487317448822l0.jpg',
-			liked: 1,
-			price: 0,
-			status: '판매완료',
-			title: '금빛 고양이',
-			description:
-				'황금색 고양이는 테스트의 한 종류입니다. 금은 별처럼 반짝거립니다. 하하',
-			category: 0,
-		},
-	]
-	const listArr = []
-	for (let i = 0; i < 10; i++) {
-		listArr.push(...dummyProduct)
-	}
-
+	const [ProductIdx, setProductIdx] = useState()
 	const [category, setCategory] = useState(0)
 
-	useEffect(() => {
-		const myPrdApi = async () => {
-			try {
-				const res = await MypageApi.productList({
-					page: 1,
-					category,
-				})
-				console.log(res.data.products)
-			} catch {}
-		}
-		myPrdApi()
-	}, [category])
+	const [page, setPage] = useState(1)
 
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+
+	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
+		page,
+		category,
+	)
+
+	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
+		onSuccess: () => {
+			refetch()
+			setIsOpenModal(false)
+		},
+		onError: err => {},
+	})
+
+	const onProductDeleteCheck = () => {
+		mutate(ProductIdx)
+	}
+
+	useEffect(() => {
+		refetch()
+	}, [page])
 	return (
-		<S.Wrapper>
-			<S.TotalNumAndFilter>
-				<div>전체 {listArr.length}개</div>
-				<select onChange={e => setCategory(e.target.value)}>
-					<option value={0}>중고상품</option>
-					<option value={1}>무료상품</option>
-				</select>
-			</S.TotalNumAndFilter>
-			<S.PrdList>
-				{listArr.map((item, idx) => {
-					return <MyPrdItemBox key={idx} item={item} />
-				})}
-			</S.PrdList>
-		</S.Wrapper>
+		<>
+			{isLoading ? (
+				<h1>'Loding...'</h1>
+			) : (
+				<>
+					<S.Wrapper>
+						<S.TotalNumAndFilter>
+							<div>전체 {data.pagination.count}개</div>
+							<TypeSelectBox
+								setCategory={setCategory}
+								category={category}
+								setPage={setPage}
+								page={page}
+							/>
+						</S.TotalNumAndFilter>
+
+						{isOpenModal && (
+							<Modal size={'small'}>
+								<S.ModalTextWrap>
+									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
+									<S.ButtonsWrap>
+										<Button onClick={onProductDeleteCheck}>삭제</Button>
+										<Button
+											variant={'default-reverse'}
+											onClick={() => setIsOpenModal(false)}
+										>
+											취소
+										</Button>
+									</S.ButtonsWrap>
+								</S.ModalTextWrap>
+							</Modal>
+						)}
+						<S.PrdList>
+							{data?.products.map(item => {
+								return (
+									<MyPrdItemBox
+										key={item.idx}
+										item={item}
+										category={category}
+										setIsOpenModal={setIsOpenModal}
+										setProductIdx={setProductIdx}
+									/>
+								)
+							})}
+						</S.PrdList>
+					</S.Wrapper>
+					<Pagination
+						totalPage={data?.pagination.totalPage}
+						setPage={setPage}
+						limit={10}
+						scroll={300}
+					/>
+				</>
+			)}
+		</>
 	)
 }
 
@@ -117,10 +104,13 @@ export default MyPrdRegister
 
 const Wrapper = styled.div`
 	${WidthAutoCSS}
+	margin-bottom: 5rem;
 `
 const TotalNumAndFilter = styled.div`
-	${FlexBetweenCSS}
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium}
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 `
 
 const PrdList = styled.div`
@@ -133,4 +123,28 @@ const PrdList = styled.div`
 		column-gap: 1rem;
 	}
 `
-const S = { Wrapper, TotalNumAndFilter, PrdList }
+
+const ModalText = styled.div`
+	height: 100%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	margin-top: 3rem;
+`
+const ModalTextWrap = styled.div`
+	${FlexCenterCSS}
+	flex-direction: column;
+`
+const ButtonsWrap = styled.div`
+	display: flex;
+	margin-top: 3rem;
+	* {
+		margin: 0 1rem;
+	}
+`
+const S = {
+	Wrapper,
+	TotalNumAndFilter,
+	PrdList,
+	ModalText,
+	ModalTextWrap,
+	ButtonsWrap,
+}
