@@ -18,8 +18,7 @@ import AlertText from '../../../Components/AlertText/AlertText'
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
 
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
+import { useRecoilState } from 'recoil'
 
 import TokenService from '../../../Utils/tokenService'
 import UserInfoService from '../../../Utils/userInfoService'
@@ -39,10 +38,10 @@ function Login() {
 	const location = useLocation()
 	const from = location.state?.from
 
-  const user = useUser()
+	const user = useUser()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-  const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
 	const loginState = TokenService.getAccessToken()
 
