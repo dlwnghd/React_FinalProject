@@ -60,6 +60,10 @@ const GlobalStyles = createGlobalStyle`
         font-size:${({ theme }) => theme.FONT_SIZE.medium}
     }
 
+    h3 ~ span {
+        font-size:${({ theme }) => theme.FONT_SIZE.small}
+    }
+
     h4 {
         font-size:${({ theme }) => theme.FONT_SIZE.medium};
         font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
