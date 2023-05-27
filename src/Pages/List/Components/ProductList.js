@@ -66,7 +66,7 @@ function ProductList({
 					})}
 				</>
 			) : undefined}
-			<S.Observer ref={observerElem}></S.Observer>
+			<div ref={observerElem}></div>
 		</S.ProductListWrapper>
 	)
 }
@@ -84,9 +84,7 @@ const ProductListWrapper = styled.div`
 		column-gap: 1rem;
 	}
 `
-const Observer = styled.div``
 
 const S = {
 	ProductListWrapper,
-	Observer,
 }
