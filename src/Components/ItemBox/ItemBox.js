@@ -5,8 +5,10 @@ import {
 	NotFillHeart_Icon,
 } from '../Icons/Icons'
 import { useState } from 'react'
-import { FlexBetweenCSS } from '../../Styles/common'
+import { FlexBetweenCSS, GridCenterCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
+import { useMutation } from '@tanstack/react-query'
+import ProductApi from '../../Apis/productApi'
 
 // 컴포넌트 불러올 때, props로
 // 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
@@ -17,11 +19,17 @@ function ItemBox({
 	price,
 	isLiked,
 	createdAt,
+	status,
+	prod_idx,
 	...rest
 }) {
 	const [isHeart, setIsHeart] = useState(isLiked)
+	const statusValue = String(status).includes('판매완료')
+
+	const { mutateAsync } = useMutation(prod_idx => ProductApi.like(prod_idx))
 
 	const onHeart = () => {
+		mutateAsync({ prod_idx })
 		setIsHeart(prev => !prev)
 	}
 
@@ -29,12 +37,20 @@ function ItemBox({
 
 	return (
 		<S.Wrapper>
-			{!isHeart ? (
-				<NotFillHeart_Icon size="30" onClick={onHeart} />
-			) : (
-				<FillHeart_Icon size="30" onClick={onHeart} />
-			)}
-			<S.IMGContainer posterIMG={posterPath} {...rest}></S.IMGContainer>
+			{status !== '판매완료' &&
+				(!isHeart ? (
+					<NotFillHeart_Icon size="30" onClick={onHeart} />
+				) : (
+					<FillHeart_Icon size="30" onClick={onHeart} />
+				))}
+			<S.SoldOutContainer />
+			<S.IMGContainer
+				posterIMG={posterPath}
+				statusValue={statusValue}
+				{...rest}
+			>
+				{statusValue && <h1>SOLD OUT</h1>}
+			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox context={context}>
 					<h4>{title}</h4>
@@ -77,13 +93,29 @@ const Wrapper = styled.div`
 	}
 `
 
+const SoldOutContainer = styled.div`
+	width: 100%;
+	height: 100%;
+	position: absolute;
+`
+
 const IMGContainer = styled.div`
 	position: relative;
-	cursor: pointer;
+	cursor: ${({ statusValue }) => !statusValue && 'pointer'};
 	width: 100%;
 	height: 27.6rem;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
+		${({ statusValue }) => statusValue && ',rgba(0, 0, 0, 0.5)'};
+	background-blend-mode: multiply;
 	background-size: cover;
+	${({ statusValue }) => statusValue && GridCenterCSS}
+	color: ${({ theme }) => theme.COLOR.common.white};
+
+	// 드래그 방지
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 `
 
 const DescContainer = styled.div`
@@ -125,6 +157,7 @@ const DescBox2 = styled.div`
 
 const S = {
 	Wrapper,
+	SoldOutContainer,
 	IMGContainer,
 	DescContainer,
 	DescBox,

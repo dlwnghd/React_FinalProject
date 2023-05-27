@@ -47,6 +47,7 @@ const ProfileImg = styled.img`
 	border-radius: 50%;
 	width: 7.2rem;
 	margin-right: 2rem;
+	height: 7.2rem;
 `
 const ProfileNickName = styled.span`
 	${FlexAlignCSS}
