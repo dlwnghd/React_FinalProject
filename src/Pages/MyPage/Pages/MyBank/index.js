@@ -30,8 +30,10 @@ function MyBank() {
 	const [filter, setFilter] = useState({
 		page: params.page || 1,
 		category: params.category || 'seller',
-		start: params.start || getFormattedDate(today, { day: 1 }),
-		end: params.end || getFormattedDate(today, { day: true }),
+		start:
+			params.start ||
+			getFormattedDate(new Date(today.getFullYear(), today.getMonth(), 1)),
+		end: params.end || getFormattedDate(today),
 	})
 
 	const { data, status, refetch } = useGetMyPageBankList(filter)
@@ -81,22 +83,14 @@ function MyBank() {
 
 	return (
 		<S.Wrapper>
-			<AmountSection
-				status={status}
-				amount={
-					data?.amount ?? {
-						totalSaleAmount: 0,
-						totalPurchaseAmount: 0,
-						thisMonthSaleAmount: 0,
-						thisMonthPurchaseAmount: 0,
-					}
-				}
-			/>
+			<AmountSection status={status} amount={data?.amount} />
+
 			<FilterSection
 				filter={filter}
 				setFilter={setFilter}
 				onSearch={getNewBankList}
 			/>
+
 			<PayList
 				status={status}
 				category={filter.category}
@@ -108,7 +102,7 @@ function MyBank() {
 					totalPage={data?.pagination.totalPage}
 					setPage={setPage}
 					limit={10}
-					scroll={570}
+					scroll={765}
 				/>
 			)}
 		</S.Wrapper>

@@ -96,7 +96,10 @@ function Calendar({ type, date, setDate }) {
 					{monthArr.map(mon => (
 						<S.SelectItem
 							key={mon}
-							state={mon === parseInt(selectedDate.month)}
+							state={
+								mon === parseInt(selectedDate.month) &&
+								parseInt(year) === parseInt(selectedDate.year)
+							}
 							disabled={
 								today.year === parseInt(selectedDate.year) && mon > today.month
 							}
