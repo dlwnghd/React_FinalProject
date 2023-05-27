@@ -8,15 +8,17 @@ import { statusCSS } from '../../../../Components/Input/Input.style'
 const nameToLabel = {
 	title: '상품명 *',
 	description: '상품 설명 *',
+	region: '주소',
 }
 
 const nameToPlaceholder = {
 	title: '상품 제목을 입력해주세요.',
 	description: '상품 설명을 입력해주세요.',
+	region: '주소 검색을 해주세요',
 }
 
 function FormItem(props) {
-	const { name, errors, field, setIsOpenModal, priceToString, ...rest } = props
+	const { name, errors, field, setIsOpenModal, setModalType, ...rest } = props
 
 	return (
 		<S.Wrapper>
@@ -26,18 +28,31 @@ function FormItem(props) {
 					{name !== 'description' ? (
 						<Input
 							placeholder={nameToPlaceholder[name]}
-							status={errors[name] && 'error'}
+							status={errors[name] ? 'error' : 'default'}
 							{...field}
 							{...rest}
-							// onChange={priceToString}
 						/>
 					) : (
 						<S.Textarea
 							placeholder={nameToPlaceholder[name]}
-							status={errors[name] && 'error'}
+							status={errors[name] ? 'error' : 'default'}
 							{...field}
 							{...rest}
 						/>
+					)}
+
+					{name === 'region' && (
+						<S.StyledButton
+							shape={'square'}
+							variant={'default-reverse'}
+							type="button"
+							onClick={() => {
+								setModalType('region')
+								setIsOpenModal(true)
+							}}
+						>
+							주소찾기
+						</S.StyledButton>
 					)}
 				</div>
 			</S.InputField>
@@ -84,7 +99,7 @@ const StyledButton = styled(Button)`
 const Textarea = styled.textarea`
 	width: 100%;
 	height: 30rem;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	padding: 1rem 1.2rem;
 	${({ status }) => statusCSS[status]};
 `

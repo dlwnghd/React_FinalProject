@@ -16,6 +16,7 @@ function PrivateRoute() {
 			})
 		}
 	}, [])
+
 	return access_token ? <Outlet /> : <Navigate to={'/login'} />
 }
 export default PrivateRoute

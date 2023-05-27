@@ -10,13 +10,22 @@ const ProductApi = {
 			},
 		})
 	},
+	editProduct(registerList) {
+		return axiosInstance.patch(PATH, registerList, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+	},
+	detail({ prod_idx }) {
+		return axiosInstance.get(PATH + '/detail', {
+			params: { prod_idx },
+		})
+	},
 	delete(prod_idx) {
-		return (
-			axiosInstance.delete(PATH),
-			{
-				params: { prod_idx },
-			}
-		)
+		return axiosInstance.delete(PATH, {
+			params: { prod_idx },
+		})
 	},
 	readProductList(page = 1, category = 0) {
 		return axiosInstance.get(`${PATH}/search`, {

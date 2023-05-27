@@ -18,12 +18,15 @@ import AlertText from '../../../Components/AlertText/AlertText'
 
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { loginStateAtom } from '../../../Atoms/loginState.atom'
 import UserInfoService from '../../../Utils/userInfoService'
 import MESSAGE from '../../../Consts/message'
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
+import { firstConnect } from '../../../Socket/socketIo'
+import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
+import ChatApi from '../../../Apis/chatApi'
 
 function Login() {
 	const navigate = useNavigate()
@@ -33,6 +36,7 @@ function Login() {
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
 	const loginState = useRecoilValue(loginStateAtom)
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 	const user = useUser()
 
 	const {
@@ -46,11 +50,36 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
+	useEffect(() => {
+		console.log(roomList)
+	}, [setRoomList])
+
+	const getChatRoomList = async () => {
+		try {
+			const res = await ChatApi.chatRoomList()
+
+			console.log(res.data)
+
+			setRoomList(res.data)
+		} catch (err) {
+			console.log('에러발생', err)
+		}
+	}
+
 	const { mutateAsync, isLoading } = useMutation(
 		({ email, pw }) => UserApi.login({ email, pw }),
 		{
 			onSuccess: ({ data }) => {
 				user.login(data.tokenForHeader, data.user)
+
+				if (data.tokenForHeader && data.user.socket) {
+					if (firstConnect(data.user.socket)) {
+						getChatRoomList()
+
+						console.log(roomList)
+					}
+				}
+
 				if (isSaveId) {
 					// 로그인 성공 시에만 아이디 저장
 					UserInfoService.setSaveId(email)

@@ -6,12 +6,29 @@ import {
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
 import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
+import useChatModal from '../../../../Hooks/useChatModal'
+
+import ChatApi from '../../../../Apis/chatApi'
 
 function Description({ product }) {
 	const { title, price, description, ProductsTags, category, status } = product
 	const [like, setLike] = useState(false)
-	const navigate = useNavigate()
 
+	const [sta, setSta] = useState(null)
+
+	const prod_idx = 230
+	const { openChat } = useChatModal()
+
+	const navigate = useNavigate()
+	const joinChat = async () => {
+		try {
+			const res = await ChatApi.makeChat({ prod_idx })
+			setSta(res.data)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	console.log(sta)
 	const onClick = () => {
 		setLike(prev => !prev)
 	}
@@ -51,7 +68,14 @@ function Description({ product }) {
 				</S.HeartBox>
 
 				<S.ButtonBox>
-					<button>채팅</button>
+					<button
+						onClick={() => {
+							openChat()
+							joinChat()
+						}}
+					>
+						채팅
+					</button>
 					<button>결제</button>
 				</S.ButtonBox>
 			</S.OptionContainer>

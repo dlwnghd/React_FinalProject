@@ -14,9 +14,9 @@ import SignUp from '../Pages/Form/SignUp/SignUp'
 import ChangePW from '../Pages/MyPage/UserEdit/Pages/ChangePW/ChangePW'
 import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
-import MyPageIndex from '../Pages/MyPage/Components/Header'
 import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
+import MyPageIndex from '../Pages/MyPage/Components/Header'
 
 const router = createBrowserRouter([
 	{
@@ -50,6 +50,7 @@ const router = createBrowserRouter([
 					{
 						path: '',
 						element: <MyPageIndex />,
+
 						children: [
 							{
 								path: '/mypage-bank',
@@ -84,7 +85,11 @@ const router = createBrowserRouter([
 						element: <RecentPrice />,
 					},
 					{
-						path: '/register/:prdname',
+						path: '/register',
+						element: <Register />,
+					},
+					{
+						path: '/register/:prod_idx',
 						element: <Register />,
 					},
 					{
