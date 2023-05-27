@@ -21,7 +21,7 @@ const MY_PAGE_NAV_TYPE = {
 			path: '/mypage-interest',
 		},
 		{
-			title: '후기',
+			title: '구매 후기',
 			path: '/mypage-review',
 		},
 	],
@@ -75,7 +75,7 @@ const Container = styled.div`
 	}
 `
 const Title = styled.div`
-	width: 9rem;
+	width: 13rem;
 	${FlexCenterCSS};
 	padding-bottom: 0.7rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
