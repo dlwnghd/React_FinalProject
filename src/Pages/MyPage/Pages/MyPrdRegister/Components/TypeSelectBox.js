@@ -2,19 +2,32 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import { Down_Icon } from '../../../../../Components/Icons/Icons'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const secondhandText = '중고상품'
-const FreeText = '무료상품'
+function TypeSelectBox({ setCategory, category, page, setPage }) {
+	const navigate = useNavigate()
 
-function TypeSelectBox({ setCategory }) {
+	const secondhandText = '중고상품'
+	const FreeText = '무료상품'
+
 	const [isOpenSlide, setIsOpenSlide] = useState(false)
 	const [type, setType] = useState(secondhandText)
 
 	const onClickType = e => {
-		const selected = e.target.textContent
-		setType(selected)
+		e.preventDefault()
+		let selected = e.target.textContent
 		setCategory(selected === '무료상품' ? 1 : 0)
+		setType(() => selected)
+		setPage(1)
 	}
+
+	useEffect(() => {
+		console.log({ category })
+		setCategory(prev => prev)
+		setType(category == 0 ? '중고상품' : '무료상품')
+		navigate(`/mypage-register?category=${category}&page=${page}`)
+	}, [type])
 
 	return (
 		<S.Wrapper onClick={() => setIsOpenSlide(prev => !prev)}>

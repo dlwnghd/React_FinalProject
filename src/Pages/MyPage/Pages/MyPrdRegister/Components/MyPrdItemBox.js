@@ -4,42 +4,25 @@ import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
-import { useRecoilState } from 'recoil'
-import Modal from '../../../../../Components/Modal/Modal'
-// import { useMutation } from '@tanstack/react-query'
-import ProductApi from '../../../../../Apis/productApi'
+import { FlexCenterCSS } from '../../../../../Styles/common'
 
-function MyPrdItemBox({ item }) {
+function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
-	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+
 	const { img_url, title, price, status, idx } = item
 
-	// const deletProductData = async idx => {
-	// 	const res = await ProductApi.delete(idx)
-	// 	return res.data
-	// }
-
-	// const useDeletProductData = idx => {
-	// 	const { data, error, status, isLoading, isError } = useMutation(() =>
-	// 		deletProductData(idx),
-	// 	)
-	// 	return { data, error, status, isLoading, isError }
-	// }
-
-	//물품 삭제
-	//useMutation 같은 경우는 잠깐 중지
-	// const onProductDel = () => {
-	// 	const { isLoading } = useDeletProductData(idx)
-	// 	console.log(isLoading)
-	// }
-	const onProductDel = async () => {
-		try {
-			await ProductApi.delete(idx)
-			setIsOpenModal(true)
-		} catch (err) {}
+	const onProductDelete = idx => {
+		setIsOpenModal(true)
+		setProductIdx(idx)
+		setEditOption(false)
 	}
+
+	const productChange = idx => {
+		navigate(`/register/${idx}`)
+		setEditOption(false)
+	}
+
 	return (
 		<S.Wrapper>
 			<S.IMGContainer
@@ -57,16 +40,12 @@ function MyPrdItemBox({ item }) {
 							size="30"
 							onClick={() => setEditOption(prev => !prev)}
 						/>
+
 						{editOption && (
 							<S.EditBox>
-								<div onClick={() => navigate(`${item.idx}`)}>수정</div>
-								<div onClick={onProductDel}>삭제</div>
+								<div onClick={() => productChange(idx)}>수정</div>
+								<div onClick={() => onProductDelete(idx)}>삭제</div>
 							</S.EditBox>
-						)}
-						{isOpenModal && (
-							<Modal size={'medium'}>
-								<S.ModalText>물품 삭제 성공~!</S.ModalText>
-							</Modal>
 						)}
 					</S.IconContainer>
 				</S.DescBox>
@@ -108,6 +87,7 @@ const Wrapper = styled.div`
 		right: 1.4rem;
 		color: ${({ theme }) => theme.COLOR.main};
 		font-weight: 900;
+		color: red;
 	}
 `
 
@@ -165,6 +145,10 @@ const IconContainer = styled.div`
 `
 const EditBox = styled.div`
 	border: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+	& > div:first-child {
+		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+		background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	}
 	& > div {
 		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 		padding: 0.5rem;
@@ -172,9 +156,7 @@ const EditBox = styled.div`
 			background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 		}
 	}
-	& > div:first-child {
-		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
-	}
+
 	position: absolute;
 	bottom: 4rem;
 	z-index: 100;
@@ -188,11 +170,20 @@ const EditBox = styled.div`
 	}
 `
 const ModalText = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	height: 100%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	margin-top: 3rem;
+`
+const ModalTextWrap = styled.div`
+	${FlexCenterCSS}
+	flex-direction: column;
+`
+const ButtonsWrap = styled.div`
+	display: flex;
+	margin-top: 3rem;
+	* {
+		margin: 0 1rem;
+	}
 `
 const S = {
 	Wrapper,
@@ -204,4 +195,6 @@ const S = {
 	IconContainer,
 	EditBox,
 	ModalText,
+	ModalTextWrap,
+	ButtonsWrap,
 }

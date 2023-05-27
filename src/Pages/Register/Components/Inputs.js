@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { FlexAlignCSS, FlexCenterCSS } from '../../../Styles/common'
+import { FlexCenterCSS } from '../../../Styles/common'
 import { Controller, useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import Button from '../../../Components/Button/Button'
@@ -15,9 +15,10 @@ import TagsItem from './InputComponents/TagsItem'
 import RegionModal from '../../../Components/Modal/RegionModal/RegionModal'
 import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 
-function Inputs({ imageFile, DetailData, setImageList }) {
+function Inputs({ imageFile, DetailData }) {
 	const {
 		control,
 		watch,
@@ -26,7 +27,10 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		setValue,
 		clearErrors,
 	} = useForm()
+
 	const navigate = useNavigate()
+	const params = useParams()
+
 	const watchedCategory = watch('category')
 	const [submitType, setSubmitType] = useState('등록')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
@@ -52,33 +56,6 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 			const price = e.target.value
 			const changePrice = Number(price.replaceAll(',', '')).toLocaleString()
 			setIntPrice(changePrice)
-		}
-	}
-
-	//수정
-	if (DetailData) {
-		const {
-			title,
-			price,
-			region,
-			category,
-			ProductsTags,
-			description,
-			img_url,
-			ProductImages,
-		} = DetailData.searchProduct
-
-		setValue('title', title)
-		setValue('description', description)
-		setValue('region', region)
-		if (hashArr.length === 0) {
-			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
-			setImageList(img => [...img, img_url])
-			ProductImages.map(Imgs => setImageList(img => [...img, Imgs.img_url]))
-			priceToString(price)
-			setResultAddress(() => region)
-			setValue('category', category ? '1' : '0')
-			setSubmitType(() => '수정')
 		}
 	}
 
@@ -109,9 +86,21 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		setHashArr(hashArr.filter(el => el !== e))
 	}
 
-	useEffect(() => {
-		checkedCategory()
-	}, [watchedCategory])
+	const { mutate } =
+		submitType === '등록'
+			? useMutation(formData => ProductApi.register(formData), {
+					onSuccess: () => {
+						setIsOpenModal(() => true)
+						navigate(-1)
+					},
+					onError: () => {},
+			  })
+			: useMutation(formData => ProductApi.editProduct(formData), {
+					onSuccess: () => {
+						setIsOpenModal(() => true)
+					},
+					onError: () => {},
+			  })
 
 	const onSubmit = async data => {
 		let price = 0
@@ -128,28 +117,41 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 		formData.append('region', resultAddress)
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
+
 		for (let i = 0; i < imageFile.length; i++) {
 			formData.append('images', imageFile[i])
 		}
 
 		if (submitType === '등록') {
-			try {
-				const response = await ProductApi.register(formData)
-				console.log(response)
-				setIsOpenModal(true)
-			} catch (err) {}
+			mutate(formData)
 		}
 		if (submitType === '수정') {
 			formData.append('main_url', DetailData.searchProduct.img_url)
+			formData.append('idx', params.prod_idx)
 			formData.append('img_url', DetailData.searchProduct.ProductImages)
 
-			try {
-				const response = await ProductApi.editProduct(formData)
-				console.log(response)
-				setIsOpenModal(true)
-			} catch (err) {}
+			mutate(formData)
 		}
 	}
+
+	useEffect(() => {
+		checkedCategory()
+	}, [watchedCategory])
+
+	useEffect(() => {
+		if (DetailData) {
+			const { title, price, region, category, ProductsTags, description } =
+				DetailData.searchProduct
+			setValue('title', title)
+			setValue('description', description)
+			setValue('region', region)
+			setValue('category', category ? '1' : '0')
+			priceToString(price)
+			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			setSubmitType(() => '수정')
+		}
+	}, [DetailData])
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Controller
@@ -272,46 +274,10 @@ function Inputs({ imageFile, DetailData, setImageList }) {
 }
 export default Inputs
 
-const InputContainer = styled.div`
-	${FlexAlignCSS}
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	& > h6 {
-		width: 14rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.small};
-	}
-`
-
 const ButtonWrap = styled.div`
 	${FlexCenterCSS}
 `
 
-const InputValueAddress = styled.div`
-	grid-column-start: 2;
-	grid-column-end: 11;
-	width: 100%;
-	display: flex;
-`
-
-const OpenMadalBtn = styled.input`
-	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
-	width: 16rem;
-	height: 4.8rem;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
-
-	border: none;
-	&:hover {
-		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
-		transition: all 0.2s ease-in-out;
-	}
-
-	&:disabled {
-		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
-	}
-`
 const CategortContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -340,12 +306,9 @@ const ModalText = styled.div`
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
 `
 const S = {
-	InputValueAddress,
 	CategoryContainer,
 	CategortContainer,
-	OpenMadalBtn,
 	ButtonWrap,
-	InputContainer,
 	StyledAlertText,
 	ModalText,
 }

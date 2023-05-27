@@ -68,10 +68,6 @@ const router = createBrowserRouter([
 								path: '/mypage-register',
 								element: <MyPrdRegister />,
 							},
-							{
-								path: '/mypage-register/:prod_idx',
-								element: <Register />,
-							},
 						],
 					},
 					{
@@ -94,6 +90,10 @@ const router = createBrowserRouter([
 					},
 					{
 						path: '/register',
+						element: <Register />,
+					},
+					{
+						path: '/register/:prod_idx',
 						element: <Register />,
 					},
 					{
