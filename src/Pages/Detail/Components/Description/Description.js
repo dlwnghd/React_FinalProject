@@ -1,25 +1,46 @@
 import styled from 'styled-components'
-import { useState } from 'react'
 import {
 	FillHeart_Icon,
 	NotFillHeart_Icon,
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
 import {
-	FlexAlignCSS,
+	ColumnNumberCSS,
 	FlexBetweenCSS,
 	FlexCenterCSS,
+	GridCenterCSS,
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
+import TagsItem from '../../../../Components/TagItem/TagsItem'
+import { useState } from 'react'
+import useGetHeartInterestData from '../../../../Hooks/Queries/get-heartInterest'
+import { useEffect } from 'react'
 
-function Description({ product }) {
-	const { title, price, description, ProductsTags, category, status } = product
-	const [like, setLike] = useState(false)
+function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
+	if (detailIsLoading && detailStatus === 'loading') return
+	console.log(liked)
+	const { title, idx, status, price, category, description, ProductsTags } =
+		detailProduct.searchProduct
+
 	const navigate = useNavigate()
+	const [isLiked, setIsLiked] = useState(liked)
 
-	const onClick = () => {
-		setLike(prev => !prev)
+	const {
+		data: heartData,
+		status: heartStatus,
+		refetch,
+	} = useGetHeartInterestData(idx, isLiked)
+
+	const onHeart = () => {
+		setIsLiked(prev => !prev)
 	}
+
+	useEffect(() => {
+		refetch()
+	}, [isLiked])
+
+	if (heartStatus === 'loading') return
+
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -27,23 +48,20 @@ function Description({ product }) {
 					<h3>{title}</h3>
 					<p>{status}</p>
 				</div>
-				<h2>{price}원</h2>
+				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
 			<S.OptionContainer>
-				<S.HeartBox onClick={onClick}>
+				<S.HeartBox onClick={onHeart}>
 					<p>찜</p>
-					{like ? (
-						<FillHeart_Icon size="30" />
+					{heartData.message ? (
+						<FillHeart_Icon size="24" />
 					) : (
-						<NotFillHeart_Icon size="30" />
+						<NotFillHeart_Icon size="24" />
 					)}
 				</S.HeartBox>
 				<S.ButtonBox>
 					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						채팅
-					</S.StyledButton>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
-						결제
 					</S.StyledButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
@@ -54,16 +72,21 @@ function Description({ product }) {
 					<p>{description}</p>
 				</div>
 				<S.TagBox>
-					{ProductsTags.map((item, idx) => {
-						return (
-							<S.TagItem
-								key={idx}
-								onClick={() => navigate(`/search/${item.Tag}`)}
-							>
-								<p>#{item.tag}</p>
-							</S.TagItem>
-						)
-					})}
+					<>
+						{ProductsTags.map((item, idx) => {
+							return (
+								<TagsItem
+									key={idx}
+									onClick={() => navigate(`/search/${item.Tag.tag}`)}
+									size={'default'}
+									shape={'round'}
+									color={'default'}
+								>
+									<p>#{item.Tag.tag}</p>
+								</TagsItem>
+							)
+						})}
+					</>
 				</S.TagBox>
 			</S.DescriptionContainer>
 		</S.Wrapper>
@@ -99,6 +122,8 @@ const TitleContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
+	width: 100%;
+
 	& > div {
 		margin-bottom: 3rem;
 	}
@@ -109,13 +134,17 @@ const DescriptionContainer = styled.div`
 
 const OptionContainer = styled.div`
 	width: 100%;
-
-	${FlexCenterCSS}
+	${FlexBetweenCSS}
 `
 
 const HeartBox = styled.div`
-	${FlexAlignCSS}
-	margin-right:1rem;
+	${FlexCenterCSS}
+	width:50%;
+	height: 100%;
+	border-radius: 1rem;
+	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+
+	margin-right: 1rem;
 	cursor: pointer;
 
 	& > p {
@@ -128,26 +157,15 @@ const HeartBox = styled.div`
 	}
 `
 
-const TagBox = styled.ul`
-	${FlexAlignCSS}
-`
-
-const TagItem = styled.li`
-	cursor: pointer;
-	padding: 0.5rem 2rem;
-	border-radius: 2rem;
-	margin-right: 1rem;
-	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	color: ${({ theme }) => theme.COLOR.common.black};
-
-	&:last-of-type {
-		margin-right: 0;
-	}
+const TagBox = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(3)}
+	gap:1rem;
 `
 
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
-	width:100%;
+	width:50%;
 `
 
 const StyledButton = styled(Button)`
@@ -157,10 +175,6 @@ const StyledButton = styled(Button)`
 	height: 6rem;
 	border: none;
 	box-sizing: border-box;
-
-	&:first-of-type {
-		margin-right: 1rem;
-	}
 `
 
 const S = {
@@ -172,5 +186,4 @@ const S = {
 	ButtonBox,
 	StyledButton,
 	TagBox,
-	TagItem,
 }

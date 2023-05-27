@@ -2,8 +2,11 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { FlexAlignCSS, FlexCenterCSS } from '../../../../Styles/common'
 
-function Thumbnail({ productImages }) {
-	const [mainImage, setMainImages] = useState(productImages[0].imgUrl)
+function Thumbnail({ detailProduct, detailIsLoading, detailStatus }) {
+	if (detailIsLoading && detailStatus === 'loading') return
+
+	const { img_url, ProductImages } = detailProduct.searchProduct
+	const [mainImage, setMainImages] = useState(img_url)
 
 	const onClickMainImage = url => {
 		setMainImages(url)
@@ -13,15 +16,17 @@ function Thumbnail({ productImages }) {
 		<S.Wrapper>
 			<S.MainIMGContainer images={mainImage}></S.MainIMGContainer>
 			<S.SubIMGContainer>
-				{productImages.map((item, idx) => {
-					return (
-						<S.SubImages
-							images={item.imgUrl}
-							key={idx}
-							onClick={() => onClickMainImage(item.imgUrl)}
-						/>
-					)
-				})}
+				<>
+					{ProductImages.map((item, idx) => {
+						return (
+							<S.SubImages
+								images={item.img_url}
+								key={idx}
+								onClick={() => onClickMainImage(item.img_url)}
+							/>
+						)
+					})}
+				</>
 			</S.SubIMGContainer>
 		</S.Wrapper>
 	)

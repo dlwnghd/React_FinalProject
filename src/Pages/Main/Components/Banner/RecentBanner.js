@@ -88,6 +88,7 @@ const Wrapper = styled.section`
 const Title = styled.div`
 	text-align: ${({ alignDetail }) =>
 		alignDetail === 'detail' ? 'left' : 'center'};
+
 	margin-bottom: ${({ alignDetail }) =>
 		alignDetail === 'detail' ? '1rem' : '3rem'};
 
@@ -98,7 +99,6 @@ const Title = styled.div`
 
 const SlideContainer = styled.div`
 	position: relative;
-	margin-top: 4rem;
 `
 
 const SlideList = styled.div`

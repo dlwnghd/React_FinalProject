@@ -7,7 +7,6 @@ export const slide = products => {
 	let startX = 0
 	let endX = 0
 	const slider = useRef(null)
-	console.log(currentIdx)
 
 	// 슬라이딩 거리 제어
 	const onMove = () => {
