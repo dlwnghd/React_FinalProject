@@ -46,14 +46,14 @@ function Header() {
 	let touchEnd = 0
 
 	// 모바일 터치 이벤트리스너
-	if(onSideBar === false){
+	if (onSideBar === false) {
 		window.addEventListener('touchstart', event => {
 			touchStart = event.changedTouches[0].clientY
 		})
-	
+
 		window.addEventListener('touchend', event => {
 			touchEnd = event.changedTouches[0].clientY
-	
+
 			if (touchEnd - touchStart > -10) {
 				setScroll(false)
 			} else if (touchEnd - touchStart < -10) {
