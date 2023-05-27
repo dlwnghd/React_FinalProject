@@ -13,9 +13,7 @@ import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Main() {
 	const navigate = useNavigate()
-
 	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
-
 	if (isLoading && status === 'loading') return
 	if (error) return
 
@@ -25,7 +23,10 @@ function Main() {
 			<S.Container>
 				<RecentBanner mainProduct={mainProduct} />
 				<S.FreeMarketList>
-					<S.Title>FREE MARKET</S.Title>
+					<S.Title>
+						<h3>Free Market</h3>
+						<span>네고와 함께하는 무료나눔</span>
+					</S.Title>
 					<S.ProductList>
 						{mainProduct.freeProduct.map((item, idx) => {
 							return (
@@ -36,7 +37,9 @@ function Main() {
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
-									onClick={() => navigate(`/detail/${item.idx}`)}
+									onClick={() =>
+										navigate(`/detail/${item.idx}`, { state: item.liked })
+									}
 								/>
 							)
 						})}
@@ -44,7 +47,10 @@ function Main() {
 				</S.FreeMarketList>
 				<SlideBanner mainProduct={mainProduct} />
 				<S.TradeUsedList>
-					<S.Title>TRADE USED</S.Title>
+					<S.Title>
+						<h3>Trade Used</h3>
+						<span>네고와 함께하는 중고거래</span>
+					</S.Title>
 					<S.ProductList>
 						{mainProduct.usedProduct.map((item, idx) => {
 							return (
@@ -55,7 +61,9 @@ function Main() {
 									context={item.script}
 									isLiked={item.liked}
 									key={idx}
-									onClick={() => navigate(`/detail/${item.idx}`)}
+									onClick={() =>
+										navigate(`/detail/${item.idx}`, { state: item.liked })
+									}
 								/>
 							)
 						})}
@@ -88,13 +96,17 @@ const TradeUsedList = styled.section`
 	margin: 12rem 0;
 `
 
-const Title = styled.h3`
+const Title = styled.div`
 	text-align: center;
+	margin-bottom: 4rem;
+
+	& > h3 {
+		margin-bottom: 1rem;
+	}
 `
 
 const ProductList = styled.div`
 	width: 100%;
-	margin-top: 4rem;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
 	column-gap: 2rem;

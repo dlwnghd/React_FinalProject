@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
 import Pagination from './Components/Pagination'
 import { slide } from '../../../../Hooks/useSlide'
 
@@ -50,7 +49,7 @@ function MainBanner() {
 		onMouseUp,
 		slider,
 		currentIdx,
-	} = slide(productsMock.slice(0, 4))
+	} = slide(bannerList)
 
 	return (
 		<S.Wrapper>
@@ -75,7 +74,7 @@ function MainBanner() {
 					)
 				})}
 			</S.SlideList>
-			<Pagination currentIdx={currentIdx} />
+			<Pagination currentIdx={currentIdx} bannerList={bannerList} />
 		</S.Wrapper>
 	)
 }

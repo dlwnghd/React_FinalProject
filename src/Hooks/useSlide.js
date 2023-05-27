@@ -1,11 +1,11 @@
-import { useRef } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useRef } from 'react'
 
 export const slide = products => {
 	const [currentIdx, setCurrentIdx] = useState(0)
-	const [startX, setStartX] = useState(0)
-	const [endX, setEndX] = useState(0)
+	let startX = 0
+	let endX = 0
 	const slider = useRef(null)
 	console.log(currentIdx)
 
@@ -36,20 +36,20 @@ export const slide = products => {
 
 	// 터치 및 마우스 clientX 상태관리
 	const onTouchStart = e => {
-		setStartX(e.changedTouches[0].clientX)
+		startX = e.changedTouches[0].clientX
 	}
 	const onTouchMove = e => {
-		setEndX(e.changedTouches[0].clientX)
+		endX = e.changedTouches[0].clientX
 	}
 	const onTouchEnd = () => {
 		onMove()
 	}
 
 	const onMouseDown = e => {
-		setStartX(e.clientX)
+		startX = e.clientX
 	}
 	const onMouseMove = e => {
-		setEndX(e.clientX)
+		endX = e.clientX
 	}
 	const onMouseUp = () => {
 		onMove()
@@ -68,7 +68,6 @@ export const slide = products => {
 		onMouseUp,
 		slider,
 		currentIdx,
-		setCurrentIdx,
 		nextSlide,
 		prevSlide,
 	}
