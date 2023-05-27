@@ -27,6 +27,30 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
+	readProductList(page = 1, category = 0) {
+		return axiosInstance.get(`${PATH}/search`, {
+			params: { page, category, keyword: '', status: '판매중' },
+		})
+	},
+	readQuoteList(keyword, start, end) {
+		return axiosInstance.get(`${PATH}/quote`, {
+			params: { keyword, start, end },
+		})
+	},
+	readViewedList() {
+		return axiosInstance.get(`${PATH}/viewed-list`, {})
+	},
+	addViewedList(prod_idx) {
+		return axiosInstance.post(`${PATH}/viewed-list`, { prod_idx })
+	},
+	deleteViewedList(prod_idx) {
+		return axiosInstance.delete(`${PATH}/viewed-list`, {
+			params: { prod_idx },
+		})
+	},
+	like(prod_idx) {
+		return axiosInstance.post(PATH + '/like', prod_idx)
+	},
 }
 
 export default ProductApi

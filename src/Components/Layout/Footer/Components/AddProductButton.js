@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
@@ -7,15 +7,24 @@ import { AddProduct_Icon } from '../../../Icons/Icons'
 
 function AddProductButton() {
 	const navigate = useNavigate()
+	const currentURL = useLocation().pathname
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
 
-	window.addEventListener('wheel', function (event) {
-		if (event.deltaY > 0) {
+	let touchStart = 0
+	let touchEnd = 0
+
+	// 모바일 터치 이벤트리스너
+	window.addEventListener('touchstart', event => {
+		touchStart = event.changedTouches[0].clientY
+	})
+
+	window.addEventListener('touchend', event => {
+		touchEnd = event.changedTouches[0].clientY
+
+		if (touchEnd - touchStart > -10) {
+			setScroll(false)
+		} else if (touchEnd - touchStart < -10) {
 			setScroll(true)
-		} else if (event.deltaY < 0) {
-			setScroll(false)
-		} else if (document.documentElement.scrollTop <= 0) {
-			setScroll(false)
 		}
 	})
 
@@ -27,11 +36,17 @@ function AddProductButton() {
 	}
 
 	return (
-		<S.ButtonBox className={scroll ? 'scroll' : ''}>
-			<S.Button type="button" onClick={() => onAddProduct()}>
-				<AddProduct_Icon size="50" />
-			</S.Button>
-		</S.ButtonBox>
+		<>
+			{currentURL.includes('register') ? (
+				''
+			) : (
+				<S.ButtonBox className={scroll ? 'scroll' : ''}>
+					<S.Button type="button" onClick={() => onAddProduct()}>
+						<AddProduct_Icon size="50" />
+					</S.Button>
+				</S.ButtonBox>
+			)}
+		</>
 	)
 }
 export default AddProductButton
