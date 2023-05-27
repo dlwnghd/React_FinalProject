@@ -16,6 +16,7 @@ import UserInfo from '../Pages/MyPage/UserEdit/Pages/UserInfo/UserInfo'
 import MyPageNav from '../Pages/MyPage/Components/Header/Components/Navigation'
 import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
+import MyReview from '../Pages/MyPage/Pages/MyReview'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
 
 const router = createBrowserRouter([
@@ -50,7 +51,6 @@ const router = createBrowserRouter([
 					{
 						path: '',
 						element: <MyPageIndex />,
-
 						children: [
 							{
 								path: '/mypage-bank',
@@ -63,6 +63,10 @@ const router = createBrowserRouter([
 							{
 								path: '/mypage-register',
 								element: <MyPrdRegister />,
+							},
+							{
+								path: '/mypage-review',
+								element: <MyReview />,
 							},
 						],
 					},

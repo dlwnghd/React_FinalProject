@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import {
-	ColumnNumberCSS,
-	FlexAlignCSS,
-	GridCenterCSS,
-} from '../../../../Styles/common'
+import { FlexAlignCSS, FlexCenterCSS } from '../../../../Styles/common'
 
-function Thumbnail({ productImages }) {
-	const [mainImage, setMainImages] = useState(productImages[0].imgUrl)
+function Thumbnail({ detailProduct, detailIsLoading, detailStatus }) {
+	if (detailIsLoading && detailStatus === 'loading') return
+
+	const { img_url, ProductImages } = detailProduct.searchProduct
+	const [mainImage, setMainImages] = useState(img_url)
 
 	const onClickMainImage = url => {
 		setMainImages(url)
@@ -17,15 +16,17 @@ function Thumbnail({ productImages }) {
 		<S.Wrapper>
 			<S.MainIMGContainer images={mainImage}></S.MainIMGContainer>
 			<S.SubIMGContainer>
-				{productImages.map((item, idx) => {
-					return (
-						<S.SubImages
-							images={item.imgUrl}
-							key={idx}
-							onClick={() => onClickMainImage(item.imgUrl)}
-						/>
-					)
-				})}
+				<>
+					{ProductImages.map((item, idx) => {
+						return (
+							<S.SubImages
+								images={item.img_url}
+								key={idx}
+								onClick={() => onClickMainImage(item.img_url)}
+							/>
+						)
+					})}
+				</>
 			</S.SubIMGContainer>
 		</S.Wrapper>
 	)
@@ -34,33 +35,28 @@ function Thumbnail({ productImages }) {
 export default Thumbnail
 
 const Wrapper = styled.section`
-	${GridCenterCSS}
-	${ColumnNumberCSS(2)}
+	width: 100%;
+	${FlexCenterCSS}
+	flex-direction: column;
 	align-items: flex-start;
-	column-gap: 0.5rem;
-	row-gap: 0.5rem !important;
+`
+
+const MainIMGContainer = styled.div`
+	position: relative;
 	width: 100%;
 
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
-		${ColumnNumberCSS(1)}
-	}
-`
-const MainIMGContainer = styled.div`
-	width: 48rem;
-	height: 48rem;
 	background: ${({ images }) => `url(${images})`} no-repeat center center;
 	background-size: cover;
+	margin-bottom: 3rem;
 
-	/* @media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 36rem;
-		height: 36rem;
-	} */
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
 `
 const SubIMGContainer = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(1)}
-	row-gap: 0.5rem !important;
-	column-gap: 0.5rem !important;
+	${FlexCenterCSS}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${FlexAlignCSS}
@@ -72,16 +68,12 @@ const SubIMGContainer = styled.div`
 const SubImages = styled.div`
 	width: 10rem;
 	height: 10rem;
+	margin-right: 1rem;
 	background: ${({ images }) => `url(${images})`} no-repeat center center;
 	background-size: cover;
 	:hover {
 		cursor: pointer;
 	}
-
-	/* @media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 8rem;
-		height: 8rem;
-	} */
 `
 
 const S = {

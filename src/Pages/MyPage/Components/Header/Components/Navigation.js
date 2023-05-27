@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { FlexAlignCSS, WidthAutoCSS } from '../../../../../Styles/common'
+import {
+	FlexAlignCSS,
+	FlexCenterCSS,
+	WidthAutoCSS,
+} from '../../../../../Styles/common'
 
 const MY_PAGE_NAV_TYPE = {
 	myPage: [
@@ -15,6 +19,10 @@ const MY_PAGE_NAV_TYPE = {
 		{
 			title: '관심상품',
 			path: '/mypage-interest',
+		},
+		{
+			title: '구매 후기',
+			path: '/mypage-review',
 		},
 	],
 	userEdit: [
@@ -59,7 +67,6 @@ const Wrapper = styled.div`
 	justify-content: flex-start;
 `
 const Container = styled.div`
-	width: 30rem;
 	${FlexAlignCSS}
 	margin: 4rem 0;
 	column-gap: 4rem;
@@ -68,6 +75,9 @@ const Container = styled.div`
 	}
 `
 const Title = styled.div`
+	width: 13rem;
+	${FlexCenterCSS};
+	padding-bottom: 0.7rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	border-bottom: ${({ state }) =>
 		state
