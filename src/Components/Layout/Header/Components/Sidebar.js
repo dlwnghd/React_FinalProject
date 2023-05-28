@@ -1,30 +1,58 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router'
-import { ColumnNumberCSS, FlexCenterCSS, GridCenterCSS } from '../../../../Styles/common'
+import { useLocation, useNavigate } from 'react-router'
+import {
+	ColumnNumberCSS,
+	FlexCenterCSS,
+	GridCenterCSS,
+} from '../../../../Styles/common'
 import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ViewedItemBox from './ViewedItemBox'
 
-function Sidebar({ onSideBar, setOnSideBar }) {
+function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	const navigate = useNavigate()
+	const currentURL = useLocation().pathname
 	const slideRef = useRef()
 	const { data, error, status, isLoading, isError, refetch } =
 		useGetViewedProductsList()
 
 	useEffect(() => {
-		const $body = document.querySelector('body')
+		function handleResize() {
+			const $body = document.querySelector('body')
 
-		if (window.innerWidth > 414) {
-			slideRef.current.style.transform = 'translateX(0%)'
-			$body.style.overflow = 'auto'
-		} else if (onSideBar === true) {
-			slideRef.current.style.transform = 'translateX(0%)'
-			$body.style.overflow = 'hidden'
-		} else if (onSideBar === false) {
-			slideRef.current.style.transform = 'translateX(100%)'
-			$body.style.overflow = 'auto'
+			if (window.innerWidth > 414) {
+				slideRef.current.style.transform = 'translateX(0%)'
+				$body.style.overflow = 'auto'
+				slideRef.current.style.transition = 'none'
+			} else if (onSideBar === true) {
+				slideRef.current.style.transform = 'translateX(0%)'
+				$body.style.overflow = 'hidden'
+			} else if (onSideBar === false) {
+				slideRef.current.style.transform = 'translateX(100%)'
+				$body.style.overflow = 'auto'
+			}
+		}
+
+		// 최초 실행
+		handleResize()
+
+		// 이벤트 리스너 추가
+		window.addEventListener('resize', handleResize)
+
+		// 컴포넌트가 언마운트되거나 onSideBar 값이 변경되면 이벤트 리스너 제거
+		return () => {
+			window.removeEventListener('resize', handleResize)
 		}
 	}, [onSideBar])
+
+	useEffect(() => {
+		setOnSideBar(false)
+	}, [currentURL])
+
+	// 전역에서 관리되는 회원정보가 바뀌면(Login, 회원정보 수정) 최근 본 상품 재요청
+	useEffect(() => {
+		refetch()
+	}, [userInfo])
 
 	return (
 		<S.SidebarWrapper ref={slideRef}>
@@ -69,7 +97,6 @@ const SidebarWrapper = styled.nav`
 	height: 100%;
 	overflow-y: auto;
 	color: ${({ theme }) => theme.COLOR.common.black};
-	transition: 0.5s ease-in-out;
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 	height: 50%;
@@ -92,6 +119,7 @@ const SidebarWrapper = styled.nav`
 		left: 0;
 		padding: 0rem 6rem 12rem 6rem;
 		height: 100%;
+		transition: 0.5s ease-in-out;
 	}
 `
 
