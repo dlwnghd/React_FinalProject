@@ -7,14 +7,16 @@ import { useParams } from 'react-router-dom'
 import ProductApi from '../../Apis/productApi'
 import { useQuery } from '@tanstack/react-query'
 import QUERY_KEY from '../../Consts/query.key'
+import { useRef } from 'react'
 
 function Register() {
-	const [imageFile, setImageFiles] = useState('')
 	const [imageList, setImageList] = useState([])
+	const [imageFileArr, setImageFileArr] = useState([])
 	const [imgNum, setImgNum] = useState(false)
+	let imageFileRef = useRef([])
+	let getMainImgUrl = useRef('')
+
 	const { prod_idx } = useParams()
-	console.log(prod_idx)
-	console.log({ imageFile })
 
 	const getProductDetailData = async () => {
 		const res = await ProductApi.detail({ prod_idx })
@@ -37,22 +39,26 @@ function Register() {
 	useEffect(() => {
 		refetch()
 	}, [prod_idx])
+
 	return (
 		<S.Wrapper>
 			<Images
-				setImageFiles={setImageFiles}
 				setImageList={setImageList}
 				imageList={imageList}
 				DetailData={DetailData}
-				imageFile={imageFile}
-				setImgNum={setImgNum}
+				setImageFileArr={setImageFileArr}
+				imageFileArr={imageFileArr}
+				imageFileRef={imageFileRef}
+				getMainImgUrl={getMainImgUrl}
 				imgNum={imgNum}
+				setImgNum={setImgNum}
 			/>
 			<Inputs
-				imageFile={imageFile}
 				DetailData={DetailData}
-				imageList={imageList}
 				setImgNum={setImgNum}
+				imgNum={imgNum}
+				imageFileArr={imageFileArr}
+				getMainImgUrl={getMainImgUrl}
 			/>
 		</S.Wrapper>
 	)

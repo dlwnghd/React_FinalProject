@@ -120,7 +120,7 @@ const PrdList = styled.div`
 	width: 100%;
 	margin-top: 4rem;
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)};
+	${ColumnNumberCSS(5)};
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;

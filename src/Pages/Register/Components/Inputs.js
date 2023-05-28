@@ -19,7 +19,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import scrollToTop from '../../../Utils/scrollToTop'
 
-function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
+function Inputs({
+	DetailData,
+	setImgNum,
+	imageFileArr,
+	getMainImgUrl,
+	imgNum,
+}) {
 	const {
 		control,
 		watch,
@@ -29,14 +35,13 @@ function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 		clearErrors,
 	} = useForm()
 
-	console.log(DetailData)
-
 	const navigate = useNavigate()
+
 	const params = useParams()
 
 	const watchedCategory = watch('category')
-	const [submitType, setSubmitType] = useState('등록')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [submitType, setSubmitType] = useState('등록')
 	const [modalType, setModalType] = useState('')
 
 	const [hashValue, setHashValue] = useState('')
@@ -94,7 +99,6 @@ function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 			? useMutation(formData => ProductApi.register(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
-						navigate(-1)
 					},
 					onError: () => {},
 			  })
@@ -106,7 +110,11 @@ function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 			  })
 
 	const onSubmit = async data => {
-		if (!imageFile.length && submitType == '등록')
+		if (
+			(!imageFileArr.length && submitType == '등록') ||
+			imageFileArr.length > 5 ||
+			imageFileArr.length === 0
+		)
 			return setImgNum(true), scrollToTop(0)
 
 		let price = 0
@@ -124,20 +132,34 @@ function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
 
-		for (let i = 0; i < imageFile.length; i++) {
-			formData.append('images', imageFile[i])
-		}
-
 		if (submitType === '등록') {
 			mutate(formData)
 		}
 		if (submitType === '수정') {
-			formData.append('main_url', DetailData.searchProduct.img_url)
+			if (getMainImgUrl.current) {
+				formData.append('main_url', DetailData.searchProduct.img_url)
+
+				if (imageFileArr.length === 5) {
+					for (let i = 0; i < imageFileArr.length - 1; i++) {
+						formData.append('images', imageFileArr[i])
+					}
+				} else {
+					for (let i = 0; i < imageFileArr.length; i++) {
+						formData.append('images', imageFileArr[i])
+					}
+				}
+			}
+
 			formData.append('idx', params.prod_idx)
 			formData.append('img_url', DetailData.searchProduct.ProductImages)
 
 			mutate(formData)
 		}
+
+		if (!getMainImgUrl.current)
+			for (let i = 0; i < imageFileArr.length; i++) {
+				formData.append('images', imageFileArr[i])
+			}
 	}
 
 	useEffect(() => {
@@ -148,12 +170,16 @@ function Inputs({ imageFile, DetailData, imgNum, setImgNum }) {
 		if (DetailData) {
 			const { title, price, region, category, ProductsTags, description } =
 				DetailData.searchProduct
+
 			setValue('title', title)
 			setValue('description', description)
 			setValue('region', region)
 			setValue('category', category ? '1' : '0')
 			priceToString(price)
-			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			if (!hashArr.length) {
+				ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			}
+
 			setSubmitType(() => '수정')
 		}
 	}, [DetailData])
