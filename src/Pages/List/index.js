@@ -50,7 +50,7 @@ function List() {
 			<S.ListContainer>
 				<S.MainContent>
 					<S.SearchContent>
-						<h3>{isSuccess && data.pages[0].product.length}개의 상품</h3>
+						<h3>{isSuccess ? data.pages[0].pagination.count : 0}개의 상품</h3>
 						<Filter
 							filterArray={!currentURL ? listFilter : listFilter.slice(0, 2)}
 							onClick={onFilter}
