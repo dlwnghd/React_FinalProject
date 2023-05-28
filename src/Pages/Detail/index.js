@@ -46,10 +46,7 @@ function Detail() {
 				<Thumbnail {...detailProductList} />
 				<Description {...detailProductList} liked={liked} />
 			</S.MainContainer>
-			<Maps>
-				<div>지도</div>
-			</Maps>
-			<Contents />
+			<Contents detailProduct={detailProduct} />
 		</S.Wrapper>
 	)
 }
@@ -73,15 +70,6 @@ const MainContainer = styled.section`
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(1)}
-	}
-`
-const Maps = styled.div`
-	width: 100%;
-	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	height: 25rem;
-
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 100%;
 	}
 `
 
