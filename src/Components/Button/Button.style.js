@@ -16,7 +16,7 @@ const variantCSS = {
 	`,
 	'default-reverse': css`
 		border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
-		font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 		background-color: ${({ theme }) => theme.COLOR.common.white};
 
 		&:hover {
@@ -25,7 +25,7 @@ const variantCSS = {
 		}
 	`,
 	'no-border': css`
-		font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
+		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 		background-color: ${({ theme }) => theme.COLOR.common.white};
 		border: none;
 

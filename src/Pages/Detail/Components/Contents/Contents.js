@@ -5,8 +5,9 @@ import useGetMyPageInterestData from '../../../../Hooks/Queries/get-myPageIntere
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGetMainPageData from '../../../../Hooks/Queries/get-mainPage'
+import Maps from './Components/Maps'
 
-function Contents() {
+function Contents({ detailProduct }) {
 	const [page, setPage] = useState(1)
 	const navigate = useNavigate()
 
@@ -23,8 +24,6 @@ function Contents() {
 	if (isLoading) return
 	if (error) return
 
-	console.log(mainProduct)
-
 	const productList = {
 		freeProduct: mainProduct.freeProduct,
 		usedProduct: mainProduct.usedProduct,
@@ -32,13 +31,14 @@ function Contents() {
 
 	return (
 		<S.PrdListBox>
+			<Maps detailProduct={detailProduct} />
 			<S.RecentPrdList>
 				<RecentBanner {...productList} />
 			</S.RecentPrdList>
 			<S.InterestPrdList>
 				<S.InterestTitle>
 					<h3>관심 상품 보러가기</h3>
-					<span>내게 관심있던 상품을 다시 둘러보세요.</span>
+					<span>내게 관심있던 상품을 다시 둘러보세요</span>
 				</S.InterestTitle>
 				<S.InterestBox>
 					{!likeIsLoading &&
@@ -75,14 +75,14 @@ const RecentPrdList = styled.div`
 `
 const InterestPrdList = styled.div`
 	width: 100%;
-
-	& > h3 {
-		margin-bottom: 1rem;
-	}
 `
 
 const InterestTitle = styled.div`
 	margin-bottom: 3rem;
+
+	& > h3 {
+		margin-bottom: 1rem;
+	}
 `
 
 const InterestBox = styled.div`

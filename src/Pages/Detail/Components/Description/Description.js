@@ -13,10 +13,23 @@ import Heart from '../../../../Components/Heart/Heart'
 
 function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
-	const { title, idx, status, price, category, description, ProductsTags } =
-		detailProduct.searchProduct
+	const {
+		title,
+		idx,
+		status,
+		price,
+		createdAt,
+		category,
+		description,
+		ProductsTags,
+	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
+
+	const createdDay = new Date(createdAt)
+	const year = createdDay.getFullYear()
+	const month = createdDay.getMonth() + 1
+	const day = createdDay.getDate()
 
 	const heartProps = {
 		like: liked,
@@ -28,26 +41,46 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 		<S.Wrapper>
 			<S.TitleContainer>
 				<div>
-					<h3>{title}</h3>
-					<p>{status}</p>
+					<div>
+						<h3>{title}</h3>
+						<div>
+							<p>{status}</p>
+							<S.StyledSubButton
+								onClick={() => navigate('/recent-price', { state: title })}
+							>
+								시세보기
+							</S.StyledSubButton>
+						</div>
+					</div>
+					<p>
+						등록일 : {year}년 {month}월 {day}일
+					</p>
 				</div>
 				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
 			<S.OptionContainer>
 				<S.ButtonBox>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+					<S.StyledMainButton
+						variant={'no-border'}
+						shape={'soft'}
+						size={'full'}
+					>
 						<p>찜</p>
 						<Heart {...heartProps} />
-					</S.StyledButton>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+					</S.StyledMainButton>
+					<S.StyledMainButton
+						variant={'no-border'}
+						shape={'soft'}
+						size={'full'}
+					>
 						채팅
-					</S.StyledButton>
+					</S.StyledMainButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
 			<hr />
 			<S.DescriptionContainer>
 				<div>
-					<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
+					<h4>카테고리 : {category === 0 ? '중고거래' : '무료나눔'}</h4>
 					<p>{description}</p>
 				</div>
 				<S.TagBox>
@@ -95,8 +128,23 @@ const TitleContainer = styled.div`
 	margin-bottom: 3rem;
 
 	& > div {
+		margin-bottom: 2rem;
+
+		& > div {
+			margin-bottom: 1rem;
+		}
+	}
+
+	& > div > div {
 		${FlexBetweenCSS}
-		margin-bottom:2rem;
+	}
+
+	& > div > div > div {
+		${FlexCenterCSS}
+	}
+
+	& > div > div > div > p:first-of-type {
+		margin-right: 1rem;
 	}
 `
 
@@ -128,7 +176,13 @@ const ButtonBox = styled.div`
 	column-gap: 1rem;
 `
 
-const StyledButton = styled(Button)`
+const StyledSubButton = styled(Button)`
+	width: 10rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	height: 3.2rem;
+`
+
+const StyledMainButton = styled(Button)`
 	&:first-of-type {
 		background: ${({ theme }) => theme.COLOR.common.white};
 		color: ${({ theme }) => theme.COLOR.error};
@@ -155,6 +209,7 @@ const S = {
 	DescriptionContainer,
 	OptionContainer,
 	ButtonBox,
-	StyledButton,
+	StyledMainButton,
+	StyledSubButton,
 	TagBox,
 }
