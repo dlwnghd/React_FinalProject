@@ -12,12 +12,19 @@ import { useRecoilState } from 'recoil'
 import Button from '../../../../Components/Button/Button'
 import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
+import { useSearchParams } from 'react-router-dom'
 
 function MyPrdRegister() {
-	const [ProductIdx, setProductIdx] = useState()
-	const [category, setCategory] = useState(0)
+	const [searchParams, setSearchParams] = useSearchParams()
 
-	const [page, setPage] = useState(1)
+	const params = {
+		page: searchParams.get('page'),
+		category: searchParams.get('category'),
+	}
+
+	const [ProductIdx, setProductIdx] = useState()
+	const [category, setCategory] = useState(params.category)
+	const [page, setPage] = useState(params.page)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [deleteOpenModal, setDeleteOpenModal] = useState(false)

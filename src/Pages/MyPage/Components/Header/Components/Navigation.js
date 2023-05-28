@@ -10,7 +10,7 @@ const MY_PAGE_NAV_TYPE = {
 		},
 		{
 			title: '등록상품',
-			path: '/mypage-register',
+			path: '/mypage-register?category=0&page=1',
 		},
 		{
 			title: '관심상품',

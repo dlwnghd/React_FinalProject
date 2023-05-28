@@ -29,6 +29,7 @@ function FormItem(props) {
 						<Input
 							placeholder={nameToPlaceholder[name]}
 							status={errors[name] ? 'error' : 'default'}
+							readOnly={name === 'region'}
 							{...field}
 							{...rest}
 						/>
