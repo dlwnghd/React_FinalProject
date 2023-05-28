@@ -58,6 +58,11 @@ const sizeCSS = {
 		width: 100%;
 		height: 4.8rem;
 	`,
+	fit: css`
+		width: fit-content;
+		height: fit-content;
+		padding: 0.3rem 1rem;
+	`,
 }
 
 const fontSizeCSS = {
