@@ -1,10 +1,37 @@
 import styled from 'styled-components'
-import { WidthAutoCSS } from '../../../../Styles/common'
+import {
+	ColumnNumberCSS,
+	GridCenterCSS,
+	WidthAutoCSS,
+} from '../../../../Styles/common'
+import useGetReviewList from '../../../../Hooks/Queries/get-reviewList'
+import { useState } from 'react'
+import ReviewCard from './Components/Card'
+import Pagination from '../../../../Components/Pagination/Pagination'
 
 function MyReview() {
+	const [page, setPage] = useState(1)
+
+	const { data, error, status } = useGetReviewList({ page })
+
+	if (status === 'loading') return
+	if (status === 'error') return
+
+	const { pagination, reviewList } = data
+
 	return (
 		<S.Wrapper>
-			<p>리뷰 페이지입니다</p>
+			<S.Container>
+				{reviewList.map(review => (
+					<ReviewCard key={review.idx} review={review} />
+				))}
+			</S.Container>
+			<Pagination
+				limit={10}
+				totalPage={pagination.totalPage}
+				setPage={setPage}
+				scroll={400}
+			/>
 		</S.Wrapper>
 	)
 }
@@ -14,4 +41,13 @@ const Wrapper = styled.div`
 	${WidthAutoCSS}
 `
 
-const S = { Wrapper }
+const Container = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(1)}
+	}
+`
+
+const S = { Wrapper, Container }

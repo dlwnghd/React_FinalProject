@@ -10,5 +10,8 @@ const MESSAGE = {
 		DEFAULT: '에러가 발생했습니다. 다시 시도해주세요',
 		EXPIRED: '로그인이 만료되었습니다. 다시 로그인해주세요.',
 	},
+	REVIEW: {
+		EMPTY: '후기를 작성해 보세요!',
+	},
 }
 export default MESSAGE
