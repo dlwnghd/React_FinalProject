@@ -8,10 +8,11 @@ import ItemBox from '../../../../Components/ItemBox/ItemBox'
 // import { useEffect } from 'react'
 import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 import useGetMyInterest from '../../../../Hooks/Queries/get-myInterest'
+import { useNavigate } from 'react-router-dom'
 
 function MyInterest() {
 	const arr = Array.from('0123456789')
-
+	const navigate = useNavigate()
 	const { data, error, status, isLoading, isError, isRefetching } =
 		useGetMyInterest({ page: 1 })
 
@@ -45,7 +46,6 @@ function MyInterest() {
 						</>
 					)
 				})}
-				{/* } */}
 			</S.Container>
 		</S.Wrapper>
 	)

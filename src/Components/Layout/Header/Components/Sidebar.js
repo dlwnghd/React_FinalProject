@@ -26,8 +26,6 @@ function Sidebar({ onSideBar, setOnSideBar }) {
 		}
 	}, [onSideBar])
 
-	console.log(data)
-
 	return (
 		<S.SidebarWrapper ref={slideRef}>
 			<S.SideBarTitleContainer>

@@ -16,6 +16,7 @@ import NonUserBar from './Components/NonUserBar'
 import HeaderSearchBar from './Components/Search'
 import MobileHeader from './Components/MobileHeader'
 import Navigation from './Components/Navigation'
+import useChatModal from '../../../Hooks/useChatModal'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 
 function Header() {
@@ -32,6 +33,7 @@ function Header() {
 	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
+	const { chatModalOpen } = useChatModal()
 
 	// 현재 URL 변경시
 	useEffect(() => {
@@ -46,14 +48,14 @@ function Header() {
 	let touchEnd = 0
 
 	// 모바일 터치 이벤트리스너
-	if(onSideBar === false){
+	if (onSideBar === false) {
 		window.addEventListener('touchstart', event => {
 			touchStart = event.changedTouches[0].clientY
 		})
-	
+
 		window.addEventListener('touchend', event => {
 			touchEnd = event.changedTouches[0].clientY
-	
+
 			if (touchEnd - touchStart > -10) {
 				setScroll(false)
 			} else if (touchEnd - touchStart < -10) {
@@ -68,8 +70,11 @@ function Header() {
 	}, [navigate])
 
 	return (
-		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
-			<Sidebar onSideBar={onSideBar} setOnSideBar={setOnSideBar} />
+		<S.HeaderWrapper
+			className={scroll ? 'scroll' : ''}
+			chatModalOpen={chatModalOpen}
+		>
+			<Sidebar onSideBar={onSideBar} />
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
 					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />
@@ -96,7 +101,7 @@ export default Header
  */
 const HeaderWrapper = styled.header`
 	position: relative;
-	z-index: 9999;
+	z-index: 9998;
 	width: 100%;
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};

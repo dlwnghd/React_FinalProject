@@ -10,15 +10,10 @@ function List() {
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
 	const currentURL = useLocation().pathname.includes('freeMarket') ? 1 : 0
 	// use-query 시작
-	const {
-		data,
-		isSuccess,
-		hasNextPage,
-		fetchNextPage,
-		isFetching,
-	} = useGetProductList({
-		category: currentURL,
-	})
+	const { data, isSuccess, hasNextPage, fetchNextPage, isFetching } =
+		useGetProductList({
+			category: currentURL,
+		})
 
 	const listFilter = [
 		'최근 등록순',

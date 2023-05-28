@@ -38,6 +38,7 @@ function SignUp() {
 	} = useForm({ mode: 'onChange' })
 
 	const watchedEmail = watch('email')
+
 	const watchedNickname = watch('nickname')
 
 	const { mutateAsync, isLoading } = useMutation(newUser =>
@@ -58,7 +59,7 @@ function SignUp() {
 			UserInfoService.setSaveId(newUser.email)
 			navigate('/login')
 		} catch (err) {
-			if (err.status === 400) {
+			if (err.response.status === 400) {
 				setModalType('error')
 				setIsOpenModal(true)
 			}
@@ -117,7 +118,7 @@ function SignUp() {
 
 	return (
 		<S.Wrapper>
-			{isOpenModal && modalType === 'alert' && (
+			{isOpenModal && modalType === 'error' && (
 				<AlertModal message={MESSAGE.JOIN.FAILURE} />
 			)}
 			<h1>회원가입</h1>

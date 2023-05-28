@@ -3,26 +3,33 @@ import { EtcOption_Icon } from '../../../../../Components/Icons/Icons'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { FlexCenterCSS } from '../../../../../Styles/common'
 
-// import ProductApi from '../../../../../Apis/productApi'
-
-function MyPrdItemBox({ item }) {
+function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
+	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
 
-	const { image_url, title, price, status, idx } = item
+	const { img_url, title, price, status, idx } = item
 
-	//물품 삭제
-	// const onProductDel = async () => {
-	// 	try {
-	// 		await ProductApi.delete(idx)
-	// 	} catch (err) {}
-	// }
+	const onProductDelete = idx => {
+		setIsOpenModal(true)
+		setProductIdx(idx)
+		setEditOption(false)
+	}
 
-	//물품 수정
+	const productChange = idx => {
+		navigate(`/register/${idx}`)
+		setEditOption(false)
+	}
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer posterIMG={image_url} status={status}>
+			<S.IMGContainer
+				posterIMG={img_url}
+				status={status}
+				onClick={() => navigate(`/detail/${idx}`)}
+			>
 				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
 			</S.IMGContainer>
 			<S.DescContainer>
@@ -33,10 +40,11 @@ function MyPrdItemBox({ item }) {
 							size="30"
 							onClick={() => setEditOption(prev => !prev)}
 						/>
+
 						{editOption && (
 							<S.EditBox>
-								<div>수정</div>
-								<div onClick={onProductDel}>삭제</div>
+								<div onClick={() => productChange(idx)}>수정</div>
+								<div onClick={() => onProductDelete(idx)}>삭제</div>
 							</S.EditBox>
 						)}
 					</S.IconContainer>
@@ -79,6 +87,7 @@ const Wrapper = styled.div`
 		right: 1.4rem;
 		color: ${({ theme }) => theme.COLOR.main};
 		font-weight: 900;
+		color: red;
 	}
 `
 
@@ -124,13 +133,22 @@ const SoldOut = styled.h2`
 	top: 40%;
 	z-index: 100;
 	left: 5%;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		top: 25%;
+		left: 25%;
+	}
 `
+
 const IconContainer = styled.div`
 	cursor: pointer;
 	position: relative;
 `
 const EditBox = styled.div`
 	border: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+	& > div:first-child {
+		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
+		background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	}
 	& > div {
 		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 		padding: 0.5rem;
@@ -138,9 +156,10 @@ const EditBox = styled.div`
 			background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 		}
 	}
-	& > div:first-child {
-		border-bottom: 2px solid ${({ theme }) => theme.COLOR.common.gray[200]};
-	}
+
+	position: absolute;
+	bottom: 4rem;
+	z-index: 100;
 	width: 6rem;
 	right: 1rem;
 	text-align: center;
@@ -148,6 +167,22 @@ const EditBox = styled.div`
 	position: absolute;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 6rem;
+	}
+`
+const ModalText = styled.div`
+	height: 100%;
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	margin-top: 3rem;
+`
+const ModalTextWrap = styled.div`
+	${FlexCenterCSS}
+	flex-direction: column;
+`
+const ButtonsWrap = styled.div`
+	display: flex;
+	margin-top: 3rem;
+	* {
+		margin: 0 1rem;
 	}
 `
 const S = {
@@ -159,4 +194,7 @@ const S = {
 	ButtonContainer,
 	IconContainer,
 	EditBox,
+	ModalText,
+	ModalTextWrap,
+	ButtonsWrap,
 }

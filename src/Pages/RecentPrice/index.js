@@ -19,7 +19,7 @@ function RecentPrice() {
 	]
 
 	// 필터버튼 클릭시
-	const onFilter = (date) => {
+	const onFilter = date => {
 		dateFilter.some(item => {
 			if (date == item) {
 				updateData(item)

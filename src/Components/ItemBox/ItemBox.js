@@ -1,63 +1,56 @@
 import styled from 'styled-components'
-import {
-	EtcOption_Icon,
-	FillHeart_Icon,
-	NotFillHeart_Icon,
-} from '../Icons/Icons'
-import { useState } from 'react'
-import { FlexBetweenCSS, GridCenterCSS } from '../../Styles/common'
+import { EtcOption_Icon } from '../Icons/Icons'
+import { FlexBetweenCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
-import { useMutation } from '@tanstack/react-query'
-import ProductApi from '../../Apis/productApi'
+import { useState } from 'react'
+import Heart from '../Heart/Heart'
 
-// 컴포넌트 불러올 때, props로
-// 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
 function ItemBox({
 	posterPath,
 	title,
-	context,
+	description,
 	price,
 	isLiked,
 	createdAt,
 	status,
 	prod_idx,
+	productsTags,
 	...rest
 }) {
-	const [isHeart, setIsHeart] = useState(isLiked)
-	const statusValue = String(status).includes('판매완료')
+	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
 
-	const { mutateAsync } = useMutation(prod_idx => ProductApi.like(prod_idx))
-
-	const onHeart = () => {
-		mutateAsync({ prod_idx })
-		setIsHeart(prev => !prev)
+	const heartProps = {
+		like: isLiked,
+		hover: isHoverItemBox,
+		setHover: setIsHoverItemBox,
+		prod_idx: prod_idx,
 	}
 
-	const onEdit = () => {}
+	const onMouseEnter = e => {
+		setIsHoverItemBox(true)
+	}
+
+	const onMouseLeave = e => {
+		setIsHoverItemBox(false)
+	}
 
 	return (
 		<S.Wrapper>
-			{status !== '판매완료' &&
-				(!isHeart ? (
-					<NotFillHeart_Icon size="30" onClick={onHeart} />
-				) : (
-					<FillHeart_Icon size="30" onClick={onHeart} />
-				))}
-			<S.SoldOutContainer />
-			<S.IMGContainer posterIMG={posterPath} statusValue={statusValue} {...rest}>
-				{statusValue && <h1>SOLD OUT</h1>}
+			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+				{isHoverItemBox && <Heart {...heartProps} />}
+				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
 			<S.DescContainer>
-				<S.DescBox context={context}>
+				<S.DescBox description={description}>
 					<h4>{title}</h4>
-					{context !== '' ? (
-						<p>{context}</p>
+					{description !== '' ? (
+						<p>{description}</p>
 					) : (
-						<EtcOption_Icon size="30" onClick={onEdit} />
+						<EtcOption_Icon size="30" />
 					)}
 				</S.DescBox>
 				<S.DescBox2>
-					<h4>{price.toLocaleString()}원</h4>
+					<h4>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h4>
 					<span>{elapsedTime(createdAt)}</span>
 				</S.DescBox2>
 			</S.DescContainer>
@@ -76,42 +69,38 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+`
+
+const IMGContainer = styled.div`
+	position: relative;
+	width: 100%;
+	height: 100%;
 
 	& > svg {
 		position: absolute;
 		z-index: 999;
 		cursor: pointer;
-		top: 1.4rem;
-		right: 1.4rem;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		color: ${({ theme }) => theme.COLOR.main};
+	}
 
-		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
+	&::hover {
+		opacity: 0.5;
+	}
+
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
 	}
 `
 
-const SoldOutContainer = styled.div`
-	width: 100%;
+const IMGBox = styled.div`
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	height: 100%;
-	position: absolute;
-`
-
-const IMGContainer = styled.div`
-	position: relative;
-	cursor: ${({ statusValue }) => !statusValue && 'pointer'};
-	width: 100%;
-	height: 27.6rem;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
-		${({ statusValue }) => statusValue && ',rgba(0, 0, 0, 0.5)'};
-	background-blend-mode: multiply;
-	background-size: cover;
-	${({ statusValue }) => statusValue && GridCenterCSS}
-	color: ${({ theme }) => theme.COLOR.common.white};
-
-	// 드래그 방지
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+	cursor: pointer;
 `
 
 const DescContainer = styled.div`
@@ -121,12 +110,11 @@ const DescContainer = styled.div`
 	flex-direction: column;
 	align-items: baseline;
 	margin-top: 2rem;
-	/* background: red; */
 `
 
 const DescBox = styled.div`
 	width: 100%;
-	${({ context }) => context === '' && FlexBetweenCSS}
+	${({ description }) => description === '' && FlexBetweenCSS}
 
 	& > h4 {
 		overflow: hidden;
@@ -153,8 +141,8 @@ const DescBox2 = styled.div`
 
 const S = {
 	Wrapper,
-	SoldOutContainer,
 	IMGContainer,
+	IMGBox,
 	DescContainer,
 	DescBox,
 	DescBox2,

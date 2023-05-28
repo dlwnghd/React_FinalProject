@@ -23,17 +23,18 @@ import {
 	AiOutlineDollarCircle,
 	AiOutlineFund,
 	AiOutlineDown,
+	AiOutlineCalendar,
 	AiFillSignal,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
-import {TbTrashX} from 'react-icons/tb'
+import { TbTrashX } from 'react-icons/tb'
 
 export const Search_Icon = ({ color, position }) => (
 	<CiSearch color={color} position={position} />
 ) // 검색
 
-export const Arrow_Icon = ({ size }) => (
-	<AiOutlineArrowRight size={size ? size : 50} />
+export const Arrow_Icon = ({ size, color }) => (
+	<AiOutlineArrowRight size={size ? size : 50} color={color} />
 ) // 슬라이드 화살표
 
 export const NotFillHeart_Icon = ({ size, onClick }) => (
@@ -67,7 +68,9 @@ export const ChatOut_Icon = () => <AiOutlineExport /> // 채팅방 나가기
 export const EtcOption_Icon = ({ size, onClick }) => (
 	<AiOutlineMore size={size ? size : 50} onClick={onClick} />
 ) // 기타 옵션
-export const ModalClose_icon = ({ size }) => <AiOutlineClose size={size} /> // 모달 닫기
+export const ModalClose_icon = ({ size, onClick }) => (
+	<AiOutlineClose size={size} onClick={onClick} />
+) // 모달 닫기
 
 export const RollBack_icon = ({ size, color, cursor }) => (
 	<AiOutlineRollback size={size} color={color} cursor={cursor} />
@@ -89,13 +92,37 @@ export const Total_Icon = ({ size, color }) => (
 export const Down_Icon = ({ size, color }) => (
 	<AiOutlineDown size={size} color={color} />
 )
+// 꼬리 없는 왼쪽 arrow
+export const Left_Arrow_Icon = ({ size, color, ...rest }) => (
+	<AiOutlineDown
+		size={size}
+		color={color}
+		style={{ transform: 'rotate(90deg)', cursor: 'pointer' }}
+		{...rest}
+	/>
+)
+// 꼬리 없는 오른쪽 arrow
+export const Right_Arrow_Icon = ({ size, color, ...rest }) => (
+	<AiOutlineDown
+		size={size}
+		color={color}
+		style={{ transform: 'rotate(-90deg)', cursor: 'pointer' }}
+		{...rest}
+	/>
+)
+// 캘린더
+export const Calendar_Icon = ({ size, color }) => (
+	<AiOutlineCalendar size={size} color={color} />
+)
 export const RecentPrice_Icon = () => <AiFillSignal /> // 최근 시세동향
 
 // 탭바
 export const Home_Icon = () => <AiOutlineHome /> // 홈
 export const FreeMarket_Icon = () => <AiOutlineShop /> // 프리마켓
 export const TradeUsed_Icon = () => <AiOutlineSwap /> // 트레이드 유즈
-export const Chatting_Icon = ({ size, color}) => <AiOutlineComment size={size} color={color}/> // 채팅
+export const Chatting_Icon = ({ size, color }) => (
+	<AiOutlineComment size={size} color={color} />
+) // 채팅
 export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
 
 export const DeleteProduct_Icon = ({ size, color, onClick }) => (
