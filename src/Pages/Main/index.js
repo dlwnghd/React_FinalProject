@@ -8,14 +8,14 @@ import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
-
 import RecentBanner from './Components/Banner/RecentBanner'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Main() {
-	const navigate = useNavigate()
 	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
-	if (isLoading && status === 'loading') return
+	const navigate = useNavigate()
+
+	if (isLoading) return
 	if (error) return
 
 	return (
@@ -29,21 +29,27 @@ function Main() {
 						<span>네고와 함께하는 무료나눔</span>
 					</S.Title>
 					<S.ProductList>
-						{mainProduct.freeProduct.map((item, idx) => {
-							return (
-								<ItemBox
-									title={item.title}
-									price={item.price}
-									posterPath={item.img_url}
-									context={item.script}
-									isLiked={item.liked}
-									key={idx}
-									onClick={() =>
-										navigate(`/detail/${item.idx}`, { state: item.liked })
-									}
-								/>
-							)
-						})}
+						<>
+							{mainProduct.freeProduct.map((item, idx) => {
+								return (
+									<ItemBox
+										key={idx}
+										prod_idx={item.idx}
+										title={item.title}
+										description={item.description}
+										price={item.price}
+										posterPath={item.img_url}
+										createdAt={item.created_at}
+										isLiked={item.liked}
+										status={item.status}
+										productsTags={item.ProductsTags}
+										onClick={() =>
+											navigate(`/detail/${item.idx}`, { state: item.liked })
+										}
+									/>
+								)
+							})}
+						</>
 					</S.ProductList>
 				</S.FreeMarketList>
 				<SlideBanner mainProduct={mainProduct} />
@@ -53,21 +59,27 @@ function Main() {
 						<span>네고와 함께하는 중고거래</span>
 					</S.Title>
 					<S.ProductList>
-						{mainProduct.usedProduct.map((item, idx) => {
-							return (
-								<ItemBox
-									title={item.title}
-									price={item.price}
-									posterPath={item.img_url}
-									context={item.script}
-									isLiked={item.liked}
-									key={idx}
-									onClick={() =>
-										navigate(`/detail/${item.idx}`, { state: item.liked })
-									}
-								/>
-							)
-						})}
+						<>
+							{mainProduct.usedProduct.map((item, idx) => {
+								return (
+									<ItemBox
+										key={idx}
+										prod_idx={item.idx}
+										title={item.title}
+										description={item.description}
+										price={item.price}
+										posterPath={item.img_url}
+										createdAt={item.created_at}
+										isLiked={item.liked}
+										status={item.status}
+										productsTags={item.ProductsTags}
+										onClick={() =>
+											navigate(`/detail/${item.idx}`, { state: item.liked })
+										}
+									/>
+								)
+							})}
+						</>
 					</S.ProductList>
 				</S.TradeUsedList>
 			</S.Container>

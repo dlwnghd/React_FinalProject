@@ -13,34 +13,30 @@ import {
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
 import { useState } from 'react'
-import useGetHeartInterestData from '../../../../Hooks/Queries/get-heartInterest'
-import { useEffect } from 'react'
 
 function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
-	console.log(liked)
 	const { title, idx, status, price, category, description, ProductsTags } =
 		detailProduct.searchProduct
 
 	const navigate = useNavigate()
 	const [isLiked, setIsLiked] = useState(liked)
 
-	const {
-		data: heartData,
-		status: heartStatus,
-		refetch,
-	} = useGetHeartInterestData(idx, isLiked)
+	// const {
+	// 	data: heartData,
+	// 	status: heartStatus,
+	// 	refetch,
+	// } = useGetHeartInterestData(idx, isLiked)
 
 	const onHeart = () => {
 		setIsLiked(prev => !prev)
-
 	}
 
-	useEffect(() => {
-		refetch()
-	}, [isLiked])
+	// useEffect(() => {
+	// 	refetch()
+	// }, [isLiked])
 
-	if (heartStatus === 'loading') return
+	// if (heartStatus === 'loading') return
 
 	return (
 		<S.Wrapper>
@@ -54,7 +50,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 			<S.OptionContainer>
 				<S.HeartBox onClick={onHeart}>
 					<p>찜</p>
-					{heartData.message ? (
+					{isLiked ? (
 						<FillHeart_Icon size="24" />
 					) : (
 						<NotFillHeart_Icon size="24" />

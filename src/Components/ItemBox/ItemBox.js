@@ -1,217 +1,149 @@
-// import styled from 'styled-components'
-// import {
-// 	EtcOption_Icon,
-// 	FillHeart_Icon,
-// 	NotFillHeart_Icon,
-// } from '../Icons/Icons'
-// import { useState } from 'react'
-// import { FlexBetweenCSS, GridCenterCSS } from '../../Styles/common'
-// import { elapsedTime } from './timeSet'
-// import { useMutation } from '@tanstack/react-query'
-// import ProductApi from '../../Apis/productApi'
+import styled from 'styled-components'
+import { EtcOption_Icon } from '../Icons/Icons'
+import { FlexBetweenCSS } from '../../Styles/common'
+import { elapsedTime } from './timeSet'
+import { useState } from 'react'
+import Heart from '../Heart/Heart'
 
-// function ItemBox({
-// 	posterPath,
-// 	title,
-// 	context,
-// 	price,
-// 	isLiked,
-// 	createdAt,
-// 	status,
-// 	prod_idx,
-// 	...rest
-// }) {
-// 	const [isHeart, setIsHeart] = useState(isLiked)
-// 	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
-// 	const statusValue = String(status).includes('판매완료')
+function ItemBox({
+	posterPath,
+	title,
+	description,
+	price,
+	isLiked,
+	createdAt,
+	status,
+	prod_idx,
+	productsTags,
+	...rest
+}) {
+	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
 
-// 	const { mutateAsync } = useMutation(prod_idx => ProductApi.like(prod_idx))
+	const heartProps = {
+		like: isLiked,
+		hover: isHoverItemBox,
+		setHover: setIsHoverItemBox,
+		prod_idx: prod_idx,
+	}
 
-// 	const onHeart = () => {
-// 		mutateAsync({ prod_idx })
-// 		setIsHeart(prev => !prev)
-// 	}
+	const onMouseEnter = e => {
+		setIsHoverItemBox(true)
+	}
 
-// 	const onMouseEnter = e => {
-// 		setIsHoverItemBox(true)
-// 	}
+	const onMouseLeave = e => {
+		setIsHoverItemBox(false)
+	}
 
-// 	const onMouseLeave = e => {
-// 		setIsHoverItemBox(false)
-// 	}
+	return (
+		<S.Wrapper>
+			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+				{isHoverItemBox && <Heart {...heartProps} />}
+				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
+			</S.IMGContainer>
+			<S.DescContainer>
+				<S.DescBox description={description}>
+					<h4>{title}</h4>
+					{description !== '' ? (
+						<p>{description}</p>
+					) : (
+						<EtcOption_Icon size="30" />
+					)}
+				</S.DescBox>
+				<S.DescBox2>
+					<h4>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h4>
+					<span>{elapsedTime(createdAt)}</span>
+				</S.DescBox2>
+			</S.DescContainer>
+		</S.Wrapper>
+	)
+}
 
-// 	return (
-// 		<S.Wrapper>
+export default ItemBox
 
-// 			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-// 				{isHoverItemBox && (
-// 					<>
-// 						{!isHeart ? (
-// 							<NotFillHeart_Icon size="30" onClick={onHeart} />
-// 						) : (
-// 							<FillHeart_Icon size="30" onClick={onHeart} />
-// 						)}
-// 						<S.IMGHoverCover {...rest}></S.IMGHoverCover>
-// 					</>
-// 				)}
-// 				<S.IMGList posterIMG={posterPath}></S.IMGList>
+const Wrapper = styled.div`
+	${FlexBetweenCSS}
+	flex-direction: column;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+`
 
-// 			{status !== '판매완료' &&
-// 				(!isHeart ? (
-// 					<NotFillHeart_Icon size="30" onClick={onHeart} />
-// 				) : (
-// 					<FillHeart_Icon size="30" onClick={onHeart} />
-// 				))}
-// 			<S.SoldOutContainer />
-// 			<S.IMGContainer
-// 				posterIMG={posterPath}
-// 				statusValue={statusValue}
-// 				{...rest}
-// 			>
-// 				{statusValue && <h1>SOLD OUT</h1>}
+const IMGContainer = styled.div`
+	position: relative;
+	width: 100%;
+	height: 100%;
 
-// 			</S.IMGContainer>
-// 			<S.DescContainer>
-// 				<S.DescBox context={context}>
-// 					<h4>{title}</h4>
-// 					{context !== '' ? <p>{context}</p> : <EtcOption_Icon size="30" />}
-// 				</S.DescBox>
-// 				<S.DescBox2>
-// 					<h4>{price.toLocaleString()}원</h4>
-// 					<span>{elapsedTime(createdAt)}</span>
-// 				</S.DescBox2>
-// 			</S.DescContainer>
-// 		</S.Wrapper>
-// 	)
-// }
+	& > svg {
+		position: absolute;
+		z-index: 999;
+		cursor: pointer;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		color: ${({ theme }) => theme.COLOR.main};
+	}
 
-// export default ItemBox
+	&::hover {
+		opacity: 0.5;
+	}
 
-// const Wrapper = styled.div`
-// 	${FlexBetweenCSS}
-// 	flex-direction: column;
-// 	position: relative;
-// 	width: 100%;
-// 	height: 100%;
-// 	z-index: 0;
-// 	box-sizing: border-box;
-// 	overflow: hidden;
-// `
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
+`
 
-// const IMGContainer = styled.div`
-// 	position: relative;
-// 	width: 100%;
-// 	height: 100%;
+const IMGBox = styled.div`
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	height: 100%;
+	cursor: pointer;
+`
 
-// 	& > svg {
-// 		position: absolute;
-// 		z-index: 999;
-// 		cursor: pointer;
-// 		top: 50%;
-// 		left: 50%;
-// 		transform: translate(-50%, -50%);
-// 		color: ${({ theme }) => theme.COLOR.main};
-// 	}
-// `
+const DescContainer = styled.div`
+	${FlexBetweenCSS}
+	width:100%;
+	padding: 0 1rem;
+	flex-direction: column;
+	align-items: baseline;
+	margin-top: 2rem;
+`
 
-// <<<<<<< Develop/pair1
-// const IMGHoverCover = styled.div`
-// 	position: absolute;
-// 	cursor: pointer;
-// 	top: 0;
-// 	left: 0;
-// 	z-index: 998;
-// 	width: 100%;
-// 	height: 100%;
-// 	background: rgba(0, 0, 0, 0.5);
-// `
+const DescBox = styled.div`
+	width: 100%;
+	${({ description }) => description === '' && FlexBetweenCSS}
 
-// const IMGList = styled.div`
-// =======
-// const SoldOutContainer = styled.div`
-// 	width: 100%;
-// 	height: 100%;
-// 	position: absolute;
-// `
+	& > h4 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 
-// const IMGContainer = styled.div`
-// >>>>>>> main
-// 	position: relative;
-// 	cursor: ${({ statusValue }) => !statusValue && 'pointer'};
-// 	width: 100%;
-// <<<<<<< Develop/pair1
-// 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
-// 	background-size: cover;
+	& > p {
+		margin: 1rem 0 2rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+`
 
-// 	&::hover {
-// 		opacity: 0.5;
-// 	}
+const DescBox2 = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`
 
-// 	&::after {
-// 		content: '';
-// 		display: block;
-// 		padding-bottom: 100%;
-// 	}
-// =======
-// 	height: 27.6rem;
-// 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
-// 		${({ statusValue }) => statusValue && ',rgba(0, 0, 0, 0.5)'};
-// 	background-blend-mode: multiply;
-// 	background-size: cover;
-// 	${({ statusValue }) => statusValue && GridCenterCSS}
-// 	color: ${({ theme }) => theme.COLOR.common.white};
-
-// 	// 드래그 방지
-// 	-webkit-user-select: none;
-// 	-moz-user-select: none;
-// 	-ms-user-select: none;
-// 	user-select: none;
-// >>>>>>> main
-// `
-
-// const DescContainer = styled.div`
-// 	${FlexBetweenCSS}
-// 	width:100%;
-// 	padding: 0 1rem;
-// 	flex-direction: column;
-// 	align-items: baseline;
-// 	margin-top: 2rem;
-// `
-
-// const DescBox = styled.div`
-// 	width: 100%;
-// 	${({ context }) => context === '' && FlexBetweenCSS}
-
-// 	& > h4 {
-// 		overflow: hidden;
-// 		text-overflow: ellipsis;
-// 		white-space: nowrap;
-// 	}
-
-// 	& > p {
-// 		margin: 1rem 0 2rem;
-// 		overflow: hidden;
-// 		text-overflow: ellipsis;
-// 		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
-// 		display: -webkit-box;
-// 		-webkit-line-clamp: 2;
-// 		-webkit-box-orient: vertical;
-// 	}
-// `
-
-// const DescBox2 = styled.div`
-// 	width: 100%;
-// 	display: flex;
-// 	justify-content: space-between;
-// `
-
-// const S = {
-// 	Wrapper,
-// 	SoldOutContainer,
-// 	IMGContainer,
-// 	IMGHoverCover,
-// 	IMGList,
-// 	DescContainer,
-// 	DescBox,
-// 	DescBox2,
-// }
+const S = {
+	Wrapper,
+	IMGContainer,
+	IMGBox,
+	DescContainer,
+	DescBox,
+	DescBox2,
+}
