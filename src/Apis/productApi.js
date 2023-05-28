@@ -57,9 +57,6 @@ const ProductApi = {
 	searchList({ keyword, page }) {
 		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
 	},
-	detail({ prod_idx }) {
-		return axiosInstance.get(PATH + '/detail', { params: { prod_idx } })
-	},
 }
 
 export default ProductApi

@@ -8,7 +8,6 @@ import { useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { isOnSideBar } from '../../Atoms/sideBar.atom'
-import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
@@ -19,14 +18,11 @@ function Detail() {
 	const location = useLocation()
 	const { state: liked } = location
 
-
 	const setOnSideBar = useSetRecoilState(isOnSideBar)
 
 	useEffect(() => {
 		setOnSideBar(false)
 	}, [idx])
-
-	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
 	const {
 		data: detailProduct,
@@ -41,9 +37,8 @@ function Detail() {
 		detailError,
 	}
 
-	if (status === 'loading') return
-	if (detailStatus === 'loading') return
-	if (error && detailError) return
+	if (detailIsLoading) return
+	if (detailError) return
 
 	return (
 		<S.Wrapper>
@@ -54,7 +49,7 @@ function Detail() {
 			<Maps>
 				<div>지도</div>
 			</Maps>
-			<Contents mainProduct={mainProduct} />
+			<Contents />
 		</S.Wrapper>
 	)
 }

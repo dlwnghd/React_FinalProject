@@ -1,8 +1,5 @@
 import styled from 'styled-components'
-import {
-	FillHeart_Icon,
-	NotFillHeart_Icon,
-} from '../../../../Components/Icons/Icons'
+
 import { useNavigate } from 'react-router'
 import {
 	ColumnNumberCSS,
@@ -12,7 +9,7 @@ import {
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
-import { useState } from 'react'
+import Heart from '../../../../Components/Heart/Heart'
 
 function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
@@ -20,23 +17,12 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 		detailProduct.searchProduct
 
 	const navigate = useNavigate()
-	const [isLiked, setIsLiked] = useState(liked)
 
-	// const {
-	// 	data: heartData,
-	// 	status: heartStatus,
-	// 	refetch,
-	// } = useGetHeartInterestData(idx, isLiked)
-
-	const onHeart = () => {
-		setIsLiked(prev => !prev)
+	const heartProps = {
+		like: liked,
+		prod_idx: idx,
+		change_size: '24',
 	}
-
-	// useEffect(() => {
-	// 	refetch()
-	// }, [isLiked])
-
-	// if (heartStatus === 'loading') return
 
 	return (
 		<S.Wrapper>
@@ -48,15 +34,11 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
 			<S.OptionContainer>
-				<S.HeartBox onClick={onHeart}>
-					<p>찜</p>
-					{isLiked ? (
-						<FillHeart_Icon size="24" />
-					) : (
-						<NotFillHeart_Icon size="24" />
-					)}
-				</S.HeartBox>
 				<S.ButtonBox>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+						<p>찜</p>
+						<Heart {...heartProps} />
+					</S.StyledButton>
 					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						채팅
 					</S.StyledButton>
@@ -134,26 +116,6 @@ const OptionContainer = styled.div`
 	${FlexBetweenCSS}
 `
 
-const HeartBox = styled.div`
-	${FlexCenterCSS}
-	width:50%;
-	height: 100%;
-	border-radius: 1rem;
-	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
-
-	margin-right: 1rem;
-	cursor: pointer;
-
-	& > p {
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		color: ${({ theme }) => theme.COLOR.main};
-	}
-
-	& > svg {
-		color: ${({ theme }) => theme.COLOR.main};
-	}
-`
-
 const TagBox = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(3)}
@@ -162,12 +124,25 @@ const TagBox = styled.div`
 
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
-	width:50%;
+	width:100%;
+	column-gap: 1rem;
 `
 
 const StyledButton = styled(Button)`
+	&:first-of-type {
+		background: ${({ theme }) => theme.COLOR.common.white};
+		color: ${({ theme }) => theme.COLOR.error};
+		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+
+		& > p {
+			font-size: 2rem;
+			margin-right: 0.3rem;
+		}
+	}
+
+	${FlexCenterCSS}
 	background: ${({ theme }) => theme.COLOR.common.black};
-	color: ${({ theme }) => theme.COLOR.common.white};
+	color: ${({ theme }) => theme.COLOR.main};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	height: 6rem;
 	border: none;
@@ -179,7 +154,6 @@ const S = {
 	TitleContainer,
 	DescriptionContainer,
 	OptionContainer,
-	HeartBox,
 	ButtonBox,
 	StyledButton,
 	TagBox,

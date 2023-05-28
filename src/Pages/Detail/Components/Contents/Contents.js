@@ -4,10 +4,13 @@ import RecentBanner from '../../../Main/Components/Banner/RecentBanner'
 import useGetMyPageInterestData from '../../../../Hooks/Queries/get-myPageInterest'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useGetMainPageData from '../../../../Hooks/Queries/get-mainPage'
 
-function Contents({ mainProduct }) {
+function Contents() {
 	const [page, setPage] = useState(1)
 	const navigate = useNavigate()
+
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
 	const {
 		data: likeData,
@@ -16,12 +19,21 @@ function Contents({ mainProduct }) {
 		isLoading: likeIsLoading,
 	} = useGetMyPageInterestData(page)
 
-	if (likeStatus === 'loading') return
+	if (status === 'loading') return
+	if (isLoading) return
+	if (error) return
+
+	console.log(mainProduct)
+
+	const productList = {
+		freeProduct: mainProduct.freeProduct,
+		usedProduct: mainProduct.usedProduct,
+	}
 
 	return (
 		<S.PrdListBox>
 			<S.RecentPrdList>
-				<RecentBanner mainProduct={mainProduct} />
+				<RecentBanner {...productList} />
 			</S.RecentPrdList>
 			<S.InterestPrdList>
 				<S.InterestTitle>
@@ -29,19 +41,20 @@ function Contents({ mainProduct }) {
 					<span>내게 관심있던 상품을 다시 둘러보세요.</span>
 				</S.InterestTitle>
 				<S.InterestBox>
-					{likeData.LikeList.slice(0, 5).map((interest, idx) => {
-						return (
-							<S.InterestItems
-								key={idx}
-								interestIMG={interest.Product.img_url}
-								onClick={() =>
-									navigate(`/detail/${interest.Product.idx}`, {
-										state: liked,
-									})
-								}
-							></S.InterestItems>
-						)
-					})}
+					{!likeIsLoading &&
+						likeData.LikeList.slice(0, 5).map((item, idx) => {
+							return (
+								<S.InterestItems
+									key={idx}
+									interestIMG={item.Product.img_url}
+									onClick={() =>
+										navigate(`/detail/${item.Product.idx}`, {
+											state: item.liked,
+										})
+									}
+								></S.InterestItems>
+							)
+						})}
 				</S.InterestBox>
 			</S.InterestPrdList>
 		</S.PrdListBox>
