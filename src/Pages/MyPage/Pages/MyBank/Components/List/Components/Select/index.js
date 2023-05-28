@@ -45,7 +45,6 @@ export default FilterSection
 const Wrapper = styled.div`
 	${FlexBetweenCSS}
 	width: 68rem;
-	margin-top: 5rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 47rem;

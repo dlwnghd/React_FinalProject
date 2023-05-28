@@ -18,7 +18,7 @@ function PayList({ status, category, payList }) {
 					{Array(4)
 						.fill()
 						.map(i => (
-							<LoadingSkeleton key={i} width={'100%'} height={'27.5rem'} />
+							<LoadingSkeleton key={i} width={'100%'} height={'20rem'} />
 						))}
 				</S.Container>
 			</S.Wrapper>
@@ -60,7 +60,8 @@ export default PayList
 
 const Wrapper = styled.div`
 	margin-top: 1rem;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	/* border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]}; */
+	box-shadow: 0 4px 14px rgba(48, 52, 65, 0.12);
 	border-radius: 0.6rem;
 `
 

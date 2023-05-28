@@ -38,6 +38,7 @@ function SignUp() {
 	} = useForm({ mode: 'onChange' })
 
 	const watchedEmail = watch('email')
+
 	const watchedNickname = watch('nickname')
 
 	const { mutateAsync, isLoading } = useMutation(newUser =>

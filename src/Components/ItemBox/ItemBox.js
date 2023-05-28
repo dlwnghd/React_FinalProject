@@ -1,27 +1,29 @@
 import styled from 'styled-components'
-import {
-	EtcOption_Icon,
-	FillHeart_Icon,
-	NotFillHeart_Icon,
-} from '../Icons/Icons'
-import { useState } from 'react'
+import { EtcOption_Icon } from '../Icons/Icons'
 import { FlexBetweenCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
+import { useState } from 'react'
+import Heart from '../Heart/Heart'
 
 function ItemBox({
 	posterPath,
 	title,
-	context,
+	description,
 	price,
 	isLiked,
 	createdAt,
+	status,
+	prod_idx,
+	productsTags,
 	...rest
 }) {
-	const [isHeart, setIsHeart] = useState(isLiked)
 	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
 
-	const onHeart = () => {
-		setIsHeart(prev => !prev)
+	const heartProps = {
+		like: isLiked,
+		hover: isHoverItemBox,
+		setHover: setIsHoverItemBox,
+		prod_idx: prod_idx,
 	}
 
 	const onMouseEnter = e => {
@@ -35,25 +37,20 @@ function ItemBox({
 	return (
 		<S.Wrapper>
 			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-				{isHoverItemBox && (
-					<>
-						{!isHeart ? (
-							<NotFillHeart_Icon size="30" onClick={onHeart} />
-						) : (
-							<FillHeart_Icon size="30" onClick={onHeart} />
-						)}
-						<S.IMGHoverCover {...rest}></S.IMGHoverCover>
-					</>
-				)}
-				<S.IMGList posterIMG={posterPath}></S.IMGList>
+				{isHoverItemBox && <Heart {...heartProps} />}
+				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
 			<S.DescContainer>
-				<S.DescBox context={context}>
+				<S.DescBox description={description}>
 					<h4>{title}</h4>
-					{context !== '' ? <p>{context}</p> : <EtcOption_Icon size="30" />}
+					{description !== '' ? (
+						<p>{description}</p>
+					) : (
+						<EtcOption_Icon size="30" />
+					)}
 				</S.DescBox>
 				<S.DescBox2>
-					<h4>{price.toLocaleString()}원</h4>
+					<h4>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h4>
 					<span>{elapsedTime(createdAt)}</span>
 				</S.DescBox2>
 			</S.DescContainer>
@@ -88,25 +85,6 @@ const IMGContainer = styled.div`
 		transform: translate(-50%, -50%);
 		color: ${({ theme }) => theme.COLOR.main};
 	}
-`
-
-const IMGHoverCover = styled.div`
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	z-index: 998;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.5);
-`
-
-const IMGList = styled.div`
-	position: relative;
-	cursor: pointer;
-	width: 100%;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
-	background-size: cover;
 
 	&::hover {
 		opacity: 0.5;
@@ -117,6 +95,12 @@ const IMGList = styled.div`
 		display: block;
 		padding-bottom: 100%;
 	}
+`
+
+const IMGBox = styled.div`
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	height: 100%;
+	cursor: pointer;
 `
 
 const DescContainer = styled.div`
@@ -130,7 +114,7 @@ const DescContainer = styled.div`
 
 const DescBox = styled.div`
 	width: 100%;
-	${({ context }) => context === '' && FlexBetweenCSS}
+	${({ description }) => description === '' && FlexBetweenCSS}
 
 	& > h4 {
 		overflow: hidden;
@@ -158,8 +142,7 @@ const DescBox2 = styled.div`
 const S = {
 	Wrapper,
 	IMGContainer,
-	IMGHoverCover,
-	IMGList,
+	IMGBox,
 	DescContainer,
 	DescBox,
 	DescBox2,

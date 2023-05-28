@@ -13,16 +13,13 @@ function PayListItem({ item, category }) {
 			<S.DescContainer>
 				<S.DescBox>
 					<div>
-						<p>{categoryText}</p>
+						<S.BoldText>{categoryText}</S.BoldText>
 						<p>{getFormattedDate(new Date(createdAt))}</p>
-						<div>
-							<p>{Product.title}</p>
-							<h4>{Product.price.toLocaleString()}원</h4>
-						</div>
 					</div>
-					{category === 'buyer' && (
-						<S.StyledButton shape={'square'}>리뷰 남기기</S.StyledButton>
-					)}
+					<div>
+						<p>{Product.title}</p>
+						<S.BoldText>{Product.price.toLocaleString()}원</S.BoldText>
+					</div>
 				</S.DescBox>
 			</S.DescContainer>
 		</S.Wrapper>
@@ -34,11 +31,12 @@ const Wrapper = styled.div`
 	${FlexBetweenCSS}
 	position: relative;
 	width: 100%;
-	height: 27.6rem;
+	height: 20rem;
+	max-height: 20rem;
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	box-shadow: 0 4px 14px rgba(48, 52, 65, 0.12);
 	border-radius: 0.3rem;
 	padding: 1rem;
 `
@@ -68,14 +66,10 @@ const DescBox = styled.div`
 	align-items: flex-end;
 	flex-direction: column;
 	padding-top: 1rem;
+`
 
-	& > div > p:first-child {
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	}
-
-	& > div > div {
-		margin-top: 2rem;
-	}
+const BoldText = styled.p`
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 `
 
 const StyledButton = styled(Button)`
@@ -89,5 +83,6 @@ const S = {
 	IMGContainer,
 	DescContainer,
 	DescBox,
+	BoldText,
 	StyledButton,
 }

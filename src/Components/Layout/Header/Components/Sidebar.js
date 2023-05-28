@@ -2,43 +2,57 @@ import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
-import productsMock from '../../../../__mock__/Data/Product/product.data'
-import ItemBox from '../../../ItemBox/ItemBox'
+import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
+import ViewedItemBox from './ViewedItemBox'
 
 function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
+	const { data, error, status, isLoading, isError, refetch } =
+		useGetViewedProductsList()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
 		if (onSideBar === false) {
 			slideRef.current.style.transform = 'translateX(100%)'
 			$body.style.overflow = 'auto'
+			return
 		}
 		if (onSideBar === true) {
 			slideRef.current.style.transform = 'translateX(0%)'
 			$body.style.overflow = 'hidden'
+			return
 		}
-	})
+	}, [onSideBar])
 
 	return (
 		<S.SidebarWrapper ref={slideRef}>
-			<h4>관심 상품 목록</h4>
+			<S.SideBarTitleContainer>
+				<h4>최근 본 상품</h4>
+			</S.SideBarTitleContainer>
 			<S.SideBarContainer>
 				<S.ProductList>
-					{productsMock.slice(0, 8).map((item, idx) => {
-						return (
-							<ItemBox
-								title={item.title}
-								price={item.price}
-								posterPath={item.image_url}
-								context={item.script}
-								isLiked={item.liked}
-								key={idx}
-								onClick={() => navigate(`/detail/${item.idx}`)}
-							/>
-						)
-					})}
+					{data &&
+						data.productList.map((item, idx) => {
+							return (
+								<>
+									<ViewedItemBox
+										refetch={refetch}
+										title={item.Product.title}
+										price={item.Product.price}
+										status={item.Product.status}
+										posterPath={item.Product.img_url}
+										createdAt={item.Product.createdAt}
+										key={item.idx}
+										prod_idx={item.Product.idx}
+										onClick={() => navigate(`/detail/${item.Product.idx}`)}
+									/>
+									{data.productList.length !== idx + 1 ? (
+										<S.ItemLine />
+									) : undefined}
+								</>
+							)
+						})}
 				</S.ProductList>
 			</S.SideBarContainer>
 		</S.SidebarWrapper>
@@ -55,17 +69,22 @@ const SidebarWrapper = styled.nav`
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
-	padding: 12rem 6rem;
+	padding: 6rem 6rem 12rem 6rem;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	transition: 0.5s ease-in-out;
 	transform: translateX(100%);
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	display: none;
 
-	@media screen and (min-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		display: none;
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: block;
 	}
+`
+
+const SideBarTitleContainer = styled.div`
+	margin: 2rem 0;
 `
 
 const SideBarContainer = styled.ul``
@@ -76,13 +95,20 @@ const ProductList = styled.li`
 	${ColumnNumberCSS(4)};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		${ColumnNumberCSS(2)}
+		${ColumnNumberCSS(1)}
 		column-gap: 2rem;
 	}
 `
 
+const ItemLine = styled.hr`
+	width: 100%;
+	color: black;
+`
+
 const S = {
 	SidebarWrapper,
+	SideBarTitleContainer,
 	SideBarContainer,
 	ProductList,
+	ItemLine,
 }
