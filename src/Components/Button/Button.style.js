@@ -50,15 +50,28 @@ const shapeCSS = {
 
 const sizeCSS = {
 	default: css`
-		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 		width: 16rem;
 		height: 4.8rem;
 	`,
 
 	full: css`
-		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 		width: 100%;
 		height: 4.8rem;
+	`,
+}
+
+const fontSizeCSS = {
+	default: css`
+		font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+	`,
+	small: css`
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	`,
+	small: css`
+		font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	`,
+	large: css`
+		font-size: ${({ theme }) => theme.FONT_SIZE.large};
 	`,
 }
 
@@ -66,5 +79,6 @@ export const Button = styled.button`
 	${({ variant }) => variantCSS[variant]}
 	${({ shape }) => shapeCSS[shape]}
     ${({ size }) => sizeCSS[size]}
+	${({ fontSize }) => fontSizeCSS[fontSize]}
 	cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 `
