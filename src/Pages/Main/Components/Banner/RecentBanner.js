@@ -8,12 +8,9 @@ import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Hooks/useSlide'
 
-function RecentBanner({ mainProduct }) {
+function RecentBanner({ freeProduct, usedProduct }) {
 	const location = useLocation()
 	const validLocation = location?.pathname.split('/')[1]
-
-	const freeProduct = mainProduct.freeProduct
-	const usedProduct = mainProduct.usedProduct
 
 	// 최근 등록상품 리스트
 	const recentProduct = [...freeProduct, ...usedProduct]
