@@ -67,6 +67,7 @@ function MyPrdRegister() {
 								category={category}
 								setPage={setPage}
 								page={page}
+								setSearchParams={setSearchParams}
 							/>
 						</S.TotalNumAndFilter>
 
