@@ -7,7 +7,7 @@ import SearchResult from './Components/SearchList'
 import useGetSearchResultData from '../../Hooks/Queries/get-searchResult'
 
 function Search() {
-	const searchFilter = [
+	const listFilter = [
 		'최근 등록순',
 		'인기 높은순',
 		'높은 가격순',
@@ -15,44 +15,74 @@ function Search() {
 	]
 
 	const { word } = useParams()
-	const [filterOption, setFilterOption] = useState(searchFilter[0])
+	const [filterOption, setFilterOption] = useState(listFilter[0])
+	const [searchFilter, setSearchFilter] = useState({
+		order: 'createdAt',
+		sort: 'desc',
+	})
 
-	const {
-		data: searchData,
-		status,
-		isLoading,
-		fetchNextPage,
-		isFetchingNextPage,
-		hasNextPage,
-	} = useGetSearchResultData(word)
+	const onFilter = e => {
+		switch (e.target.innerText) {
+			case listFilter[0]:
+				setFilterOption(listFilter[0])
+				setSearchFilter({
+					order: 'createdAt',
+					sort: 'desc',
+				})
+				break
+			case listFilter[1]:
+				setFilterOption(listFilter[1])
+				setSearchFilter({
+					order: 'popular',
+					sort: 'asc',
+				})
+				break
+			case listFilter[2]:
+				setFilterOption(listFilter[2])
+				setSearchFilter({
+					order: 'price',
+					sort: 'desc',
+				})
+				break
+			case listFilter[3]:
+				setFilterOption(listFilter[3])
+				setSearchFilter({
+					order: 'price',
+					sort: 'asc',
+				})
+				break
+			default:
+				break
+		}
+	}
+
+	const { data, isSuccess, fetchNextPage, isFetching, hasNextPage } =
+		useGetSearchResultData(word, searchFilter)
 
 	useEffect(() => {
 		fetchNextPage(0)
-	}, [word, filterOption])
+	}, [word])
 
-	if (isLoading && status === 'loading') return
-
-	const searchResultLength = searchData.pages.map(page => {
-		return page.product.length
-	})
-	const searchResultNumber = searchResultLength.reduce((a, b) => a + b)
-
-	return (
+	return isSuccess && data.pages[0].pagination.count !== 0 ? (
 		<S.Wrapper>
 			<S.SearchContainer>
 				<S.SearchTitle>
-					<h3>{searchResultNumber}개의 를 찾았습니다.</h3>
-					<Filter filterArray={searchFilter} />
+					<h3>{isSuccess && data.pages[0].pagination.count}개를 찾았습니다.</h3>
+					<Filter filterArray={listFilter} onClick={onFilter} />
 				</S.SearchTitle>
 				<SearchResult
-					searchData={searchData}
-					status={status}
+					searchResult={data}
+					isSuccess={isSuccess}
 					fetchNextPage={fetchNextPage}
 					hasNextPage={hasNextPage}
-					isFetchingNextPage={isFetchingNextPage}
+					isFetching={isFetching}
 				/>
 			</S.SearchContainer>
 		</S.Wrapper>
+	) : (
+		<>
+			<div>fff</div>
+		</>
 	)
 }
 

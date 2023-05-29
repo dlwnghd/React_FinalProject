@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRef } from 'react'
 import styled from 'styled-components'
 import ItemBox from '../../../Components/ItemBox/ItemBox'
@@ -6,59 +6,60 @@ import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 import { useNavigate } from 'react-router-dom'
 
-const lengthArray = new Array(20).fill(0)
+const skeletonUI = new Array(8).fill(0)
 
 function SearchResult({
-	searchData,
-	status,
+	searchResult,
+	isSuccess,
 	fetchNextPage,
 	hasNextPage,
-	isFetchingNextPage,
+	isFetching,
 }) {
 	const observeRef = useRef(null)
-	const navigate = useNavigate()
 
-	const observerCallback = entries => {
-		const target = entries[0]
+	const observerCallback = useCallback(
+		entries => {
+			const target = entries[0]
 
-		if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-			fetchNextPage()
-		}
-	}
+			if (target.isIntersecting && hasNextPage) {
+				fetchNextPage()
+			}
+		},
+		[fetchNextPage, hasNextPage],
+	)
 
 	useEffect(() => {
+		const observeElem = observeRef.current
 		const observer = new IntersectionObserver(observerCallback, {
-			threshold: 1,
+			threshold: 0.5,
 		})
-		if (observeRef.current) observer.observe(observeRef.current)
+		if (observeElem) observer.observe(observeElem)
 
-		return () => {
-			if (observeRef.current) observer.unobserve(observeRef.current)
-		}
-	}, [hasNextPage])
+		return () => observer.unobserve(observeElem)
+	}, [hasNextPage, observerCallback])
+
+	const navigate = useNavigate()
 
 	return (
 		<S.Wrapper>
-			{!isFetchingNextPage
-				? searchData.pages.map(page =>
-						page.product.map((item, idx) => {
-							return (
-								<ItemBox
-									title={item.title}
-									price={item.price}
-									posterPath={item.img_url}
-									context={item.script}
-									isLiked={item.liked}
-									key={idx}
-									onClick={() => navigate(`/detail/${item.idx}`)}
-								/>
-							)
-						}),
-				  )
-				: lengthArray.map((item, idx) => {
-						return <MainSkeleton key={idx} />
-				  })}
-			<Observer ref={observeRef}>옵저버 테스팅</Observer>
+			{isSuccess &&
+				searchResult.pages.map(page =>
+					page.product.map((item, idx) => {
+						return (
+							<ItemBox
+								title={item.title}
+								price={item.price}
+								posterPath={item.img_url}
+								context={item.script}
+								isLiked={item.liked}
+								key={idx}
+								onClick={() => navigate(`/detail/${item.idx}`)}
+							/>
+						)
+					}),
+				)}
+			{isFetching && skeletonUI.map((item, i) => <MainSkeleton key={i} />)}
+			<div ref={observeRef}></div>
 		</S.Wrapper>
 	)
 }
@@ -77,19 +78,6 @@ const Wrapper = styled.div`
 	}
 `
 
-const Observer = styled.div`
-	position: absolute;
-	width: 100%;
-	height: 4rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	left: 0;
-	bottom: 0;
-	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-`
-
 const S = {
 	Wrapper,
-	Observer,
 }

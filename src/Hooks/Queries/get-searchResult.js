@@ -7,35 +7,35 @@ const getSearchData = async params => {
 	return res.data
 }
 
-const useGetSearchResultData = word => {
-	const {
-		data,
-		status,
-		isLoading,
-		fetchNextPage,
-		isFetchingNextPage,
-		hasNextPage,
-	} = useInfiniteQuery(
-		[QUERY_KEY.GET_SEARCHPAGE_DATA, word],
-		({ pageParam = 1 }) => getSearchData({ keyword: word, page: pageParam }),
-		{
-			// lastPage : 현재 보고있는 마지막 페이지
-			// allPages : 현재 pages 데이터(배열)에 담긴 총량
-			getNextPageParam: (lastPage, allPages) => {
-				const nextPage = allPages.length + 1
-				const totalPage = lastPage.pagination.totalPage
+const useGetSearchResultData = (word, { order, sort }) => {
+	const { data, isSuccess, fetchNextPage, isFetching, hasNextPage } =
+		useInfiniteQuery(
+			[QUERY_KEY.GET_SEARCHPAGE_DATA, word, order, sort],
+			({ pageParam = 1 }) =>
+				getSearchData({
+					status: '판매중',
+					keyword: word,
+					page: pageParam,
+					order,
+					sort,
+				}),
+			{
+				// lastPage : 현재 보고있는 마지막 페이지
+				// allPages : 현재 pages 데이터(배열)에 담긴 총량
+				getNextPageParam: (lastPage, allPages) => {
+					const nextPage = allPages.length + 1
+					const totalPage = lastPage.pagination.totalPage
 
-				return nextPage > totalPage ? undefined : nextPage
+					return nextPage > totalPage ? undefined : nextPage
+				},
 			},
-		},
-	)
+		)
 
 	return {
 		data,
-		status,
-		isLoading,
+		isSuccess,
 		fetchNextPage,
-		isFetchingNextPage,
+		isFetching,
 		hasNextPage,
 	}
 }
