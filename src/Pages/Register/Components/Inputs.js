@@ -165,7 +165,6 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 			setValue('title', title)
 			setValue('description', description)
 			setValue('region', region)
-			console.log(region)
 			setValue('category', category ? '1' : '0')
 			priceToString(price)
 			if (!hashArr.length) {
@@ -303,7 +302,9 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 				<Button type="submit" style={{ margin: '4rem' }}>
 					{DetailData ? '수정 완료' : '등록 완료'}
 				</Button>
-				<Button style={{ margin: '4rem' }}>취소</Button>
+				<Button style={{ margin: '4rem' }} variant={'default-reverse'}>
+					취소
+				</Button>
 			</S.ButtonWrap>
 		</form>
 	)

@@ -11,7 +11,9 @@ function TagsItem(props) {
 		<div>
 			<S.InputField>
 				<label>태그 *</label>
-				<S.TagBox>
+				<S.TagBox
+					status={errors.hash && hashArr.length === 0 ? 'error' : 'success'}
+				>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
 							<div>{hash}</div>
@@ -59,7 +61,10 @@ const TagBox = styled.div`
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	border: 1px solid
+		${({ theme, status }) =>
+			status === 'error' ? theme.COLOR.error : theme.COLOR.common.gray[400]};
+
 	&:focus-within {
 		border-color: tomato;
 	}
