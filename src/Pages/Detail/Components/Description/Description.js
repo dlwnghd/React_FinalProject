@@ -10,6 +10,7 @@ import {
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
 import Heart from '../../../../Components/Heart/Heart'
+import SellerInfo from './Components/SellerInfo'
 
 function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
@@ -22,6 +23,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 		category,
 		description,
 		ProductsTags,
+		User,
 	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
@@ -58,6 +60,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 				</div>
 				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
+			<SellerInfo User={User} />
 			<S.OptionContainer>
 				<S.ButtonBox>
 					<S.StyledMainButton
@@ -85,7 +88,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 				</div>
 				<S.TagBox>
 					<>
-						{ProductsTags.map((item, idx) => {
+						{ProductsTags.slice(0, 3).map((item, idx) => {
 							return (
 								<TagsItem
 									key={idx}

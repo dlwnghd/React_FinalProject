@@ -4,10 +4,7 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import { useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
-import { isOnSideBar } from '../../Atoms/sideBar.atom'
 import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
@@ -17,12 +14,6 @@ function Detail() {
 	const { idx } = useParams()
 	const location = useLocation()
 	const { state: liked } = location
-
-	const setOnSideBar = useSetRecoilState(isOnSideBar)
-
-	useEffect(() => {
-		setOnSideBar(false)
-	}, [idx])
 
 	const {
 		data: detailProduct,
@@ -39,6 +30,7 @@ function Detail() {
 
 	if (detailIsLoading) return
 	if (detailError) return
+	console.log(detailProduct)
 
 	return (
 		<S.Wrapper>

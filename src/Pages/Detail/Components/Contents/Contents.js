@@ -38,7 +38,7 @@ function Contents({ detailProduct }) {
 			<S.InterestPrdList>
 				<S.InterestTitle>
 					<h3>관심 상품 보러가기</h3>
-					<span>내게 관심있던 상품을 다시 둘러보세요</span>
+					<span>내가 찜했던 상품을 다시 둘러보세요</span>
 				</S.InterestTitle>
 				<S.InterestBox>
 					{!likeIsLoading &&
