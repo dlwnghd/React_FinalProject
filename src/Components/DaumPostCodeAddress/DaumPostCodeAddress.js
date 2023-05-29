@@ -7,7 +7,7 @@ import { FlexCenterCSS } from '../../Styles/common'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
 import axios from 'axios'
 
-function DaumPostCodeAddress({ setResultAddress, setAddressInfo }) {
+function DaumPostCodeAddress({ setResultAddress, setLatAndLng }) {
 	const setIsOpenModal = useSetRecoilState(isOpenModalAtom)
 
 	const gpsSelect = async data => {
@@ -30,7 +30,7 @@ function DaumPostCodeAddress({ setResultAddress, setAddressInfo }) {
 			const res = await axios(config)
 			if (res.data !== undefined || res.data !== null) {
 				if (res.data.documents[0].x && res.data.documents[0].y) {
-					setAddressInfo({
+					setLatAndLng({
 						x: res.data.documents[0].x,
 						y: res.data.documents[0].y,
 					})

@@ -81,7 +81,6 @@ function UserInfo() {
 			}
 		}
 	}
-
 	const onSubmit = async editData => {
 		let formData
 		if (imgFile) {

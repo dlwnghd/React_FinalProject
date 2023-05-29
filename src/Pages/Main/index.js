@@ -4,57 +4,82 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import productsMock from '../../__mock__/Data/Product/product.data'
 import SlideBanner from './Components/Banner/SlideBanner'
 import MainBanner from './Components/Banner/MainBanner'
-import GridBanner from './Components/Banner/RecentBanner'
 import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
+import RecentBanner from './Components/Banner/RecentBanner'
+import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 
 function Main() {
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 	const navigate = useNavigate()
+
+	if (isLoading) return
+	if (error) return
 
 	return (
 		<S.Wrapper>
-			<MainBanner />
+			<MainBanner mainProduct={mainProduct} />
 			<S.Container>
-				<GridBanner />
+				<RecentBanner mainProduct={mainProduct} />
 				<S.FreeMarketList>
-					<S.Title>FREE MARKET</S.Title>
+					<S.Title>
+						<h3>Free Market</h3>
+						<span>네고와 함께하는 무료나눔</span>
+					</S.Title>
 					<S.ProductList>
-						{productsMock.slice(0, 8).map((item, idx) => {
-							return (
-								<ItemBox
-									title={item.title}
-									price={item.price}
-									posterPath={item.image_url}
-									context={item.script}
-									isLiked={item.liked}
-									key={idx}
-									onClick={() => navigate(`/detail/${item.idx}`)}
-									// hover 되었을 경우, 투명도 있는 검정 바탕 위에 하트 표시하는 것으로 변경 예정
-								/>
-							)
-						})}
+						<>
+							{mainProduct.freeProduct.map((item, idx) => {
+								return (
+									<ItemBox
+										key={idx}
+										prod_idx={item.idx}
+										title={item.title}
+										description={item.description}
+										price={item.price}
+										posterPath={item.img_url}
+										createdAt={item.created_at}
+										isLiked={item.liked}
+										status={item.status}
+										productsTags={item.ProductsTags}
+										onClick={() =>
+											navigate(`/detail/${item.idx}`, { state: item.liked })
+										}
+									/>
+								)
+							})}
+						</>
 					</S.ProductList>
 				</S.FreeMarketList>
-				<SlideBanner />
+				<SlideBanner mainProduct={mainProduct} />
 				<S.TradeUsedList>
-					<S.Title>TRADE USED</S.Title>
+					<S.Title>
+						<h3>Trade Used</h3>
+						<span>네고와 함께하는 중고거래</span>
+					</S.Title>
 					<S.ProductList>
-						{productsMock.slice(0, 8).map((item, idx) => {
-							return (
-								<ItemBox
-									title={item.title}
-									price={item.price}
-									posterPath={item.image_url}
-									context={item.script}
-									isLiked={item.liked}
-									key={idx}
-									onClick={() => navigate(`/detail/${item.idx}`)}
-								/>
-							)
-						})}
+						<>
+							{mainProduct.usedProduct.map((item, idx) => {
+								return (
+									<ItemBox
+										key={idx}
+										prod_idx={item.idx}
+										title={item.title}
+										description={item.description}
+										price={item.price}
+										posterPath={item.img_url}
+										createdAt={item.created_at}
+										isLiked={item.liked}
+										status={item.status}
+										productsTags={item.ProductsTags}
+										onClick={() =>
+											navigate(`/detail/${item.idx}`, { state: item.liked })
+										}
+									/>
+								)
+							})}
+						</>
 					</S.ProductList>
 				</S.TradeUsedList>
 			</S.Container>
@@ -84,15 +109,21 @@ const TradeUsedList = styled.section`
 	margin: 12rem 0;
 `
 
-const Title = styled.h3`
+const Title = styled.div`
 	text-align: center;
+	margin-bottom: 4rem;
+
+	& > h3 {
+		margin-bottom: 1rem;
+	}
 `
 
 const ProductList = styled.div`
 	width: 100%;
-	margin-top: 4rem;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
+	column-gap: 2rem;
+	row-gap: 6rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}

@@ -8,7 +8,8 @@ import ViewedItemBox from './ViewedItemBox'
 function Sidebar({ onSideBar }) {
 	const navigate = useNavigate()
 	const slideRef = useRef()
-	const { data, error, status, isLoading, isError, refetch } = useGetViewedProductsList()
+	const { data, error, status, isLoading, isError, refetch } =
+		useGetViewedProductsList()
 
 	useEffect(() => {
 		const $body = document.querySelector('body')
@@ -23,8 +24,6 @@ function Sidebar({ onSideBar }) {
 			return
 		}
 	}, [onSideBar])
-
-	console.log(data)
 
 	return (
 		<S.SidebarWrapper ref={slideRef}>

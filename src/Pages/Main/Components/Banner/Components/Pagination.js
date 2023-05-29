@@ -1,18 +1,15 @@
 import styled from 'styled-components'
-import productsMock from '../../../../../__mock__/Data/Product/product.data'
 import { FlexAlignCSS } from '../../../../../Styles/common'
 
-function Pagination({ currentIdx }) {
+function Pagination({ currentIdx, bannerList }) {
 	return (
 		<S.Wrapper>
-			{productsMock.slice(0, 4).map((prd, idx) => {
+			{bannerList?.map((prd, idx) => {
 				return (
 					<S.PaginationBox>
-						{currentIdx === idx ? (
-							<PaginationItems className="active"></PaginationItems>
-						) : (
-							<PaginationItems></PaginationItems>
-						)}
+						<PaginationItems
+							className={currentIdx === idx && 'active'}
+						></PaginationItems>
 					</S.PaginationBox>
 				)
 			})}
@@ -38,7 +35,7 @@ const PaginationBox = styled.div`
 	}
 
 	& > .active {
-		background: ${({ theme }) => theme.COLOR.common.gray[200]};
+		background: ${({ theme }) => theme.COLOR.common.gray[100]};
 	}
 `
 
@@ -46,7 +43,7 @@ const PaginationItems = styled.div`
 	width: 1rem;
 	height: 1rem;
 	border-radius: 50%;
-	background: ${({ theme }) => theme.COLOR.common.gray[400]};
+	background: ${({ theme }) => theme.COLOR.common.gray[200]};
 `
 
 const S = {

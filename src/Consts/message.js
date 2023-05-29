@@ -6,6 +6,10 @@ const MESSAGE = {
 		FAILURE: '아이디 또는 비밀번호를 다시 확인해주세요.',
 		ERROR: '로그인에 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.',
 	},
+	ERROR: {
+		DEFAULT: '에러가 발생했습니다. 다시 시도해주세요',
+		EXPIRED: '로그인이 만료되었습니다. 다시 로그인해주세요.'
+  },
 	USEREDIT: {
 		SUCCESS: '프로필 수정이 완료되었습니다.',
 		FAILURE: '프로필 수정에 실패했습니다.',
@@ -14,8 +18,8 @@ const MESSAGE = {
 		SUCCESS: '비밀번호 변경이 완료되었습니다.',
 		FAILURE: '비밀번호 변경에 실패했습니다.',
 	},
-	USERDATA:{
-		FAILURE: '데이터를 불러오는데 실패했습니다.'
-	}
+	USERDATA: {
+		FAILURE: '데이터를 불러오는데 실패했습니다.',
+	},
 }
 export default MESSAGE

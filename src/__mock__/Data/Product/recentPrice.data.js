@@ -37,4 +37,3 @@ items.forEach(item => {
 })
 
 export default recentPriceMock
-

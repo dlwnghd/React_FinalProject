@@ -1,22 +1,21 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 function ErrorCat() {
-
-    return (
-			<S.Cat className="cat">
-				<S.Ear_left className="ear ear--left"></S.Ear_left>
-				<S.Ear_right className="ear ear--right"></S.Ear_right>
-				<S.Face className="face">
-					<S.Eye_left className="eye eye--left">
-						<S.Eye_pupil className="eye-pupil"></S.Eye_pupil>
-					</S.Eye_left>
-					<S.Eye_right className="eye eye--right">
-						<S.Eye_pupil className="eye-pupil"></S.Eye_pupil>
-					</S.Eye_right>
-					<S.Muzzle className="muzzle"></S.Muzzle>
-				</S.Face>
-			</S.Cat>
-		)
+	return (
+		<S.Cat className="cat">
+			<S.Ear_left className="ear ear--left"></S.Ear_left>
+			<S.Ear_right className="ear ear--right"></S.Ear_right>
+			<S.Face className="face">
+				<S.Eye_left className="eye eye--left">
+					<S.Eye_pupil className="eye-pupil"></S.Eye_pupil>
+				</S.Eye_left>
+				<S.Eye_right className="eye eye--right">
+					<S.Eye_pupil className="eye-pupil"></S.Eye_pupil>
+				</S.Eye_right>
+				<S.Muzzle className="muzzle"></S.Muzzle>
+			</S.Face>
+		</S.Cat>
+	)
 }
 export default ErrorCat
 
