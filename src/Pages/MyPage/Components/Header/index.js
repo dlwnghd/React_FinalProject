@@ -1,4 +1,4 @@
-// import Profile from './Components/Profile'
+import Profile from './Components/Profile'
 import useGetMyPageMainData from '../../../../Hooks/Queries/get-myPageMain'
 import MyPageNav from './Components/Navigation'
 
@@ -10,7 +10,7 @@ function MyPageIndex() {
 
 	return (
 		<>
-			{/* <Profile mainData={mainData} /> */}
+			<Profile mainData={mainData} />
 			<MyPageNav type={'myPage'} />
 		</>
 	)
