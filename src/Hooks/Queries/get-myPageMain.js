@@ -19,6 +19,7 @@ const useGetMyPageMainData = () => {
 		[QUERY_KEY.GET_MYPAGE_MAIN_DATA],
 		() => getMyPageMainData(),
 		{
+			refetchOnMount: 'always',
 			cacheTime: 1000 * 60 * 30, // 30분
 			onError: error => {
 				// if (error.response.status === 403) {
