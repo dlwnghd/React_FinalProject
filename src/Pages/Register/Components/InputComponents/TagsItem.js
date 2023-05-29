@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-
 import { ModalClose_icon } from '../../../../Components/Icons/Icons'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import Input from '../../../../Components/Input/Input'
@@ -12,7 +11,9 @@ function TagsItem(props) {
 		<div>
 			<S.InputField>
 				<label>태그 *</label>
-				<S.TagBox>
+				<S.TagBox
+					status={errors.hash && hashArr.length === 0 ? 'error' : 'success'}
+				>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
 							<div>{hash}</div>
@@ -23,7 +24,7 @@ function TagsItem(props) {
 					))}
 					<S.StyledInput
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
-						status={errors.hash ? 'error' : 'default'}
+						status={'error'}
 						{...field}
 						{...rest}
 					/>
@@ -40,7 +41,6 @@ export default TagsItem
 
 const InputField = styled.div`
 	${FlexAlignCSS}
-
 	& > label {
 		width: 14rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
@@ -61,7 +61,10 @@ const TagBox = styled.div`
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
+	border: 1px solid
+		${({ theme, status }) =>
+			status === 'error' ? theme.COLOR.error : theme.COLOR.common.gray[400]};
+
 	&:focus-within {
 		border-color: tomato;
 	}
@@ -86,6 +89,7 @@ const DelButton = styled.button`
 	border-radius: 50%;
 `
 const StyledInput = styled(Input)`
+	border: 1px solid red;
 	display: inline-flex;
 	border: none;
 	outline: none;
@@ -96,6 +100,7 @@ const StyledAlertText = styled(AlertText)`
 	font-size: 1.5rem;
 	text-align: end;
 `
+
 const S = {
 	InputField,
 	TagBox,

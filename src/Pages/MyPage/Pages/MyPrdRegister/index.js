@@ -12,15 +12,22 @@ import { useRecoilState } from 'recoil'
 import Button from '../../../../Components/Button/Button'
 import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
+import { useSearchParams } from 'react-router-dom'
 
 function MyPrdRegister() {
-	const [ProductIdx, setProductIdx] = useState()
-	const [category, setCategory] = useState(0)
+	const [searchParams, setSearchParams] = useSearchParams()
 
-	const [page, setPage] = useState(1)
+	const params = {
+		page: searchParams.get('page'),
+		category: searchParams.get('category'),
+	}
+
+	const [ProductIdx, setProductIdx] = useState()
+	const [category, setCategory] = useState(params.category)
+	const [page, setPage] = useState(params.page)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-
+	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
 	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
 		page,
 		category,
@@ -38,6 +45,11 @@ function MyPrdRegister() {
 		mutate(ProductIdx)
 	}
 
+	const closeModal = () => {
+		setIsOpenModal(() => false)
+		setDeleteOpenModal(() => false)
+	}
+
 	useEffect(() => {
 		refetch()
 	}, [page])
@@ -50,24 +62,23 @@ function MyPrdRegister() {
 					<S.Wrapper>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.pagination.count}개</div>
+
 							<TypeSelectBox
 								setCategory={setCategory}
 								category={category}
 								setPage={setPage}
 								page={page}
+								setSearchParams={setSearchParams}
 							/>
 						</S.TotalNumAndFilter>
 
-						{isOpenModal && (
+						{isOpenModal && deleteOpenModal && (
 							<Modal size={'small'}>
 								<S.ModalTextWrap>
 									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
 									<S.ButtonsWrap>
 										<Button onClick={onProductDeleteCheck}>삭제</Button>
-										<Button
-											variant={'default-reverse'}
-											onClick={() => setIsOpenModal(false)}
-										>
+										<Button variant={'default-reverse'} onClick={closeModal}>
 											취소
 										</Button>
 									</S.ButtonsWrap>
@@ -82,6 +93,7 @@ function MyPrdRegister() {
 										item={item}
 										category={category}
 										setIsOpenModal={setIsOpenModal}
+										setDeleteOpenModal={setDeleteOpenModal}
 										setProductIdx={setProductIdx}
 									/>
 								)
@@ -117,7 +129,7 @@ const PrdList = styled.div`
 	width: 100%;
 	margin-top: 4rem;
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)};
+	${ColumnNumberCSS(5)};
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;
