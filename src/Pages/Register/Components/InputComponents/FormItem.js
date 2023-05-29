@@ -103,5 +103,8 @@ const Textarea = styled.textarea`
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	padding: 1rem 1.2rem;
 	${({ status }) => statusCSS[status]};
+	&:focus {
+		outline: none;
+	}
 `
 const S = { Wrapper, InputField, StyledAlertText, StyledButton, Textarea }

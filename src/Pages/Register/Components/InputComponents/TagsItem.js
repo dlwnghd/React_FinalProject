@@ -12,7 +12,7 @@ function TagsItem(props) {
 			<S.InputField>
 				<label>태그 *</label>
 				<S.TagBox
-					status={errors.hash && hashArr.length === 0 ? 'error' : 'success'}
+					status={errors.hash && hashArr.length === 0 ? 'error' : 'default'}
 				>
 					{hashArr.map((hash, idx) => (
 						<S.TagItem key={idx}>
@@ -22,18 +22,20 @@ function TagsItem(props) {
 							</S.DelButton>
 						</S.TagItem>
 					))}
+
 					<S.StyledInput
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
-						status={'error'}
 						{...field}
 						{...rest}
 					/>
 				</S.TagBox>
 			</S.InputField>
 
-			<S.StyledAlertText type="error">
-				{errors.hash && errors.hash.message}
-			</S.StyledAlertText>
+			{hashArr.length === 0 && (
+				<S.StyledAlertText type="error">
+					{errors.hash && errors.hash.message}
+				</S.StyledAlertText>
+			)}
 		</div>
 	)
 }
@@ -41,6 +43,7 @@ export default TagsItem
 
 const InputField = styled.div`
 	${FlexAlignCSS}
+
 	& > label {
 		width: 14rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
@@ -61,13 +64,17 @@ const TagBox = styled.div`
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	/* &:focus {
+		border: 1px solid
+			${({ theme, status }) => status == 'default' && theme.COLOR.common.gray[400]};
+	} */
 	border: 1px solid
 		${({ theme, status }) =>
 			status === 'error' ? theme.COLOR.error : theme.COLOR.common.gray[400]};
 
-	&:focus-within {
+	/* &:focus-within {
 		border-color: tomato;
-	}
+	} */
 `
 const TagItem = styled.div`
 	display: flex;
@@ -89,7 +96,6 @@ const DelButton = styled.button`
 	border-radius: 50%;
 `
 const StyledInput = styled(Input)`
-	border: 1px solid red;
 	display: inline-flex;
 	border: none;
 	outline: none;

@@ -5,7 +5,7 @@ import Input from '../../../../Components/Input/Input'
 import Button from '../../../../Components/Button/Button'
 
 function PriceItem(props) {
-	const { errors, field, ...rest } = props
+	const { errors, field, intPrice, ...rest } = props
 
 	return (
 		<S.Wrapper>
@@ -14,16 +14,18 @@ function PriceItem(props) {
 				<div>
 					<Input
 						placeholder={'가격을 입력해주세요.'}
-						status={errors.price && 'error'}
+						status={errors.price ? 'error' : 'default'}
 						{...field}
 						{...rest}
 					/>
 				</div>
 			</S.InputField>
 
-			<S.StyledAlertText type="error">
-				{errors.price && errors.price.message}
-			</S.StyledAlertText>
+			{intPrice == 0 && (
+				<S.StyledAlertText type="error">
+					{errors.price && errors.price.message}
+				</S.StyledAlertText>
+			)}
 		</S.Wrapper>
 	)
 }

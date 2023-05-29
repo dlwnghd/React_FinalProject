@@ -238,7 +238,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 			<Controller
 				name="price"
 				control={control}
-				rules={{ required: !intPrice && '가격을 입력해주세요.' }}
+				rules={intPrice == 0 && { required: '가격을 입력해주세요.' }}
 				render={({ field }) => (
 					<PriceItem
 						name={'무료'}
@@ -246,6 +246,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 						field={field}
 						onChange={e => priceToString(e)}
 						value={intPrice}
+						intPrice={intPrice}
 						type={'text'}
 						disabled={watchedCategory === '1' ? true : false}
 					/>
