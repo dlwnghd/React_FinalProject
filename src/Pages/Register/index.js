@@ -14,7 +14,7 @@ function Register() {
 	const [imageFileArr, setImageFileArr] = useState([])
 	const [imgNum, setImgNum] = useState(false)
 	let imageFileRef = useRef([])
-	let getMainImgUrl = useRef('')
+	// let getMainImgUrl = useRef('')
 
 	const { prod_idx } = useParams()
 
@@ -49,16 +49,17 @@ function Register() {
 				setImageFileArr={setImageFileArr}
 				imageFileArr={imageFileArr}
 				imageFileRef={imageFileRef}
-				getMainImgUrl={getMainImgUrl}
 				imgNum={imgNum}
 				setImgNum={setImgNum}
+				// getMainImgUrl={getMainImgUrl}
 			/>
 			<Inputs
 				DetailData={DetailData}
 				setImgNum={setImgNum}
-				imgNum={imgNum}
+				// imgNum={imgNum}
 				imageFileArr={imageFileArr}
-				getMainImgUrl={getMainImgUrl}
+				imageList={imageList}
+				// getMainImgUrl={getMainImgUrl}
 			/>
 		</S.Wrapper>
 	)

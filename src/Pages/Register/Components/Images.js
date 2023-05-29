@@ -13,7 +13,6 @@ function Images({
 	setImageFileArr,
 	imageFileArr,
 	imageFileRef,
-	getMainImgUrl,
 	setImgNum,
 	imgNum,
 }) {
@@ -25,9 +24,8 @@ function Images({
 
 	useEffect(() => {
 		if (DetailData) {
-			const { img_url } = DetailData.searchProduct
-			setImageList([img_url])
-			getMainImgUrl.current = img_url
+			const { img_url, ProductImages } = DetailData.searchProduct
+			setImageList([img_url, ...ProductImages.map(el => el.img_url)])
 		}
 	}, [DetailData])
 
@@ -38,11 +36,15 @@ function Images({
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
+
+			if (imageList.length + ImageLists.length > 5) return setImgNum(true)
+
 			imageFileRef.current.push(ImageLists[i])
 		}
-		if (ImageUrlLists.length > 5) {
+
+		if (ImageLists.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
-			imageFileRef.current = imageFileRef.current.slice(0, 5)
+			imageFileRef.current = imageFileRef.current.slice(0, imageFileArr.length)
 			setImgNum(true)
 		}
 		setImageList(ImageUrlLists)
@@ -59,30 +61,28 @@ function Images({
 		setImgNum(() => false)
 	}
 
-	if (imageList[0] !== getMainImgUrl.current) {
-		getMainImgUrl.current = ''
-	}
-
-	//Drag
+	//드래그
 	const dragStartIdx = useRef()
 	const dragEnterIdx = useRef()
 
-	//drag sort
 	const onhandleSort = () => {
 		let imgItems = [...imageList]
+		let imgFileItem = [...imageFileArr]
 
-		//remove and save dragged item
 		const draggedItemContent = imgItems.splice(dragStartIdx.current, 1)[0]
+		const draggedFileItemContent = imgFileItem.splice(
+			dragStartIdx.current,
+			1,
+		)[0]
 
-		//switch the position
 		imgItems.splice(dragEnterIdx.current, 0, draggedItemContent)
+		imgFileItem.splice(dragEnterIdx.current, 0, draggedFileItemContent)
 
-		//reset the position ref
 		dragStartIdx.current = null
 		dragEnterIdx.current = null
 
-		//update state value
 		setImageList(imgItems)
+		setImageFileArr(imgFileItem)
 	}
 
 	return (

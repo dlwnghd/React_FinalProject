@@ -62,6 +62,7 @@ function MyPrdRegister() {
 					<S.Wrapper>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.pagination.count}개</div>
+
 							<TypeSelectBox
 								setCategory={setCategory}
 								category={category}

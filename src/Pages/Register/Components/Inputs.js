@@ -19,13 +19,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import scrollToTop from '../../../Utils/scrollToTop'
 
-function Inputs({
-	DetailData,
-	setImgNum,
-	imageFileArr,
-	getMainImgUrl,
-	imgNum,
-}) {
+function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	const {
 		control,
 		watch,
@@ -110,10 +104,10 @@ function Inputs({
 			  })
 
 	const onSubmit = async data => {
+		let subUrl = []
 		if (
 			(!imageFileArr.length && submitType == '등록') ||
-			imageFileArr.length > 5 ||
-			imageFileArr.length === 0
+			imageList.length === 0
 		)
 			return setImgNum(true), scrollToTop(0)
 
@@ -132,34 +126,31 @@ function Inputs({
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
 
-		if (submitType === '등록') {
-			mutate(formData)
-		}
 		if (submitType === '수정') {
-			if (getMainImgUrl.current) {
-				formData.append('main_url', DetailData.searchProduct.img_url)
-
-				if (imageFileArr.length === 5) {
-					for (let i = 0; i < imageFileArr.length - 1; i++) {
-						formData.append('images', imageFileArr[i])
+			imageList.map((el, idx) => {
+				if (idx === 0) {
+					if (imageFileArr.length === 0) {
+						formData.append('main_url', el)
 					}
+					formData.append('images', imageFileArr[idx])
+					console.log('images idx0', imageFileArr[idx])
 				} else {
-					for (let i = 0; i < imageFileArr.length; i++) {
-						formData.append('images', imageFileArr[i])
-					}
+					subUrl.push(el)
+					formData.append('images', imageFileArr[idx])
+					console.log('images idxNot0', imageFileArr[idx])
 				}
-			}
-
+			})
 			formData.append('idx', params.prod_idx)
-			formData.append('img_url', DetailData.searchProduct.ProductImages)
+			formData.append('img_url', subUrl.join())
 
 			mutate(formData)
 		}
-
-		if (!getMainImgUrl.current)
+		if (submitType === '등록') {
 			for (let i = 0; i < imageFileArr.length; i++) {
 				formData.append('images', imageFileArr[i])
 			}
+			mutate(formData)
+		}
 	}
 
 	useEffect(() => {
@@ -170,7 +161,6 @@ function Inputs({
 		if (DetailData) {
 			const { title, price, region, category, ProductsTags, description } =
 				DetailData.searchProduct
-
 			setValue('title', title)
 			setValue('description', description)
 			setValue('region', region)
@@ -179,7 +169,6 @@ function Inputs({
 			if (!hashArr.length) {
 				ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
 			}
-
 			setSubmitType(() => '수정')
 		}
 	}, [DetailData])
@@ -295,7 +284,13 @@ function Inputs({
 						<Button
 							size={'full'}
 							variant={'default-reverse'}
-							onClick={() => navigate('/mypage-register')}
+							onClick={() =>
+								navigate(
+									`/mypage-register?category=${Number(
+										watchedCategory,
+									)}&page=${1}`,
+								)
+							}
 						>
 							이전 페이지로 돌아가기
 						</Button>
