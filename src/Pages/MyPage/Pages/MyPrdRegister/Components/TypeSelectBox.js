@@ -54,7 +54,12 @@ function TypeSelectBox({
 export default TypeSelectBox
 
 const Wrapper = styled.div`
-	width: 15rem;
+	position: relative;
+	width: 13rem;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 10rem;
+	}
 `
 
 const BoxContainer = styled.div`
@@ -72,9 +77,12 @@ const BoxContainer = styled.div`
 `
 
 const SelectContainer = styled.ul`
+	position: absolute;
+	z-index: 10;
 	width: 100%;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 0.5rem;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 	margin-top: 0.8rem;
 `
 

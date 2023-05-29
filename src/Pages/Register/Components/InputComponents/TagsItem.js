@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-
 import { ModalClose_icon } from '../../../../Components/Icons/Icons'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import Input from '../../../../Components/Input/Input'
@@ -23,7 +22,7 @@ function TagsItem(props) {
 					))}
 					<S.StyledInput
 						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
-						status={errors.hash ? 'error' : 'default'}
+						status={'error'}
 						{...field}
 						{...rest}
 					/>
@@ -40,7 +39,6 @@ export default TagsItem
 
 const InputField = styled.div`
 	${FlexAlignCSS}
-
 	& > label {
 		width: 14rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.small};
@@ -86,6 +84,7 @@ const DelButton = styled.button`
 	border-radius: 50%;
 `
 const StyledInput = styled(Input)`
+	border: 1px solid red;
 	display: inline-flex;
 	border: none;
 	outline: none;
@@ -96,6 +95,7 @@ const StyledAlertText = styled(AlertText)`
 	font-size: 1.5rem;
 	text-align: end;
 `
+
 const S = {
 	InputField,
 	TagBox,

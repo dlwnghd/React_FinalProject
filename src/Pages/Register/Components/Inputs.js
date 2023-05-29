@@ -69,6 +69,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	}
 
 	const setRegion = result => {
+		console.log({ result })
 		setValue('region', result)
 		clearErrors('region')
 		setResultAddress(result)
@@ -164,6 +165,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 			setValue('title', title)
 			setValue('description', description)
 			setValue('region', region)
+			console.log(region)
 			setValue('category', category ? '1' : '0')
 			priceToString(price)
 			if (!hashArr.length) {
