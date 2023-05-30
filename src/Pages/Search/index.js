@@ -5,6 +5,13 @@ import Filter from '../../Components/Filter/Filter'
 import { useState, useEffect } from 'react'
 import SearchResult from './Components/SearchList'
 import useGetSearchResultData from '../../Hooks/Queries/get-searchResult'
+import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
+import AlertModal from '../../Components/Modal/AlertModal/AlertModal'
+import MESSAGE from '../../Consts/message'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../Atoms/modal.atom'
+
+const skeletonUI = new Array(8).fill(0)
 
 function Search() {
 	const listFilter = [
@@ -20,6 +27,8 @@ function Search() {
 		order: 'createdAt',
 		sort: 'desc',
 	})
+
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const onFilter = e => {
 		switch (e.target.innerText) {
@@ -64,15 +73,22 @@ function Search() {
 		refetch()
 	}, [word, searchFilter])
 
-	return isSuccess && data.pages[0].pagination.count !== 0 ? (
+	const totalCount = data?.pages[0].pagination.count
+
+	useEffect(() => {
+		if (totalCount === 0) setIsOpenModal(true)
+	}, [word, totalCount])
+
+	return isSuccess && totalCount !== 0 ? (
 		<S.Wrapper>
 			<S.SearchContainer>
 				<S.SearchTitle>
-					<h3>{isSuccess && data.pages[0].pagination.count}개를 찾았습니다.</h3>
+					<h3>{isSuccess && totalCount}개를 찾았습니다.</h3>
 					<Filter filterArray={listFilter} onClick={onFilter} />
 				</S.SearchTitle>
 				<SearchResult
 					searchResult={data}
+					skeletonUI={skeletonUI}
 					isSuccess={isSuccess}
 					fetchNextPage={fetchNextPage}
 					hasNextPage={hasNextPage}
@@ -81,9 +97,14 @@ function Search() {
 			</S.SearchContainer>
 		</S.Wrapper>
 	) : (
-		<>
-			<div>fff</div>
-		</>
+		<S.Wrapper>
+			<S.SearchContainer totalCount={totalCount}>
+				{isOpenModal && <AlertModal message={MESSAGE.SEARCH.EMPTY} />}
+				{skeletonUI.map((item, i) => (
+					<MainSkeleton key={i} />
+				))}
+			</S.SearchContainer>
+		</S.Wrapper>
 	)
 }
 
@@ -96,6 +117,13 @@ const Wrapper = styled.section`
 
 const SearchContainer = styled.div`
 	margin: 12rem 0;
+	${({ totalCount }) =>
+		totalCount === 0 && {
+			display: 'grid',
+			gridTemplateColumns: 'repeat(4,1fr)',
+			columnGap: '3rem',
+			rowGap: '6rem',
+		}}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		margin: 6rem 0;

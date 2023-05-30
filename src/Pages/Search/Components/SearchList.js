@@ -6,11 +6,10 @@ import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 import { useNavigate } from 'react-router-dom'
 
-const skeletonUI = new Array(8).fill(0)
-
 function SearchResult({
 	searchResult,
 	isSuccess,
+	skeletonUI,
 	fetchNextPage,
 	hasNextPage,
 	isFetching,
