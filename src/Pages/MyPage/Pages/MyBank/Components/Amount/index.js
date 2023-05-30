@@ -56,8 +56,8 @@ function AmountSection({ status, amount }) {
 				<StackedBar
 					status={status}
 					clicked={clicked}
-					sale={amount.thisMonthSaleAmount || 0}
-					purchase={amount.thisMonthPurchaseAmount || 0}
+					sale={amount?.thisMonthSaleAmount || 0}
+					purchase={amount?.thisMonthPurchaseAmount || 0}
 				/>
 			)}
 		</>
