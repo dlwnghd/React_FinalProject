@@ -8,13 +8,22 @@ import ItemBox from '../../../../Components/ItemBox/ItemBox'
 // import { useEffect } from 'react'
 import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 import useGetMyInterest from '../../../../Hooks/Queries/get-myInterest'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import Pagination from '../../../../Components/Pagination/Pagination'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 function MyInterest() {
-	const arr = Array.from('0123456789')
+	const arr = Array(10).fill(0)
 	const navigate = useNavigate()
-	const { data, error, status, isLoading, isError, isRefetching } =
-		useGetMyInterest({ page: 1 })
+	const [searchParams, setSearchParams] = useSearchParams()
+	const [page, setPage] = useState(searchParams.get('page'))
+	const { data, error, status, isLoading, isError, isRefetching, refetch } =
+		useGetMyInterest({ page })
+
+	useEffect(() => {
+		refetch()
+	}, [page])
 
 	return (
 		<S.Wrapper>
@@ -47,6 +56,12 @@ function MyInterest() {
 					)
 				})}
 			</S.Container>
+			<Pagination
+				totalPage={data?.pagination.totalPage}
+				setPage={setPage}
+				limit={10}
+				scroll={300}
+			/>
 		</S.Wrapper>
 	)
 }
@@ -58,7 +73,7 @@ const Wrapper = styled.div`
 `
 const Container = styled.div`
 	${GridCenterCSS}
-	${ColumnNumberCSS(4)};
+	${ColumnNumberCSS(5)};
 	margin: 4rem auto;
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}

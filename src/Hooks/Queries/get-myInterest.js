@@ -8,7 +8,7 @@ const getMyInterest = async page => {
 }
 
 const useGetMyInterest = page => {
-	const { data, error, status, isLoading, isError } = useQuery(
+	const { data, error, status, isLoading, isError, refetch } = useQuery(
 		[QUERY_KEY.GET_MYINTEREST],
 		() => getMyInterest(page),
 		{
@@ -18,7 +18,7 @@ const useGetMyInterest = page => {
 		},
 	)
 
-	return { data, error, status, isLoading, isError }
+	return { data, error, status, isLoading, isError, refetch }
 }
 
 export default useGetMyInterest
