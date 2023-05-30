@@ -61,6 +61,7 @@ function MyPrdItemBox({
 				<Button shape={'square'} style={{ width: '48%' }}>
 					채팅
 				</Button>
+
 				<Button
 					shape={'square'}
 					style={{ background: status === '판매완료' && '#AAA', width: '48%' }}
@@ -175,6 +176,7 @@ const EditBox = styled.div`
 		width: 6rem;
 	}
 `
+
 const ModalText = styled.div`
 	height: 100%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};

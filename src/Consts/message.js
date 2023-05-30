@@ -21,5 +21,16 @@ const MESSAGE = {
 	USERDATA: {
 		FAILURE: '데이터를 불러오는데 실패했습니다.',
 	},
+	REGISTER: {
+		SUCCESS: '물품 등록이 완료되었습니다.',
+		FAILURE: '물품 등록에 실패했습니다.',
+	},
+	EDITPRODUCT: {
+		SUCCESS: '물품 수정이 완료되었습니다.',
+		FAILURE: '물품 수정에 실패했습니다.',
+	},
+	DELETEPRODUCT: {
+		CHECK: '정말로 삭제하시겠습니까?',
+	},
 }
 export default MESSAGE

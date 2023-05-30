@@ -5,7 +5,7 @@ import Input from '../../../../Components/Input/Input'
 import Button from '../../../../Components/Button/Button'
 
 function PriceItem(props) {
-	const { errors, field, intPrice, ...rest } = props
+	const { errors, field, ...rest } = props
 
 	return (
 		<S.Wrapper>
@@ -21,11 +21,11 @@ function PriceItem(props) {
 				</div>
 			</S.InputField>
 
-			{intPrice == 0 && (
+			{
 				<S.StyledAlertText type="error">
 					{errors.price && errors.price.message}
 				</S.StyledAlertText>
-			)}
+			}
 		</S.Wrapper>
 	)
 }

@@ -13,6 +13,8 @@ import Button from '../../../../Components/Button/Button'
 import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useSearchParams } from 'react-router-dom'
+import MESSAGE from '../../../../Consts/message'
+// import ErrorModal from '../../../../Components/Modal/ErrorModal/ErrorModal'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -28,19 +30,18 @@ function MyPrdRegister() {
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
-	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
-		page,
-		category,
-	)
+	const { data, refetch, status } = useGetMyPagePrdRegisterData(page, category)
 
-	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
+	const { mutate, error } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
 			refetch()
 			setIsOpenModal(false)
 		},
-		onError: err => {},
+		onError: err => {
+			setIsOpenModal(() => false)
+		},
 	})
-
+	console.log(error)
 	const onProductDeleteCheck = () => {
 		mutate(ProductIdx)
 	}
@@ -53,12 +54,24 @@ function MyPrdRegister() {
 	useEffect(() => {
 		refetch()
 	}, [page])
+
 	return (
 		<>
-			{isLoading ? (
-				<h1>'Loding...'</h1>
-			) : (
-				<>
+			{status === 'isLoading' && <h1>'Loding...'</h1>}
+
+			{status === 'error' && (
+				<S.AlertTextContainer>
+					<p>조회에 실패했습니다.</p>
+					<p>잠시 후 다시 시도해주세요</p>
+					<div>
+						<Button shape={'soft'} onClick={() => window.location.reload()}>
+							새로고침
+						</Button>
+					</div>
+				</S.AlertTextContainer>
+			)}
+			<>
+				{status === 'success' && (
 					<S.Wrapper>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.pagination.count}개</div>
@@ -75,7 +88,7 @@ function MyPrdRegister() {
 						{isOpenModal && deleteOpenModal && (
 							<Modal size={'small'}>
 								<S.ModalTextWrap>
-									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
+									<S.ModalText>{MESSAGE.DELETEPRODUCT.CHECK}</S.ModalText>
 									<S.ButtonsWrap>
 										<Button onClick={onProductDeleteCheck}>삭제</Button>
 										<Button variant={'default-reverse'} onClick={closeModal}>
@@ -85,29 +98,39 @@ function MyPrdRegister() {
 								</S.ModalTextWrap>
 							</Modal>
 						)}
-						<S.PrdList>
-							{data?.products.map(item => {
-								return (
-									<MyPrdItemBox
-										key={item.idx}
-										item={item}
-										category={category}
-										setIsOpenModal={setIsOpenModal}
-										setDeleteOpenModal={setDeleteOpenModal}
-										setProductIdx={setProductIdx}
-									/>
-								)
-							})}
-						</S.PrdList>
+
+						{data.pagination.count ? (
+							<S.PrdList>
+								{data?.products.map(item => {
+									return (
+										<MyPrdItemBox
+											key={item.idx}
+											item={item}
+											category={category}
+											setIsOpenModal={setIsOpenModal}
+											setDeleteOpenModal={setDeleteOpenModal}
+											setProductIdx={setProductIdx}
+										/>
+									)
+								})}
+							</S.PrdList>
+						) : (
+							<S.AlertTextContainer>
+								<p>
+									{category === '0' ? '중고상품' : '무료상품'} 내역이 없습니다.
+								</p>
+							</S.AlertTextContainer>
+						)}
 					</S.Wrapper>
-					<Pagination
-						totalPage={data?.pagination.totalPage}
-						setPage={setPage}
-						limit={10}
-						scroll={300}
-					/>
-				</>
-			)}
+				)}
+			</>
+
+			<Pagination
+				totalPage={data?.pagination.totalPage}
+				setPage={setPage}
+				limit={10}
+				scroll={300}
+			/>
 		</>
 	)
 }
@@ -152,6 +175,21 @@ const ButtonsWrap = styled.div`
 		margin: 0 1rem;
 	}
 `
+const AlertTextContainer = styled.div`
+	margin: auto;
+	height: 50rem;
+	${FlexCenterCSS}
+	flex-direction: column;
+
+	& > p:last-child {
+		margin-top: 0.3rem;
+		color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+
+	& > div {
+		margin-top: 1rem;
+	}
+`
 const S = {
 	Wrapper,
 	TotalNumAndFilter,
@@ -159,4 +197,5 @@ const S = {
 	ModalText,
 	ModalTextWrap,
 	ButtonsWrap,
+	AlertTextContainer,
 }

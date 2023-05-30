@@ -64,17 +64,9 @@ const TagBox = styled.div`
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	/* &:focus {
-		border: 1px solid
-			${({ theme, status }) => status == 'default' && theme.COLOR.common.gray[400]};
-	} */
 	border: 1px solid
 		${({ theme, status }) =>
 			status === 'error' ? theme.COLOR.error : theme.COLOR.common.gray[400]};
-
-	/* &:focus-within {
-		border-color: tomato;
-	} */
 `
 const TagItem = styled.div`
 	display: flex;
@@ -85,7 +77,7 @@ const TagItem = styled.div`
 	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 5px;
 	color: white;
-	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 `
 
 const DelButton = styled.button`
