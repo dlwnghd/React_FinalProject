@@ -1,4 +1,6 @@
 const addHyphenToPhoneNum = str => {
+	if (!str) return
+
 	str = str.replace(/[^0-9]/g, '')
 	var tmp = ''
 	if (str.length < 4) {
