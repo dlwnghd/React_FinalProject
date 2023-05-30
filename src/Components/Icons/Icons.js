@@ -28,6 +28,7 @@ import {
 	AiFillStar,
 	AiOutlineStar,
 	AiOutlinePlus,
+	AiOutlineCloseCircle,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 import { TbTrashX } from 'react-icons/tb'
@@ -143,4 +144,9 @@ export const DeleteProduct_Icon = ({ size, color, onClick }) => (
 // 플러스
 export const Plus_Icon = ({ size, color }) => (
 	<AiOutlinePlus size={size} color={color} />
+)
+
+// close 아이콘
+export const Outline_Close_Icon = ({ size, color }) => (
+	<AiOutlineCloseCircle size={size} color={color} />
 )
