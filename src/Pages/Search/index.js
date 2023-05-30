@@ -79,30 +79,32 @@ function Search() {
 		if (totalCount === 0) setIsOpenModal(true)
 	}, [word, totalCount])
 
-	return isSuccess && totalCount !== 0 ? (
-		<S.Wrapper>
-			<S.SearchContainer>
-				<S.SearchTitle>
-					<h3>{isSuccess && totalCount}개를 찾았습니다.</h3>
-					<Filter filterArray={listFilter} onClick={onFilter} />
-				</S.SearchTitle>
-				<SearchResult
-					searchResult={data}
-					skeletonUI={skeletonUI}
-					isSuccess={isSuccess}
-					fetchNextPage={fetchNextPage}
-					hasNextPage={hasNextPage}
-					isFetching={isFetching}
-				/>
-			</S.SearchContainer>
-		</S.Wrapper>
-	) : (
+	return (
 		<S.Wrapper>
 			<S.SearchContainer totalCount={totalCount}>
-				{isOpenModal && <AlertModal message={MESSAGE.SEARCH.EMPTY} />}
-				{skeletonUI.map((item, i) => (
-					<MainSkeleton key={i} />
-				))}
+				{totalCount !== 0 ? (
+					<>
+						<S.SearchTitle>
+							<h3>{isSuccess && totalCount}개를 찾았습니다.</h3>
+							<Filter filterArray={listFilter} onClick={onFilter} />
+						</S.SearchTitle>
+						<SearchResult
+							searchResult={data}
+							skeletonUI={skeletonUI}
+							isSuccess={isSuccess}
+							fetchNextPage={fetchNextPage}
+							hasNextPage={hasNextPage}
+							isFetching={isFetching}
+						/>
+					</>
+				) : (
+					<>
+						{isOpenModal && <AlertModal message={MESSAGE.SEARCH.EMPTY} />}
+						{skeletonUI.map((item, i) => (
+							<MainSkeleton key={i} />
+						))}
+					</>
+				)}
 			</S.SearchContainer>
 		</S.Wrapper>
 	)
