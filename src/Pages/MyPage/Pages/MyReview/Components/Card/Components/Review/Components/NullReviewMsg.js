@@ -2,7 +2,7 @@ import Button from '../../../../../../../../../Components/Button/Button'
 import MESSAGE from '../../../../../../../../../Consts/message'
 import * as S from './style'
 
-function NullReviewMsg({ setConfig }) {
+function NullReviewMsg({ setMode }) {
 	return (
 		<S.Wrapper>
 			<S.Container>
@@ -11,7 +11,7 @@ function NullReviewMsg({ setConfig }) {
 					<Button
 						shape={'soft'}
 						fontSize={'small'}
-						onClick={() => setConfig(prev => ({ ...prev, state: 'write' }))}
+						onClick={() => setMode('write')}
 					>
 						작성하기
 					</Button>

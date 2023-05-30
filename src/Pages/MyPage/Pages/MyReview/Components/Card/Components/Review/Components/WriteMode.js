@@ -1,58 +1,96 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Stars from './Stars'
 import * as S from './style'
 import Button from '../../../../../../../../../Components/Button/Button'
-import { useState } from 'react'
+import ImageInput from './ImageInput'
 
-function WriteMode({ config, onClickChangeMode }) {
+function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 	const titleArea = useRef()
-	const { title, content, ondo, img_url, ReviewImages } = config.data
 
-	const [newReview, setNewReview] = useState({
-		title,
-		content,
-		ondo,
-		images: ReviewImages ?? [],
-	})
+	const { title, content, ondo } = newReview
+	const [images, setImages] = useState(newReview.images)
 
 	useEffect(() => {
 		titleArea.current.focus()
+
+		setNewReview(prev => ({
+			...prev,
+			title,
+			content,
+			ondo,
+			images,
+		}))
 	}, [])
+
+	const onChangeReviewValues = e => {
+		const { name, value } = e.target
+		setNewReview(prev => ({ ...prev, [name]: value }))
+	}
+
+	const onChangeImages = (idx, newImage) => {
+		const reader = new FileReader()
+		reader.readAsDataURL(newImage)
+
+		const newImages = [...newReview.images, newImage]
+		setNewReview(prev => ({ ...prev, images: newImages })) // 우선 File 객체 형태의 이미지를 추가
+
+		reader.onload = () => {
+			setImages(prevImages => {
+				const updatedImages = [...prevImages]
+				updatedImages[idx] = reader.result
+				return updatedImages
+			})
+		}
+	}
+
+	const onClickRemoveImage = index => {
+		const newImages = [...images]
+		const filteredImages = newImages.filter((_, i) => i !== index)
+		setImages(filteredImages)
+	}
 
 	return (
 		<S.Wrapper>
 			<S.Container>
-				<Stars config={config} />
+				<Stars mode={mode} ondo={newReview.ondo} setNewReview={setNewReview} />
 				<S.BottomSection>
 					<S.ContentSection>
 						<S.TextAreaBox
-							type={'title'}
+							name={'title'}
+							defaultValue={title}
 							ref={titleArea}
 							placeholder="제목을 입력해주세요"
-						>
-							{title}
-						</S.TextAreaBox>
+							onChange={onChangeReviewValues}
+						/>
+
 						<S.TextAreaBox
-							type={'content'}
+							name={'content'}
+							defaultValue={content}
 							placeholder="후기 내용을 입력해주세요"
-						>
-							{content}
-						</S.TextAreaBox>
+							onChange={onChangeReviewValues}
+						/>
 					</S.ContentSection>
 					<S.ImageSection>
-						<S.ImageBox imgURL={img_url} />
-						{newReview.images.map(url => (
-							<S.ImageBox key={url} imgURL={url} />
-						))}
-						{Array(3 - newReview.images.length)
+						{Array(4)
 							.fill('')
 							.map((_, i) => (
-								<S.ImageBox key={i} />
+								<ImageInput
+									key={i}
+									index={i}
+									imgURL={images[i]}
+									onChangeImages={onChangeImages}
+									onClickRemove={onClickRemoveImage}
+								/>
 							))}
 					</S.ImageSection>
 				</S.BottomSection>
 				<S.ButtonSection>
-					<Button fontSize={'small'} size={'fit'} onClick={onClickChangeMode}>
+					<Button
+						fontSize={'small'}
+						size={'fit'}
+						onClick={onClickChangeMode}
+						disabled={!newReview.title || !newReview.content || !newReview.ondo}
+					>
 						확인
 					</Button>
 					<Button

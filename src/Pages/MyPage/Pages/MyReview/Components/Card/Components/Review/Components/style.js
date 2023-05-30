@@ -58,8 +58,8 @@ export const TextBox = styled.div`
 
 export const TextAreaBox = styled.textarea`
 	width: 100%;
-	min-height: ${({ type }) => (type === 'title' ? '20%' : '75%')};
-	max-height: ${({ type }) => (type === 'title' ? '20%' : '75%')};
+	min-height: ${({ name }) => (name === 'title' ? '20%' : '75%')};
+	max-height: ${({ name }) => (name === 'title' ? '20%' : '75%')};
 	margin-bottom: 1rem;
 	padding: 1rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
@@ -70,13 +70,15 @@ export const TextAreaBox = styled.textarea`
 `
 
 export const ImageBox = styled.div`
+	${FlexCenterCSS}
 	position: relative;
 	cursor: pointer;
 	width: 100%;
-	height: 100%;
+	height: 10.2rem;
 	background: ${({ imgURL }) => `url(${imgURL})`} no-repeat center center;
 	background-size: cover;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
+	opacity: ${({ hover }) => (hover ? 0.5 : 1)};
 `
 
 export const AlertBox = styled.div`

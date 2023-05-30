@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	Star_Empty,
 	Star_Fill,
@@ -10,25 +10,29 @@ const createStarsArray = number => {
 	return Array.from({ length: 5 }, (_, i) => i < numberOfTrues)
 }
 
-function Stars({ config }) {
-	const {
-		state,
-		data: { ondo },
-	} = config
+const calculateStarValue = array => {
+	const trueCount = array.filter(value => value).length
+	return trueCount * 20
+}
 
+function Stars({ mode, ondo, setNewReview }) {
 	const [stars, setStars] = useState(createStarsArray(ondo))
 
 	const onClickStar = num => {
-		if (state === 'read') return
+		if (mode === 'read') return
 
 		const newStarArr = Array.from({ length: 5 }, (_, i) => i < num)
 		setStars(newStarArr)
 	}
 
+	useEffect(() => {
+		setNewReview(prev => ({ ...prev, ondo: calculateStarValue(stars) }))
+	}, [stars])
+
 	return (
 		<S.Wrapper>
 			{stars.map((star, i) => (
-				<S.Container key={i} state={state} onClick={() => onClickStar(i + 1)}>
+				<S.Container key={i} mode={mode} onClick={() => onClickStar(i + 1)}>
 					{star ? (
 						<Star_Fill size={'2.8rem'} />
 					) : (
@@ -46,7 +50,7 @@ const Wrapper = styled.div`
 `
 
 const Container = styled.span`
-	cursor: ${({ state }) => (state === 'read' ? 'default' : 'pointer')};
+	cursor: ${({ mode }) => (mode === 'read' ? 'default' : 'pointer')};
 `
 
 const S = { Wrapper, Container }

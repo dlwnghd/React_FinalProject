@@ -8,7 +8,7 @@ function ReviewCard({ review }) {
 	return (
 		<S.Wrapper>
 			<ProductSection product={Product} date={created_at} />
-			<ReviewSection idx={idx} review={Review} />
+			<ReviewSection idx={idx} review={Review ?? {}} />
 		</S.Wrapper>
 	)
 }
