@@ -14,7 +14,6 @@ import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useSearchParams } from 'react-router-dom'
 import MESSAGE from '../../../../Consts/message'
-// import ErrorModal from '../../../../Components/Modal/ErrorModal/ErrorModal'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -25,8 +24,8 @@ function MyPrdRegister() {
 	}
 
 	const [ProductIdx, setProductIdx] = useState()
-	const [category, setCategory] = useState(params.category)
-	const [page, setPage] = useState(params.page)
+	const [category, setCategory] = useState(params.category || 0)
+	const [page, setPage] = useState(params.page || 1)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
