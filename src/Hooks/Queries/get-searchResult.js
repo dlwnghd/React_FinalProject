@@ -8,9 +8,9 @@ const getSearchData = async params => {
 }
 
 const useGetSearchResultData = (word, { order, sort }) => {
-	const { data, isSuccess, fetchNextPage, isFetching, hasNextPage } =
+	const { data, isSuccess, refetch, fetchNextPage, isFetching, hasNextPage } =
 		useInfiniteQuery(
-			[QUERY_KEY.GET_SEARCHPAGE_DATA, word, order, sort],
+			[QUERY_KEY.GET_SEARCHPAGE_DATA],
 			({ pageParam = 1 }) =>
 				getSearchData({
 					status: '판매중',
@@ -34,6 +34,7 @@ const useGetSearchResultData = (word, { order, sort }) => {
 	return {
 		data,
 		isSuccess,
+		refetch,
 		fetchNextPage,
 		isFetching,
 		hasNextPage,

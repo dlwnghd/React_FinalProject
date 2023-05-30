@@ -56,12 +56,13 @@ function Search() {
 		}
 	}
 
-	const { data, isSuccess, fetchNextPage, isFetching, hasNextPage } =
+	const { data, isSuccess, refetch, fetchNextPage, isFetching, hasNextPage } =
 		useGetSearchResultData(word, searchFilter)
 
 	useEffect(() => {
 		fetchNextPage(0)
-	}, [word])
+		refetch()
+	}, [word, searchFilter])
 
 	return isSuccess && data.pages[0].pagination.count !== 0 ? (
 		<S.Wrapper>
