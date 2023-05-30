@@ -27,6 +27,7 @@ import {
 	AiFillSignal,
 	AiFillStar,
 	AiOutlineStar,
+	AiOutlinePlus,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 import { TbTrashX } from 'react-icons/tb'
@@ -138,3 +139,8 @@ export const Star_Empty = ({ size, color }) => (
 export const DeleteProduct_Icon = ({ size, color, onClick }) => (
 	<TbTrashX size={size} color={color} onClick={onClick} />
 ) // 최근 본 상품 삭제
+
+// 플러스
+export const Plus_Icon = ({ size, color }) => (
+	<AiOutlinePlus size={size} color={color} />
+)
