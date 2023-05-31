@@ -21,6 +21,7 @@ import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
 import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
+import UserInfoSkeleton from './Components/UserInfoSkeleton'
 // import useUser from '../../../../../Hooks/useUser'
 // import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
@@ -124,6 +125,10 @@ function UserInfo() {
 		setValue('region', userInfo.region)
 		setValue('phone', userInfo.phone)
 	}, [userInfo])
+
+	if (status === 'loading') {
+		return <UserInfoSkeleton />
+	}
 
 	return (
 		<S.Wrapper>
