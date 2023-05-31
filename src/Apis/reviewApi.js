@@ -13,5 +13,12 @@ const ReviewApi = {
 			},
 		})
 	},
+	updateReview({ review_idx, newReview }) {
+		return axiosInstance.patch(PATH + `?review_idx=${review_idx}`, newReview, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+	},
 }
 export default ReviewApi
