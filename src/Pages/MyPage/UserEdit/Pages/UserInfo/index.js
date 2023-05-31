@@ -203,7 +203,9 @@ function UserInfo() {
 						>
 							주소 찾기
 						</S.RegisterButton>
-						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
+						{!isSubmit && isOpenModal && (
+							<RegionModal setResultAddress={setRegion} />
+						)}
 					</S.InputBox>
 				</S.Container>
 				<S.Container>
