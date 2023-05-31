@@ -14,10 +14,11 @@ import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useSearchParams } from 'react-router-dom'
 import MESSAGE from '../../../../Consts/message'
+import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
-
+	const arr = Array(10).fill(0)
 	const params = {
 		page: searchParams.get('page'),
 		category: searchParams.get('category'),
@@ -29,7 +30,10 @@ function MyPrdRegister() {
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
-	const { data, refetch, status } = useGetMyPagePrdRegisterData(page, category)
+	const { data, refetch, status, isLoading } = useGetMyPagePrdRegisterData(
+		page,
+		category,
+	)
 
 	const { mutate, error } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
@@ -56,8 +60,6 @@ function MyPrdRegister() {
 
 	return (
 		<>
-			{status === 'isLoading' && <h1>'Loding...'</h1>}
-
 			{status === 'error' && (
 				<S.AlertTextContainer>
 					<p>조회에 실패했습니다.</p>
@@ -69,9 +71,16 @@ function MyPrdRegister() {
 					</div>
 				</S.AlertTextContainer>
 			)}
-			<>
-				{status === 'success' && (
-					<S.Wrapper>
+
+			<S.Wrapper>
+				{isLoading ? (
+					<S.PrdList>
+						{arr.map(() => (
+							<MainSkeleton />
+						))}
+					</S.PrdList>
+				) : (
+					<>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.pagination.count}개</div>
 
@@ -83,21 +92,6 @@ function MyPrdRegister() {
 								setSearchParams={setSearchParams}
 							/>
 						</S.TotalNumAndFilter>
-
-						{isOpenModal && deleteOpenModal && (
-							<Modal size={'small'}>
-								<S.ModalTextWrap>
-									<S.ModalText>{MESSAGE.DELETEPRODUCT.CHECK}</S.ModalText>
-									<S.ButtonsWrap>
-										<Button onClick={onProductDeleteCheck}>삭제</Button>
-										<Button variant={'default-reverse'} onClick={closeModal}>
-											취소
-										</Button>
-									</S.ButtonsWrap>
-								</S.ModalTextWrap>
-							</Modal>
-						)}
-
 						{data.pagination.count ? (
 							<S.PrdList>
 								{data?.products.map(item => {
@@ -120,10 +114,23 @@ function MyPrdRegister() {
 								</p>
 							</S.AlertTextContainer>
 						)}
-					</S.Wrapper>
+					</>
 				)}
-			</>
+			</S.Wrapper>
 
+			{isOpenModal && deleteOpenModal && (
+				<Modal size={'small'}>
+					<S.ModalTextWrap>
+						<S.ModalText>{MESSAGE.DELETEPRODUCT.CHECK}</S.ModalText>
+						<S.ButtonsWrap>
+							<Button onClick={onProductDeleteCheck}>삭제</Button>
+							<Button variant={'default-reverse'} onClick={closeModal}>
+								취소
+							</Button>
+						</S.ButtonsWrap>
+					</S.ModalTextWrap>
+				</Modal>
+			)}
 			<Pagination
 				totalPage={data?.pagination.totalPage}
 				setPage={setPage}
