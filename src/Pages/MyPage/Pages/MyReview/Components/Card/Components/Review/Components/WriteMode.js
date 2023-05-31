@@ -4,11 +4,19 @@ import * as S from './style'
 import Button from '../../../../../../../../../Components/Button/Button'
 import ImageInput from './ImageInput'
 
-function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
+function WriteMode({
+	mode,
+	review,
+	imageArray,
+	onClickChangeMode,
+	newReview,
+	setNewReview,
+}) {
 	const titleArea = useRef()
 
-	const { title, content, ondo } = newReview
-	const [images, setImages] = useState(newReview.images)
+	const { title, content, ondo, images } = newReview
+	const [concatImages, setConcatImages] = useState([...imageArray]) // 화면용
+	const [isUpdateReview, setIsUpdateReview] = useState(false)
 
 	useEffect(() => {
 		titleArea.current.focus()
@@ -18,9 +26,19 @@ function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 			title,
 			content,
 			ondo,
-			images,
 		}))
 	}, [])
+
+	useEffect(() => {
+		// 내용이 변경되었을 때만 확인 버튼을 활성화 하기 위해서
+		const isDifferent =
+			newReview.title !== review.title ||
+			newReview.content !== review.content ||
+			newReview.ondo !== review.ondo ||
+			imageArray.length !== concatImages.length ||
+			imageArray.some((img, idx) => img !== concatImages[idx])
+		setIsUpdateReview(isDifferent)
+	}, [newReview, concatImages])
 
 	const onChangeReviewValues = e => {
 		const { name, value } = e.target
@@ -35,7 +53,7 @@ function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 		setNewReview(prev => ({ ...prev, images: newImages })) // 우선 File 객체 형태의 이미지를 추가
 
 		reader.onload = () => {
-			setImages(prevImages => {
+			setConcatImages(prevImages => {
 				const updatedImages = [...prevImages]
 				updatedImages[idx] = reader.result
 				return updatedImages
@@ -44,9 +62,11 @@ function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 	}
 
 	const onClickRemoveImage = index => {
-		const newImages = [...images]
+		const newImages = [...concatImages]
 		const filteredImages = newImages.filter((_, i) => i !== index)
-		setImages(filteredImages)
+		setConcatImages(filteredImages)
+
+		setNewReview(prev => ({ ...prev, images: newImages }))
 	}
 
 	return (
@@ -77,7 +97,7 @@ function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 								<ImageInput
 									key={i}
 									index={i}
-									imgURL={images[i]}
+									imgURL={concatImages[i]}
 									onChangeImages={onChangeImages}
 									onClickRemove={onClickRemoveImage}
 								/>
@@ -89,7 +109,12 @@ function WriteMode({ mode, onClickChangeMode, newReview, setNewReview }) {
 						fontSize={'small'}
 						size={'fit'}
 						onClick={onClickChangeMode}
-						disabled={!newReview.title || !newReview.content || !newReview.ondo}
+						disabled={
+							!newReview.title ||
+							!newReview.content ||
+							!newReview.ondo ||
+							!isUpdateReview
+						}
 					>
 						확인
 					</Button>

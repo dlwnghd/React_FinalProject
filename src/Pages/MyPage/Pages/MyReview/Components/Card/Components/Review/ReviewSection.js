@@ -6,13 +6,26 @@ import WriteMode from './Components/WriteMode'
 import Button from '../../../../../../../../Components/Button/Button'
 import { usePostReview } from '../../../../../../../../Hooks/Queries/post-review'
 import { useEffect } from 'react'
+import { useUpdateReview } from '../../../../../../../../Hooks/Queries/update-review'
+
+const ReviewImagesMapForImgURL = ReviewImages => {
+	return ReviewImages ? ReviewImages.map(({ img_url }) => img_url) : []
+}
 
 function ReviewSection({ idx, review }) {
-	const isWrittenReview = Object.keys(review).length > 0
-	const { title, content, ondo, img_url, ReviewImages } = review
+	const isWrittenReview = Object.keys(review).length !== 0
+
+	const {
+		idx: review_idx,
+		title,
+		content,
+		ondo,
+		img_url,
+		ReviewImages,
+	} = review
+
 	// 아직 작성하지 않았다면 review === null
 	const [mode, setMode] = useState('read') // 'read' | 'write'
-
 	const [newReview, setNewReview] = useState({
 		title: '',
 		content: '',
@@ -20,16 +33,18 @@ function ReviewSection({ idx, review }) {
 		images: [],
 	})
 
+	const imageArray = [
+		...(img_url ? [img_url] : []),
+		...ReviewImagesMapForImgURL(ReviewImages),
+	]
+
 	// 서버 데이터와 클라이언트 데이터를 맞추는 함수
 	const setReviewToNewReview = () => {
 		setNewReview({
 			title: title || '',
 			content: content || '',
 			ondo: ondo || 0,
-			images: [
-				...(img_url ? [img_url] : []),
-				...(ReviewImages ? ReviewImages.map(({ img_url }) => img_url) : []),
-			],
+			images: [],
 		})
 	}
 
@@ -38,6 +53,21 @@ function ReviewSection({ idx, review }) {
 	}, [review])
 
 	const postReview = usePostReview() // 리뷰 등록 (post)
+	const updateReview = useUpdateReview() // 리뷰 수정 (patch)
+
+	const onAppendObjectToFormData = object => {
+		const formData = new FormData()
+		Object.entries(object).forEach(([key, value]) => {
+			if (key === 'images' && Array.isArray(value)) {
+				value.forEach(img => {
+					formData.append('images', img)
+				})
+			} else {
+				formData.append(key, value)
+			}
+		})
+		return formData
+	}
 
 	const onClickChangeMode = async e => {
 		switch (e.target.innerText) {
@@ -56,23 +86,27 @@ function ReviewSection({ idx, review }) {
 			case '확인':
 				if (!isWrittenReview) {
 					// 등록인 경우
-					const formData = new FormData()
-					Object.entries(newReview).forEach(([key, value]) => {
-						if (key === 'images' && Array.isArray(value)) {
-							value.forEach(img => {
-								formData.append('images', img)
-							})
-						} else {
-							formData.append(key, value)
-						}
-					})
+					const formData = onAppendObjectToFormData(newReview)
 					await postReview.mutateAsync({
 						payList_idx: idx,
 						newReview: formData,
 					})
 				} else {
 					// 수정일 경우
-					console.log(newReview)
+					const { title, content, ondo, images } = newReview
+					const hasImages = images.length > 0 // 수정한 이미지가 있는지
+
+					const updateNewReview = {
+						// 이미지를 수정하지 않았다면 images를 포함 X
+						...(hasImages ? newReview : { title, content, ondo }),
+						main_url: imageArray[0],
+						img_url: imageArray.slice(1),
+					}
+					const formData = onAppendObjectToFormData(updateNewReview)
+					await updateReview.mutateAsync({
+						review_idx,
+						newReview: formData,
+					})
 				}
 				setMode('read')
 				break
@@ -84,7 +118,9 @@ function ReviewSection({ idx, review }) {
 		return (
 			<WriteMode
 				mode={mode}
+				review={review}
 				onClickChangeMode={onClickChangeMode}
+				imageArray={imageArray}
 				newReview={newReview}
 				setNewReview={setNewReview}
 			/>
@@ -109,7 +145,7 @@ function ReviewSection({ idx, review }) {
 						{Array(4)
 							.fill('')
 							.map((_, i) => (
-								<S.ImageBox key={i} imgURL={newReview.images[i]} />
+								<S.ImageBox key={i} imgURL={imageArray[i]} />
 							))}
 					</S.ImageSection>
 				</S.BottomSection>
