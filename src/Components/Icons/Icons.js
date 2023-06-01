@@ -150,6 +150,7 @@ export const Plus_Icon = ({ size, color }) => (
 // close 아이콘
 export const Outline_Close_Icon = ({ size, color }) => (
 	<AiOutlineCloseCircle size={size} color={color} />
+)
 // Info Icon
 export const Info_Icon = ({ size, color }) => (
 	<AiOutlineQuestionCircle size={size} color={color} />
