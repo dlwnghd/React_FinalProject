@@ -7,6 +7,7 @@ import Button from '../../../../../../../../Components/Button/Button'
 import { usePostReview } from '../../../../../../../../Hooks/Queries/post-review'
 import { useEffect } from 'react'
 import { useUpdateReview } from '../../../../../../../../Hooks/Queries/update-review'
+import { useDeleteReview } from '../../../../../../../../Hooks/Queries/delete-review'
 
 const ReviewImagesMapForImgURL = ReviewImages => {
 	return ReviewImages ? ReviewImages.map(({ img_url }) => img_url) : []
@@ -58,6 +59,7 @@ function ReviewSection({ idx, review }) {
 
 	const postReview = usePostReview() // 리뷰 등록 (post)
 	const updateReview = useUpdateReview() // 리뷰 수정 (patch)
+	const deleteReview = useDeleteReview() // 리뷰 삭제 (delete)
 
 	const onAppendObjectToFormData = object => {
 		const formData = new FormData()
@@ -85,6 +87,8 @@ function ReviewSection({ idx, review }) {
 				break
 
 			case '삭제':
+				await deleteReview.mutateAsync({ review_idx })
+				setMode('read')
 				break
 
 			case '확인':
