@@ -25,6 +25,7 @@ import {
 	AiOutlineDown,
 	AiOutlineCalendar,
 	AiFillSignal,
+	AiOutlineQuestionCircle,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 import { TbTrashX } from 'react-icons/tb'
@@ -128,3 +129,8 @@ export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
 export const DeleteProduct_Icon = ({ size, color, onClick }) => (
 	<TbTrashX size={size} color={color} onClick={onClick} />
 ) // 최근 본 상품 삭제
+
+// Info Icon
+export const Info_Icon = ({ size, color }) => (
+	<AiOutlineQuestionCircle size={size} color={color} />
+)
