@@ -77,7 +77,9 @@ export const ImageBox = styled.div`
 	height: 10.2rem;
 	background: ${({ imgURL }) => `url(${imgURL})`} no-repeat center center;
 	background-size: cover;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
+	/* background-color: ${({ theme }) => theme.COLOR.common.gray[400]}; */
+	/* border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]}; */
+	box-shadow: 0 3px 3px rgba(48, 52, 65, 0.15);
 	opacity: ${({ hover }) => (hover ? 0.5 : 1)};
 `
 
