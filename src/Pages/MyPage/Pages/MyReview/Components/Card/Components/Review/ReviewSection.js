@@ -12,6 +12,10 @@ const ReviewImagesMapForImgURL = ReviewImages => {
 	return ReviewImages ? ReviewImages.map(({ img_url }) => img_url) : []
 }
 
+const onMakeMainAndSubImageArray = (main, subImages) => {
+	return [...(main ? [main] : []), ...ReviewImagesMapForImgURL(subImages)]
+}
+
 function ReviewSection({ idx, review }) {
 	const isWrittenReview = Object.keys(review).length !== 0
 
@@ -32,12 +36,11 @@ function ReviewSection({ idx, review }) {
 		ondo: ondo || 0,
 		images: [],
 	})
-
-	const imageArray = [
-		...(img_url ? [img_url] : []),
-		...ReviewImagesMapForImgURL(ReviewImages),
-	]
-
+	const [imageArray, setImageArray] = useState([]) // 모든 이미지를 함께 가지고 있는 배열
+	const originalImageLength = onMakeMainAndSubImageArray(
+		img_url,
+		ReviewImages,
+	).length
 	// 서버 데이터와 클라이언트 데이터를 맞추는 함수
 	const setReviewToNewReview = () => {
 		setNewReview({
@@ -46,6 +49,7 @@ function ReviewSection({ idx, review }) {
 			ondo: ondo || 0,
 			images: [],
 		})
+		setImageArray(onMakeMainAndSubImageArray(img_url, ReviewImages))
 	}
 
 	useEffect(() => {
@@ -95,7 +99,6 @@ function ReviewSection({ idx, review }) {
 					// 수정일 경우
 					const { title, content, ondo, images } = newReview
 					const hasImages = images.length > 0 // 수정한 이미지가 있는지
-
 					const updateNewReview = {
 						// 이미지를 수정하지 않았다면 images를 포함 X
 						...(hasImages ? newReview : { title, content, ondo }),
@@ -121,6 +124,8 @@ function ReviewSection({ idx, review }) {
 				review={review}
 				onClickChangeMode={onClickChangeMode}
 				imageArray={imageArray}
+				setImageArray={setImageArray}
+				originalImageLength={originalImageLength}
 				newReview={newReview}
 				setNewReview={setNewReview}
 			/>

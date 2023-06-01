@@ -8,6 +8,8 @@ function WriteMode({
 	mode,
 	review,
 	imageArray,
+	setImageArray,
+	originalImageLength,
 	onClickChangeMode,
 	newReview,
 	setNewReview,
@@ -15,7 +17,8 @@ function WriteMode({
 	const titleArea = useRef()
 
 	const { title, content, ondo, images } = newReview
-	const [concatImages, setConcatImages] = useState([...imageArray]) // 화면용
+
+	const [concatImages, setConcatImages] = useState([...imageArray, ...images]) // 화면용
 	const [isUpdateReview, setIsUpdateReview] = useState(false)
 
 	useEffect(() => {
@@ -35,7 +38,7 @@ function WriteMode({
 			newReview.title !== review.title ||
 			newReview.content !== review.content ||
 			newReview.ondo !== review.ondo ||
-			imageArray.length !== concatImages.length ||
+			originalImageLength !== concatImages.length ||
 			imageArray.some((img, idx) => img !== concatImages[idx])
 		setIsUpdateReview(isDifferent)
 	}, [newReview, concatImages])
@@ -62,12 +65,22 @@ function WriteMode({
 	}
 
 	const onClickRemoveImage = index => {
+		if (newReview.images.length === 0) {
+			// 새로운 이미지를 추가하지 않은 경우
+			// 기존 이미지를 수정한 경우
+			setImageArray(prev => prev.filter((_, i) => i !== index))
+			return
+		}
 		const newImages = [...concatImages]
 		const filteredImages = newImages.filter((_, i) => i !== index)
 		setConcatImages(filteredImages)
 
 		setNewReview(prev => ({ ...prev, images: newImages }))
 	}
+
+	useEffect(() => {
+		setConcatImages([...imageArray, ...images])
+	}, [imageArray])
 
 	return (
 		<S.Wrapper>
