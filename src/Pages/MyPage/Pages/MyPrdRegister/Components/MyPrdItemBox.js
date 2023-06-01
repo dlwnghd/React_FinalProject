@@ -6,7 +6,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexCenterCSS } from '../../../../../Styles/common'
 
-function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
+function MyPrdItemBox({
+	item,
+	setIsOpenModal,
+	setProductIdx,
+	setDeleteOpenModal,
+}) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
 
@@ -16,6 +21,7 @@ function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 		setIsOpenModal(true)
 		setProductIdx(idx)
 		setEditOption(false)
+		setDeleteOpenModal(true)
 	}
 
 	const productChange = idx => {

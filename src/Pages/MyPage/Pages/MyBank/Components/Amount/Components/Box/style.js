@@ -71,6 +71,7 @@ export const MonthButton = styled(Button)`
 	${FlexCenterCSS}
 	width: 100%;
 	height: 100%;
+	border-radius: 0.8rem;
 	background-color: ${({ theme, clicked }) =>
 		clicked
 			? `${theme.COLOR.common.gray[100]}`
