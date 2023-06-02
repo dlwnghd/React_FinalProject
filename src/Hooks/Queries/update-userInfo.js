@@ -10,7 +10,7 @@ const useUpdateUserInfo = () => {
 	const client = useQueryClient()
 	const user = useUser()
 	const userAtomInfo = useRecoilValue(userInfoAtom)
-	const { mutateAsync, isLoading } = useMutation(
+	const { mutateAsync, isLoading, error } = useMutation(
 		async ({ email, nickName, phone, region, profile_url }) =>
 			await axios.all([
 				UserApi.userEdit({ email, nickName, phone, region }),
@@ -48,7 +48,7 @@ const useUpdateUserInfo = () => {
 			},
 		},
 	)
-	return { mutateAsync, isLoading }
+	return { mutateAsync, isLoading, error }
 }
 
 export default useUpdateUserInfo
