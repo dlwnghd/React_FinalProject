@@ -70,7 +70,6 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	}
 
 	const setRegion = result => {
-		console.log({ result })
 		setValue('region', result)
 		clearErrors('region')
 		setResultAddress(result)
@@ -135,11 +134,9 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 						formData.append('main_url', el)
 					}
 					formData.append('images', imageFileArr[idx])
-					console.log('images idx0', imageFileArr[idx])
 				} else {
 					subUrl.push(el)
 					formData.append('images', imageFileArr[idx])
-					console.log('images idxNot0', imageFileArr[idx])
 				}
 			})
 			formData.append('idx', params.prod_idx)

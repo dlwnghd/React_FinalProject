@@ -60,6 +60,12 @@ const ProductApi = {
 	detail({ prod_idx }) {
 		return axiosInstance.get(PATH + '/detail', { params: { prod_idx } })
 	},
+	saleComplete(prod_idx, token) {
+		return axiosInstance.post(PATH + '/sale-complete', {
+			prod_idx,
+			token,
+		})
+	},
 }
 
 export default ProductApi

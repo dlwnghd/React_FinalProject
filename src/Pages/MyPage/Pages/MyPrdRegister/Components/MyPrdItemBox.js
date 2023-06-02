@@ -10,7 +10,8 @@ function MyPrdItemBox({
 	item,
 	setIsOpenModal,
 	setProductIdx,
-	setDeleteOpenModal,
+	setIsModalType,
+	refetch,
 }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
@@ -21,12 +22,20 @@ function MyPrdItemBox({
 		setIsOpenModal(true)
 		setProductIdx(idx)
 		setEditOption(false)
-		setDeleteOpenModal(true)
+		setIsModalType('삭제')
 	}
 
 	const productChange = idx => {
 		navigate(`/register/${idx}`)
 		setEditOption(false)
+	}
+
+	const showChatList = idx => {
+		setIsModalType('판매')
+		setIsOpenModal(true)
+		setProductIdx(idx)
+
+		refetch(idx)
 	}
 
 	return (
@@ -46,7 +55,6 @@ function MyPrdItemBox({
 							size="30"
 							onClick={() => setEditOption(prev => !prev)}
 						/>
-
 						{editOption && (
 							<S.EditBox>
 								<div onClick={() => productChange(idx)}>수정</div>
@@ -66,6 +74,7 @@ function MyPrdItemBox({
 					shape={'square'}
 					style={{ background: status === '판매완료' && '#AAA', width: '48%' }}
 					disabled={status === '판매완료' ? true : false}
+					onClick={() => showChatList(idx)}
 				>
 					{status}
 				</Button>

@@ -15,6 +15,9 @@ import ProductApi from '../../../../Apis/productApi'
 import { useSearchParams } from 'react-router-dom'
 import MESSAGE from '../../../../Consts/message'
 import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
+import { ModalTitle } from '../../../../Components/Modal/Modal.style'
+import { myChatRoomList } from '../../../../Atoms/myChatRoomList.atom'
+import useGetProductChatListData from '../../../../Hooks/Queries/get-productChatList'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -29,34 +32,58 @@ function MyPrdRegister() {
 	const [page, setPage] = useState(params.page || 1)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
-	const { data, refetch, status, isLoading } = useGetMyPagePrdRegisterData(
-		page,
-		category,
-	)
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+
+	const [isModalType, setIsModalType] = useState('')
+	const {
+		data,
+		refetch: PrdRegisterData,
+		status,
+		isLoading,
+	} = useGetMyPagePrdRegisterData(page, category)
 
 	const { mutate, error } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
-			refetch()
+			PrdRegisterData()
 			setIsOpenModal(false)
 		},
 		onError: err => {
 			setIsOpenModal(() => false)
 		},
 	})
-	console.log(error)
+
+	const { mutate: saleCompleteMutate } = useMutation(
+		token => ProductApi.saleComplete(ProductIdx, token),
+		{
+			onSuccess: () => {},
+			onError: err => {},
+		},
+	)
+
+	const { data: ChatListData, refetch } = useGetProductChatListData(ProductIdx)
+
 	const onProductDeleteCheck = () => {
 		mutate(ProductIdx)
 	}
 
 	const closeModal = () => {
 		setIsOpenModal(() => false)
-		setDeleteOpenModal(() => false)
+		setIsModalType('')
 	}
 
 	useEffect(() => {
-		refetch()
+		PrdRegisterData()
 	}, [page])
+
+	const onSelectBuyer = chatList => {
+		const completeInfo = {
+			socket: chatList.User.token,
+			prod_idx: chatList.Product.idx,
+		}
+
+		saleCompleteMutate(chatList.User.token)
+		closeModal()
+	}
 
 	return (
 		<>
@@ -101,8 +128,9 @@ function MyPrdRegister() {
 											item={item}
 											category={category}
 											setIsOpenModal={setIsOpenModal}
-											setDeleteOpenModal={setDeleteOpenModal}
+											setIsModalType={setIsModalType}
 											setProductIdx={setProductIdx}
+											refetch={refetch}
 										/>
 									)
 								})}
@@ -118,7 +146,7 @@ function MyPrdRegister() {
 				)}
 			</S.Wrapper>
 
-			{isOpenModal && deleteOpenModal && (
+			{isOpenModal && isModalType === '삭제' && (
 				<Modal size={'small'}>
 					<S.ModalTextWrap>
 						<S.ModalText>{MESSAGE.DELETEPRODUCT.CHECK}</S.ModalText>
@@ -130,6 +158,19 @@ function MyPrdRegister() {
 						</S.ButtonsWrap>
 					</S.ModalTextWrap>
 				</Modal>
+			)}
+			{isOpenModal && isModalType === '판매' && (
+				<>
+					<Modal size={'large'}>
+						<ModalTitle>구매자를 선택해주세요</ModalTitle>
+
+						{ChatListData?.map(chatData => (
+							<S.BuyerList onClick={() => onSelectBuyer(chatData)}>
+								{chatData.User.nick_name}
+							</S.BuyerList>
+						))}
+					</Modal>
+				</>
 			)}
 			<Pagination
 				totalPage={data?.pagination.totalPage}
@@ -196,6 +237,14 @@ const AlertTextContainer = styled.div`
 		margin-top: 1rem;
 	}
 `
+const BuyerList = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	padding: 0.5rem 0;
+	cursor: pointer;
+	:hover {
+		background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
+	}
+`
 const S = {
 	Wrapper,
 	TotalNumAndFilter,
@@ -204,4 +253,5 @@ const S = {
 	ModalTextWrap,
 	ButtonsWrap,
 	AlertTextContainer,
+	BuyerList,
 }

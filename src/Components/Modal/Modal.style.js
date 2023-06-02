@@ -45,7 +45,7 @@ export const Modal = styled.div`
 	opacity: 0;
 	animation: ${fadeIn} 0.3s ease;
 	animation-fill-mode: forwards;
-
+	overflow: auto;
 	&.active {
 		opacity: 1;
 	}
