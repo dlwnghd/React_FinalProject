@@ -46,12 +46,14 @@ function SearchResult({
 					page.product.map((item, idx) => {
 						return (
 							<ItemBox
+								key={idx}
+								prod_idx={item.idx}
 								title={item.title}
 								price={item.price}
 								posterPath={item.img_url}
-								context={item.script}
+								description={item.description}
+								createdAt={item.createdAt}
 								isLiked={item.liked}
-								key={idx}
 								onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
