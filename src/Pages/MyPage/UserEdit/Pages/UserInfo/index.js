@@ -23,6 +23,7 @@ import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
 import UserInfoSkeleton from './Components/UserInfoSkeleton'
 import ErrorFallback from '../../../../../Components/Error/ErrorFallback'
 import ErrorModal from '../../../../../Components/Error/ErrorModal'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 // import useUser from '../../../../../Hooks/useUser'
 // import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
@@ -237,7 +238,6 @@ function UserInfo() {
 					</S.StyledAlert>
 				</S.Container>
 				{isSubmit && isOpenModal && <AlertModal message={message} />}
-				{/* {isSubmit && isOpenModal && <ErrorModal />} */}
 				<S.SubmitButton>변경</S.SubmitButton>
 			</form>
 		</S.Wrapper>
