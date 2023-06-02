@@ -21,7 +21,6 @@ const ReviewApi = {
 		})
 	},
 	deleteReview({ review_idx }) {
-		console.log({ review_idx })
 		return axiosInstance.delete(PATH + `?review_idx=${review_idx}`)
 	},
 }
