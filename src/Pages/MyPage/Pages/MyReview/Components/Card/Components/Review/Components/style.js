@@ -7,6 +7,7 @@ import {
 } from '../../../../../../../../../Styles/common'
 
 export const Wrapper = styled.div`
+	position: relative;
 	height: 60%;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 `

@@ -8,6 +8,7 @@ import { usePostReview } from '../../../../../../../../Hooks/Queries/post-review
 import { useEffect } from 'react'
 import { useUpdateReview } from '../../../../../../../../Hooks/Queries/update-review'
 import { useDeleteReview } from '../../../../../../../../Hooks/Queries/delete-review'
+import ConfirmDelete from './Components/ConfirmDelete'
 
 const ReviewImagesMapForImgURL = ReviewImages => {
 	return ReviewImages ? ReviewImages.map(({ img_url }) => img_url) : []
@@ -31,6 +32,7 @@ function ReviewSection({ idx, review }) {
 
 	// 아직 작성하지 않았다면 review === null
 	const [mode, setMode] = useState('read') // 'read' | 'write'
+	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const [newReview, setNewReview] = useState({
 		title: '',
 		content: '',
@@ -87,8 +89,9 @@ function ReviewSection({ idx, review }) {
 				break
 
 			case '삭제':
-				await deleteReview.mutateAsync({ review_idx })
-				setMode('read')
+				setShowConfirmDelete(true)
+				// await deleteReview.mutateAsync({ review_idx })
+				// setMode('read')
 				break
 
 			case '확인':
@@ -120,6 +123,12 @@ function ReviewSection({ idx, review }) {
 		}
 	}
 
+	// Confirm 모달이 띄워졌을 때 confirm을 받으면 그때 삭제하기 위해
+	const onClickDeleteReview = async () => {
+		await deleteReview.mutateAsync({ review_idx })
+		setMode('read')
+	}
+
 	// 쓰기 모드
 	if (mode === 'write')
 		return (
@@ -143,6 +152,12 @@ function ReviewSection({ idx, review }) {
 	// 리뷰가 있는 경우
 	return (
 		<S.Wrapper>
+			{showConfirmDelete && (
+				<ConfirmDelete
+					onConfirm={onClickDeleteReview}
+					onCancel={() => setShowConfirmDelete(false)}
+				/>
+			)}
 			<S.Container>
 				<Stars mode={mode} ondo={newReview.ondo} setNewReview={setNewReview} />
 				<S.BottomSection>
