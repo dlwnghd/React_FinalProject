@@ -17,26 +17,16 @@ function ItemBox({
 	productsTags,
 	...rest
 }) {
-	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
+	const [isHoverItemBox, setIsHoverItemBox] = useState(true)
 
 	const heartProps = {
 		like: isLiked,
-		hover: isHoverItemBox,
-		setHover: setIsHoverItemBox,
 		prod_idx: prod_idx,
-	}
-
-	const onMouseEnter = e => {
-		setIsHoverItemBox(true)
-	}
-
-	const onMouseLeave = e => {
-		setIsHoverItemBox(false)
 	}
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+			<S.IMGContainer>
 				{isHoverItemBox && <Heart {...heartProps} />}
 				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
@@ -62,6 +52,8 @@ export default ItemBox
 
 const Wrapper = styled.div`
 	${FlexBetweenCSS}
+	box-shadow:0 0 0.3rem rgba(0,0,0,0.2);
+	/* border-radius: 1rem; */
 	flex-direction: column;
 	position: relative;
 	width: 100%;
@@ -69,12 +61,17 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+
+	&:hover {
+		box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.3);
+	}
 `
 
 const IMGContainer = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
+	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	& > svg {
 		position: absolute;
@@ -99,6 +96,7 @@ const IMGContainer = styled.div`
 
 const IMGBox = styled.div`
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	background-size: cover;
 	height: 100%;
 	cursor: pointer;
 `
@@ -106,10 +104,10 @@ const IMGBox = styled.div`
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
 	width:100%;
-	padding: 0 1rem;
+	padding: 0 2rem;
 	flex-direction: column;
 	align-items: baseline;
-	margin-top: 2rem;
+	margin: 2rem 0;
 `
 
 const DescBox = styled.div`
