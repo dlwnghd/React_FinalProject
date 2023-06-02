@@ -16,8 +16,8 @@ import { useSearchParams } from 'react-router-dom'
 import MESSAGE from '../../../../Consts/message'
 import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 import { ModalTitle } from '../../../../Components/Modal/Modal.style'
-import { myChatRoomList } from '../../../../Atoms/myChatRoomList.atom'
 import useGetProductChatListData from '../../../../Hooks/Queries/get-productChatList'
+import AlertModal from '../../../../Components/Modal/AlertModal/AlertModal'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -32,7 +32,6 @@ function MyPrdRegister() {
 	const [page, setPage] = useState(params.page || 1)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
 	const [isModalType, setIsModalType] = useState('')
 	const {
@@ -55,7 +54,11 @@ function MyPrdRegister() {
 	const { mutate: saleCompleteMutate } = useMutation(
 		token => ProductApi.saleComplete(ProductIdx, token),
 		{
-			onSuccess: () => {},
+			onSuccess: () => {
+				setIsModalType('판매완료')
+				setIsOpenModal(true)
+				PrdRegisterData()
+			},
 			onError: err => {},
 		},
 	)
@@ -76,13 +79,8 @@ function MyPrdRegister() {
 	}, [page])
 
 	const onSelectBuyer = chatList => {
-		const completeInfo = {
-			socket: chatList.User.token,
-			prod_idx: chatList.Product.idx,
-		}
-
-		saleCompleteMutate(chatList.User.token)
 		closeModal()
+		saleCompleteMutate(chatList.User.token)
 	}
 
 	return (
@@ -98,7 +96,6 @@ function MyPrdRegister() {
 					</div>
 				</S.AlertTextContainer>
 			)}
-
 			<S.Wrapper>
 				{isLoading ? (
 					<S.PrdList>
@@ -145,7 +142,6 @@ function MyPrdRegister() {
 					</>
 				)}
 			</S.Wrapper>
-
 			{isOpenModal && isModalType === '삭제' && (
 				<Modal size={'small'}>
 					<S.ModalTextWrap>
@@ -161,17 +157,25 @@ function MyPrdRegister() {
 			)}
 			{isOpenModal && isModalType === '판매' && (
 				<>
-					<Modal size={'large'}>
+					<Modal size={'xs'}>
 						<ModalTitle>구매자를 선택해주세요</ModalTitle>
-
-						{ChatListData?.map(chatData => (
-							<S.BuyerList onClick={() => onSelectBuyer(chatData)}>
-								{chatData.User.nick_name}
-							</S.BuyerList>
-						))}
+						{ChatListData?.length !== 0 ? (
+							ChatListData?.map((chatData, idx) => (
+								<S.BuyerList onClick={() => onSelectBuyer(chatData)}>
+									{idx + 1}.{chatData.User.nick_name}
+								</S.BuyerList>
+							))
+						) : (
+							<S.BuyerListNone>채팅한 사람이 없습니다.</S.BuyerListNone>
+						)}
 					</Modal>
 				</>
 			)}
+
+			{isOpenModal && isModalType === '판매완료' && (
+				<AlertModal message={MESSAGE.SALECOMPLETE.SUCCESS} />
+			)}
+
 			<Pagination
 				totalPage={data?.pagination.totalPage}
 				setPage={setPage}
@@ -245,6 +249,11 @@ const BuyerList = styled.div`
 		background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
 	}
 `
+const BuyerListNone = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	margin-top: 1rem;
+`
 const S = {
 	Wrapper,
 	TotalNumAndFilter,
@@ -254,4 +263,5 @@ const S = {
 	ButtonsWrap,
 	AlertTextContainer,
 	BuyerList,
+	BuyerListNone,
 }

@@ -8,7 +8,7 @@ function SoldOutList({ soldOutList }) {
 			<h3>최근 거래 종료 품목</h3>
 			<S.SoldOutListContainer>
 				{soldOutList &&
-					soldOutList.prod_idx.products.product.map((item, idx) => {
+					soldOutList.prod_idx?.products.product.map((item, idx) => {
 						return (
 							<SoldOutItemBox
 								title={item.title}

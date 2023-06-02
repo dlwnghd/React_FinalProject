@@ -1,6 +1,12 @@
 import styled, { css, keyframes } from 'styled-components'
 
 const sizeCSS = {
+	xs: css`
+		width: 20vw;
+		min-width: 350px;
+		height: 200px;
+		padding: 12px;
+	`,
 	small: css`
 		width: 30vw;
 		min-width: 350px;

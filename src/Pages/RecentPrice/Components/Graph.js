@@ -27,7 +27,7 @@ function Graph({ quoteList, searchQuote }) {
 	const [avgPrice, setAvgPrice] = useState(0)
 
 	if (quoteList) {
-		quoteDataList = quoteList.prod_idx.cumulativeAvgPrice.map(item => {
+		quoteDataList = quoteList.prod_idx?.cumulativeAvgPrice.map(item => {
 			return {
 				x: item.date,
 				y: Number(item.avgPrice),
@@ -38,9 +38,9 @@ function Graph({ quoteList, searchQuote }) {
 	// 전체 데이터 변화 할때 마다
 	useEffect(() => {
 		// 평균값을 저장합니다.
-		const nonZeroData = quoteDataList.filter(item => item.y !== 0)
-		const sum = nonZeroData.reduce((acc, curr) => acc + curr.y, 0)
-		const avg = sum / nonZeroData.length
+		const nonZeroData = quoteDataList?.filter(item => item.y !== 0)
+		const sum = nonZeroData?.reduce((acc, curr) => acc + curr.y, 0)
+		const avg = sum / nonZeroData?.length
 		setAvgPrice(avg)
 	}, quoteDataList)
 

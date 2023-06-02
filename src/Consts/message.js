@@ -32,5 +32,8 @@ const MESSAGE = {
 	DELETEPRODUCT: {
 		CHECK: '정말로 삭제하시겠습니까?',
 	},
+	SALECOMPLETE: {
+		SUCCESS: '물품이 판매 확정되었습니다.',
+	},
 }
 export default MESSAGE

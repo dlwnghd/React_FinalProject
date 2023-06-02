@@ -66,18 +66,23 @@ function MyPrdItemBox({
 				<h4>{price.toLocaleString()}원</h4>
 			</S.DescContainer>
 			<S.ButtonContainer>
-				<Button shape={'square'} style={{ width: '48%' }}>
+				<S.Buttons
+					shape={'square'}
+					style={{ width: '48%' }}
+					variant={'default-reverse'}
+				>
 					채팅
-				</Button>
+				</S.Buttons>
 
-				<Button
+				<S.Buttons
 					shape={'square'}
 					style={{ background: status === '판매완료' && '#AAA', width: '48%' }}
 					disabled={status === '판매완료' ? true : false}
+					status={status}
 					onClick={() => showChatList(idx)}
 				>
 					{status}
-				</Button>
+				</S.Buttons>
 			</S.ButtonContainer>
 		</S.Wrapper>
 	)
@@ -202,6 +207,10 @@ const ButtonsWrap = styled.div`
 		margin: 0 1rem;
 	}
 `
+const Buttons = styled(Button)`
+	font-family: ${({ theme, status }) =>
+		status !== '판매완료' && theme.FONT_WEIGHT.regular};
+`
 const S = {
 	Wrapper,
 	IMGContainer,
@@ -214,4 +223,5 @@ const S = {
 	ModalText,
 	ModalTextWrap,
 	ButtonsWrap,
+	Buttons,
 }
