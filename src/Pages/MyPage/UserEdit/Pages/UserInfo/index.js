@@ -17,17 +17,18 @@ import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
-import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
 import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
 import UserInfoSkeleton from './Components/UserInfoSkeleton'
+import ErrorFallback from '../../../../../Components/Error/ErrorFallback'
+import ErrorModal from '../../../../../Components/Error/ErrorModal'
 // import useUser from '../../../../../Hooks/useUser'
 // import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
 function UserInfo() {
-	const { data, error, status, isLoading } = useGetUserInfo()
-	const updateUserInfo = useUpdateUserInfo()
+	const { data, error: getError, status, isLoading } = useGetUserInfo()
+	const { mutateAsync, error: updateError } = useUpdateUserInfo()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -97,7 +98,7 @@ function UserInfo() {
 		}
 		setIsSubmit(true)
 		try {
-			updateUserInfo.mutateAsync(editUser)
+			mutateAsync(editUser)
 			setMessage(MESSAGE.USEREDIT.SUCCESS)
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
@@ -128,6 +129,14 @@ function UserInfo() {
 
 	if (status === 'loading') {
 		return <UserInfoSkeleton />
+	}
+
+	if (getError) {
+		return <ErrorFallback error={getError} />
+	}
+
+	if (updateError) {
+		return <ErrorModal error={updateError} />
 	}
 
 	return (
@@ -228,6 +237,7 @@ function UserInfo() {
 					</S.StyledAlert>
 				</S.Container>
 				{isSubmit && isOpenModal && <AlertModal message={message} />}
+				{/* {isSubmit && isOpenModal && <ErrorModal />} */}
 				<S.SubmitButton>변경</S.SubmitButton>
 			</form>
 		</S.Wrapper>
