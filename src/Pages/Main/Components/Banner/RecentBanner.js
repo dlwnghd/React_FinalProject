@@ -4,7 +4,6 @@ import {
 	FlexCenterCSS,
 	GridCenterCSS,
 } from '../../../../Styles/common'
-import { Arrow_Icon } from '../../../../Components/Icons/Icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Hooks/useSlide'
 
@@ -63,14 +62,14 @@ function RecentBanner({ freeProduct, usedProduct }) {
 						)
 					})}
 				</S.SlideList>
-				<S.ButtonBox>
+				{/* <S.ButtonBox>
 					<button className="prev" onClick={prevSlide}>
 						<Arrow_Icon size="15" color="black" />
 					</button>
 					<button className="next" onClick={nextSlide}>
 						<Arrow_Icon size="15" color="black" />
 					</button>
-				</S.ButtonBox>
+				</S.ButtonBox> */}
 			</S.SlideContainer>
 		</S.Wrapper>
 	)
@@ -118,22 +117,20 @@ const SlideBox = styled.ul`
 		column-gap: 1rem;
 		row-gap: 1rem;
 	}
-
-	& > li {
-		width: 100%;
-	}
-
-	& > li::after {
-		content: '';
-		display: block;
-		padding-bottom: 100%;
-	}
 `
 
 const SlideItem = styled.li`
 	cursor: pointer;
+	width: 100%;
 	background: ${({ recentIMG }) => `url(${recentIMG})`} no-repeat center center;
 	background-size: cover;
+	box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 100%;

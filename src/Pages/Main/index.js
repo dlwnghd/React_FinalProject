@@ -44,13 +44,11 @@ function Main() {
 										description={item.description}
 										price={item.price}
 										posterPath={item.img_url}
-										createdAt={item.created_at}
+										createdAt={item.createdAt}
 										isLiked={item.liked}
 										status={item.status}
 										productsTags={item.ProductsTags}
-										onClick={() =>
-											navigate(`/detail/${item.idx}`, { state: item.liked })
-										}
+										onClick={() => navigate(`/detail/${item.idx}`)}
 									/>
 								)
 							})}
@@ -131,6 +129,7 @@ const ProductList = styled.div`
 	row-gap: 6rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${WidthAutoCSS}
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;
 	}
