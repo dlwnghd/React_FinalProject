@@ -8,7 +8,7 @@ import {
 import LoadingSkeleton from '../../../../../../../../Components/Skeleton/Skeleton'
 import Button from '../../../../../../../../Components/Button/Button'
 
-function PayList({ status, category, payList }) {
+function PayList({ status, category, payList, refetch }) {
 	const categoryText = category === 'seller' ? '판매내역' : '구매내역'
 
 	if (status === 'loading')
@@ -31,7 +31,7 @@ function PayList({ status, category, payList }) {
 					<p>조회에 실패했습니다.</p>
 					<p>잠시 후 다시 시도해주세요</p>
 					<div>
-						<Button shape={'soft'} onClick={() => window.location.reload()}>
+						<Button shape={'soft'} onClick={() => refetch()}>
 							새로고침
 						</Button>
 					</div>
