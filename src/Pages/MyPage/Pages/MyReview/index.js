@@ -8,13 +8,26 @@ import useGetReviewList from '../../../../Hooks/Queries/get-reviewList'
 import { useState } from 'react'
 import ReviewCard from './Components/Card'
 import Pagination from '../../../../Components/Pagination/Pagination'
+import ReviewCardLoading from './Components/Card/Components/Loading/Loading'
 
 function MyReview() {
 	const [page, setPage] = useState(1)
 
 	const { data, error, status } = useGetReviewList({ page })
 
-	if (status === 'loading') return
+	if (status === 'loading') {
+		return (
+			<S.Wrapper>
+				<S.Container>
+					{Array(2)
+						.fill()
+						.map((_, i) => (
+							<ReviewCardLoading />
+						))}
+				</S.Container>
+			</S.Wrapper>
+		)
+	}
 	if (status === 'error') return
 
 	const { pagination, reviewList } = data
