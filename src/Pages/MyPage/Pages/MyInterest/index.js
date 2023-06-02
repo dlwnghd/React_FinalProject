@@ -12,6 +12,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import EmptyList from '../../../../Components/EmptyList/EmptyList'
 
 function MyInterest() {
 	const arr = Array(10).fill(0)
@@ -27,6 +28,7 @@ function MyInterest() {
 
 	return (
 		<S.Wrapper>
+			{data?.LikeList.length === 0 && <EmptyList />}
 			<S.Container>
 				{arr.map(_ => {
 					return (
