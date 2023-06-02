@@ -139,7 +139,7 @@ const HeaderContainer = styled.div`
 const List = styled.div`
 	position: relative;
 	text-align: center;
-	height: 10rem;
+	height: 8rem;
 	width: 100%;
 	${FlexBetweenCSS}
 	margin-bottom:2rem;

@@ -1,11 +1,8 @@
 import styled from 'styled-components'
 import { DeleteProduct_Icon } from '../../../Icons/Icons'
-import { elapsedTime } from '../../../ItemBox/timeSet'
 import ProductApi from '../../../../Apis/productApi'
 import { FlexBetweenCSS } from '../../../../Styles/common'
 
-// 컴포넌트 불러올 때, props로
-// 데이터(상품 이미지, 상품 제목, 상품 설명, 상품 가격) 보내와서 입히기
 function ViewedItemBox({
 	refetch,
 	posterPath,
@@ -29,20 +26,17 @@ function ViewedItemBox({
 	return (
 		<S.Wrapper>
 			<DeleteProduct_Icon
-				size="25"
+				size="20"
 				color="black"
 				onClick={() => onDeleteView(prod_idx)}
 			/>
 			<S.IMGContainer posterIMG={posterPath} {...rest}></S.IMGContainer>
 			<S.DescContainer {...rest}>
 				<S.DescBox>
-					<h4>{status}</h4>
+					<h5>{status}</h5>
 					<h4>{title}</h4>
 					<span>{price.toLocaleString()}원</span>
 				</S.DescBox>
-				<S.DescBox2>
-					<span>{elapsedTime(createdAt)}</span>
-				</S.DescBox2>
 			</S.DescContainer>
 		</S.Wrapper>
 	)
@@ -54,6 +48,7 @@ const Wrapper = styled.div`
 	${FlexBetweenCSS}
 	flex-direction: row;
 	position: relative;
+	padding: 1rem 0;
 	width: 100%;
 	height: 100%;
 	z-index: 0;
@@ -79,7 +74,8 @@ const IMGContainer = styled.div`
 	height: 7.2rem;
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
-	
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 17rem;
 		height: 17rem;
@@ -88,25 +84,38 @@ const IMGContainer = styled.div`
 
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
-	width:62%;
+	width:60%;
 	height: 100%;
 	padding: 0 1rem;
 	flex-direction: column;
 	align-items: baseline;
-	font-size: 50%
-	
+	font-size: 50%;
+
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width:50%;
+		width: 50%;
 	}
 `
 
 const DescBox = styled.div`
-	margin-top: 1rem;
+	/* margin-top: 1rem; */
 	width: 100%;
+	height: 100%;
 	display: flex;
 	gap: 3px;
 	flex-direction: column;
 	${({ context }) => context === '' && FlexBetweenCSS}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		& > h5 {
+			font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+		}
+		& > h4 {
+			font-size: ${({ theme }) => theme.FONT_SIZE.big};
+		}
+		& > span {
+			font-size: ${({ theme }) => theme.FONT_SIZE.large};
+		}
+	}
 
 	& > h4 {
 		overflow: hidden;

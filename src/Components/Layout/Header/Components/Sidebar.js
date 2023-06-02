@@ -55,9 +55,9 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	}, [userInfo])
 
 	return (
-		<S.SidebarWrapper ref={slideRef}>
+		<S.SidebarWrapper ref={slideRef} pathURL={currentURL}>
 			<S.SideBarTitleContainer>
-				<h4>최근 본 상품</h4>
+				<h5>최근 본 상품</h5>
 			</S.SideBarTitleContainer>
 			<S.SideBarContainer>
 				<S.ProductList>
@@ -92,7 +92,7 @@ export default Sidebar
 
 const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 28.8rem;
+	top: 25.5rem;
 	z-index: 99;
 	height: 100%;
 	overflow-y: auto;
@@ -103,9 +103,15 @@ const SidebarWrapper = styled.nav`
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 	transform: translateX(0%);
 	width: 21rem;
-	right: 5px;
-	left: 84%;
-	padding: 0rem 1rem 1rem;
+	right: 6%;
+	/* padding: 0rem 1rem 1rem; */
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+	${({ pathURL }) =>
+		pathURL === '/'
+			? {
+					display: 'none',
+			  }
+			: { display: 'block' }}
 
 	&::-webkit-scrollbar {
 		display: none;
@@ -124,14 +130,21 @@ const SidebarWrapper = styled.nav`
 `
 
 const SideBarTitleContainer = styled.div`
-	padding: 2rem 0;
+	padding: 1rem;
 	position: sticky;
 	top: 0px;
 	z-index: 99999;
-	background-color: ${({ theme }) => theme.COLOR.common.white};
+	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		padding: 4rem 1rem 2rem;
+		background-color: ${({ theme }) => theme.COLOR.common.white};
+	}
 `
 
-const SideBarContainer = styled.ul``
+const SideBarContainer = styled.ul`
+	padding: 1rem;
+`
 
 const ProductList = styled.li`
 	width: 100%;
