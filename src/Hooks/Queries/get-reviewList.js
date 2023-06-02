@@ -8,7 +8,7 @@ const getList = async ({ page }) => {
 }
 
 const useGetReviewList = ({ page }) => {
-	const { data, error, status } = useQuery(
+	const { data, error, status, refetch } = useQuery(
 		[QUERY_KEY.GET_REVIEW_LIST_DATA, page],
 		() => getList({ page }),
 		{
@@ -16,6 +16,6 @@ const useGetReviewList = ({ page }) => {
 			staleTime: 1000 * 60 * 15,
 		},
 	)
-	return { data, error, status }
+	return { data, error, status, refetch }
 }
 export default useGetReviewList

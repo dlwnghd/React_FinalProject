@@ -9,11 +9,12 @@ import { useState } from 'react'
 import ReviewCard from './Components/Card'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import ReviewCardLoading from './Components/Card/Components/Loading/Loading'
+import ErrorFallback from '../../../../Components/Error/ErrorFallback'
 
 function MyReview() {
 	const [page, setPage] = useState(1)
 
-	const { data, error, status } = useGetReviewList({ page })
+	const { data, error, status, refetch } = useGetReviewList({ page })
 
 	if (status === 'loading') {
 		return (
@@ -28,7 +29,9 @@ function MyReview() {
 			</S.Wrapper>
 		)
 	}
-	if (status === 'error') return
+	if (status === 'error') {
+		return <ErrorFallback error={error} refetch={refetch} />
+	}
 
 	const { pagination, reviewList } = data
 
