@@ -4,7 +4,7 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
@@ -12,8 +12,6 @@ import Contents from './Components/Contents/Contents'
 
 function Detail() {
 	const { idx } = useParams()
-	const location = useLocation()
-	const { state: liked } = location
 
 	const {
 		data: detailProduct,
@@ -30,13 +28,12 @@ function Detail() {
 
 	if (detailIsLoading) return
 	if (detailError) return
-	console.log(detailProduct)
 
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
 				<Thumbnail {...detailProductList} />
-				<Description {...detailProductList} liked={liked} />
+				<Description {...detailProductList} />
 			</S.MainContainer>
 			<Contents detailProduct={detailProduct} />
 		</S.Wrapper>

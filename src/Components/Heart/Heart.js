@@ -1,37 +1,31 @@
-import { useState } from 'react'
 import { FillHeart_Icon, NotFillHeart_Icon } from '../Icons/Icons'
 import styled from 'styled-components'
-import { useMutation } from '@tanstack/react-query'
-import ProductApi from '../../Apis/productApi'
 import { useLocation } from 'react-router'
+import usePostHeart from '../../Hooks/Queries/post-heart'
+import { useState } from 'react'
 
-function Heart({ like, hover, setHover, prod_idx, change_size }) {
-	const [isHeart, setIsHeart] = useState(like)
+function Heart({ like, prod_idx, change_size }) {
 	const location = useLocation()
 	const validLocation = location?.pathname.split('/')[1]
 
-	const { mutateAsync, isLoading } = useMutation(
-		({ prod_idx }) => ProductApi.like({ prod_idx }),
-		{
-			onSuccess: res => {
-				const data = res.data
-				if (data.message === true) setIsHeart(true)
-				if (data.message === false) setIsHeart(false)
-			},
-			onError: err => {
-				console.log(err)
-			},
-		},
-	)
+	const [isLike, setIsLike] = useState(like)
+
+	const getMessage = message => {
+		console.log(message)
+		setIsLike(message)
+	}
+
+	const { mutateAsync, isLoading } = usePostHeart({ prod_idx }, getMessage)
 
 	const onHeart = async () => {
-		setIsHeart(prev => !prev)
 		await mutateAsync({ prod_idx })
 	}
 
+	if (isLoading) return
+
 	return (
-		<S.Wrapper align={validLocation}>
-			{isHeart ? (
+		<S.Wrapper mode={validLocation}>
+			{isLike ? (
 				<FillHeart_Icon
 					size={change_size ? change_size : '30'}
 					onClick={onHeart}
@@ -49,8 +43,8 @@ function Heart({ like, hover, setHover, prod_idx, change_size }) {
 export default Heart
 
 const Wrapper = styled.div`
-	${({ align }) =>
-		align === 'detail'
+	${({ mode }) =>
+		mode === 'detail'
 			? {
 					position: 'relative',
 					display: 'flex',
@@ -60,9 +54,9 @@ const Wrapper = styled.div`
 			  }
 			: {
 					position: 'absolute',
-					top: '50%',
-					left: '50%',
-					transform: 'translate(-50%,-50%)',
+					top: '5%',
+					right: '5%',
+					// transform: 'translate(-50%,-50%)',
 			  }};
 
 	& > svg {

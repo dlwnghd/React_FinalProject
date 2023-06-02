@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-
 import { useNavigate } from 'react-router'
 import {
 	ColumnNumberCSS,
@@ -12,12 +11,13 @@ import TagsItem from '../../../../Components/TagItem/TagsItem'
 import Heart from '../../../../Components/Heart/Heart'
 import SellerInfo from './Components/SellerInfo'
 
-function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
+function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
 	const {
 		title,
 		idx,
 		status,
+		liked,
 		price,
 		createdAt,
 		category,
@@ -27,7 +27,6 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
-
 	const createdDay = new Date(createdAt)
 	const year = createdDay.getFullYear()
 	const month = createdDay.getMonth() + 1

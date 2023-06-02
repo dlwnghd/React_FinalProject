@@ -103,6 +103,7 @@ const InterestItems = styled.div`
 	background: ${({ interestIMG }) => `url(${interestIMG})`} no-repeat center
 		center;
 	background-size: cover;
+	box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.2);
 
 	&::after {
 		content: '';

@@ -44,7 +44,7 @@ const Wrapper = styled.section`
 const MainIMGContainer = styled.div`
 	position: relative;
 	width: 100%;
-
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
 	background: ${({ images }) => `url(${images})`} no-repeat center center;
 	background-size: cover;
 	margin-bottom: 3rem;
