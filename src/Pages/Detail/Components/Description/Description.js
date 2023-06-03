@@ -1,8 +1,4 @@
 import styled from 'styled-components'
-import {
-	FillHeart_Icon,
-	NotFillHeart_Icon,
-} from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
 import {
 	ColumnNumberCSS,
@@ -12,65 +8,86 @@ import {
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
-import { useState } from 'react'
+import Heart from '../../../../Components/Heart/Heart'
+import SellerInfo from './Components/SellerInfo'
 
-function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
+function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
-	const { title, idx, status, price, category, description, ProductsTags } =
-		detailProduct.searchProduct
+	const {
+		title,
+		idx,
+		status,
+		liked,
+		price,
+		createdAt,
+		category,
+		description,
+		ProductsTags,
+		User,
+	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
-	const [isLiked, setIsLiked] = useState(liked)
+	const createdDay = new Date(createdAt)
+	const year = createdDay.getFullYear()
+	const month = createdDay.getMonth() + 1
+	const day = createdDay.getDate()
 
-	// const {
-	// 	data: heartData,
-	// 	status: heartStatus,
-	// 	refetch,
-	// } = useGetHeartInterestData(idx, isLiked)
-
-	const onHeart = () => {
-		setIsLiked(prev => !prev)
+	const heartProps = {
+		like: liked,
+		prod_idx: idx,
+		change_size: '24',
 	}
-
-	// useEffect(() => {
-	// 	refetch()
-	// }, [isLiked])
-
-	// if (heartStatus === 'loading') return
 
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
 				<div>
-					<h3>{title}</h3>
-					<p>{status}</p>
+					<div>
+						<h3>{title}</h3>
+						<div>
+							<p>{status}</p>
+							<S.StyledSubButton
+								onClick={() => navigate('/recent-price', { state: title })}
+							>
+								시세보기
+							</S.StyledSubButton>
+						</div>
+					</div>
+					<p>
+						등록일 : {year}년 {month}월 {day}일
+					</p>
 				</div>
 				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
+			<SellerInfo User={User} />
 			<S.OptionContainer>
-				<S.HeartBox onClick={onHeart}>
-					<p>찜</p>
-					{isLiked ? (
-						<FillHeart_Icon size="24" />
-					) : (
-						<NotFillHeart_Icon size="24" />
-					)}
-				</S.HeartBox>
 				<S.ButtonBox>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+					<S.StyledMainButton
+						variant={'no-border'}
+						shape={'soft'}
+						size={'full'}
+					>
+						<p>찜</p>
+						<Heart {...heartProps} />
+					</S.StyledMainButton>
+					<S.StyledMainButton
+						variant={'no-border'}
+						shape={'soft'}
+						size={'full'}
+					>
 						채팅
-					</S.StyledButton>
+					</S.StyledMainButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
 			<hr />
 			<S.DescriptionContainer>
 				<div>
-					<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
+					<h4>카테고리 : {category === 0 ? '중고거래' : '무료나눔'}</h4>
 					<p>{description}</p>
 				</div>
 				<S.TagBox>
 					<>
-						{ProductsTags.map((item, idx) => {
+						{ProductsTags.slice(0, 3).map((item, idx) => {
 							return (
 								<TagsItem
 									key={idx}
@@ -113,8 +130,23 @@ const TitleContainer = styled.div`
 	margin-bottom: 3rem;
 
 	& > div {
+		margin-bottom: 2rem;
+
+		& > div {
+			margin-bottom: 1rem;
+		}
+	}
+
+	& > div > div {
 		${FlexBetweenCSS}
-		margin-bottom:2rem;
+	}
+
+	& > div > div > div {
+		${FlexCenterCSS}
+	}
+
+	& > div > div > div > p:first-of-type {
+		margin-right: 1rem;
 	}
 `
 
@@ -134,26 +166,6 @@ const OptionContainer = styled.div`
 	${FlexBetweenCSS}
 `
 
-const HeartBox = styled.div`
-	${FlexCenterCSS}
-	width:50%;
-	height: 100%;
-	border-radius: 1rem;
-	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
-
-	margin-right: 1rem;
-	cursor: pointer;
-
-	& > p {
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		color: ${({ theme }) => theme.COLOR.main};
-	}
-
-	& > svg {
-		color: ${({ theme }) => theme.COLOR.main};
-	}
-`
-
 const TagBox = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(3)}
@@ -162,12 +174,31 @@ const TagBox = styled.div`
 
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
-	width:50%;
+	width:100%;
+	column-gap: 1rem;
 `
 
-const StyledButton = styled(Button)`
+const StyledSubButton = styled(Button)`
+	width: 10rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	height: 3.2rem;
+`
+
+const StyledMainButton = styled(Button)`
+	&:first-of-type {
+		background: ${({ theme }) => theme.COLOR.common.white};
+		color: ${({ theme }) => theme.COLOR.error};
+		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+
+		& > p {
+			font-size: 2rem;
+			margin-right: 0.3rem;
+		}
+	}
+
+	${FlexCenterCSS}
 	background: ${({ theme }) => theme.COLOR.common.black};
-	color: ${({ theme }) => theme.COLOR.common.white};
+	color: ${({ theme }) => theme.COLOR.main};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	height: 6rem;
 	border: none;
@@ -179,8 +210,8 @@ const S = {
 	TitleContainer,
 	DescriptionContainer,
 	OptionContainer,
-	HeartBox,
 	ButtonBox,
-	StyledButton,
+	StyledMainButton,
+	StyledSubButton,
 	TagBox,
 }

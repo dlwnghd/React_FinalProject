@@ -4,11 +4,7 @@ import {
 	GridCenterCSS,
 	WidthAutoCSS,
 } from '../../Styles/common'
-import { useEffect } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
-import { isOnSideBar } from '../../Atoms/sideBar.atom'
-import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
+import { useParams } from 'react-router-dom'
 import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
@@ -16,17 +12,6 @@ import Contents from './Components/Contents/Contents'
 
 function Detail() {
 	const { idx } = useParams()
-	const location = useLocation()
-	const { state: liked } = location
-
-
-	const setOnSideBar = useSetRecoilState(isOnSideBar)
-
-	useEffect(() => {
-		setOnSideBar(false)
-	}, [idx])
-
-	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
 	const {
 		data: detailProduct,
@@ -41,20 +26,16 @@ function Detail() {
 		detailError,
 	}
 
-	if (status === 'loading') return
-	if (detailStatus === 'loading') return
-	if (error && detailError) return
+	if (detailIsLoading) return
+	if (detailError) return
 
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
 				<Thumbnail {...detailProductList} />
-				<Description {...detailProductList} liked={liked} />
+				<Description {...detailProductList} />
 			</S.MainContainer>
-			<Maps>
-				<div>지도</div>
-			</Maps>
-			<Contents mainProduct={mainProduct} />
+			<Contents detailProduct={detailProduct} />
 		</S.Wrapper>
 	)
 }
@@ -78,15 +59,6 @@ const MainContainer = styled.section`
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(1)}
-	}
-`
-const Maps = styled.div`
-	width: 100%;
-	background: ${({ theme }) => theme.COLOR.common.gray[100]};
-	height: 25rem;
-
-	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 100%;
 	}
 `
 

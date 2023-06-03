@@ -99,7 +99,7 @@ function Pagination({ limit, totalPage, setPage, scroll }) {
 const Nav = styled.nav`
 	${FlexCenterCSS}
 	gap: 4px;
-	margin-top: 4rem;
+	margin: 6rem 0;
 `
 
 const Button = styled.button`

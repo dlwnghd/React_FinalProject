@@ -78,7 +78,8 @@ const GlobalStyles = createGlobalStyle`
     }
 
     textarea {
-        font-size:${({ theme }) => theme.FONT_SIZE.small}
+        font-size:${({ theme }) => theme.FONT_SIZE.small};
+        font-family: 'LINESeed-Rg';
     }
 
     p {
