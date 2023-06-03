@@ -49,18 +49,20 @@ function MyPrdItemBox({
 			<S.DescContainer>
 				<S.DescBox>
 					<h4>{title}</h4>
-					<S.IconContainer>
-						<EtcOption_Icon
-							size="30"
-							onClick={() => setEditOption(prev => !prev)}
-						/>
-						{editOption && (
-							<S.EditBox>
-								<div onClick={() => productChange(idx)}>수정</div>
-								<div onClick={() => onProductDelete(idx)}>삭제</div>
-							</S.EditBox>
-						)}
-					</S.IconContainer>
+					{status !== '판매완료' && (
+						<S.IconContainer>
+							<EtcOption_Icon
+								size="30"
+								onClick={() => setEditOption(prev => !prev)}
+							/>
+							{editOption && (
+								<S.EditBox>
+									<div onClick={() => productChange(idx)}>수정</div>
+									<div onClick={() => onProductDelete(idx)}>삭제</div>
+								</S.EditBox>
+							)}
+						</S.IconContainer>
+					)}
 				</S.DescBox>
 				<h4>{price.toLocaleString()}원</h4>
 			</S.DescContainer>
