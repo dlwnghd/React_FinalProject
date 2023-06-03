@@ -3,18 +3,27 @@ import styled from 'styled-components'
 import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
 import { InterestBasket_Icon, RollBack_icon } from '../../../Icons/Icons'
 
-function MobileHeader({ setSelectedNav, setOnSideBar }) {
+function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
 	const navigate = useNavigate() // 네비게이션 추가
 
 	return (
 		<S.MobileHeaderWrapper>
-			<S.MobileIcon onClick={() => navigate(-1)}>
+			<S.MobileIcon
+				onClick={() => {
+					if (onSideBar) {
+						setOnSideBar(false)
+					} else {
+						navigate(-1)
+					}
+				}}
+			>
 				<RollBack_icon size="24" cursor="pointer" />
 			</S.MobileIcon>
 			<S.Logo
 				onClick={() => {
 					navigate('/')
 					setSelectedNav(0)
+					setOnSideBar(false)
 				}}
 			>
 				NEGO MARKET

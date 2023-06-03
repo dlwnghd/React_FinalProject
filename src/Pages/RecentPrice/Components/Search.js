@@ -2,8 +2,8 @@ import styled from 'styled-components'
 import { FaSearch } from 'react-icons/fa'
 import useInput from '../../../Hooks/useInput'
 
-function RecentSearch({ setSearchQuote }) {
-	const [searchQuote, onChange] = useInput('')
+function RecentSearch({ setSearchQuote, title }) {
+	const [searchQuote, onChange] = useInput(title)
 
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
