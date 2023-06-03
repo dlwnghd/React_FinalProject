@@ -3,10 +3,11 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import Filter from './Components/DateFilter'
 import useGetQuoteProductList from '../../Hooks/Queries/get-quoteList'
-import { FlexAlignCSS, WidthAutoCSS } from '../../Styles/common'
+import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import Graph from './Components/Graph'
 import RecentSearch from './Components/Search'
 import SoldOutList from './Components/SoldOutList'
+import getFormattedDate from '../../Utils/getFormattedDate'
 
 function RecentPrice() {
 	// Filter 종류
@@ -21,7 +22,7 @@ function RecentPrice() {
 	// 필터버튼 클릭시
 	const onFilter = date => {
 		dateFilter.some(item => {
-			if (date == item) {
+			if (date === item) {
 				updateData(item)
 				return true
 			}
@@ -50,19 +51,11 @@ function RecentPrice() {
 	// 시세 상품 검색어
 	const [searchQuote, setSearchQuote] = useState('')
 
-	// 날짜 형태 (yyy-mm-dd)로 변경
-	const formatDate = date => {
-		const year = date.getFullYear()
-		const month = String(date.getMonth() + 1).padStart(2, '0')
-		const day = String(date.getDate()).padStart(2, '0')
-		return `${year}-${month}-${day}`
-	}
-
 	// 1년 전 데이터 구하기 (yyyy-mm-dd)
 	const getOneYearAgo = () => {
 		const oneYearAgo = new Date()
 		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-		return formatDate(oneYearAgo)
+		return getFormattedDate(oneYearAgo)
 	}
 
 	// use-query 시작
@@ -70,7 +63,7 @@ function RecentPrice() {
 	const { data, error, status, isLoading } = useGetQuoteProductList({
 		keyword: searchQuote,
 		start: getOneYearAgo(),
-		end: formatDate(new Date()),
+		end: getFormattedDate(new Date()),
 	})
 
 	if (isLoading) return
@@ -121,7 +114,9 @@ const RecentPriceContainer = styled.div`
 `
 
 const OptionContainer = styled.div`
-	${FlexAlignCSS}
+	${FlexBetweenCSS}
+	align-items: flex-end;
+	padding-bottom: 1.5rem;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
 `
 
