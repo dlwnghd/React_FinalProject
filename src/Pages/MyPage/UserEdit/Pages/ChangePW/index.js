@@ -13,6 +13,7 @@ import MESSAGE from '../../../../../Consts/message'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import ErrorModal from '../../../../../Components/Error/ErrorModal'
 
 function ChangePW() {
 	const {
@@ -27,7 +28,7 @@ function ChangePW() {
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [message, setMessage] = useState('')
 
-	const { mutateAsync } = useMutation(
+	const { mutateAsync, status, error } = useMutation(
 		newPw => UserApi.userEditPw({ pw: newPw }),
 		{
 			onSuccess: () => {
@@ -39,19 +40,17 @@ function ChangePW() {
 			},
 			onError: err => {
 				console.log(err)
-				setMessage(MESSAGE.PWEDIT.FAILURE)
 				setIsOpenModal(true)
-				setTimeout(() => setIsOpenModal(false), 3000)
-				setValue('newPw', '')
-				setValue('newPwConfirm', '')
 			},
 		},
 	)
 	const onSubmit = async data => {
 		mutateAsync(data.newPw)
 	}
+
 	return (
 		<S.Wrapper>
+			{isOpenModal && status === 'error' && <ErrorModal error={error} />}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<S.Container>
 					<S.StyledInput
@@ -86,7 +85,9 @@ function ChangePW() {
 						{errors.newPwConfirm && errors.newPwConfirm.message}
 					</S.StyledAlert>
 				</S.Container>
-				{isOpenModal && <AlertModal message={message} />}
+				{isOpenModal && status === 'success' && (
+					<AlertModal message={message} />
+				)}
 				<S.StyledButton>변경</S.StyledButton>
 			</form>
 		</S.Wrapper>

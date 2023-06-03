@@ -13,18 +13,24 @@ import Pagination from '../../../../Components/Pagination/Pagination'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import EmptyList from '../../../../Components/EmptyList/EmptyList'
+import ErrorFallback from '../../../../Components/Error/ErrorFallback'
 
 function MyInterest() {
 	const arr = Array(10).fill(0)
 	const navigate = useNavigate()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const [page, setPage] = useState(searchParams.get('page'))
-	const { data, error, status, isLoading, isError, isRefetching, refetch } =
-		useGetMyInterest({ page })
+	const { data, error, status, refetch, fetchStatus } = useGetMyInterest({
+		page,
+	})
 
 	useEffect(() => {
 		refetch()
 	}, [page])
+
+	if (status === 'error') {
+		return <ErrorFallback error={error} />
+	}
 
 	return (
 		<S.Wrapper>
@@ -33,8 +39,8 @@ function MyInterest() {
 				{arr.map(_ => {
 					return (
 						<>
-							{isRefetching && <MainSkeleton />}
-							{isLoading && <MainSkeleton />}
+							{fetchStatus === 'fetching' && <MainSkeleton />}
+							{status === 'loading' && <MainSkeleton />}
 						</>
 					)
 				})}
@@ -42,12 +48,12 @@ function MyInterest() {
 				{data?.LikeList?.map(item => {
 					return (
 						<>
-							{!isRefetching && !isLoading && (
+							{!(fetchStatus === 'fetching') && !(status === 'loading') && (
 								<ItemBox
 									title={item.Product.title}
 									price={item.Product.price}
 									posterPath={item.Product.img_url}
-									// context={item.description}
+									description={item.description}
 									isLiked={item.Product.liked}
 									key={item.Product.idx}
 									onClick={() => navigate(`/detail/${item.Product.idx}`)}
