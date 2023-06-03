@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { EtcOption_Icon } from '../Icons/Icons'
 import { FlexBetweenCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
-import { useState } from 'react'
 import Heart from '../Heart/Heart'
 
 function ItemBox({
@@ -17,8 +16,6 @@ function ItemBox({
 	productsTags,
 	...rest
 }) {
-	const [isHoverItemBox, setIsHoverItemBox] = useState(true)
-
 	const heartProps = {
 		like: isLiked,
 		prod_idx: prod_idx,
@@ -27,7 +24,7 @@ function ItemBox({
 	return (
 		<S.Wrapper>
 			<S.IMGContainer>
-				{isHoverItemBox && <Heart {...heartProps} />}
+				<Heart {...heartProps} />
 				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
 			<S.DescContainer>
