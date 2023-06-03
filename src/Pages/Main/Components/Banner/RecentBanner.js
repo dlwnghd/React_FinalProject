@@ -54,7 +54,9 @@ function RecentBanner({ freeProduct, usedProduct }) {
 										<S.SlideItem
 											key={idx}
 											recentIMG={`${item.img_url}`}
-											onClick={() => navigate(`/detail/${item.idx}`)}
+											onClick={() =>
+												navigate(`/detail/${item.idx}`, { state: item.liked })
+											}
 										></S.SlideItem>
 									)
 								})}

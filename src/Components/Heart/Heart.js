@@ -1,36 +1,39 @@
-import { useState } from 'react'
 import { FillHeart_Icon, NotFillHeart_Icon } from '../Icons/Icons'
 import styled from 'styled-components'
-import { useMutation } from '@tanstack/react-query'
-import ProductApi from '../../Apis/productApi'
+import { useLocation } from 'react-router'
+import usePostHeart from '../../Hooks/Queries/post-heart'
+import { useState } from 'react'
 
-function Heart({ like, hover, setHover, prod_idx }) {
-	const [isHeart, setIsHeart] = useState(like)
+function Heart({ like, prod_idx, change_size }) {
+	const location = useLocation()
+	const validLocation = location?.pathname.split('/')[1]
 
-	const { mutateAsync, isLoading } = useMutation(
-		({ prod_idx }) => ProductApi.like({ prod_idx }),
-		{
-			onSuccess: data => {
-				if (data.message === true) setIsHeart(true)
-				if (data.message === false) setIsHeart(false)
-			},
-			onError: err => {
-				console.log(err)
-			},
-		},
-	)
+	const [isLike, setIsLike] = useState(like)
 
-	const onHeart = async () => {
-		setIsHeart(prev => !prev)
-		await mutateAsync({ prod_idx })
+	const getMessage = message => {
+		setIsLike(message)
 	}
 
+	const { mutateAsync, isLoading } = usePostHeart(prod_idx, getMessage)
+
+	const onHeart = async () => {
+		await mutateAsync()
+	}
+
+	if (isLoading) return
+
 	return (
-		<S.Wrapper>
-			{isHeart ? (
-				<FillHeart_Icon size="30" onClick={onHeart} />
+		<S.Wrapper mode={validLocation}>
+			{isLike ? (
+				<FillHeart_Icon
+					size={change_size ? change_size : '30'}
+					onClick={onHeart}
+				/>
 			) : (
-				<NotFillHeart_Icon size="30" onClick={onHeart} />
+				<NotFillHeart_Icon
+					size={change_size ? change_size : '30'}
+					onClick={onHeart}
+				/>
 			)}
 		</S.Wrapper>
 	)
@@ -39,14 +42,25 @@ function Heart({ like, hover, setHover, prod_idx }) {
 export default Heart
 
 const Wrapper = styled.div`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	${({ mode }) =>
+		mode === 'detail'
+			? {
+					position: 'relative',
+					display: 'flex',
+					top: '-0.1rem',
+					left: '0%',
+					transform: 'translate(0,0)',
+			  }
+			: {
+					position: 'absolute',
+					top: '5%',
+					right: '5%',
+					// transform: 'translate(-50%,-50%)',
+			  }};
 
 	& > svg {
 		cursor: pointer;
-		color: ${({ theme }) => theme.COLOR.main};
+		color: ${({ theme }) => theme.COLOR.error};
 	}
 `
 

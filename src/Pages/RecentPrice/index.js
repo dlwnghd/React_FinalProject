@@ -7,8 +7,12 @@ import { FlexAlignCSS, WidthAutoCSS } from '../../Styles/common'
 import Graph from './Components/Graph'
 import RecentSearch from './Components/Search'
 import SoldOutList from './Components/SoldOutList'
+import { useLocation } from 'react-router-dom'
 
 function RecentPrice() {
+	const location = useLocation()
+	const { state: title } = location
+
 	// Filter 종류
 	const dateFilter = [
 		'최근 일주일',
@@ -48,7 +52,7 @@ function RecentPrice() {
 	}
 
 	// 시세 상품 검색어
-	const [searchQuote, setSearchQuote] = useState('')
+	const [searchQuote, setSearchQuote] = useState(title)
 
 	// 날짜 형태 (yyy-mm-dd)로 변경
 	const formatDate = date => {
@@ -81,7 +85,7 @@ function RecentPrice() {
 		<S.RecentPriceWrapper>
 			<S.RecentPriceContainer>
 				<S.OptionContainer>
-					<RecentSearch setSearchQuote={setSearchQuote} />
+					<RecentSearch setSearchQuote={setSearchQuote} title={title} />
 					<Filter
 						filterArray={dateFilter}
 						onFilter={onFilter}
