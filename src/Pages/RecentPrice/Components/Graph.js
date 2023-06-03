@@ -42,7 +42,7 @@ function Graph({ quoteList, searchQuote }) {
 		const sum = nonZeroData?.reduce((acc, curr) => acc + curr.y, 0)
 		const avg = sum / nonZeroData?.length
 		setAvgPrice(avg)
-	}, quoteDataList)
+	}, [quoteDataList])
 
 	// Series(데이터가 들어가야할 곳!)
 	const series = [

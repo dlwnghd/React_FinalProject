@@ -1,14 +1,19 @@
 import styled from 'styled-components'
 import { FaSearch } from 'react-icons/fa'
+import { useSearchParams } from 'react-router-dom'
 import useInput from '../../../Hooks/useInput'
 
 function RecentSearch({ setSearchQuote }) {
-	const [searchQuote, onChange] = useInput('')
+	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchQuote, onChange] = useInput(searchParams.get('quote'))
 
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
 			setSearchQuote(searchQuote)
-			event.target.blur()
+
+			searchParams.set('quote', searchQuote)
+			setSearchParams(searchParams)
+			event.target.blur() // 커서 제거
 		}
 	}
 

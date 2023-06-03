@@ -8,6 +8,7 @@ import Graph from './Components/Graph'
 import RecentSearch from './Components/Search'
 import SoldOutList from './Components/SoldOutList'
 import getFormattedDate from '../../Utils/getFormattedDate'
+import { useSearchParams } from 'react-router-dom'
 
 function RecentPrice() {
 	// Filter 종류
@@ -49,7 +50,10 @@ function RecentPrice() {
 	}
 
 	// 시세 상품 검색어
-	const [searchQuote, setSearchQuote] = useState('')
+	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchQuote, setSearchQuote] = useState(
+		searchParams.get('quote') || '',
+	)
 
 	// 1년 전 데이터 구하기 (yyyy-mm-dd)
 	const getOneYearAgo = () => {
@@ -65,8 +69,6 @@ function RecentPrice() {
 		start: getOneYearAgo(),
 		end: getFormattedDate(new Date()),
 	})
-
-	if (isLoading) return
 
 	if (error) {
 		return
