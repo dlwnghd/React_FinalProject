@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { EtcOption_Icon } from '../../../../../Components/Icons/Icons'
-import { FlexBetweenCSS } from '../../../../../Styles/common'
+import { FlexBetweenCSS, GridCenterCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -40,12 +40,19 @@ function MyPrdItemBox({
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer
+			{/* <S.IMGContainer
 				posterIMG={img_url}
 				status={status}
 				onClick={() => navigate(`/detail/${idx}`)}
 			>
 				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
+			</S.IMGContainer> */}
+			<S.IMGContainer
+				posterIMG={img_url}
+				status={status}
+				onClick={() => navigate(`/detail/${idx}`)}
+			>
+				{status === '판매완료' && <h1>SOLD OUT</h1>}
 			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox>
@@ -117,10 +124,18 @@ const IMGContainer = styled.div`
 	cursor: pointer;
 	width: 100%;
 	height: 27.6rem;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
+		${({ status }) => status === '판매완료' && ',rgba(0, 0, 0, 0.5)'};
+	background-blend-mode: multiply;
 	background-size: cover;
-	filter: brightness(${({ status }) => status === '판매완료' && '50%'});
-	z-index: 10;
+	${({ status }) => status === '판매완료' && GridCenterCSS}
+	color: ${({ theme }) => theme.COLOR.common.white};
+
+	// 드래그 방지
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 `
 
 const DescContainer = styled.div`
