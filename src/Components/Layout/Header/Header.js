@@ -5,7 +5,7 @@ import {
 	FlexBetweenCSS,
 	WidthAutoCSS,
 } from '../../../Styles/common'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Sidebar from './Components/Sidebar'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
@@ -28,8 +28,6 @@ function Header() {
 	const userInfo = useRecoilValue(userInfoAtom)
 
 	const currentURL = useLocation().pathname // 현재 URL 기억 State (0: 무료, 1: 중고)
-
-	const [login, setLogin] = useState(true) // 로그인 Header 구현용 State
 
 	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
@@ -79,6 +77,7 @@ function Header() {
 		>
 			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
 			<Sidebar onSideBar={onSideBar} />
+
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
 					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />
@@ -87,6 +86,7 @@ function Header() {
 				)}
 				<S.List>
 					<MobileHeader
+						onSideBar={onSideBar}
 						setSelectedNav={setSelectedNav}
 						setOnSideBar={setOnSideBar}
 					/>
@@ -138,7 +138,7 @@ const HeaderContainer = styled.div`
 const List = styled.div`
 	position: relative;
 	text-align: center;
-	height: 10rem;
+	height: 8rem;
 	width: 100%;
 	${FlexBetweenCSS}
 	margin-bottom:2rem;

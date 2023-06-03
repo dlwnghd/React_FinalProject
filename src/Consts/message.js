@@ -34,6 +34,8 @@ const MESSAGE = {
 	},
 	SALECOMPLETE: {
 		SUCCESS: '물품이 판매 확정되었습니다.',
+	REVIEW: {
+		EMPTY: '후기를 작성해 보세요!',
 	},
 }
 export default MESSAGE

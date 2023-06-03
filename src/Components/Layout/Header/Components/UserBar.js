@@ -78,6 +78,7 @@ const UserWrapper = styled.div`
 const UserContainer = styled.div`
 	display: flex;
 	column-gap: 8px;
+	position: relative;
 `
 
 const UserBox = styled.div`
@@ -91,20 +92,6 @@ const UserBox = styled.div`
 	transition: 0.1s ease;
 
 	&:hover {
-		&:hover:before {
-			content: '';
-			position: absolute;
-			border-color: transparent transparent
-				${({ theme }) => theme.COLOR.common.gray[300]};
-			border-style: solid;
-			border-width: 0px 20px 11px;
-			width: 0rem;
-			height: 1rem;
-			top: 41px;
-			z-index: 20;
-			margin-left: 4rem;
-		}
-
 		& > .dropdown {
 			display: grid;
 		}
@@ -137,26 +124,28 @@ const ProfileIMG = styled.div`
 
 const UserDropDownMenu = styled.div`
 	position: absolute;
+	padding-top: 1rem;
 	display: none;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 	border-radius: 5%;
-	top: 25%;
+	top: 85%;
+	right: 0;
 	z-index: 9999;
-	width: 9%;
-	max-width: 12rem;
+	width: 90%;
 
 	& > span {
 		padding: 1rem;
-		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
+		border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.white};
+		box-sizing: content-box;
 		cursor: pointer;
-		border-radius: 1rem;
-		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
+		color: ${({ theme }) => theme.COLOR.main};
+		background-color: ${({ theme }) => theme.COLOR.common.black};
 
 		:hover {
-			scale: 1.1;
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
 			color: ${({ theme }) => theme.COLOR.common.white};
+			box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
 		}
 	}
 `

@@ -18,6 +18,8 @@ import AlertModal from '../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../Consts/message'
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
+import CoordinateToViewMap from '../../../Components/Map/CoordinateToViewMap'
+import OrdinaryMap from '../../../Components/Map/OrdinaryMap'
 
 function SignUp() {
 	const navigate = useNavigate()
@@ -26,6 +28,7 @@ function SignUp() {
 		email: { state: null, message: '' },
 		nickname: { state: null, message: '' },
 	})
+	const [LatAndLng, setLatAndLng] = useState('') // 위도 경도
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 
 	const {
@@ -193,7 +196,10 @@ function SignUp() {
 							)}
 						></Controller>
 						{isOpenModal && modalType === 'region' && (
-							<RegionModal setRegion={setRegion} />
+							<RegionModal
+								setResultAddress={setRegion}
+								setLatAndLng={setLatAndLng}
+							/>
 						)}
 						<Controller
 							name="phone"
@@ -211,7 +217,21 @@ function SignUp() {
 							)}
 						></Controller>
 					</S.InputSection>
-					<S.MapSection></S.MapSection>
+					<S.MapSection isVisible={LatAndLng}>
+						{LatAndLng ? (
+							<CoordinateToViewMap
+								LatAndLng={LatAndLng}
+								width={'100%'}
+								height={'100%'}
+							/>
+						) : (
+							<OrdinaryMap
+								LatAndLng={{ x: 33.450701, y: 126.570667 }}
+								width={'100%'}
+								height={'100%'}
+							/>
+						)}
+					</S.MapSection>
 				</div>
 				<div>
 					<Button>
@@ -265,6 +285,7 @@ const MapSection = styled.section`
 	width: 49%;
 	height: 47.5rem;
 	background-color: gray;
+	opacity: ${({ isVisible }) => (isVisible ? 1 : 0.4)};
 
 	@media screen and (max-width: 670px) {
 		display: none;

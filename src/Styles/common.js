@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import { css, keyframes } from 'styled-components'
 
 export const GridCenterCSS = css`
 	display: grid;
@@ -37,4 +37,15 @@ export const WidthAutoCSS = css`
 
 export const ShadowCSS = css`
 	box-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+`
+
+export const FadeInKeyFrame = keyframes`
+	0% {
+		opacity: 0;
+		transform: translateY(20%);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 `

@@ -22,14 +22,6 @@ const bannerList = [
 		logo: '/assets/img/nego_symbol_230516_ver1.0_black.svg',
 	},
 	{
-		title: '작은 것에서 부터 무료나눔',
-		subTitle: 'FREE MARKET',
-		description: '나의 한 발자국이 너를 이롭게',
-		imgUrl:
-			'/assets/img/nego001_banner_230516/Banner_Index01_Layer001_230516_ver.black.svg',
-		logo: '/assets/img/nego_symbol_230516_ver1.0_white.svg',
-	},
-	{
 		title: '내 신을 올렸다, 새 신이 되었다.',
 		subTitle: '하루만에... 신던 신발이 바꼈다 ?!',
 		description: '이제 신발은 돈주고 사지 말기',

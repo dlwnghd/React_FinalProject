@@ -30,9 +30,9 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	readProductList(page = 1, category = 0) {
+	readProductList({ page = 1, category = 0, order, sort }) {
 		return axiosInstance.get(`${PATH}/search`, {
-			params: { page, category, keyword: '', status: '판매중' },
+			params: { page, category, keyword: '', status: '판매중', order, sort },
 		})
 	},
 	readQuoteList(keyword, start, end) {
@@ -51,15 +51,13 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	like({ prod_idx }) {
+	like(prod_idx) {
 		return axiosInstance.post(PATH + '/like', { prod_idx })
 	},
 	searchList({ keyword, page }) {
 		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
 	},
-	detail({ prod_idx }) {
-		return axiosInstance.get(PATH + '/detail', { params: { prod_idx } })
-	},
+
 	saleComplete(prod_idx, token) {
 		return axiosInstance.post(PATH + '/sale-complete', {
 			prod_idx,

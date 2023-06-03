@@ -5,10 +5,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainSkeleton from '../../../Components/ItemBox/ItemSkeleton'
 
-// 스켈레톤의 갯수
-// 	전체물품 수 - 현재 화면에 랜더링된 물품 수 = Skeleton으로 나타낼 수 있는 수
-// 	=> 첫번째 페이지를 호출할때는 몇개의 데이터가 올지 모름(고정 갯수 지정❓)
-const lengthArray = new Array(20).fill(0)
+let skeletonArrayLength = new Array(8).fill(0)
 
 function ProductList({
 	data,
@@ -41,19 +38,35 @@ function ProductList({
 
 	const navigate = useNavigate()
 
+	if (data) {
+		const lastPage = data.pages[data.pages.length - 1].pagination
+		const remainingItems =
+			lastPage.count - lastPage.curPage * 20 > 20
+				? 20
+				: lastPage.count - lastPage.curPage * 20
+
+		if (remainingItems > 0) {
+			skeletonArrayLength = new Array(remainingItems).fill(0)
+		}
+	}
+
 	return (
 		<S.ProductListWrapper>
+			<MainSkeleton />
 			{isSuccess &&
 				data?.pages.map(page =>
 					page.product.map((item, idx) => {
 						return (
 							<ItemBox
+								key={idx}
+								prod_idx={item.idx}
 								title={item.title}
+								description={item.description}
 								price={item.price}
 								posterPath={item.img_url}
 								tags={item.ProductsTags}
+								createdAt={item.createdAt}
 								isLiked={item.liked}
-								key={idx}
 								onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
@@ -61,7 +74,7 @@ function ProductList({
 				)}
 			{isFetching ? (
 				<>
-					{lengthArray.map((i, idx) => {
+					{skeletonArrayLength.map((i, idx) => {
 						return <MainSkeleton key={idx} />
 					})}
 				</>

@@ -3,11 +3,8 @@ import getErrorMessage from '../../Utils/getErrorMessage'
 import styled from 'styled-components'
 import { FlexCenterCSS, WidthAutoCSS } from '../../Styles/common'
 import Button from '../Button/Button'
-import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 
-function ErrorFallback({ error }) {
-	const { reset } = useQueryErrorResetBoundary()
-
+function ErrorFallback({ error, refetch }) {
 	const status = error.response?.status
 	const navigate = useNavigate()
 	const { title, content } = getErrorMessage(status)
@@ -18,7 +15,7 @@ function ErrorFallback({ error }) {
 		if (isExpiredSession) {
 			navigate('/login')
 		} else {
-			reset()
+			refetch()
 		}
 	}
 

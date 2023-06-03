@@ -8,17 +8,14 @@ const getMyInterest = async page => {
 }
 
 const useGetMyInterest = page => {
-	const { data, error, status, isLoading, isError } = useQuery(
-		[QUERY_KEY.GET_MYINTEREST],
-		() => getMyInterest(page),
-		{
+	const { data, error, status, isLoading, isError, refetch, fetchStatus } =
+		useQuery([QUERY_KEY.GET_MYINTEREST], () => getMyInterest(page), {
 			refetchOnMount: 'always',
 			cacheTime: 1000 * 5 * 60,
 			staleTime: 1000 * 1 * 60,
-		},
-	)
+		})
 
-	return { data, error, status, isLoading, isError }
+	return { data, error, status, isLoading, isError, refetch, fetchStatus }
 }
 
 export default useGetMyInterest

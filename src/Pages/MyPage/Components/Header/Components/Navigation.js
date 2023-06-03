@@ -47,6 +47,7 @@ function MyPageNav({ type }) {
 					{MY_PAGE_NAV_TYPE[type].map(nav => (
 						<S.Title
 							key={nav.title}
+							type={type}
 							onClick={() => navigate(`${nav.path}`)}
 							state={window.location.pathname === nav.path}
 						>
@@ -85,6 +86,10 @@ const Title = styled.div`
 			: '2px solid white'}; /* border-bottom 때문에 텍스트가 살짝 올라가는 걸 방지하기 위해 아닐 경우에도 white로 */
 	letter-spacing: -0.1rem;
 	cursor: pointer;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: ${({ type }) => type === 'myPage' && '8rem'};
+	}
 `
 
 const S = { Wrapper, Container, Title }
