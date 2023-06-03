@@ -3,10 +3,11 @@ import ChatBox from './ChatBox/ChatBox'
 import RoomBox from './RoomBox/RoomBox'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 
-function ChatView() {
+function ChatView({ prod_idx, room_state }) {
+	console.log('chatview', prod_idx)
 	return (
 		<S.ChatViewContainer>
-			<RoomBox />
+			<RoomBox prod_idx={prod_idx} />
 			<ChatBox />
 		</S.ChatViewContainer>
 	)

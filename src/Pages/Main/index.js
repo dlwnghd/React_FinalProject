@@ -10,10 +10,13 @@ import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
 import RecentBanner from './Components/Banner/RecentBanner'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
+import { useRecoilState } from 'recoil'
+import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
 
 function Main() {
 	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 	const navigate = useNavigate()
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
 	if (isLoading) return
 	if (error) return

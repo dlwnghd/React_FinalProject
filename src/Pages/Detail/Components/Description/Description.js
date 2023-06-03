@@ -13,14 +13,29 @@ import {
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
 import { useState } from 'react'
+import useChatModal from '../../../../Hooks/useChatModal'
+import ChatApi from '../../../../Apis/chatApi'
+import { myChatRoomList } from '../../../../Atoms/myChatRoomList.atom'
+import { useRecoilState } from 'recoil'
 
 function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	if (detailIsLoading && detailStatus === 'loading') return
-	const { title, idx, status, price, category, description, ProductsTags } =
-		detailProduct.searchProduct
+	const {
+		title,
+		idx: prod_idx,
+		status,
+		price,
+		category,
+		description,
+		ProductsTags,
+	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
 	const [isLiked, setIsLiked] = useState(liked)
+	const { openChat } = useChatModal()
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+
+	const user = JSON.parse(localStorage.getItem('userInfo'))
 
 	// const {
 	// 	data: heartData,
@@ -28,6 +43,25 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 	// 	refetch,
 	// } = useGetHeartInterestData(idx, isLiked)
 
+	const makeChatRoom = async () => {
+		try {
+			const res = await ChatApi.makeChat(prod_idx)
+
+			if (res.status === 200) {
+				const room_idx = res.data.idx
+				await ChatApi.sendMsg(room_idx, '채팅방을 생성합니다')
+				const list = await ChatApi.chatRoomList()
+
+				setRoomList(list.data)
+			}
+			openChat()
+		} catch (err) {
+			console.log('에러 발생%', err)
+			if (err.response && err.response.status === 400) {
+				openChat()
+			}
+		}
+	}
 	const onHeart = () => {
 		setIsLiked(prev => !prev)
 	}
@@ -57,7 +91,12 @@ function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
 					)}
 				</S.HeartBox>
 				<S.ButtonBox>
-					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
+					<S.StyledButton
+						variant={'no-border'}
+						shape={'soft'}
+						size={'full'}
+						onClick={makeChatRoom}
+					>
 						채팅
 					</S.StyledButton>
 				</S.ButtonBox>
