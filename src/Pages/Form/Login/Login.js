@@ -83,24 +83,29 @@ function Login() {
 				navigate('/') // 그게 아니라면 메인 페이지로 이동
 			},
 			onError: err => {
-				const { FAILURE, ERROR } = MESSAGE.LOGIN
-				try {
-					const {
-						message: { info },
-					} = err.response.data
-					setError(info === 'loginFailed' ? FAILURE : ERROR)
-				} catch (err) {
-					// setError하는 과정에서 에러가 발생할 수 있어
-					// 대비하여 ERROR로 텍스트를 띄웁니다.
-					setError(ERROR)
-				}
+				throw err
 			},
 		},
 	)
 
 	const onSubmit = async data => {
 		const { email, password: pw } = data
-		await mutateAsync({ email, pw })
+
+		try {
+			await mutateAsync({ email, pw })
+		} catch (err) {
+			const { FAILURE, ERROR } = MESSAGE.LOGIN
+			try {
+				const {
+					message: { info },
+				} = err.response.data
+				setError(info === 'loginFailed' ? FAILURE : info)
+			} catch (err) {
+				// setError하는 과정에서 에러가 발생할 수 있어
+				// 대비하여 ERROR로 텍스트를 띄웁니다.
+				setError(ERROR)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -111,7 +116,7 @@ function Login() {
 	}, [])
 
 	useEffect(() => {
-		setError(null)
+		setError('')
 	}, [watchedEmail, watchedPassword])
 
 	if (loginState) return <Navigate replace to="/" /> // 이미 로그인 상태이면 메인페이지로 보내기
