@@ -5,7 +5,7 @@ const getErrorMessage = status => {
 				title: '세션이 만료되었습니다.',
 				content: '로그인을 해주세요',
 			}
-		case 409:
+		// case 409:
 		case 500:
 			return {
 				title: '서버에서 오류가 발생하였습니다.',

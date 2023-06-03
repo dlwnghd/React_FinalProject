@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 import UserApi from '../../../../../Apis/userApi'
@@ -19,18 +19,24 @@ import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal
 import Modal from '../../../../../Components/Modal/Modal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
-import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
 import UserInfoSkeleton from './Components/UserInfoSkeleton'
 import ErrorFallback from '../../../../../Components/Error/ErrorFallback'
-import ErrorModal from '../../../../../Components/Error/ErrorModal'
 import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+import ErrorModal from '../../../../../Components/Error/ErrorModal'
+import { useMutation } from '@tanstack/react-query'
+import useUser from '../../../../../Hooks/useUser'
+import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
+import axios from 'axios'
 // import useUser from '../../../../../Hooks/useUser'
 // import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
 function UserInfo() {
-	const { data, error: getError, status, isLoading } = useGetUserInfo()
-	const { mutateAsync, error: updateError } = useUpdateUserInfo()
-	const [userInfo, setUserInfo] = useState({})
+	const {
+		data,
+		error: getError,
+		status: getStatus,
+		isLoading,
+	} = useGetUserInfo()
 	const {
 		register,
 		setValue,
@@ -39,16 +45,73 @@ function UserInfo() {
 	} = useForm({
 		mode: 'onChange',
 	})
+	const [userInfo, setUserInfo] = useState({})
 	const [imgFile, setImgFile] = useState()
 	const [preFile, setPreFile] = useState()
-	const [isSubmit, setIsSubmit] = useState(false)
+	const [modalType, setModalType] = useState('')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
 	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
 
+	const user = useUser()
+	const userAtomInfo = useRecoilValue(userInfoAtom)
+
 	useEffect(() => {
 		setUserInfo({ ...data })
 	}, [data])
+
+	const {
+		mutateAsync,
+		error: updateError,
+		status: updateState,
+	} = useMutation(
+		async ({ email, nickName, phone, region, profile_url }) =>
+			await axios.all([
+				UserApi.userEdit({ email, nickName, phone, region }),
+				profile_url && UserApi.userEditProfile(profile_url),
+			]),
+
+		{
+			onSuccess: res => {
+				console.log(res)
+				const editData = JSON.parse(res[0].config.data)
+				if (res[1]) {
+					user.editUserInfo({
+						email: editData.email,
+						nickName: editData.nickName,
+						profileUrl: res[1].data.profile_url,
+						region: editData.region,
+						socket: userAtomInfo.socket,
+					})
+				} else {
+					user.editUserInfo({
+						email: editData.email,
+						nickName: editData.nickName,
+						profileUrl: userAtomInfo.profileUrl,
+						region: editData.region,
+						socket: userAtomInfo.socket,
+					})
+				}
+				setModalType('submit')
+				setMessage(MESSAGE.USEREDIT.SUCCESS)
+				setIsDuplicate({ state: false, message: '' })
+				setIsOpenModal(true)
+				setTimeout(() => {
+					setIsOpenModal(false)
+					setModalType('')
+				}, 3000)
+				// client.invalidateQueries(
+				// 	[QUERY_KEY.GET_USER_INFO],
+				// 	[QUERY_KEY.GET_MYPAGE_MAIN_DATA],
+				// )
+			},
+			onError: err => {
+				console.log(err)
+				setModalType('error')
+				setIsOpenModal(true)
+			},
+		},
+	)
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
@@ -60,14 +123,15 @@ function UserInfo() {
 		}
 	}
 
-	const modalOpen = () => {
+	const addressModalOpen = () => {
 		document.body.style.overflow = 'hidden'
-		setIsSubmit(false)
+		setModalType('address')
 		setIsOpenModal(true)
 	}
 
 	const setRegion = str => {
 		setValue('region', str)
+		setModalType('')
 	}
 
 	const checkNickname = async e => {
@@ -97,23 +161,11 @@ function UserInfo() {
 			region: editData.region,
 			profile_url: formData,
 		}
-		setIsSubmit(true)
+
 		try {
 			mutateAsync(editUser)
-			setMessage(MESSAGE.USEREDIT.SUCCESS)
-			setIsDuplicate({ state: false, message: '' })
-			setIsOpenModal(true)
-			setTimeout(() => {
-				setIsOpenModal(false)
-				setIsSubmit(false)
-			}, 3000)
 		} catch (err) {
-			setMessage(MESSAGE.USEREDIT.FAILURE)
-			setIsOpenModal(true)
-			setTimeout(() => {
-				setIsOpenModal(false)
-				setIsSubmit(false)
-			}, 3000)
+			console.log(err)
 		}
 	}
 
@@ -128,7 +180,7 @@ function UserInfo() {
 		setValue('phone', userInfo.phone)
 	}, [userInfo])
 
-	if (status === 'loading') {
+	if (getStatus === 'loading') {
 		return <UserInfoSkeleton />
 	}
 
@@ -136,12 +188,11 @@ function UserInfo() {
 		return <ErrorFallback error={getError} />
 	}
 
-	if (updateError) {
-		return <ErrorModal error={updateError} />
-	}
-
 	return (
 		<S.Wrapper>
+			{isOpenModal && modalType === 'error' && (
+				<ErrorModal error={updateError} />
+			)}
 			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 				<S.Container>
 					<S.InputBox>
@@ -209,11 +260,11 @@ function UserInfo() {
 							type="button"
 							shape={'square'}
 							variant={'default-reverse'}
-							onClick={modalOpen}
+							onClick={addressModalOpen}
 						>
 							주소 찾기
 						</S.RegisterButton>
-						{!isSubmit && isOpenModal && (
+						{modalType === 'address' && isOpenModal && (
 							<RegionModal setResultAddress={setRegion} />
 						)}
 					</S.InputBox>
@@ -237,7 +288,9 @@ function UserInfo() {
 						{errors.phone && errors.phone.message}
 					</S.StyledAlert>
 				</S.Container>
-				{isSubmit && isOpenModal && <AlertModal message={message} />}
+				{updateState === 'success' && modalType === 'submit' && isOpenModal && (
+					<AlertModal message={message} />
+				)}
 				<S.SubmitButton>변경</S.SubmitButton>
 			</form>
 		</S.Wrapper>

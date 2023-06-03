@@ -4,7 +4,7 @@ import { FlexCenterCSS } from '../../Styles/common'
 import getErrorMessage from '../../Utils/getErrorMessage'
 
 function ErrorModal({ error }) {
-	const status = error.response?.status
+	const status = error?.response?.status
 	const { title, content } = getErrorMessage(status)
 
 	return (
