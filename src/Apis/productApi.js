@@ -30,9 +30,9 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	readProductList(page = 1, category = 0) {
+	readProductList({ page = 1, category = 0, order, sort }) {
 		return axiosInstance.get(`${PATH}/search`, {
-			params: { page, category, keyword: '', status: '판매중' },
+			params: { page, category, keyword: '', status: '판매중', order, sort },
 		})
 	},
 	readQuoteList(keyword, start, end) {

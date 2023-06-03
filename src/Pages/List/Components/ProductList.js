@@ -25,13 +25,13 @@ function ProductList({
 			}
 		},
 		[fetchNextPage, hasNextPage],
-		)
-		
-		useEffect(() => {
-			const element = observerElem.current
-			const option = { threshold: 0 }
-			
-			const observer = new IntersectionObserver(handleObserver, option)
+	)
+
+	useEffect(() => {
+		const element = observerElem.current
+		const option = { threshold: 0 }
+
+		const observer = new IntersectionObserver(handleObserver, option)
 		observer.observe(element)
 		return () => observer.unobserve(element)
 	}, [fetchNextPage, hasNextPage, handleObserver])
@@ -50,8 +50,6 @@ function ProductList({
 		}
 	}
 
-	console.log(data)
-
 	return (
 		<S.ProductListWrapper>
 			<MainSkeleton />
@@ -60,13 +58,15 @@ function ProductList({
 					page.product.map((item, idx) => {
 						return (
 							<ItemBox
+								key={idx}
+								prod_idx={item.idx}
 								title={item.title}
+								description={item.description}
 								price={item.price}
 								posterPath={item.img_url}
-								description={item.description}
 								tags={item.ProductsTags}
+								createdAt={item.createdAt}
 								isLiked={item.liked}
-								key={idx}
 								onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
