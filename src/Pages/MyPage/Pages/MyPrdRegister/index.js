@@ -18,6 +18,7 @@ import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
 import { ModalTitle } from '../../../../Components/Modal/Modal.style'
 import useGetProductChatListData from '../../../../Hooks/Queries/get-productChatList'
 import AlertModal from '../../../../Components/Modal/AlertModal/AlertModal'
+import ErrorModal from '../../../../Components/Error/ErrorModal'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -41,17 +42,21 @@ function MyPrdRegister() {
 		isLoading,
 	} = useGetMyPagePrdRegisterData(page, category)
 
-	const { mutate, error } = useMutation(idx => ProductApi.delete(idx), {
-		onSuccess: () => {
-			PrdRegisterData()
-			setIsOpenModal(false)
+	const { mutate, error: deleteError } = useMutation(
+		idx => ProductApi.delete(idx),
+		{
+			onSuccess: () => {
+				PrdRegisterData()
+				setIsOpenModal(false)
+			},
+			onError: () => {
+				setIsModalType('deleteError')
+				setIsOpenModal(true)
+			},
 		},
-		onError: err => {
-			setIsOpenModal(() => false)
-		},
-	})
+	)
 
-	const { mutate: saleCompleteMutate } = useMutation(
+	const { mutate: saleCompleteMutate, error: saleCompleteError } = useMutation(
 		token => ProductApi.saleComplete(ProductIdx, token),
 		{
 			onSuccess: () => {
@@ -59,7 +64,10 @@ function MyPrdRegister() {
 				setIsOpenModal(true)
 				PrdRegisterData()
 			},
-			onError: err => {},
+			onError: () => {
+				setIsModalType('saleCompleteError')
+				setIsOpenModal(true)
+			},
 		},
 	)
 
@@ -85,6 +93,12 @@ function MyPrdRegister() {
 
 	return (
 		<>
+			{isOpenModal && isModalType === 'deleteError' && (
+				<ErrorModal deleteError={deleteError} />
+			)}
+			{isOpenModal && isModalType === 'saleCompleteError' && (
+				<ErrorModal saleCompleteError={saleCompleteError} />
+			)}
 			{status === 'error' && (
 				<S.AlertTextContainer>
 					<p>조회에 실패했습니다.</p>

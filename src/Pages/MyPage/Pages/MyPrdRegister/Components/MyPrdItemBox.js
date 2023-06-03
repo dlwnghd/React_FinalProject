@@ -100,7 +100,10 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
-
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+	&:hover {
+		box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.3);
+	}
 	& > svg {
 		position: absolute;
 		z-index: 999;
