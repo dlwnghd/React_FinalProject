@@ -9,7 +9,7 @@ const getDetailData = async idx => {
 
 const useGetDetailData = idx => {
 	const { data, error, status, isLoading } = useQuery(
-		[QUERY_KEY.GET_DETAILPAGE_DATA, idx],
+		[QUERY_KEY.GET_DETAILPAGE_DATA + idx],
 		() => getDetailData({ prod_idx: idx }),
 		{},
 	)

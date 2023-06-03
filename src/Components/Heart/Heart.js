@@ -11,14 +11,13 @@ function Heart({ like, prod_idx, change_size }) {
 	const [isLike, setIsLike] = useState(like)
 
 	const getMessage = message => {
-		console.log(message)
 		setIsLike(message)
 	}
 
-	const { mutateAsync, isLoading } = usePostHeart({ prod_idx }, getMessage)
+	const { mutateAsync, isLoading } = usePostHeart(prod_idx, getMessage)
 
 	const onHeart = async () => {
-		await mutateAsync({ prod_idx })
+		await mutateAsync()
 	}
 
 	if (isLoading) return

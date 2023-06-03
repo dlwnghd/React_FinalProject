@@ -51,7 +51,7 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	like({ prod_idx }) {
+	like(prod_idx) {
 		return axiosInstance.post(PATH + '/like', { prod_idx })
 	},
 	searchList({ keyword, page }) {
