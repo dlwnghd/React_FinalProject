@@ -160,9 +160,9 @@ function MyPrdRegister() {
 					<Modal size={'xs'}>
 						<ModalTitle>구매자를 선택해주세요</ModalTitle>
 						{ChatListData?.length !== 0 ? (
-							ChatListData?.map((chatData, idx) => (
+							ChatListData?.map(chatData => (
 								<S.BuyerList onClick={() => onSelectBuyer(chatData)}>
-									{idx + 1}.{chatData.User.nick_name}
+									• {chatData.User.nick_name}
 								</S.BuyerList>
 							))
 						) : (
