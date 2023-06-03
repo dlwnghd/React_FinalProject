@@ -26,17 +26,22 @@ function DaumPostCodeAddress({ setResultAddress, setLatAndLng }) {
 				Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_RESTAPI}`,
 			},
 		}
-		try {
-			const res = await axios(config)
-			if (res.data !== undefined || res.data !== null) {
-				if (res.data.documents[0].x && res.data.documents[0].y) {
-					setLatAndLng({
-						x: res.data.documents[0].x,
-						y: res.data.documents[0].y,
-					})
+
+		if (setLatAndLng) {
+			try {
+				const res = await axios(config)
+				if (res.data !== undefined || res.data !== null) {
+					if (res.data.documents[0].x && res.data.documents[0].y) {
+						setLatAndLng({
+							x: res.data.documents[0].x,
+							y: res.data.documents[0].y,
+						})
+					}
 				}
+			} catch (err) {
+				throw new Error('Daum Post code Error')
 			}
-		} catch (err) {}
+		}
 	}
 
 	return (
