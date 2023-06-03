@@ -27,7 +27,7 @@ function Graph({ quoteList, searchQuote }) {
 	const [avgPrice, setAvgPrice] = useState(0)
 
 	if (quoteList) {
-		quoteDataList = quoteList.prod_idx?.cumulativeAvgPrice.map(item => {
+		quoteDataList = quoteList.cumulativeAvgPrice.map(item => {
 			return {
 				x: item.date,
 				y: Number(item.avgPrice),

@@ -73,6 +73,8 @@ function RecentPrice() {
 		end: formatDate(new Date()),
 	})
 
+	if (isLoading) return
+
 	if (error) {
 		return
 	}
