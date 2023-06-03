@@ -17,18 +17,19 @@ import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
-import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
-import {
-	useUpdateUserInfo,
-	useUpdateProfileImg,
-} from '../../../../../Hooks/Queries/update-userInfo'
+import useUpdateUserInfo from '../../../../../Hooks/Queries/update-userInfo'
+import UserInfoSkeleton from './Components/UserInfoSkeleton'
+import ErrorFallback from '../../../../../Components/Error/ErrorFallback'
+import ErrorModal from '../../../../../Components/Error/ErrorModal'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+// import useUser from '../../../../../Hooks/useUser'
+// import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
 function UserInfo() {
-	const { data, error, status, isLoading } = useGetUserInfo()
-	const updateUserInfo = useUpdateUserInfo()
-	const updateProfileImg = useUpdateProfileImg()
+	const { data, error: getError, status, isLoading } = useGetUserInfo()
+	const { mutateAsync, error: updateError } = useUpdateUserInfo()
 	const [userInfo, setUserInfo] = useState({})
 	const {
 		register,
@@ -38,13 +39,12 @@ function UserInfo() {
 	} = useForm({
 		mode: 'onChange',
 	})
-	const [imgFile, setImgFile] = useState('')
+	const [imgFile, setImgFile] = useState()
 	const [preFile, setPreFile] = useState()
 	const [isSubmit, setIsSubmit] = useState(false)
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
 	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
-	const [isChangeImg, setIsChangeImg] = useState(false)
 
 	useEffect(() => {
 		setUserInfo({ ...data })
@@ -71,42 +71,35 @@ function UserInfo() {
 	}
 
 	const checkNickname = async e => {
-		const nickName = e.target.value
-		try {
-			const res = await UserApi.checkNickname({ nickName })
-			setIsDuplicate({ state: false, message: res.data.message })
-		} catch (err) {
-			if (err.response.status === 400) {
-				setIsDuplicate({ state: true, message: err.response.data.message })
+		const nickname = e.target.value
+		setIsDuplicate({ state: false, message: '' })
+		if (userInfo.nick_name !== nickname) {
+			try {
+				const res = await UserApi.checkNickname({ nickname })
+				setIsDuplicate({ state: false, message: res.data.message })
+			} catch (err) {
+				if (err.response.status === 400) {
+					setIsDuplicate({ state: true, message: err.response.data.message })
+				}
 			}
 		}
 	}
 	const onSubmit = async editData => {
-		const formData = new FormData()
-		formData.append('profile_url', imgFile)
-
-		// FormData의 key 확인
-		for (let key of formData.keys()) {
-			console.log(key)
+		let formData
+		if (imgFile) {
+			formData = new FormData()
+			formData.append('profile_url', imgFile)
 		}
-
-		// FormData의 value 확인
-		for (let value of formData.values()) {
-			console.log(value)
-		}
-
 		const editUser = {
 			email: editData.email,
 			nickName: editData.nickName,
 			phone: editData.phone,
 			region: editData.region,
+			profile_url: formData,
 		}
 		setIsSubmit(true)
 		try {
-			updateUserInfo.mutateAsync(editUser)
-			if (isChangeImg) {
-				updateProfileImg.mutateAsync({ profile_url: formData })
-			}
+			mutateAsync(editUser)
 			setMessage(MESSAGE.USEREDIT.SUCCESS)
 			setIsDuplicate({ state: false, message: '' })
 			setIsOpenModal(true)
@@ -125,7 +118,6 @@ function UserInfo() {
 	}
 
 	useEffect(() => {
-		setImgFile(userInfo.profile_url)
 		setPreFile(
 			userInfo.profile_url ||
 				'https://static.nid.naver.com/images/web/user/default.png?type=s160',
@@ -134,8 +126,19 @@ function UserInfo() {
 		setValue('nickName', userInfo.nick_name)
 		setValue('region', userInfo.region)
 		setValue('phone', userInfo.phone)
-		setIsChangeImg(false)
 	}, [userInfo])
+
+	if (status === 'loading') {
+		return <UserInfoSkeleton />
+	}
+
+	if (getError) {
+		return <ErrorFallback error={getError} />
+	}
+
+	if (updateError) {
+		return <ErrorModal error={updateError} />
+	}
 
 	return (
 		<S.Wrapper>
@@ -154,7 +157,6 @@ function UserInfo() {
 							{...register('profile_img', {
 								onChange: e => {
 									saveImgFile(e)
-									setIsChangeImg(true)
 								},
 							})}
 						/>
@@ -211,7 +213,9 @@ function UserInfo() {
 						>
 							주소 찾기
 						</S.RegisterButton>
-						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
+						{!isSubmit && isOpenModal && (
+							<RegionModal setResultAddress={setRegion} />
+						)}
 					</S.InputBox>
 				</S.Container>
 				<S.Container>

@@ -17,8 +17,9 @@ import AlertText from '../../../Components/AlertText/AlertText'
 import Modal from '../../../Components/Modal/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import scrollToTop from '../../../Utils/scrollToTop'
 
-function Inputs({ imageFile, DetailData }) {
+function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	const {
 		control,
 		watch,
@@ -29,11 +30,12 @@ function Inputs({ imageFile, DetailData }) {
 	} = useForm()
 
 	const navigate = useNavigate()
+
 	const params = useParams()
 
 	const watchedCategory = watch('category')
-	const [submitType, setSubmitType] = useState('등록')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+	const [submitType, setSubmitType] = useState('등록')
 	const [modalType, setModalType] = useState('')
 
 	const [hashValue, setHashValue] = useState('')
@@ -67,6 +69,7 @@ function Inputs({ imageFile, DetailData }) {
 	}
 
 	const setRegion = result => {
+		console.log({ result })
 		setValue('region', result)
 		clearErrors('region')
 		setResultAddress(result)
@@ -91,7 +94,6 @@ function Inputs({ imageFile, DetailData }) {
 			? useMutation(formData => ProductApi.register(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
-						navigate(-1)
 					},
 					onError: () => {},
 			  })
@@ -103,6 +105,13 @@ function Inputs({ imageFile, DetailData }) {
 			  })
 
 	const onSubmit = async data => {
+		let subUrl = []
+		if (
+			(!imageFileArr.length && submitType == '등록') ||
+			imageList.length === 0
+		)
+			return setImgNum(true), scrollToTop(0)
+
 		let price = 0
 		if (data.category !== '1') {
 			price = Number(intPrice.replace(/,/g, ''))
@@ -118,18 +127,29 @@ function Inputs({ imageFile, DetailData }) {
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
 
-		for (let i = 0; i < imageFile.length; i++) {
-			formData.append('images', imageFile[i])
-		}
+		if (submitType === '수정') {
+			imageList.map((el, idx) => {
+				if (idx === 0) {
+					if (imageFileArr.length === 0) {
+						formData.append('main_url', el)
+					}
+					formData.append('images', imageFileArr[idx])
+					console.log('images idx0', imageFileArr[idx])
+				} else {
+					subUrl.push(el)
+					formData.append('images', imageFileArr[idx])
+					console.log('images idxNot0', imageFileArr[idx])
+				}
+			})
+			formData.append('idx', params.prod_idx)
+			formData.append('img_url', subUrl.join())
 
-		if (submitType === '등록') {
 			mutate(formData)
 		}
-		if (submitType === '수정') {
-			formData.append('main_url', DetailData.searchProduct.img_url)
-			formData.append('idx', params.prod_idx)
-			formData.append('img_url', DetailData.searchProduct.ProductImages)
-
+		if (submitType === '등록') {
+			for (let i = 0; i < imageFileArr.length; i++) {
+				formData.append('images', imageFileArr[i])
+			}
 			mutate(formData)
 		}
 	}
@@ -147,7 +167,9 @@ function Inputs({ imageFile, DetailData }) {
 			setValue('region', region)
 			setValue('category', category ? '1' : '0')
 			priceToString(price)
-			ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			if (!hashArr.length) {
+				ProductsTags.map(Tags => setHashArr(hash => [...hash, Tags.Tag.tag]))
+			}
 			setSubmitType(() => '수정')
 		}
 	}, [DetailData])
@@ -260,6 +282,19 @@ function Inputs({ imageFile, DetailData }) {
 				<Modal size={'medium'}>
 					<S.ModalText>
 						{DetailData ? '물품 수정 성공~!' : '물품 등록 성공~!'}
+						<Button
+							size={'full'}
+							variant={'default-reverse'}
+							onClick={() =>
+								navigate(
+									`/mypage-register?category=${Number(
+										watchedCategory,
+									)}&page=${1}`,
+								)
+							}
+						>
+							이전 페이지로 돌아가기
+						</Button>
 					</S.ModalText>
 				</Modal>
 			)}
@@ -267,7 +302,9 @@ function Inputs({ imageFile, DetailData }) {
 				<Button type="submit" style={{ margin: '4rem' }}>
 					{DetailData ? '수정 완료' : '등록 완료'}
 				</Button>
-				<Button style={{ margin: '4rem' }}>취소</Button>
+				<Button style={{ margin: '4rem' }} variant={'default-reverse'}>
+					취소
+				</Button>
 			</S.ButtonWrap>
 		</form>
 	)
@@ -300,10 +337,11 @@ const CategoryContainer = styled.div`
 `
 const ModalText = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	justify-content: space-around;
 	align-items: center;
 	height: 100%;
-	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	font-size: ${({ theme }) => theme.FONT_SIZE.big};
 `
 const S = {
 	CategoryContainer,
