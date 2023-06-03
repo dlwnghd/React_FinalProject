@@ -1,14 +1,19 @@
 import styled from 'styled-components'
 import { FaSearch } from 'react-icons/fa'
+import { useSearchParams } from 'react-router-dom'
 import useInput from '../../../Hooks/useInput'
 
-function RecentSearch({ setSearchQuote, title }) {
-	const [searchQuote, onChange] = useInput(title)
+function RecentSearch({ setSearchQuote }) {
+	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchQuote, onChange] = useInput(searchParams.get('quote'))
 
 	const onEnterSearch = event => {
 		if (event.key === 'Enter') {
 			setSearchQuote(searchQuote)
-			event.target.blur()
+
+			searchParams.set('quote', searchQuote)
+			setSearchParams(searchParams)
+			event.target.blur() // 커서 제거
 		}
 	}
 
@@ -37,7 +42,6 @@ const SearchWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-top: 3rem;
-	padding-bottom: 1rem;
 	justify-content: center;
 `
 const TitleBox = styled.div``
@@ -49,7 +53,7 @@ const InputBox = styled.div`
 	position: relative;
 	& > svg {
 		position: absolute;
-		top: 50%;
+		top: 60%;
 		left: 1rem;
 		transform: translate(0, -50%);
 	}
@@ -59,6 +63,7 @@ const Input = styled.input`
 	width: 30rem;
 	height: 3rem;
 	padding-left: 3rem;
+	margin-top: 1rem;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	:focus {

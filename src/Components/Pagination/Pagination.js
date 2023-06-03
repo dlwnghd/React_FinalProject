@@ -35,13 +35,15 @@ function Pagination({ limit, totalPage, setPage, scroll }) {
 		setPage(number)
 		// 기존 쿼리 스트링을 유지
 		const queryString = {}
-		searchParams
-			.toString()
-			.split('&')
-			.forEach(query => {
-				const [key, value] = query.split('=')
-				queryString[key] = value
-			})
+		if (searchParams.toString()) {
+			searchParams
+				.toString()
+				.split('&')
+				.forEach(query => {
+					const [key, value] = query.split('=')
+					queryString[key] = value
+				})
+		}
 
 		queryString['page'] = number // 쿼리 스트링 값 중 'page'만 변경
 		setSearchParams(queryString)
