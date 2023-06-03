@@ -57,6 +57,13 @@ const ProductApi = {
 	searchList({ keyword, page }) {
 		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
 	},
+
+	saleComplete(prod_idx, token) {
+		return axiosInstance.post(PATH + '/sale-complete', {
+			prod_idx,
+			token,
+		})
+	},
 }
 
 export default ProductApi

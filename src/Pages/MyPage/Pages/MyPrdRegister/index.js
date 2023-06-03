@@ -13,33 +13,57 @@ import Button from '../../../../Components/Button/Button'
 import { useMutation } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useSearchParams } from 'react-router-dom'
+import MESSAGE from '../../../../Consts/message'
+import MainSkeleton from '../../../../Components/ItemBox/ItemSkeleton'
+import { ModalTitle } from '../../../../Components/Modal/Modal.style'
+import useGetProductChatListData from '../../../../Hooks/Queries/get-productChatList'
+import AlertModal from '../../../../Components/Modal/AlertModal/AlertModal'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
-
+	const arr = Array(10).fill(0)
 	const params = {
 		page: searchParams.get('page'),
 		category: searchParams.get('category'),
 	}
 
 	const [ProductIdx, setProductIdx] = useState()
-	const [category, setCategory] = useState(params.category)
-	const [page, setPage] = useState(params.page)
+	const [category, setCategory] = useState(params.category || 0)
+	const [page, setPage] = useState(params.page || 1)
 
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
-	const [deleteOpenModal, setDeleteOpenModal] = useState(false)
-	const { data, isLoading, refetch } = useGetMyPagePrdRegisterData(
-		page,
-		category,
-	)
 
-	const { mutate } = useMutation(idx => ProductApi.delete(idx), {
+	const [isModalType, setIsModalType] = useState('')
+	const {
+		data,
+		refetch: PrdRegisterData,
+		status,
+		isLoading,
+	} = useGetMyPagePrdRegisterData(page, category)
+
+	const { mutate, error } = useMutation(idx => ProductApi.delete(idx), {
 		onSuccess: () => {
-			refetch()
+			PrdRegisterData()
 			setIsOpenModal(false)
 		},
-		onError: err => {},
+		onError: err => {
+			setIsOpenModal(() => false)
+		},
 	})
+
+	const { mutate: saleCompleteMutate } = useMutation(
+		token => ProductApi.saleComplete(ProductIdx, token),
+		{
+			onSuccess: () => {
+				setIsModalType('판매완료')
+				setIsOpenModal(true)
+				PrdRegisterData()
+			},
+			onError: err => {},
+		},
+	)
+
+	const { data: ChatListData, refetch } = useGetProductChatListData(ProductIdx)
 
 	const onProductDeleteCheck = () => {
 		mutate(ProductIdx)
@@ -47,19 +71,40 @@ function MyPrdRegister() {
 
 	const closeModal = () => {
 		setIsOpenModal(() => false)
-		setDeleteOpenModal(() => false)
+		setIsModalType('')
 	}
 
 	useEffect(() => {
-		refetch()
+		PrdRegisterData()
 	}, [page])
+
+	const onSelectBuyer = chatList => {
+		closeModal()
+		saleCompleteMutate(chatList.User.token)
+	}
+
 	return (
 		<>
-			{isLoading ? (
-				<h1>'Loding...'</h1>
-			) : (
-				<>
-					<S.Wrapper>
+			{status === 'error' && (
+				<S.AlertTextContainer>
+					<p>조회에 실패했습니다.</p>
+					<p>잠시 후 다시 시도해주세요</p>
+					<div>
+						<Button shape={'soft'} onClick={() => window.location.reload()}>
+							새로고침
+						</Button>
+					</div>
+				</S.AlertTextContainer>
+			)}
+			<S.Wrapper>
+				{isLoading ? (
+					<S.PrdList>
+						{arr.map(() => (
+							<MainSkeleton />
+						))}
+					</S.PrdList>
+				) : (
+					<>
 						<S.TotalNumAndFilter>
 							<div>전체 {data.pagination.count}개</div>
 
@@ -71,43 +116,72 @@ function MyPrdRegister() {
 								setSearchParams={setSearchParams}
 							/>
 						</S.TotalNumAndFilter>
-
-						{isOpenModal && deleteOpenModal && (
-							<Modal size={'small'}>
-								<S.ModalTextWrap>
-									<S.ModalText>정말로 삭제하시겠습니까?</S.ModalText>
-									<S.ButtonsWrap>
-										<Button onClick={onProductDeleteCheck}>삭제</Button>
-										<Button variant={'default-reverse'} onClick={closeModal}>
-											취소
-										</Button>
-									</S.ButtonsWrap>
-								</S.ModalTextWrap>
-							</Modal>
+						{data.pagination.count ? (
+							<S.PrdList>
+								{data?.products.map(item => {
+									return (
+										<MyPrdItemBox
+											key={item.idx}
+											item={item}
+											category={category}
+											setIsOpenModal={setIsOpenModal}
+											setIsModalType={setIsModalType}
+											setProductIdx={setProductIdx}
+											refetch={refetch}
+										/>
+									)
+								})}
+							</S.PrdList>
+						) : (
+							<S.AlertTextContainer>
+								<p>
+									{category === '0' ? '중고상품' : '무료상품'} 내역이 없습니다.
+								</p>
+							</S.AlertTextContainer>
 						)}
-						<S.PrdList>
-							{data?.products.map(item => {
-								return (
-									<MyPrdItemBox
-										key={item.idx}
-										item={item}
-										category={category}
-										setIsOpenModal={setIsOpenModal}
-										setDeleteOpenModal={setDeleteOpenModal}
-										setProductIdx={setProductIdx}
-									/>
-								)
-							})}
-						</S.PrdList>
-					</S.Wrapper>
-					<Pagination
-						totalPage={data?.pagination.totalPage}
-						setPage={setPage}
-						limit={10}
-						scroll={300}
-					/>
+					</>
+				)}
+			</S.Wrapper>
+			{isOpenModal && isModalType === '삭제' && (
+				<Modal size={'small'}>
+					<S.ModalTextWrap>
+						<S.ModalText>{MESSAGE.DELETEPRODUCT.CHECK}</S.ModalText>
+						<S.ButtonsWrap>
+							<Button onClick={onProductDeleteCheck}>삭제</Button>
+							<Button variant={'default-reverse'} onClick={closeModal}>
+								취소
+							</Button>
+						</S.ButtonsWrap>
+					</S.ModalTextWrap>
+				</Modal>
+			)}
+			{isOpenModal && isModalType === '판매' && (
+				<>
+					<Modal size={'xs'}>
+						<ModalTitle>구매자를 선택해주세요</ModalTitle>
+						{ChatListData?.length !== 0 ? (
+							ChatListData?.map(chatData => (
+								<S.BuyerList onClick={() => onSelectBuyer(chatData)}>
+									• {chatData.User.nick_name}
+								</S.BuyerList>
+							))
+						) : (
+							<S.BuyerListNone>채팅한 사람이 없습니다.</S.BuyerListNone>
+						)}
+					</Modal>
 				</>
 			)}
+
+			{isOpenModal && isModalType === '판매완료' && (
+				<AlertModal message={MESSAGE.SALECOMPLETE.SUCCESS} />
+			)}
+
+			<Pagination
+				totalPage={data?.pagination.totalPage}
+				setPage={setPage}
+				limit={10}
+				scroll={300}
+			/>
 		</>
 	)
 }
@@ -152,6 +226,34 @@ const ButtonsWrap = styled.div`
 		margin: 0 1rem;
 	}
 `
+const AlertTextContainer = styled.div`
+	margin: auto;
+	height: 50rem;
+	${FlexCenterCSS}
+	flex-direction: column;
+
+	& > p:last-child {
+		margin-top: 0.3rem;
+		color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+
+	& > div {
+		margin-top: 1rem;
+	}
+`
+const BuyerList = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	padding: 0.5rem 0;
+	cursor: pointer;
+	:hover {
+		background-color: ${({ theme }) => theme.COLOR.common.gray[400]};
+	}
+`
+const BuyerListNone = styled.div`
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	color: ${({ theme }) => theme.COLOR.common.gray[200]};
+	margin-top: 1rem;
+`
 const S = {
 	Wrapper,
 	TotalNumAndFilter,
@@ -159,4 +261,7 @@ const S = {
 	ModalText,
 	ModalTextWrap,
 	ButtonsWrap,
+	AlertTextContainer,
+	BuyerList,
+	BuyerListNone,
 }

@@ -26,7 +26,6 @@ function TypeSelectBox({
 	}
 
 	useEffect(() => {
-		console.log({ category })
 		setCategory(prev => prev)
 		setType(category == 0 ? '중고상품' : '무료상품')
 		setSearchParams({ category: category, page: page })

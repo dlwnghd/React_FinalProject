@@ -18,6 +18,7 @@ import Modal from '../../../Components/Modal/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import scrollToTop from '../../../Utils/scrollToTop'
+import MESSAGE from '../../../Consts/message'
 
 function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	const {
@@ -69,7 +70,6 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	}
 
 	const setRegion = result => {
-		console.log({ result })
 		setValue('region', result)
 		clearErrors('region')
 		setResultAddress(result)
@@ -134,11 +134,9 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 						formData.append('main_url', el)
 					}
 					formData.append('images', imageFileArr[idx])
-					console.log('images idx0', imageFileArr[idx])
 				} else {
 					subUrl.push(el)
 					formData.append('images', imageFileArr[idx])
-					console.log('images idxNot0', imageFileArr[idx])
 				}
 			})
 			formData.append('idx', params.prod_idx)
@@ -238,7 +236,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 			<Controller
 				name="price"
 				control={control}
-				rules={{ required: !intPrice && '가격을 입력해주세요.' }}
+				rules={{ required: !intPrice && '중고상품은 가격을 입력해주세요.' }}
 				render={({ field }) => (
 					<PriceItem
 						name={'무료'}
@@ -281,7 +279,9 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 			{isOpenModal && modalType === 'isSuccess' && (
 				<Modal size={'medium'}>
 					<S.ModalText>
-						{DetailData ? '물품 수정 성공~!' : '물품 등록 성공~!'}
+						{DetailData
+							? MESSAGE.EDITPRODUCT.SUCCESS
+							: MESSAGE.REGISTER.SUCCESS}
 						<Button
 							size={'full'}
 							variant={'default-reverse'}
@@ -341,7 +341,7 @@ const ModalText = styled.div`
 	justify-content: space-around;
 	align-items: center;
 	height: 100%;
-	font-size: ${({ theme }) => theme.FONT_SIZE.big};
+	font-size: ${({ theme }) => theme.FONT_SIZE.large};
 `
 const S = {
 	CategoryContainer,

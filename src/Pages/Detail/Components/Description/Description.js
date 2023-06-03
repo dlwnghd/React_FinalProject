@@ -8,6 +8,11 @@ import {
 } from '../../../../Styles/common'
 import Button from '../../../../Components/Button/Button'
 import TagsItem from '../../../../Components/TagItem/TagsItem'
+import { useState } from 'react'
+import useChatModal from '../../../../Hooks/useChatModal'
+import ChatApi from '../../../../Apis/chatApi'
+import { myChatRoomList } from '../../../../Atoms/myChatRoomList.atom'
+import { useRecoilState } from 'recoil'
 import Heart from '../../../../Components/Heart/Heart'
 import SellerInfo from './Components/SellerInfo'
 
@@ -15,7 +20,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
 	const {
 		title,
-		idx,
+    idx,
 		status,
 		liked,
 		price,
@@ -27,7 +32,11 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	} = detailProduct.searchProduct
 
 	const navigate = useNavigate()
-	const createdDay = new Date(createdAt)
+	const [isLiked, setIsLiked] = useState(liked)
+	const { openChat } = useChatModal()
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+  
+  const createdDay = new Date(createdAt)
 	const year = createdDay.getFullYear()
 	const month = createdDay.getMonth() + 1
 	const day = createdDay.getDate()
@@ -38,6 +47,34 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 		change_size: '24',
 	}
 
+	const user = JSON.parse(localStorage.getItem('userInfo'))
+
+	// const {
+	// 	data: heartData,
+	// 	status: heartStatus,
+	// 	refetch,
+	// } = useGetHeartInterestData(idx, isLiked)
+
+	const makeChatRoom = async () => {
+		try {
+			const res = await ChatApi.makeChat(prod_idx)
+
+			if (res.status === 200) {
+				const room_idx = res.data.idx
+				await ChatApi.sendMsg(room_idx, '채팅방을 생성합니다')
+				const list = await ChatApi.chatRoomList()
+
+				setRoomList(list.data)
+			}
+			openChat()
+		} catch (err) {
+			console.log('에러 발생%', err)
+			if (err.response && err.response.status === 400) {
+				openChat()
+			}
+		}
+	}
+  
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -74,6 +111,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						variant={'no-border'}
 						shape={'soft'}
 						size={'full'}
+            onClick={makeChatRoom}
 					>
 						채팅
 					</S.StyledMainButton>

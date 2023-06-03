@@ -45,6 +45,7 @@ function UserBar({ setSelectedNav, userInfo }) {
 							onClick={() => {
 								navigate('/')
 								user.logout()
+								localStorage.removeItem('myChatRoomList')
 								setSelectedNav(0)
 							}}
 						>

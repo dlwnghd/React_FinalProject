@@ -1,14 +1,28 @@
 import styled from 'styled-components'
-import { ColumnNumberCSS, GridCenterCSS } from '../../../../../Styles/common'
 
-function ChatItemBox() {
+function ChatItemBox({ list }) {
+	const options = {
+		timeZone: 'Asia/Seoul',
+		hour12: true, // 오후/오후 구분을 위해 true로 설정합니다.
+		month: 'short',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+	}
+
+	// 채팅방 중 가장 최근 메시지 시간 필터
+	const times = list.map(item => item.lastMessageCreatedAt)
+	times.sort((a, b) => new Date(b) - new Date(a))
+	const utcDate = new Date(times[0])
+	const koreanDate = utcDate.toLocaleString('ko-KR', options)
+
 	return (
 		<ItemContainer>
-			<S.ImgBox />
+			<S.ImgBox images={list[0].product.img_url} />
 			<S.DesBox>
-				<p>네모난 고양이</p>
-				<p>0원</p>
-				<p>오후 5:40</p>
+				<p>{list[0].product.title}</p>
+				<p>{list[0].product.price}원</p>
+				<p>최근 메시지 : {koreanDate}</p>
 			</S.DesBox>
 		</ItemContainer>
 	)
@@ -17,13 +31,19 @@ function ChatItemBox() {
 export default ChatItemBox
 
 const ItemContainer = styled.div`
-	${GridCenterCSS}
-	${ColumnNumberCSS(2)}
+	display: flex;
+	gap: 1rem;
+
+	padding: 1rem 1rem;
+	width: 80%;
 `
 const ImgBox = styled.div`
 	width: 8rem;
 	height: 8rem;
 	border: 1px solid black;
+	background: ${({ images }) => (images ? `url(${images})` : '이미지없음')}
+		no-repeat center center;
+	background-size: cover;
 `
 const DesBox = styled.div``
 const S = {
