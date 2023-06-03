@@ -40,13 +40,6 @@ function MyPrdItemBox({
 
 	return (
 		<S.Wrapper>
-			{/* <S.IMGContainer
-				posterIMG={img_url}
-				status={status}
-				onClick={() => navigate(`/detail/${idx}`)}
-			>
-				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
-			</S.IMGContainer> */}
 			<S.IMGContainer
 				posterIMG={img_url}
 				status={status}
