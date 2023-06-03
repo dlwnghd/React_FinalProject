@@ -34,7 +34,6 @@ function MyPrdItemBox({
 		setIsModalType('판매')
 		setIsOpenModal(true)
 		setProductIdx(idx)
-
 		refetch(idx)
 	}
 
