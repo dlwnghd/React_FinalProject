@@ -21,5 +21,8 @@ const MESSAGE = {
 	USERDATA: {
 		FAILURE: '데이터를 불러오는데 실패했습니다.',
 	},
+	REVIEW: {
+		EMPTY: '후기를 작성해 보세요!',
+	},
 }
 export default MESSAGE

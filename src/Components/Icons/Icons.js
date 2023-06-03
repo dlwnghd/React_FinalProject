@@ -25,6 +25,10 @@ import {
 	AiOutlineDown,
 	AiOutlineCalendar,
 	AiFillSignal,
+	AiFillStar,
+	AiOutlineStar,
+	AiOutlinePlus,
+	AiOutlineCloseCircle,
 	AiOutlineQuestionCircle,
 } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
@@ -126,10 +130,27 @@ export const Chatting_Icon = ({ size, color }) => (
 ) // 채팅
 export const MyPage_Icon = () => <AiOutlineReddit /> // 마이 페이지
 
+// 빈 별
+export const Star_Fill = ({ size, color }) => (
+	<AiFillStar size={size} color={color} />
+)
+// 채워진 별
+export const Star_Empty = ({ size, color }) => (
+	<AiOutlineStar size={size} color={color} />
+)
 export const DeleteProduct_Icon = ({ size, color, onClick }) => (
 	<TbTrashX size={size} color={color} onClick={onClick} />
 ) // 최근 본 상품 삭제
 
+// 플러스
+export const Plus_Icon = ({ size, color }) => (
+	<AiOutlinePlus size={size} color={color} />
+)
+
+// close 아이콘
+export const Outline_Close_Icon = ({ size, color }) => (
+	<AiOutlineCloseCircle size={size} color={color} />
+)
 // Info Icon
 export const Info_Icon = ({ size, color }) => (
 	<AiOutlineQuestionCircle size={size} color={color} />
