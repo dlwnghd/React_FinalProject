@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import ItemBox from '../../../Components/ItemBox/ItemBox'
+import SoldOutItemBox from '../../../Components/ItemBox/SoldOutItemBox'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 
 function SoldOutList({ soldOutList }) {
@@ -8,9 +8,9 @@ function SoldOutList({ soldOutList }) {
 			<h3>최근 거래 종료 품목</h3>
 			<S.SoldOutListContainer>
 				{soldOutList &&
-					soldOutList.prod_idx.products.product.map((item, idx) => {
+					soldOutList.prod_idx?.products.product.map((item, idx) => {
 						return (
-							<ItemBox
+							<SoldOutItemBox
 								title={item.title}
 								price={item.price}
 								posterPath={item.img_url}

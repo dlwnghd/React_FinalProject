@@ -7,7 +7,6 @@ const getMyPagePrdRegisterData = async (page, category) => {
 		page,
 		category,
 	})
-	console.log(page)
 	return res.data
 }
 

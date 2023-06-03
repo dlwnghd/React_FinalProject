@@ -13,17 +13,22 @@ import Button from '../../../Components/Button/Button'
 import CheckBox from '../../../Components/CheckBox/CheckBox'
 
 import { useForm } from 'react-hook-form'
-import { FORM_TYPE } from '../../../Consts/form.type'
 import AlertText from '../../../Components/AlertText/AlertText'
 
 import UserApi from '../../../Apis/userApi'
 import useUser from '../../../Hooks/useUser'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { loginStateAtom } from '../../../Atoms/loginState.atom'
+
+import { useRecoilState } from 'recoil'
+
+import TokenService from '../../../Utils/tokenService'
 import UserInfoService from '../../../Utils/userInfoService'
+
+import { FORM_TYPE } from '../../../Consts/form.type'
 import MESSAGE from '../../../Consts/message'
+
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
+
 import { firstConnect } from '../../../Socket/socketIo'
 import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
 import ChatApi from '../../../Apis/chatApi'
@@ -33,11 +38,12 @@ function Login() {
 	const location = useLocation()
 	const from = location.state?.from
 
+	const user = useUser()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
-	const loginState = useRecoilValue(loginStateAtom)
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
-	const user = useUser()
+
+	const loginState = TokenService.getAccessToken()
 
 	const {
 		register,

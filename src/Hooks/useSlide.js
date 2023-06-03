@@ -1,43 +1,56 @@
-import { useRef } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useRef } from 'react'
 
 export const slide = products => {
 	const [currentIdx, setCurrentIdx] = useState(0)
-	const [startX, setStartX] = useState(0)
-	const [endX, setEndX] = useState(0)
+	let startX = 0
+	let endX = 0
 	const slider = useRef(null)
 
+	// 슬라이딩 거리 제어
 	const onMove = () => {
 		const isMoved = endX - startX
 
-		if (isMoved > 100 && currentIdx > 0) {
-			setCurrentIdx(currentIdx - 1)
+		if (isMoved > 100) {
+			prevSlide()
 		}
 
-		if (isMoved < -100 && currentIdx < products.length - 1) {
+		if (isMoved < -100) {
+			nextSlide()
+		}
+	}
+
+	// current 인덱스 상태관리
+	const nextSlide = () => {
+		if (currentIdx < products.length - 1) {
 			setCurrentIdx(currentIdx + 1)
 		}
 	}
+	const prevSlide = () => {
+		if (currentIdx > 0) {
+			setCurrentIdx(currentIdx - 1)
+		}
+	}
 
+	// 터치 및 마우스 clientX 상태관리
 	const onTouchStart = e => {
-		setStartX(e.touches[0].clientX)
+		startX = e.changedTouches[0].clientX
 	}
 	const onTouchMove = e => {
-		setEndX(e.touches[0].clientX)
+		endX = e.changedTouches[0].clientX
 	}
 	const onTouchEnd = () => {
 		onMove()
 	}
 
 	const onMouseDown = e => {
-		setStartX(e.clientX)
+		startX = e.clientX
 	}
 	const onMouseMove = e => {
-		setEndX(e.clientX)
+		endX = e.clientX
 	}
-	const onMouseUp = e => {
-		e.preventDefault()
+	const onMouseUp = () => {
 		onMove()
 	}
 
@@ -54,6 +67,7 @@ export const slide = products => {
 		onMouseUp,
 		slider,
 		currentIdx,
-		setCurrentIdx,
+		nextSlide,
+		prevSlide,
 	}
 }

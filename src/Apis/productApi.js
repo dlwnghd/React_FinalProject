@@ -10,6 +10,9 @@ const ProductApi = {
 			},
 		})
 	},
+	confirm() {
+		return axiosInstance.get(PATH)
+	},
 	editProduct(registerList) {
 		return axiosInstance.patch(PATH, registerList, {
 			headers: {
@@ -48,8 +51,20 @@ const ProductApi = {
 			params: { prod_idx },
 		})
 	},
-	like(prod_idx) {
-		return axiosInstance.post(PATH + '/like', prod_idx)
+	like({ prod_idx }) {
+		return axiosInstance.post(PATH + '/like', { prod_idx })
+	},
+	searchList({ keyword, page }) {
+		return axiosInstance.get(PATH + '/search', { params: { keyword, page } })
+	},
+	detail({ prod_idx }) {
+		return axiosInstance.get(PATH + '/detail', { params: { prod_idx } })
+	},
+	saleComplete(prod_idx, token) {
+		return axiosInstance.post(PATH + '/sale-complete', {
+			prod_idx,
+			token,
+		})
 	},
 }
 

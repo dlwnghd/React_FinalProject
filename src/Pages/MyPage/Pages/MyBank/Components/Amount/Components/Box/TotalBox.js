@@ -18,14 +18,16 @@ function AmountTotalBox({ price }) {
 
 	return (
 		<S.Wrapper state={'last'}>
-			{totalPriceItem.map(item => (
-				<S.TitleContainer>
-					<S.Title>{item.title}</S.Title>
-					<S.PriceText size={'tiny'}>
-						{parseInt(item.price).toLocaleString()}
-					</S.PriceText>
-				</S.TitleContainer>
-			))}
+			<S.Container>
+				{totalPriceItem.map(item => (
+					<S.TitleContainer>
+						<S.Title>{item.title}</S.Title>
+						<S.PriceText size={'tiny'}>
+							{parseInt(item.price).toLocaleString()}
+						</S.PriceText>
+					</S.TitleContainer>
+				))}
+			</S.Container>
 		</S.Wrapper>
 	)
 }

@@ -1,37 +1,43 @@
 import styled from 'styled-components'
-import { useState } from 'react'
 import {
 	FillHeart_Icon,
 	NotFillHeart_Icon,
 } from '../../../../Components/Icons/Icons'
 import { useNavigate } from 'react-router'
-import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
-import useChatModal from '../../../../Hooks/useChatModal'
+import {
+	ColumnNumberCSS,
+	FlexBetweenCSS,
+	FlexCenterCSS,
+	GridCenterCSS,
+} from '../../../../Styles/common'
+import Button from '../../../../Components/Button/Button'
+import TagsItem from '../../../../Components/TagItem/TagsItem'
+import { useState } from 'react'
 
-import ChatApi from '../../../../Apis/chatApi'
-
-function Description({ product }) {
-	const { title, price, description, ProductsTags, category, status } = product
-	const [like, setLike] = useState(false)
-
-	const [sta, setSta] = useState(null)
-
-	const prod_idx = 230
-	const { openChat } = useChatModal()
+function Description({ detailProduct, detailIsLoading, detailStatus, liked }) {
+	if (detailIsLoading && detailStatus === 'loading') return
+	const { title, idx, status, price, category, description, ProductsTags } =
+		detailProduct.searchProduct
 
 	const navigate = useNavigate()
-	const joinChat = async () => {
-		try {
-			const res = await ChatApi.makeChat({ prod_idx })
-			setSta(res.data)
-		} catch (err) {
-			console.log(err)
-		}
+	const [isLiked, setIsLiked] = useState(liked)
+
+	// const {
+	// 	data: heartData,
+	// 	status: heartStatus,
+	// 	refetch,
+	// } = useGetHeartInterestData(idx, isLiked)
+
+	const onHeart = () => {
+		setIsLiked(prev => !prev)
 	}
-	console.log(sta)
-	const onClick = () => {
-		setLike(prev => !prev)
-	}
+
+	// useEffect(() => {
+	// 	refetch()
+	// }, [isLiked])
+
+	// if (heartStatus === 'loading') return
+
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -39,46 +45,47 @@ function Description({ product }) {
 					<h3>{title}</h3>
 					<p>{status}</p>
 				</div>
-				<h2>{price}원</h2>
+				<h2>{price === 0 ? '무료' : `${price.toLocaleString()}원`}</h2>
 			</S.TitleContainer>
-			<S.DescriptionContainer>
-				<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
-				<p>{description}</p>
-				<S.TagBox>
-					{ProductsTags.map((item, idx) => {
-						return (
-							<S.TagItem
-								key={idx}
-								onClick={() => navigate(`/search/${item.Tag}`)}
-							>
-								<span>#{item.Tag}</span>
-							</S.TagItem>
-						)
-					})}
-				</S.TagBox>
-			</S.DescriptionContainer>
 			<S.OptionContainer>
-				<S.HeartBox onClick={onClick}>
+				<S.HeartBox onClick={onHeart}>
 					<p>찜</p>
-					{like ? (
-						<FillHeart_Icon size="30" />
+					{isLiked ? (
+						<FillHeart_Icon size="24" />
 					) : (
-						<NotFillHeart_Icon size="30" />
+						<NotFillHeart_Icon size="24" />
 					)}
 				</S.HeartBox>
-
 				<S.ButtonBox>
-					<button
-						onClick={() => {
-							openChat()
-							joinChat()
-						}}
-					>
+					<S.StyledButton variant={'no-border'} shape={'soft'} size={'full'}>
 						채팅
-					</button>
-					<button>결제</button>
+					</S.StyledButton>
 				</S.ButtonBox>
 			</S.OptionContainer>
+			<hr />
+			<S.DescriptionContainer>
+				<div>
+					<h4>{category === 0 ? '중고거래' : '무료나눔'}</h4>
+					<p>{description}</p>
+				</div>
+				<S.TagBox>
+					<>
+						{ProductsTags.map((item, idx) => {
+							return (
+								<TagsItem
+									key={idx}
+									onClick={() => navigate(`/search/${item.Tag.tag}`)}
+									size={'default'}
+									shape={'round'}
+									color={'default'}
+								>
+									<p>#{item.Tag.tag}</p>
+								</TagsItem>
+							)
+						})}
+					</>
+				</S.TagBox>
+			</S.DescriptionContainer>
 		</S.Wrapper>
 	)
 }
@@ -88,14 +95,22 @@ export default Description
 const Wrapper = styled.section`
 	width: 100%;
 	height: 100%;
-	${FlexBetweenCSS}
+	padding: 2rem 2rem 0;
+	${FlexCenterCSS}
+	justify-content: flex-start;
 	flex-direction: column;
 	align-items: flex-start;
+
+	& > hr {
+		width: 100%;
+		height: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[300]};
+		margin: 4rem 0;
+	}
 `
 
 const TitleContainer = styled.div`
 	width: 100%;
-	padding: 2rem;
+	margin-bottom: 3rem;
 
 	& > div {
 		${FlexBetweenCSS}
@@ -104,16 +119,30 @@ const TitleContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
-	padding: 2rem;
+	width: 100%;
+
+	& > div {
+		margin-bottom: 3rem;
+	}
+	& > div > h4 {
+		margin-bottom: 1rem;
+	}
 `
 
 const OptionContainer = styled.div`
 	width: 100%;
+	${FlexBetweenCSS}
 `
 
 const HeartBox = styled.div`
-	${FlexAlignCSS}
-	margin-bottom:2rem;
+	${FlexCenterCSS}
+	width:50%;
+	height: 100%;
+	border-radius: 1rem;
+	box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+
+	margin-right: 1rem;
+	cursor: pointer;
 
 	& > p {
 		font-size: ${({ theme }) => theme.FONT_SIZE.large};
@@ -125,24 +154,24 @@ const HeartBox = styled.div`
 	}
 `
 
-const TagBox = styled.ul`
-	${FlexAlignCSS}
+const TagBox = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(3)}
+	gap:1rem;
 `
-const TagItem = styled.li``
 
 const ButtonBox = styled.div`
 	${FlexBetweenCSS}
+	width:50%;
+`
 
-	& > button {
-		width: 100%;
-		height: 6rem;
-		font-size: ${({ theme }) => theme.FONT_SIZE.large};
-		font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
-	}
-
-	& > button:first-of-type {
-		margin-right: 1rem;
-	}
+const StyledButton = styled(Button)`
+	background: ${({ theme }) => theme.COLOR.common.black};
+	color: ${({ theme }) => theme.COLOR.common.white};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
+	height: 6rem;
+	border: none;
+	box-sizing: border-box;
 `
 
 const S = {
@@ -152,6 +181,6 @@ const S = {
 	OptionContainer,
 	HeartBox,
 	ButtonBox,
+	StyledButton,
 	TagBox,
-	TagItem,
 }

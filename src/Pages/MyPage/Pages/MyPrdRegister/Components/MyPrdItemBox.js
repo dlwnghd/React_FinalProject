@@ -1,12 +1,18 @@
 import styled from 'styled-components'
 import { EtcOption_Icon } from '../../../../../Components/Icons/Icons'
-import { FlexBetweenCSS } from '../../../../../Styles/common'
+import { FlexBetweenCSS, GridCenterCSS } from '../../../../../Styles/common'
 import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexCenterCSS } from '../../../../../Styles/common'
 
-function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
+function MyPrdItemBox({
+	item,
+	setIsOpenModal,
+	setProductIdx,
+	setIsModalType,
+	refetch,
+}) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
 
@@ -16,11 +22,19 @@ function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 		setIsOpenModal(true)
 		setProductIdx(idx)
 		setEditOption(false)
+		setIsModalType('삭제')
 	}
 
 	const productChange = idx => {
 		navigate(`/register/${idx}`)
 		setEditOption(false)
+	}
+
+	const showChatList = idx => {
+		setIsModalType('판매')
+		setIsOpenModal(true)
+		setProductIdx(idx)
+		refetch(idx)
 	}
 
 	return (
@@ -30,38 +44,46 @@ function MyPrdItemBox({ item, setIsOpenModal, setProductIdx }) {
 				status={status}
 				onClick={() => navigate(`/detail/${idx}`)}
 			>
-				{status === '판매완료' && <S.SoldOut>SOLD OUT</S.SoldOut>}
+				{status === '판매완료' && <h1>SOLD OUT</h1>}
 			</S.IMGContainer>
 			<S.DescContainer>
 				<S.DescBox>
 					<h4>{title}</h4>
-					<S.IconContainer>
-						<EtcOption_Icon
-							size="30"
-							onClick={() => setEditOption(prev => !prev)}
-						/>
-
-						{editOption && (
-							<S.EditBox>
-								<div onClick={() => productChange(idx)}>수정</div>
-								<div onClick={() => onProductDelete(idx)}>삭제</div>
-							</S.EditBox>
-						)}
-					</S.IconContainer>
+					{status !== '판매완료' && (
+						<S.IconContainer>
+							<EtcOption_Icon
+								size="30"
+								onClick={() => setEditOption(prev => !prev)}
+							/>
+							{editOption && (
+								<S.EditBox>
+									<div onClick={() => productChange(idx)}>수정</div>
+									<div onClick={() => onProductDelete(idx)}>삭제</div>
+								</S.EditBox>
+							)}
+						</S.IconContainer>
+					)}
 				</S.DescBox>
 				<h4>{price.toLocaleString()}원</h4>
 			</S.DescContainer>
 			<S.ButtonContainer>
-				<Button shape={'square'} style={{ width: '48%' }}>
+				<S.Buttons
+					shape={'square'}
+					style={{ width: '48%' }}
+					variant={'default-reverse'}
+				>
 					채팅
-				</Button>
-				<Button
+				</S.Buttons>
+
+				<S.Buttons
 					shape={'square'}
 					style={{ background: status === '판매완료' && '#AAA', width: '48%' }}
 					disabled={status === '판매완료' ? true : false}
+					status={status}
+					onClick={() => showChatList(idx)}
 				>
 					{status}
-				</Button>
+				</S.Buttons>
 			</S.ButtonContainer>
 		</S.Wrapper>
 	)
@@ -96,10 +118,18 @@ const IMGContainer = styled.div`
 	cursor: pointer;
 	width: 100%;
 	height: 27.6rem;
-	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center
+		${({ status }) => status === '판매완료' && ',rgba(0, 0, 0, 0.5)'};
+	background-blend-mode: multiply;
 	background-size: cover;
-	filter: brightness(${({ status }) => status === '판매완료' && '50%'});
-	z-index: 10;
+	${({ status }) => status === '판매완료' && GridCenterCSS}
+	color: ${({ theme }) => theme.COLOR.common.white};
+
+	// 드래그 방지
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 `
 
 const DescContainer = styled.div`
@@ -169,6 +199,7 @@ const EditBox = styled.div`
 		width: 6rem;
 	}
 `
+
 const ModalText = styled.div`
 	height: 100%;
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
@@ -185,6 +216,10 @@ const ButtonsWrap = styled.div`
 		margin: 0 1rem;
 	}
 `
+const Buttons = styled(Button)`
+	font-family: ${({ theme, status }) =>
+		status !== '판매완료' && theme.FONT_WEIGHT.regular};
+`
 const S = {
 	Wrapper,
 	IMGContainer,
@@ -197,4 +232,5 @@ const S = {
 	ModalText,
 	ModalTextWrap,
 	ButtonsWrap,
+	Buttons,
 }

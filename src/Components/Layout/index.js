@@ -6,7 +6,6 @@ import ChatModal from '../ChatModal'
 
 function Layout() {
 	const { chatModalOpen } = useChatModal()
-	console.log(chatModalOpen)
 
 	return (
 		<>

@@ -3,6 +3,7 @@ import {
 	FlexBetweenCSS,
 	FlexCenterCSS,
 } from '../../../../../../../../Styles/common'
+import Button from '../../../../../../../../Components/Button/Button'
 
 export const Wrapper = styled.div`
 	display: flex;
@@ -10,7 +11,7 @@ export const Wrapper = styled.div`
 	justify-content: center;
 	width: 100%;
 	min-height: 9.5rem;
-	padding: 1rem;
+	height: 9.5rem;
 	border-radius: 1rem;
 	box-shadow: 0 4px 14px rgba(48, 52, 65, 0.08);
 	background-color: ${({ theme }) => theme.COLOR.common.white};
@@ -19,6 +20,10 @@ export const Wrapper = styled.div`
 		display: ${({ state }) => state === 'last' && 'none'};
 		min-height: 5rem;
 	}
+`
+
+export const Container = styled.div`
+	padding: 1rem;
 `
 
 export const TitleContainer = styled.div`
@@ -60,4 +65,24 @@ export const PriceText = styled.div`
 	font-size: ${({ theme, size }) => theme.FONT_SIZE[size]};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 	color: ${({ theme }) => theme.COLOR.common.gray[200]};
+`
+
+export const MonthButton = styled(Button)`
+	${FlexCenterCSS}
+	width: 100%;
+	height: 100%;
+	background-color: ${({ theme, clicked }) =>
+		clicked
+			? `${theme.COLOR.common.gray[100]}`
+			: `${theme.COLOR.common.white}`};
+	font-size: ${({ theme }) => theme.FONT_SIZE.small};
+	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
+	&:hover {
+		background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+		background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	}
 `
