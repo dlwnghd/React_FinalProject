@@ -1,26 +1,24 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import ChatApi from '../../../../../Apis/chatApi'
 import { useEffect } from 'react'
+import ChatApi from '../../../../../Apis/chatApi'
 
 function RoomBox({ prod_idx }) {
-	// user_idx와 api 통신으로 비교해서 해당 유저 프로필 입혀야함.
 	const [roomList, setRoomList] = useState([])
 
-	const getChatRooms = async () => {
+	const getChatRoomList = async () => {
 		try {
 			const res = await ChatApi.prdChatList(prod_idx)
-
-			console.log(res)
-		} catch (err) {
-			console.log(err)
+			setRoomList(res.data)
+		} catch (error) {
+			console.log('채팅룸 없어요.')
 		}
 	}
 
 	useEffect(() => {
-		getChatRooms()
+		getChatRoomList()
 	}, [prod_idx])
-	console.log(prod_idx)
+
 	return (
 		<S.RoomBoxContainer>
 			<S.profileImgBox />
