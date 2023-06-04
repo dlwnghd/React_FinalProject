@@ -20,7 +20,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
 	const {
 		title,
-    idx,
+		idx,
 		status,
 		liked,
 		price,
@@ -35,8 +35,8 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	const [isLiked, setIsLiked] = useState(liked)
 	const { openChat } = useChatModal()
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
-  
-  const createdDay = new Date(createdAt)
+
+	const createdDay = new Date(createdAt)
 	const year = createdDay.getFullYear()
 	const month = createdDay.getMonth() + 1
 	const day = createdDay.getDate()
@@ -47,13 +47,12 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 		change_size: '24',
 	}
 
-	const user = JSON.parse(localStorage.getItem('userInfo'))
+	const onNavigateRecentPrice = () => {
+		const searchParams = new URLSearchParams({ quote: title }).toString()
+		navigate(`/recent-price?${searchParams}`)
+	}
 
-	// const {
-	// 	data: heartData,
-	// 	status: heartStatus,
-	// 	refetch,
-	// } = useGetHeartInterestData(idx, isLiked)
+	const user = JSON.parse(localStorage.getItem('userInfo'))
 
 	const makeChatRoom = async () => {
 		try {
@@ -74,7 +73,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			}
 		}
 	}
-  
+
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -83,9 +82,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						<h3>{title}</h3>
 						<div>
 							<p>{status}</p>
-							<S.StyledSubButton
-								onClick={() => navigate('/recent-price', { state: title })}
-							>
+							<S.StyledSubButton onClick={onNavigateRecentPrice}>
 								시세보기
 							</S.StyledSubButton>
 						</div>
@@ -111,7 +108,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						variant={'no-border'}
 						shape={'soft'}
 						size={'full'}
-            onClick={makeChatRoom}
+						onClick={makeChatRoom}
 					>
 						채팅
 					</S.StyledMainButton>

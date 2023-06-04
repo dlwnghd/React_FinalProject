@@ -107,11 +107,15 @@ const SidebarWrapper = styled.nav`
 	/* padding: 0rem 1rem 1rem; */
 	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
 	${({ pathURL }) =>
-		pathURL === '/'
+		pathURL.includes('search')
 			? {
-					display: 'none',
+					display: 'block',
 			  }
-			: { display: 'block' }}
+			: pathURL.includes('list')
+			? {
+					display: 'block',
+			  }
+			: { display: 'none' }}
 
 	&::-webkit-scrollbar {
 		display: none;

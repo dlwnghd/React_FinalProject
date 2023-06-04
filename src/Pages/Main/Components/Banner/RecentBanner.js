@@ -89,6 +89,7 @@ const Title = styled.div`
 
 	margin-bottom: ${({ alignDetail }) =>
 		alignDetail === 'detail' ? '1rem' : '3rem'};
+	margin-bottom: 3rem;
 
 	& > h3 {
 		margin-bottom: 1rem;

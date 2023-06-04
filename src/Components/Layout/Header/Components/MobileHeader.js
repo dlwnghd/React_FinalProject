@@ -1,10 +1,17 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
 import { InterestBasket_Icon, RollBack_icon } from '../../../Icons/Icons'
+import { useEffect } from 'react'
 
 function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
 	const navigate = useNavigate() // 네비게이션 추가
+	const location = useLocation()
+	const { pathname } = location
+
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [pathname])
 
 	return (
 		<S.MobileHeaderWrapper>
@@ -24,6 +31,7 @@ function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
 					navigate('/')
 					setSelectedNav(0)
 					setOnSideBar(false)
+					window.scrollTo(0, 0)
 				}}
 			>
 				NEGO MARKET

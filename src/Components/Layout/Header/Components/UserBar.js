@@ -13,9 +13,10 @@ function UserBar({ setSelectedNav, userInfo }) {
 	return (
 		<S.UserWrapper>
 			<S.UserContainer>
-				<span onClick={() => navigate('/chating')}>
+				<div onClick={() => navigate('/chating')}>
 					<Chatting_Icon size="28" color={'black'} />
-				</span>
+					<p>채팅</p>
+				</div>
 				<S.IssueBox />
 				<S.UserBox ref={userMenu}>
 					{userInfo.profileUrl ? (
@@ -79,16 +80,22 @@ const UserContainer = styled.div`
 	display: flex;
 	column-gap: 8px;
 	position: relative;
+
+	& > div {
+		${FlexAlignCSS}
+		padding:2px;
+		color: ${({ theme }) => theme.COLOR.common.black};
+		column-gap: 0.5rem;
+	}
 `
 
 const UserBox = styled.div`
 	${FlexAlignCSS}
 	height: 100%;
 	color: ${({ theme }) => theme.COLOR.common.black};
-	column-gap: 1rem;
+
 	z-index: 600;
 	border-radius: 1rem;
-	padding: 2px;
 	transition: 0.1s ease;
 
 	&:hover {

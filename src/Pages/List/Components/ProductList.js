@@ -13,6 +13,7 @@ function ProductList({
 	hasNextPage,
 	fetchNextPage,
 	isFetching,
+	currentURL,
 }) {
 	const observerElem = useRef(null) // 타겟 요소
 
@@ -52,7 +53,6 @@ function ProductList({
 
 	return (
 		<S.ProductListWrapper>
-			<MainSkeleton />
 			{isSuccess &&
 				data?.pages.map(page =>
 					page.product.map((item, idx) => {
@@ -67,6 +67,7 @@ function ProductList({
 								tags={item.ProductsTags}
 								createdAt={item.createdAt}
 								isLiked={item.liked}
+								category={currentURL}
 								onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
@@ -88,9 +89,10 @@ export default ProductList
 
 const ProductListWrapper = styled.div`
 	width: 100%;
-	margin-top: 4rem;
+	margin-top: 2rem;
 	${GridCenterCSS}
 	${ColumnNumberCSS(4)};
+	row-gap: 6rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		${ColumnNumberCSS(2)}

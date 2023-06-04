@@ -93,13 +93,13 @@ function Login() {
 
 		try {
 			await mutateAsync({ email, pw })
-		} catch (err) {
+		} catch (error) {
 			const { FAILURE, ERROR } = MESSAGE.LOGIN
 			try {
 				const {
 					message: { info },
 				} = err.response.data
-				setError(info === 'loginFailed' ? FAILURE : info)
+				setError(info === 'loginFailed' ? FAILURE : ERROR)
 			} catch (err) {
 				// setError하는 과정에서 에러가 발생할 수 있어
 				// 대비하여 ERROR로 텍스트를 띄웁니다.
