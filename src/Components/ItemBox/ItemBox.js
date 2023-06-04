@@ -14,11 +14,13 @@ function ItemBox({
 	status,
 	prod_idx,
 	productsTags,
+	category,
 	...rest
 }) {
 	const heartProps = {
 		like: isLiked,
 		prod_idx: prod_idx,
+		category: category,
 	}
 
 	return (
@@ -121,10 +123,11 @@ const DescBox = styled.div`
 		margin: 1rem 0 2rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
-		display: -webkit-box;
+		/* 1줄로 넘친 글자를 생략할 때 이용 */
+		white-space: nowrap;
+		/* display: -webkit-box;
 		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+		-webkit-box-orient: vertical; */
 	}
 `
 

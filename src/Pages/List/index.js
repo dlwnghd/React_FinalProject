@@ -91,6 +91,7 @@ function List() {
 						hasNextPage={hasNextPage}
 						fetchNextPage={fetchNextPage}
 						isFetching={isFetching}
+						currentURL={currentURL}
 					/>
 				</S.MainContent>
 			</S.ListContainer>
@@ -109,6 +110,14 @@ const ListContainer = styled.div`
 	margin: 12rem 0;
 	margin-bottom: 12rem;
 	${FlexBetweenCSS}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
+		margin: 6rem 0;
+	}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		margin: 3rem 0;
+	}
 `
 
 const MainContent = styled.div`

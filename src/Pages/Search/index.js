@@ -5,9 +5,16 @@ import Filter from '../../Components/Filter/Filter'
 import { useState, useEffect } from 'react'
 import SearchResult from './Components/SearchList'
 import useGetSearchResultData from '../../Hooks/Queries/get-searchResult'
+import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
+import AlertModal from '../../Components/Modal/AlertModal/AlertModal'
+import MESSAGE from '../../Consts/message'
+import { useRecoilState } from 'recoil'
+import { isOpenModalAtom } from '../../Atoms/modal.atom'
+
+const skeletonUI = new Array(8).fill(0)
 
 function Search() {
-	const searchFilter = [
+	const listFilter = [
 		'최근 등록순',
 		'인기 높은순',
 		'높은 가격순',
@@ -15,42 +22,89 @@ function Search() {
 	]
 
 	const { word } = useParams()
-	const [filterOption, setFilterOption] = useState(searchFilter[0])
+	const [filterOption, setFilterOption] = useState(listFilter[0])
+	const [searchFilter, setSearchFilter] = useState({
+		order: 'createdAt',
+		sort: 'desc',
+	})
 
-	const {
-		data: searchData,
-		status,
-		isLoading,
-		fetchNextPage,
-		isFetchingNextPage,
-		hasNextPage,
-	} = useGetSearchResultData(word)
+	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
+
+	const onFilter = e => {
+		switch (e.target.innerText) {
+			case listFilter[0]:
+				setFilterOption(listFilter[0])
+				setSearchFilter({
+					order: 'createdAt',
+					sort: 'desc',
+				})
+				break
+			case listFilter[1]:
+				setFilterOption(listFilter[1])
+				setSearchFilter({
+					order: 'popular',
+					sort: 'asc',
+				})
+				break
+			case listFilter[2]:
+				setFilterOption(listFilter[2])
+				setSearchFilter({
+					order: 'price',
+					sort: 'desc',
+				})
+				break
+			case listFilter[3]:
+				setFilterOption(listFilter[3])
+				setSearchFilter({
+					order: 'price',
+					sort: 'asc',
+				})
+				break
+			default:
+				break
+		}
+	}
+
+	const { data, isSuccess, refetch, fetchNextPage, isFetching, hasNextPage } =
+		useGetSearchResultData(word, searchFilter)
 
 	useEffect(() => {
 		fetchNextPage(0)
-	}, [word, filterOption])
+		refetch()
+	}, [word, searchFilter])
 
-	if (isLoading && status === 'loading') return
+	const totalCount = data?.pages[0].pagination.count
 
-	const searchResultLength = searchData.pages.map(page => {
-		return page.product.length
-	})
-	const searchResultNumber = searchResultLength.reduce((a, b) => a + b)
+	useEffect(() => {
+		if (totalCount === 0) setIsOpenModal(true)
+	}, [word, totalCount])
 
 	return (
 		<S.Wrapper>
-			<S.SearchContainer>
-				<S.SearchTitle>
-					<h3>{searchResultNumber}개의 를 찾았습니다.</h3>
-					<Filter filterArray={searchFilter} />
-				</S.SearchTitle>
-				<SearchResult
-					searchData={searchData}
-					status={status}
-					fetchNextPage={fetchNextPage}
-					hasNextPage={hasNextPage}
-					isFetchingNextPage={isFetchingNextPage}
-				/>
+			<S.SearchContainer totalCount={totalCount}>
+				{totalCount !== 0 ? (
+					<>
+						<S.SearchTitle>
+							<h3>{isSuccess && totalCount}개를 찾았습니다.</h3>
+							<Filter filterArray={listFilter} onClick={onFilter} />
+						</S.SearchTitle>
+						<SearchResult
+							searchResult={data}
+							skeletonUI={skeletonUI}
+							isSuccess={isSuccess}
+							fetchNextPage={fetchNextPage}
+							hasNextPage={hasNextPage}
+							isFetching={isFetching}
+						/>
+					</>
+				) : (
+					<>
+						{isOpenModal && <AlertModal message={MESSAGE.SEARCH.EMPTY} />}
+						{skeletonUI.map((item, i) => (
+							<MainSkeleton key={i} />
+						))}
+					</>
+				)}
 			</S.SearchContainer>
 		</S.Wrapper>
 	)
@@ -65,6 +119,13 @@ const Wrapper = styled.section`
 
 const SearchContainer = styled.div`
 	margin: 12rem 0;
+	${({ totalCount }) =>
+		totalCount === 0 && {
+			display: 'grid',
+			gridTemplateColumns: 'repeat(4,1fr)',
+			columnGap: '3rem',
+			rowGap: '6rem',
+		}}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		margin: 6rem 0;
