@@ -19,6 +19,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import scrollToTop from '../../../Utils/scrollToTop'
 import MESSAGE from '../../../Consts/message'
+import ErrorModal from '../../../Components/Error/ErrorModal'
 
 function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 	const {
@@ -89,19 +90,25 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 		setHashArr(hashArr.filter(el => el !== e))
 	}
 
-	const { mutate } =
+	const { mutate, error } =
 		submitType === '등록'
 			? useMutation(formData => ProductApi.register(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
 					},
-					onError: () => {},
+					onError: () => {
+						setModalType('registerError')
+						setIsOpenModal(() => true)
+					},
 			  })
 			: useMutation(formData => ProductApi.editProduct(formData), {
 					onSuccess: () => {
 						setIsOpenModal(() => true)
 					},
-					onError: () => {},
+					onError: () => {
+						setModalType('editProductError')
+						setIsOpenModal(() => true)
+					},
 			  })
 
 	const onSubmit = async data => {
@@ -174,6 +181,10 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
+			{isOpenModal && modalType === ('registerError' || 'editProductError') && (
+				<ErrorModal error={error} />
+			)}
+
 			<Controller
 				name="title"
 				control={control}

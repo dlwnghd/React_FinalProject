@@ -7,13 +7,12 @@ import { useParams } from 'react-router-dom'
 import ProductApi from '../../Apis/productApi'
 import { useQuery } from '@tanstack/react-query'
 import QUERY_KEY from '../../Consts/query.key'
-import { useRef } from 'react'
 
 function Register() {
 	const [imageList, setImageList] = useState([])
 	const [imageFileArr, setImageFileArr] = useState([])
 	const [imgNum, setImgNum] = useState(false)
-	let imageFileRef = useRef([])
+	let imageFileArrTest = []
 
 	const { prod_idx } = useParams()
 
@@ -47,9 +46,9 @@ function Register() {
 				DetailData={DetailData}
 				setImageFileArr={setImageFileArr}
 				imageFileArr={imageFileArr}
-				imageFileRef={imageFileRef}
 				imgNum={imgNum}
 				setImgNum={setImgNum}
+				imageFileArrTest={imageFileArrTest}
 			/>
 			<Inputs
 				DetailData={DetailData}

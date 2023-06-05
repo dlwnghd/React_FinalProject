@@ -13,10 +13,11 @@ import Graph from './Components/Graph'
 import RecentSearch from './Components/Search'
 import SoldOutList from './Components/SoldOutList'
 import getFormattedDate from '../../Utils/getFormattedDate'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
 
 function RecentPrice() {
+	const location = useLocation()
 	const { state: title } = location
 
 	const location = useLocation()
