@@ -4,7 +4,7 @@ import ChatUserBox from './UserBox/UserBox'
 function UserList() {
 	//이거 그냥 for문 돌리는 mock데이터 에요
 	//userList 배열로 해서 있는 만큼 맵 돌리고 그 안에 데이터는 그냥 제가 만들어서 보냈습니다.
-
+	//
 	let user = {
 		profile_img:
 			'https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/1UzB/image/paEOLJhjPWh-CW7c2KoUJ-tKWs4.jpg',
