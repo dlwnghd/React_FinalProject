@@ -1,30 +1,40 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
 import ChatApi from '../../../../../Apis/chatApi'
-import { useEffect } from 'react'
 
-function RoomBox({ prod_idx }) {
-	// user_idx와 api 통신으로 비교해서 해당 유저 프로필 입혀야함.
+function RoomBox({ prod_idx, onClickUserChatRoom }) {
 	const [roomList, setRoomList] = useState([])
-
-	const getChatRooms = async () => {
+	const getChatRoomList = async () => {
 		try {
 			const res = await ChatApi.prdChatList(prod_idx)
-
-			console.log(res)
-		} catch (err) {
-			console.log(err)
+			setRoomList(res.data)
+		} catch (error) {
+			console.log('채팅룸 없어요.')
 		}
 	}
-
 	useEffect(() => {
-		getChatRooms()
+		getChatRoomList()
 	}, [prod_idx])
-	console.log(prod_idx)
+
 	return (
 		<S.RoomBoxContainer>
-			<S.profileImgBox />
-			<S.profileInfo></S.profileInfo>
+			{roomList.chat?.map(user => {
+				return (
+					<S.ProfileBox
+						onClick={() => {
+							onClickUserChatRoom(user.idx)
+						}}
+					>
+						<S.ProfileImg />
+						<S.profileInfo>
+							<S.userNickname>{user.User.nick_name}</S.userNickname>
+							<p>{user.lastMessageCreateAt}</p>
+							<p>{user.isRead ? '읽음' : '안읽음'}</p>
+						</S.profileInfo>
+					</S.ProfileBox>
+				)
+			})}
 		</S.RoomBoxContainer>
 	)
 }
@@ -36,13 +46,31 @@ const RoomBoxContainer = styled.div`
 	height: 100%;
 	display: flex;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-`
-const profileImgBox = styled.div``
+	border: 1px solid green;
 
-const profileInfo = styled.div``
+	margin: 1rem 0;
+`
+const ProfileBox = styled.div`
+	display: flex;
+
+	margin: 1rem 0;
+`
+const ProfileImg = styled.div``
+
+const profileInfo = styled.div`
+	& > p {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	}
+`
+
+const userNickname = styled.span`
+	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+`
 
 const S = {
 	RoomBoxContainer,
-	profileImgBox,
+	ProfileBox,
+	ProfileImg,
 	profileInfo,
+	userNickname,
 }

@@ -56,7 +56,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 
 	const makeChatRoom = async () => {
 		try {
-			const res = await ChatApi.makeChat(prod_idx)
+			const res = await ChatApi.makeChat(idx)
 
 			if (res.status === 200) {
 				const room_idx = res.data.idx

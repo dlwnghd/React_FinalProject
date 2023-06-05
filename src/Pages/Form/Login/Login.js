@@ -70,7 +70,6 @@ function Login() {
 			onSuccess: ({ data }) => {
 				user.login(data.tokenForHeader, data.user)
 				getChatRoomList()
-
 				socket?.emit('connect-user', {
 					token: data.tokenForHeader,
 				})

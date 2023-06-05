@@ -22,6 +22,7 @@ function RecentPrice() {
 	const location = useLocation()
 	const { state: title } = location
 
+	const location = useLocation()
 	// Filter 종류
 	const dateFilter = [
 		'최근 일주일',
