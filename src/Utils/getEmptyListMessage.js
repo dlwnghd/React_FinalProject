@@ -17,6 +17,11 @@ const getEmptyListMessage = path => {
 				title: '구매한 상품이 없습니다.',
 				content: '구매하러 가기',
 			}
+		case 'recent-price':
+			return {
+				title: '최근 거래 종료된 품목이 없습니다.',
+				content: '구매하러 가기',
+			}
 	}
 }
 export default getEmptyListMessage

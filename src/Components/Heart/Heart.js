@@ -1,23 +1,34 @@
 import { FillHeart_Icon, NotFillHeart_Icon } from '../Icons/Icons'
 import styled from 'styled-components'
 import { useLocation } from 'react-router'
-import usePostHeart from '../../Hooks/Queries/post-heart'
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import ProductApi from '../../Apis/productApi'
 
-function Heart({ like, prod_idx, change_size }) {
+function Heart({ like, prod_idx, change_size, category }) {
+	const [isLike, setIsLike] = useState(like)
+
 	const location = useLocation()
 	const validLocation = location?.pathname.split('/')[1]
 
-	const [isLike, setIsLike] = useState(like)
+	const queryClient = useQueryClient()
 
-	const getMessage = message => {
-		setIsLike(message)
-	}
-
-	const { mutateAsync, isLoading } = usePostHeart(prod_idx, getMessage)
+	const { mutateAsync, isLoading } = useMutation(
+		() => ProductApi.like(prod_idx),
+		{
+			onSuccess: async res => {
+				await queryClient.refetchQueries()
+				const { message } = res.data
+				setIsLike(message)
+			},
+			onError: err => {
+				console.log(err)
+			},
+		},
+	)
 
 	const onHeart = async () => {
-		await mutateAsync()
+		await mutateAsync(prod_idx)
 	}
 
 	if (isLoading) return
