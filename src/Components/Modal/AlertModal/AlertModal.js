@@ -2,21 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { FlexCenterCSS } from '../../../Styles/common'
+import getComponentsByPeriod from '../../../Utils/getComponentsByPeriod'
 
 function AlertModal({ message }) {
-	const splittedText = message.split('. ')
-	const formattedText = splittedText.map((sentence, index) => (
-		<React.Fragment key={index}>
-			{sentence}
-			<br />
-		</React.Fragment>
-	))
+	const formattedMsg = getComponentsByPeriod(message)
+
 	return (
 		<Modal size={'medium'}>
 			<S.Container>
 				<h3>NEGO MARKET</h3>
 				<section>
-					<S.Text>{formattedText}</S.Text>
+					<S.Text>{formattedMsg}</S.Text>
 				</section>
 			</S.Container>
 		</Modal>

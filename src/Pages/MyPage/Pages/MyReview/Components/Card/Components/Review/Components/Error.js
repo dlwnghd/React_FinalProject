@@ -4,17 +4,12 @@ import { FlexCenterCSS } from '../../../../../../../../../Styles/common'
 import Button from '../../../../../../../../../Components/Button/Button'
 import { ModalClose_icon } from '../../../../../../../../../Components/Icons/Icons'
 import getErrorMessage from '../../../../../../../../../Utils/getErrorMessage'
+import getComponentsByPeriod from '../../../../../../../../../Utils/getComponentsByPeriod'
 
 function InnerError({ error, onCloseError }) {
 	const status = error?.response?.status
 	const { title, content } = getErrorMessage(status)
-	const splittedContent = content.split('. ')
-	const formattedText = splittedContent.map((sentence, index) => (
-		<React.Fragment key={index}>
-			{sentence}
-			<br />
-		</React.Fragment>
-	))
+	const formattedText = getComponentsByPeriod(content)
 
 	return (
 		<S.Wrapper>
