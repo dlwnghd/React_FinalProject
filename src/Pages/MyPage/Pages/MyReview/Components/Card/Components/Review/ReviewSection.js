@@ -44,7 +44,8 @@ function ReviewSection({ idx, review }) {
 	const originalImageLength = onMakeMainAndSubImageArray(
 		img_url,
 		ReviewImages,
-	).length
+	).length // 기존 이미지 길이
+
 	// 서버 데이터와 클라이언트 데이터를 맞추는 함수
 	const setReviewToNewReview = () => {
 		setNewReview({
@@ -135,22 +136,19 @@ function ReviewSection({ idx, review }) {
 	const onClickDeleteReview = async () => {
 		await deleteReview.mutateAsync({ review_idx })
 		setMode('read')
+		setShowConfirmDelete(false)
 	}
 
 	// 쓰기 모드
 	if (mode === 'write')
 		return (
 			<WriteMode
-				mode={mode}
+				mode={{ mode, onClickChangeMode }}
 				review={review}
-				onClickChangeMode={onClickChangeMode}
-				imageArray={imageArray}
-				setImageArray={setImageArray}
+				imageArray={{ imageArray, setImageArray }}
 				originalImageLength={originalImageLength}
-				newReview={newReview}
-				setNewReview={setNewReview}
-				errorData={errorData}
-				setErrorData={setErrorData}
+				newReview={{ newReview, setNewReview }}
+				errorData={{ errorData, setErrorData }}
 			/>
 		)
 

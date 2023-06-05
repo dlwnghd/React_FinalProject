@@ -6,16 +6,12 @@ import ImageInput from './ImageInput'
 import InnerError from './Error'
 
 function WriteMode({
-	mode,
+	mode: { mode, onClickChangeMode },
 	review,
-	imageArray,
-	setImageArray,
+	imageArray: { imageArray, setImageArray },
 	originalImageLength,
-	onClickChangeMode,
-	newReview,
-	setNewReview,
-	errorData,
-	setErrorData,
+	newReview: { newReview, setNewReview },
+	errorData: { errorData, setErrorData },
 }) {
 	const titleArea = useRef()
 
