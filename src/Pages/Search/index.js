@@ -5,11 +5,9 @@ import Filter from '../../Components/Filter/Filter'
 import { useState, useEffect } from 'react'
 import SearchResult from './Components/SearchList'
 import useGetSearchResultData from '../../Hooks/Queries/get-searchResult'
-import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
-import AlertModal from '../../Components/Modal/AlertModal/AlertModal'
-import MESSAGE from '../../Consts/message'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
+import EmptyList from '../../Components/EmptyList/EmptyList'
 
 const skeletonUI = new Array(8).fill(0)
 
@@ -98,12 +96,7 @@ function Search() {
 						/>
 					</>
 				) : (
-					<>
-						{isOpenModal && <AlertModal message={MESSAGE.SEARCH.EMPTY} />}
-						{skeletonUI.map((item, i) => (
-							<MainSkeleton key={i} />
-						))}
-					</>
+					<EmptyList />
 				)}
 			</S.SearchContainer>
 		</S.Wrapper>
@@ -118,15 +111,6 @@ const Wrapper = styled.section`
 `
 
 const SearchContainer = styled.div`
-	margin: 12rem 0;
-	${({ totalCount }) =>
-		totalCount === 0 && {
-			display: 'grid',
-			gridTemplateColumns: 'repeat(4,1fr)',
-			columnGap: '3rem',
-			rowGap: '6rem',
-		}}
-
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		margin: 6rem 0;
 	}
