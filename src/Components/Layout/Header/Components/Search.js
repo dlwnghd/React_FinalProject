@@ -31,7 +31,9 @@ function HeaderSearchBar({ setSelectedNav }) {
 	const handleKeyPress = e => {
 		if (e.key === 'Enter') {
 			onSubmitSearch()
-			setSelectedNav(1)
+			if (product) {
+				setSelectedNav(1)
+			}
 		}
 	}
 
@@ -44,7 +46,6 @@ function HeaderSearchBar({ setSelectedNav }) {
 		}
 
 		if (product == '') {
-			alert('검색어를 입력해주세요')
 			return
 		}
 		navigate(`/search/${product}`)
