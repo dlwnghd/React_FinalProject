@@ -4,11 +4,16 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import { Chatting_Icon, Profile_Icon } from '../../../Icons/Icons'
 import useUser from '../../../../Hooks/useUser'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
+import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
 
-function UserBar({ setSelectedNav, userInfo }) {
+function UserBar({ setSelectedNav }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const user = useUser()
+	const queryClient = useQueryClient()
+	const userInfo = useRecoilValue(userInfoAtom)
 
 	return (
 		<S.UserWrapper>
@@ -24,7 +29,7 @@ function UserBar({ setSelectedNav, userInfo }) {
 					) : (
 						<Profile_Icon size="28" />
 					)}
-					<p>회원명</p>
+					<p>{userInfo.nickName} 님</p>
 					<S.UserDropDownMenu className="dropdown">
 						<span
 							onClick={() => {
@@ -47,6 +52,7 @@ function UserBar({ setSelectedNav, userInfo }) {
 								navigate('/')
 								user.logout()
 								localStorage.removeItem('myChatRoomList')
+								queryClient.removeQueries() // 캐싱된 데이터 모두 삭제
 								setSelectedNav(0)
 							}}
 						>
@@ -138,7 +144,7 @@ const UserDropDownMenu = styled.div`
 	top: 85%;
 	right: 0;
 	z-index: 9999;
-	width: 90%;
+	width: 11rem;
 
 	& > span {
 		padding: 1rem;
