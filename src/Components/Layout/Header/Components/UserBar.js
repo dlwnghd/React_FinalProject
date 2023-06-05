@@ -4,11 +4,13 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import { Chatting_Icon, Profile_Icon } from '../../../Icons/Icons'
 import useUser from '../../../../Hooks/useUser'
+import { useQueryClient } from '@tanstack/react-query'
 
 function UserBar({ setSelectedNav, userInfo }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const user = useUser()
+	const queryClient = useQueryClient()
 
 	return (
 		<S.UserWrapper>
@@ -47,6 +49,7 @@ function UserBar({ setSelectedNav, userInfo }) {
 								navigate('/')
 								user.logout()
 								localStorage.removeItem('myChatRoomList')
+								queryClient.removeQueries() // 캐싱된 데이터 모두 삭제
 								setSelectedNav(0)
 							}}
 						>
