@@ -10,6 +10,7 @@ import ReviewCard from './Components/Card'
 import Pagination from '../../../../Components/Pagination/Pagination'
 import ReviewCardLoading from './Components/Card/Components/Loading/Loading'
 import ErrorFallback from '../../../../Components/Error/ErrorFallback'
+import EmptyList from '../../../../Components/EmptyList/EmptyList'
 
 function MyReview() {
 	const [page, setPage] = useState(1)
@@ -37,6 +38,7 @@ function MyReview() {
 
 	return (
 		<S.Wrapper>
+			{reviewList.length === 0 && <EmptyList />}
 			<S.Container>
 				{reviewList.map(review => (
 					<ReviewCard key={review.idx} review={review} />
