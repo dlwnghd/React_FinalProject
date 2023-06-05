@@ -33,6 +33,7 @@ function ReviewSection({ idx, review }) {
 	// 아직 작성하지 않았다면 review === null
 	const [mode, setMode] = useState('read') // 'read' | 'write'
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+	const [errorData, setErrorData] = useState(null)
 	const [newReview, setNewReview] = useState({
 		title: '',
 		content: '',
@@ -90,18 +91,21 @@ function ReviewSection({ idx, review }) {
 
 			case '삭제':
 				setShowConfirmDelete(true)
-				// await deleteReview.mutateAsync({ review_idx })
-				// setMode('read')
 				break
 
 			case '확인':
 				if (!isWrittenReview) {
 					// 등록인 경우
 					const formData = onAppendObjectToFormData(newReview)
-					await postReview.mutateAsync({
-						payList_idx: idx,
-						newReview: formData,
-					})
+					try {
+						await postReview.mutateAsync({
+							payList_idx: idx,
+							newReview: formData,
+						})
+						setMode('read')
+					} catch (err) {
+						setErrorData(err)
+					}
 				} else {
 					// 수정일 경우
 					const { title, content, ondo, images } = newReview
@@ -113,12 +117,16 @@ function ReviewSection({ idx, review }) {
 						img_url: imageArray.slice(1),
 					}
 					const formData = onAppendObjectToFormData(updateNewReview)
-					await updateReview.mutateAsync({
-						review_idx,
-						newReview: formData,
-					})
+					try {
+						await updateReview.mutateAsync({
+							review_idx,
+							newReview: formData,
+						})
+						setMode('read')
+					} catch (err) {
+						setErrorData(err)
+					}
 				}
-				setMode('read')
 				break
 		}
 	}
@@ -141,6 +149,8 @@ function ReviewSection({ idx, review }) {
 				originalImageLength={originalImageLength}
 				newReview={newReview}
 				setNewReview={setNewReview}
+				errorData={errorData}
+				setErrorData={setErrorData}
 			/>
 		)
 
@@ -158,6 +168,7 @@ function ReviewSection({ idx, review }) {
 					onCancel={() => setShowConfirmDelete(false)}
 				/>
 			)}
+
 			<S.Container>
 				<Stars mode={mode} ondo={newReview.ondo} setNewReview={setNewReview} />
 				<S.BottomSection>
