@@ -10,19 +10,27 @@ import ItemBox from '../../Components/ItemBox/ItemBox'
 import { useNavigate } from 'react-router-dom'
 import RecentBanner from './Components/Banner/RecentBanner'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
+import { useRecoilState } from 'recoil'
+import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
 
 function Main() {
-	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
+	const { data: mainProduct, error, isLoading } = useGetMainPageData()
 	const navigate = useNavigate()
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
 	if (isLoading) return
 	if (error) return
 
+	const productList = {
+		freeProduct: mainProduct.freeProduct,
+		usedProduct: mainProduct.usedProduct,
+	}
+
 	return (
 		<S.Wrapper>
-			<MainBanner mainProduct={mainProduct} />
+			<MainBanner />
 			<S.Container>
-				<RecentBanner mainProduct={mainProduct} />
+				<RecentBanner {...productList} />
 				<S.FreeMarketList>
 					<S.Title>
 						<h3>Free Market</h3>
@@ -39,13 +47,11 @@ function Main() {
 										description={item.description}
 										price={item.price}
 										posterPath={item.img_url}
-										createdAt={item.created_at}
+										createdAt={item.createdAt}
 										isLiked={item.liked}
 										status={item.status}
 										productsTags={item.ProductsTags}
-										onClick={() =>
-											navigate(`/detail/${item.idx}`, { state: item.liked })
-										}
+										onClick={() => navigate(`/detail/${item.idx}`)}
 									/>
 								)
 							})}
@@ -69,7 +75,7 @@ function Main() {
 										description={item.description}
 										price={item.price}
 										posterPath={item.img_url}
-										createdAt={item.created_at}
+										createdAt={item.createdAt}
 										isLiked={item.liked}
 										status={item.status}
 										productsTags={item.ProductsTags}
@@ -126,6 +132,7 @@ const ProductList = styled.div`
 	row-gap: 6rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${WidthAutoCSS}
 		${ColumnNumberCSS(2)}
 		column-gap: 1rem;
 	}

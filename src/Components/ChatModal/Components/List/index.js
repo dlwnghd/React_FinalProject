@@ -1,30 +1,18 @@
 import styled from 'styled-components'
-import { useState } from 'react'
 import ChatItemBox from './ItemBox/ItemBox'
-import ChatView from '../View'
-import { useRecoilState } from 'recoil'
-import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
 
-function ChatList() {
-	const userInfo = useRecoilState(userInfoAtom)
-	const [chatRoom, setChatRoom] = useState(false)
+function ChatList({ list, onClickChatRoom }) {
+	const prod_idx = list[0].product.idx
 
-	const onClickChatRoom = () => {
-		setChatRoom(true)
+	const onClickJoinChat = () => {
+		onClickChatRoom(prod_idx)
+		// socket.emit('join', { idx })
 	}
-
+	// list.isRead == true이면? 채팅창 빨간불 끄고 false일땐 빨간불 들어오게 ui그려야함
 	return (
 		<S.ChatListContainer>
-			{chatRoom ? (
-				<>
-					<ChatView />
-				</>
-			) : (
-				<>
-					<ChatItemBox />
-					<button onClick={onClickChatRoom}>채팅방 입장</button>
-				</>
-			)}
+			<ChatItemBox list={list} />
+			<button onClick={onClickJoinChat}>채팅방 목록 확인</button>
 		</S.ChatListContainer>
 	)
 }
@@ -35,16 +23,20 @@ const ChatListContainer = styled.div`
 	position: relative;
 	display: flex;
 	justify-content: space-between;
+
 	& > button {
 		position: absolute;
 		border: none;
 		background-color: #fff;
-		width: 10rem;
+		width: auto;
 		height: 3rem;
 		bottom: 0;
 		right: 0;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 		cursor: pointer;
+		:hover {
+			color: ${({ theme }) => theme.COLOR.main};
+		}
 	}
 `
 const S = {

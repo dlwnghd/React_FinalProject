@@ -9,6 +9,7 @@ import { RecoilRoot } from 'recoil'
 // import { worker } from './__mock__/browser'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import SocketProvider from './Context/socket'
 
 function App() {
 	// worker.start()
@@ -25,8 +26,10 @@ function App() {
 		<QueryClientProvider client={queryClient}>
 			<RecoilRoot>
 				<ThemeProvider theme={theme}>
-					<GlobalStyles />
-					<RouterProvider router={router} />
+					<SocketProvider>
+						<GlobalStyles />
+						<RouterProvider router={router} />
+					</SocketProvider>
 				</ThemeProvider>
 			</RecoilRoot>
 			<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />

@@ -1,51 +1,93 @@
 import styled from 'styled-components'
 import Input from '../../../../Input/Input'
 import Button from '../../../../Button/Button'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import ChatApi from '../../../../../Apis/chatApi'
+import { useEffect } from 'react'
 import MessagesBox from './MessagesBox.js/MessagesBox'
-import { io } from 'socket.io-client'
+import { useRecoilState } from 'recoil'
+import { myChatRoomList } from '../../../../../Atoms/myChatRoomList.atom'
+import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
+import { useSocket } from '../../../../../Context/socket'
+import { useRef } from 'react'
 
-const socket = io.connect('https://topdragon.co.kr')
+function ChatBox({ roomIdx }) {
+	const socket = useSocket()
+	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
+	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 
-function ChatBox() {
-	const room_idx = 29
-	socket.emit('connect-user', {
-		socket: '815ec613-59fa-46e7-a1c2-9a52244ad67f',
-	})
+	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
+	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
+	const [allMessages, setAllMessages] = useState([])
 
-	socket.emit('join', { room_idx })
-
-	const [chat, setChat] = useState('')
+	const messagesInput = useRef('')
 	const [sendMessages, setSendMessages] = useState('')
 	const [receivedMessages, setReceivedMessages] = useState([])
 
-	const sendMessage = e => {
+	const time = new Date()
+
+	const newChatRoomList = async () => {
+		try {
+			const res = await ChatApi.chatRoomList()
+			setMyChatRoom(res.data)
+		} catch (err) {
+			console.log('에러발생', err)
+		}
+	}
+
+	const getChatMsg = async () => {
+		try {
+			const res = await ChatApi.checkChatLog(roomIdx)
+			setAllMessages(res.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const postMessage = async e => {
 		const data = {
-			title: '치킨',
+			title: chatInfo.product.title,
 			createdAt:
 				new Date(Date.now()).getHours() +
 				':' +
 				new Date(Date.now()).getMinutes(),
 
-			prod_idx: 224,
-			room_idx: 29,
-			nicKname: '제이콥',
+			prod_idx: chatInfo.product.idx,
+			roomIdx: roomIdx,
+			nicKname: myInfo.nicKname,
 
-			message: sendMessages,
+			message: messagesInput.current.value,
 
-			isSeller: 1,
+			isSeller: chatInfo.isSeller,
 		}
-		if (sendMessages !== '' && e.keyCode === 13) {
-			console.log(sendMessages)
-
+		if (messagesInput.current.value !== '' && e.keyCode === 13) {
 			socket.emit('sendMessage', data)
-			setSendMessages('')
+			try {
+				const res = await ChatApi.sendMsg(roomIdx, messagesInput.current.value)
+
+				if (res.status) {
+					console.log(messagesInput.current.value)
+					messagesInput.current.value = ''
+					newChatRoomList()
+				}
+			} catch (error) {
+				console.log('전송실패')
+			}
+
+			return
 		}
-		if (sendMessages === '' && e.keyCode === 13) {
+		if (messagesInput.current.value === '' && e.keyCode === 13) {
 			alert('메세지를 입력해주세요')
+			return
 		}
 	}
+	useEffect(() => {
+		getChatMsg()
+	}, [roomIdx])
 
+	// useEffect(() => {
+	// 	console.log('하이')
+	// }, [setMyChatRoom])
 	useEffect(() => {
 		// 메세지 수신
 		socket.on('receiveMessage', data => {
@@ -57,23 +99,24 @@ function ChatBox() {
 		<S.ChatContainer>
 			<S.ChatDate>
 				<span>2023년 05월 20일</span>
+				{/* 날짜는 last메신저로 설정 */}
 			</S.ChatDate>
 			<S.ChatMsg>
-				{receivedMessages &&
-					receivedMessages.map((item, idx) => {
-						return <MessagesBox key={idx} msg={item} />
-					})}
+				{allMessages.map((item, idx) => {
+					return <MessagesBox key={idx} allMessages={item} myInfo={myInfo} />
+				})}
 			</S.ChatMsg>
-			<S.ChatSend onKeyDown={sendMessage}>
-				<Input
+			<S.ChatSend onKeyDown={postMessage}>
+				<S.StyledInput
 					placeholder="메시지를 입력해주세요"
-					value={sendMessages}
-					onChange={e => {
-						setSendMessages(e.target.value)
-					}}
+					ref={messagesInput}
+					// value={sendMessages}
+					// onChange={e => {
+					// 	setSendMessages(e.target.value)
+					// }}
 				/>
 
-				<Button onClick={sendMessage}>보내기</Button>
+				<S.StyledButton onClick={postMessage}>전송</S.StyledButton>
 			</S.ChatSend>
 		</S.ChatContainer>
 	)
@@ -88,7 +131,9 @@ const ChatContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	justify-content: center;
+	box-shadow: 1px 1px 1px gray;
+	border-radius: 1rem;
+
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 `
 const ChatDate = styled.div`
@@ -105,14 +150,33 @@ const ChatDate = styled.div`
 const ChatMsg = styled.div`
 	margin-top: 1rem;
 	height: 90%;
+	overflow-y: scroll;
+
+	::-webkit-scrollbar {
+		display: none;
+	}
 `
 const ChatSend = styled.div`
-	height: 10%;
 	display: flex;
+	height: 10%;
+	border-top: 1px solid ${({ theme }) => theme.COLOR.common.gray[300]};
+	padding: 0 0.3rem;
+`
+const StyledButton = styled(Button)`
+	background: ${({ theme }) => theme.COLOR.main};
+	border-radius: 0rem;
+	width: 20%;
+`
+const StyledInput = styled(Input)`
+	width: 80%;
+	border: none;
+	background: ${({ theme }) => theme.COLOR.common.white};
 `
 const S = {
 	ChatContainer,
 	ChatDate,
 	ChatMsg,
 	ChatSend,
+	StyledButton,
+	StyledInput,
 }

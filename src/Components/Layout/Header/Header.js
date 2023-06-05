@@ -5,7 +5,7 @@ import {
 	FlexBetweenCSS,
 	WidthAutoCSS,
 } from '../../../Styles/common'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Sidebar from './Components/Sidebar'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { isNavigationAtom } from '../../../Atoms/navigation.atom'
@@ -18,6 +18,7 @@ import MobileHeader from './Components/MobileHeader'
 import Navigation from './Components/Navigation'
 import useChatModal from '../../../Hooks/useChatModal'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
+import ChatModal from '../../ChatModal'
 
 function Header() {
 	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage'] // 네비게이션 Filter
@@ -28,12 +29,12 @@ function Header() {
 
 	const currentURL = useLocation().pathname // 현재 URL 기억 State (0: 무료, 1: 중고)
 
-	const [login, setLogin] = useState(true) // 로그인 Header 구현용 State
-
 	const [scroll, setScroll] = useRecoilState(isScrollAtom) // 스크롤 상태관리
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
 	const { chatModalOpen } = useChatModal()
+
+	const isDetailPage = currentURL.includes('detail')
 
 	// 현재 URL 변경시
 	useEffect(() => {
@@ -74,15 +75,18 @@ function Header() {
 			className={scroll ? 'scroll' : ''}
 			chatModalOpen={chatModalOpen}
 		>
+			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
 			<Sidebar onSideBar={onSideBar} />
+
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
-					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />
+					<UserBar setSelectedNav={setSelectedNav} />
 				) : (
 					<NonUserBar setSelectedNav={setSelectedNav} />
 				)}
 				<S.List>
 					<MobileHeader
+						onSideBar={onSideBar}
 						setSelectedNav={setSelectedNav}
 						setOnSideBar={setOnSideBar}
 					/>
@@ -134,7 +138,7 @@ const HeaderContainer = styled.div`
 const List = styled.div`
 	position: relative;
 	text-align: center;
-	height: 10rem;
+	height: 8rem;
 	width: 100%;
 	${FlexBetweenCSS}
 	margin-bottom:2rem;

@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { EtcOption_Icon } from '../Icons/Icons'
 import { FlexBetweenCSS } from '../../Styles/common'
 import { elapsedTime } from './timeSet'
-import { useState } from 'react'
 import Heart from '../Heart/Heart'
 
 function ItemBox({
@@ -15,29 +14,19 @@ function ItemBox({
 	status,
 	prod_idx,
 	productsTags,
+	category,
 	...rest
 }) {
-	const [isHoverItemBox, setIsHoverItemBox] = useState(false)
-
 	const heartProps = {
 		like: isLiked,
-		hover: isHoverItemBox,
-		setHover: setIsHoverItemBox,
 		prod_idx: prod_idx,
-	}
-
-	const onMouseEnter = e => {
-		setIsHoverItemBox(true)
-	}
-
-	const onMouseLeave = e => {
-		setIsHoverItemBox(false)
+		category: category,
 	}
 
 	return (
 		<S.Wrapper>
-			<S.IMGContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-				{isHoverItemBox && <Heart {...heartProps} />}
+			<S.IMGContainer>
+				<Heart {...heartProps} />
 				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
 			<S.DescContainer>
@@ -62,6 +51,8 @@ export default ItemBox
 
 const Wrapper = styled.div`
 	${FlexBetweenCSS}
+	box-shadow:0 0 0.3rem rgba(0,0,0,0.2);
+	/* border-radius: 1rem; */
 	flex-direction: column;
 	position: relative;
 	width: 100%;
@@ -69,12 +60,17 @@ const Wrapper = styled.div`
 	z-index: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+
+	&:hover {
+		box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.3);
+	}
 `
 
 const IMGContainer = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
+	border-bottom: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[100]};
 
 	& > svg {
 		position: absolute;
@@ -99,6 +95,7 @@ const IMGContainer = styled.div`
 
 const IMGBox = styled.div`
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
+	background-size: cover;
 	height: 100%;
 	cursor: pointer;
 `
@@ -106,10 +103,10 @@ const IMGBox = styled.div`
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
 	width:100%;
-	padding: 0 1rem;
+	padding: 0 2rem;
 	flex-direction: column;
 	align-items: baseline;
-	margin-top: 2rem;
+	margin: 2rem 0;
 `
 
 const DescBox = styled.div`
@@ -126,10 +123,11 @@ const DescBox = styled.div`
 		margin: 1rem 0 2rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
-		display: -webkit-box;
+		/* 1줄로 넘친 글자를 생략할 때 이용 */
+		white-space: nowrap;
+		/* display: -webkit-box;
 		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+		-webkit-box-orient: vertical; */
 	}
 `
 

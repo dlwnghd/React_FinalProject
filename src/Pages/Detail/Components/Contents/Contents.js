@@ -4,10 +4,14 @@ import RecentBanner from '../../../Main/Components/Banner/RecentBanner'
 import useGetMyPageInterestData from '../../../../Hooks/Queries/get-myPageInterest'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useGetMainPageData from '../../../../Hooks/Queries/get-mainPage'
+import Maps from './Components/Maps'
 
-function Contents({ mainProduct }) {
+function Contents({ detailProduct }) {
 	const [page, setPage] = useState(1)
 	const navigate = useNavigate()
+
+	const { data: mainProduct, error, status, isLoading } = useGetMainPageData()
 
 	const {
 		data: likeData,
@@ -16,32 +20,41 @@ function Contents({ mainProduct }) {
 		isLoading: likeIsLoading,
 	} = useGetMyPageInterestData(page)
 
-	if (likeStatus === 'loading') return
+	if (status === 'loading') return
+	if (isLoading) return
+	if (error) return
+
+	const productList = {
+		freeProduct: mainProduct.freeProduct,
+		usedProduct: mainProduct.usedProduct,
+	}
 
 	return (
 		<S.PrdListBox>
+			<Maps detailProduct={detailProduct} />
 			<S.RecentPrdList>
-				<RecentBanner mainProduct={mainProduct} />
+				<RecentBanner {...productList} />
 			</S.RecentPrdList>
 			<S.InterestPrdList>
 				<S.InterestTitle>
 					<h3>관심 상품 보러가기</h3>
-					<span>내게 관심있던 상품을 다시 둘러보세요.</span>
+					<span>내가 찜했던 상품을 다시 둘러보세요</span>
 				</S.InterestTitle>
 				<S.InterestBox>
-					{likeData.LikeList.slice(0, 5).map((interest, idx) => {
-						return (
-							<S.InterestItems
-								key={idx}
-								interestIMG={interest.Product.img_url}
-								onClick={() =>
-									navigate(`/detail/${interest.Product.idx}`, {
-										state: liked,
-									})
-								}
-							></S.InterestItems>
-						)
-					})}
+					{!likeIsLoading &&
+						likeData.LikeList.slice(0, 5).map((item, idx) => {
+							return (
+								<S.InterestItems
+									key={idx}
+									interestIMG={item.Product.img_url}
+									onClick={() =>
+										navigate(`/detail/${item.Product.idx}`, {
+											state: item.liked,
+										})
+									}
+								></S.InterestItems>
+							)
+						})}
 				</S.InterestBox>
 			</S.InterestPrdList>
 		</S.PrdListBox>
@@ -62,14 +75,14 @@ const RecentPrdList = styled.div`
 `
 const InterestPrdList = styled.div`
 	width: 100%;
-
-	& > h3 {
-		margin-bottom: 1rem;
-	}
 `
 
 const InterestTitle = styled.div`
 	margin-bottom: 3rem;
+
+	& > h3 {
+		margin-bottom: 1rem;
+	}
 `
 
 const InterestBox = styled.div`
@@ -90,6 +103,7 @@ const InterestItems = styled.div`
 	background: ${({ interestIMG }) => `url(${interestIMG})`} no-repeat center
 		center;
 	background-size: cover;
+	box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.2);
 
 	&::after {
 		content: '';

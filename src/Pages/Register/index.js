@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Images from './Components/Images'
 import { WidthAutoCSS } from '../../Styles/common'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Inputs from './Components/Inputs'
 import { useParams } from 'react-router-dom'
 import ProductApi from '../../Apis/productApi'
@@ -9,11 +9,12 @@ import { useQuery } from '@tanstack/react-query'
 import QUERY_KEY from '../../Consts/query.key'
 
 function Register() {
-	const [imageFile, setImageFiles] = useState('')
 	const [imageList, setImageList] = useState([])
+	const [imageFileArr, setImageFileArr] = useState([])
+	const [imgNum, setImgNum] = useState(false)
+	let imageFileArrTest = []
 
 	const { prod_idx } = useParams()
-	console.log(prod_idx)
 
 	const getProductDetailData = async () => {
 		const res = await ProductApi.detail({ prod_idx })
@@ -21,29 +22,38 @@ function Register() {
 	}
 
 	const useGetProductDetailData = () => {
-		const { data } = useQuery(
+		const { data, refetch } = useQuery(
 			[QUERY_KEY.GET_PRODUCT_DETAIL_DATA, prod_idx],
 			() => getProductDetailData(),
 			{
 				enabled: !!prod_idx,
 			},
 		)
-		return { data }
+		return { data, refetch }
 	}
 
-	const { data: DetailData } = useGetProductDetailData()
+	const { data: DetailData, refetch } = useGetProductDetailData()
+
+	useEffect(() => {
+		refetch()
+	}, [prod_idx])
 
 	return (
 		<S.Wrapper>
 			<Images
-				setImageFiles={setImageFiles}
 				setImageList={setImageList}
 				imageList={imageList}
 				DetailData={DetailData}
+				setImageFileArr={setImageFileArr}
+				imageFileArr={imageFileArr}
+				imgNum={imgNum}
+				setImgNum={setImgNum}
+				imageFileArrTest={imageFileArrTest}
 			/>
 			<Inputs
-				imageFile={imageFile}
 				DetailData={DetailData}
+				setImgNum={setImgNum}
+				imageFileArr={imageFileArr}
 				imageList={imageList}
 			/>
 		</S.Wrapper>

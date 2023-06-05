@@ -1,12 +1,24 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import { Search_Icon } from '../../../Icons/Icons'
+import { useEffect } from 'react'
 
 function HeaderSearchBar({ setSelectedNav }) {
 	const navigate = useNavigate() // 네비게이션 추가
+	const location = useLocation()
+
 	const [product, setProduct] = useState('') // 검색할 물품 State관리용
+
+	useEffect(() => {
+		if (!location?.pathname.includes('search')) return setProduct('')
+
+		const saved = JSON.parse(localStorage.getItem('searchKey'))
+		if (saved) {
+			setProduct(saved)
+		}
+	}, [location?.pathname])
 
 	// 검색내용 변경
 	const onChangeSearch = e => {
@@ -27,6 +39,10 @@ function HeaderSearchBar({ setSelectedNav }) {
 	 * 검색 기능
 	 */
 	const onSubmitSearch = () => {
+		if (product) {
+			localStorage.setItem('searchKey', JSON.stringify(product))
+		}
+
 		if (product == '') {
 			alert('검색어를 입력해주세요')
 			return

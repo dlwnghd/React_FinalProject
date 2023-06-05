@@ -3,11 +3,14 @@ import { useState } from 'react'
 import { FlexBetweenCSS } from '../../../../../Styles/common'
 import { Down_Icon } from '../../../../../Components/Icons/Icons'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-function TypeSelectBox({ setCategory, category, page, setPage }) {
-	const navigate = useNavigate()
-
+function TypeSelectBox({
+	setCategory,
+	category,
+	page,
+	setPage,
+	setSearchParams,
+}) {
 	const secondhandText = '중고상품'
 	const FreeText = '무료상품'
 
@@ -23,10 +26,9 @@ function TypeSelectBox({ setCategory, category, page, setPage }) {
 	}
 
 	useEffect(() => {
-		console.log({ category })
 		setCategory(prev => prev)
 		setType(category == 0 ? '중고상품' : '무료상품')
-		navigate(`/mypage-register?category=${category}&page=${page}`)
+		setSearchParams({ category: category, page: page })
 	}, [type])
 
 	return (
@@ -51,7 +53,12 @@ function TypeSelectBox({ setCategory, category, page, setPage }) {
 export default TypeSelectBox
 
 const Wrapper = styled.div`
-	width: 15rem;
+	position: relative;
+	width: 13rem;
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		width: 10rem;
+	}
 `
 
 const BoxContainer = styled.div`
@@ -69,9 +76,12 @@ const BoxContainer = styled.div`
 `
 
 const SelectContainer = styled.ul`
+	position: absolute;
+	z-index: 10;
 	width: 100%;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.gray[400]};
 	border-radius: 0.5rem;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
 	margin-top: 0.8rem;
 `
 

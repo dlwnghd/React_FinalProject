@@ -10,26 +10,33 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { AlertText } from '../../../../../Components/AlertText/AlertText.style'
 import { Camera_Icon } from '../../../../../Components/Icons/Icons'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { isOpenModalAtom } from '../../../../../Atoms/modal.atom'
 import addHyphenToPhoneNum from '../../../../../Utils/addHyphenToPhoneNum'
 import UserApi from '../../../../../Apis/userApi'
 import { useEffect } from 'react'
 import RegionModal from '../../../../../Components/Modal/RegionModal/RegionModal'
 import Modal from '../../../../../Components/Modal/Modal'
-import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
 import MESSAGE from '../../../../../Consts/message'
 import useGetUserInfo from '../../../../../Hooks/Queries/get-userInfo'
-import {
-	useUpdateUserInfo,
-	useUpdateProfileImg,
-} from '../../../../../Hooks/Queries/update-userInfo'
+import UserInfoSkeleton from './Components/UserInfoSkeleton'
+import ErrorFallback from '../../../../../Components/Error/ErrorFallback'
+import AlertModal from '../../../../../Components/Modal/AlertModal/AlertModal'
+import ErrorModal from '../../../../../Components/Error/ErrorModal'
+import { useMutation } from '@tanstack/react-query'
+import useUser from '../../../../../Hooks/useUser'
+import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
+import axios from 'axios'
+// import useUser from '../../../../../Hooks/useUser'
+// import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 
 function UserInfo() {
-	const { data, error, status, isLoading } = useGetUserInfo()
-	const updateUserInfo = useUpdateUserInfo()
-	const updateProfileImg = useUpdateProfileImg()
-	const [userInfo, setUserInfo] = useState({})
+	const {
+		data,
+		error: getError,
+		status: getStatus,
+		isLoading,
+	} = useGetUserInfo()
 	const {
 		register,
 		setValue,
@@ -38,17 +45,73 @@ function UserInfo() {
 	} = useForm({
 		mode: 'onChange',
 	})
-	const [imgFile, setImgFile] = useState('')
+	const [userInfo, setUserInfo] = useState({})
+	const [imgFile, setImgFile] = useState()
 	const [preFile, setPreFile] = useState()
-	const [isSubmit, setIsSubmit] = useState(false)
+	const [modalType, setModalType] = useState('')
 	const [isOpenModal, setIsOpenModal] = useRecoilState(isOpenModalAtom)
 	const [isDuplicate, setIsDuplicate] = useState({ state: null, message: '' })
 	const [message, setMessage] = useState(MESSAGE.USEREDIT.SUCCESS)
-	const [isChangeImg, setIsChangeImg] = useState(false)
+
+	const user = useUser()
+	const userAtomInfo = useRecoilValue(userInfoAtom)
 
 	useEffect(() => {
 		setUserInfo({ ...data })
 	}, [data])
+
+	const {
+		mutateAsync,
+		error: updateError,
+		status: updateState,
+	} = useMutation(
+		async ({ email, nickName, phone, region, profile_url }) =>
+			await axios.all([
+				UserApi.userEdit({ email, nickName, phone, region }),
+				profile_url && UserApi.userEditProfile(profile_url),
+			]),
+
+		{
+			onSuccess: res => {
+				console.log(res)
+				const editData = JSON.parse(res[0].config.data)
+				if (res[1]) {
+					user.editUserInfo({
+						email: editData.email,
+						nickName: editData.nickName,
+						profileUrl: res[1].data.profile_url,
+						region: editData.region,
+						socket: userAtomInfo.socket,
+					})
+				} else {
+					user.editUserInfo({
+						email: editData.email,
+						nickName: editData.nickName,
+						profileUrl: userAtomInfo.profileUrl,
+						region: editData.region,
+						socket: userAtomInfo.socket,
+					})
+				}
+				setModalType('submit')
+				setMessage(MESSAGE.USEREDIT.SUCCESS)
+				setIsDuplicate({ state: false, message: '' })
+				setIsOpenModal(true)
+				setTimeout(() => {
+					setIsOpenModal(false)
+					setModalType('')
+				}, 3000)
+				// client.invalidateQueries(
+				// 	[QUERY_KEY.GET_USER_INFO],
+				// 	[QUERY_KEY.GET_MYPAGE_MAIN_DATA],
+				// )
+			},
+			onError: err => {
+				console.log(err)
+				setModalType('error')
+				setIsOpenModal(true)
+			},
+		},
+	)
 
 	const saveImgFile = e => {
 		const file = e.target.files[0]
@@ -60,72 +123,53 @@ function UserInfo() {
 		}
 	}
 
-	const modalOpen = () => {
+	const addressModalOpen = () => {
 		document.body.style.overflow = 'hidden'
-		setIsSubmit(false)
+		setModalType('address')
 		setIsOpenModal(true)
 	}
 
 	const setRegion = str => {
 		setValue('region', str)
+		setModalType('')
 	}
 
 	const checkNickname = async e => {
-		const nickName = e.target.value
-		try {
-			const res = await UserApi.checkNickname({ nickName })
-			setIsDuplicate({ state: false, message: res.data.message })
-		} catch (err) {
-			if (err.response.status === 400) {
-				setIsDuplicate({ state: true, message: err.response.data.message })
+		const nickname = e.target.value
+		setIsDuplicate({ state: false, message: '' })
+		if (userInfo.nick_name !== nickname) {
+			try {
+				const res = await UserApi.checkNickname({ nickname })
+				setIsDuplicate({ state: false, message: res.data.message })
+			} catch (err) {
+				if (err.response.status === 400) {
+					setIsDuplicate({ state: true, message: err.response.data.message })
+				}
 			}
 		}
 	}
 	const onSubmit = async editData => {
-		const formData = new FormData()
-		formData.append('profile_url', imgFile)
-
-		// FormData의 key 확인
-		for (let key of formData.keys()) {
-			console.log(key)
+		let formData
+		if (imgFile) {
+			formData = new FormData()
+			formData.append('profile_url', imgFile)
 		}
-
-		// FormData의 value 확인
-		for (let value of formData.values()) {
-			console.log(value)
-		}
-
 		const editUser = {
 			email: editData.email,
 			nickName: editData.nickName,
 			phone: editData.phone,
 			region: editData.region,
+			profile_url: formData,
 		}
-		setIsSubmit(true)
+
 		try {
-			updateUserInfo.mutateAsync(editUser)
-			if (isChangeImg) {
-				updateProfileImg.mutateAsync({ profile_url: formData })
-			}
-			setMessage(MESSAGE.USEREDIT.SUCCESS)
-			setIsDuplicate({ state: false, message: '' })
-			setIsOpenModal(true)
-			setTimeout(() => {
-				setIsOpenModal(false)
-				setIsSubmit(false)
-			}, 3000)
+			mutateAsync(editUser)
 		} catch (err) {
-			setMessage(MESSAGE.USEREDIT.FAILURE)
-			setIsOpenModal(true)
-			setTimeout(() => {
-				setIsOpenModal(false)
-				setIsSubmit(false)
-			}, 3000)
+			console.log(err)
 		}
 	}
 
 	useEffect(() => {
-		setImgFile(userInfo.profile_url)
 		setPreFile(
 			userInfo.profile_url ||
 				'https://static.nid.naver.com/images/web/user/default.png?type=s160',
@@ -134,11 +178,21 @@ function UserInfo() {
 		setValue('nickName', userInfo.nick_name)
 		setValue('region', userInfo.region)
 		setValue('phone', userInfo.phone)
-		setIsChangeImg(false)
 	}, [userInfo])
+
+	if (getStatus === 'loading') {
+		return <UserInfoSkeleton />
+	}
+
+	if (getError) {
+		return <ErrorFallback error={getError} />
+	}
 
 	return (
 		<S.Wrapper>
+			{isOpenModal && modalType === 'error' && (
+				<ErrorModal error={updateError} />
+			)}
 			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 				<S.Container>
 					<S.InputBox>
@@ -154,7 +208,6 @@ function UserInfo() {
 							{...register('profile_img', {
 								onChange: e => {
 									saveImgFile(e)
-									setIsChangeImg(true)
 								},
 							})}
 						/>
@@ -207,11 +260,13 @@ function UserInfo() {
 							type="button"
 							shape={'square'}
 							variant={'default-reverse'}
-							onClick={modalOpen}
+							onClick={addressModalOpen}
 						>
 							주소 찾기
 						</S.RegisterButton>
-						{!isSubmit && isOpenModal && <RegionModal setRegion={setRegion} />}
+						{modalType === 'address' && isOpenModal && (
+							<RegionModal setResultAddress={setRegion} />
+						)}
 					</S.InputBox>
 				</S.Container>
 				<S.Container>
@@ -233,7 +288,9 @@ function UserInfo() {
 						{errors.phone && errors.phone.message}
 					</S.StyledAlert>
 				</S.Container>
-				{isSubmit && isOpenModal && <AlertModal message={message} />}
+				{updateState === 'success' && modalType === 'submit' && isOpenModal && (
+					<AlertModal message={message} />
+				)}
 				<S.SubmitButton>변경</S.SubmitButton>
 			</form>
 		</S.Wrapper>

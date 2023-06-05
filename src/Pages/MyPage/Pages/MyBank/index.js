@@ -49,38 +49,6 @@ function MyBank() {
 		refetch()
 	}
 
-	// Mock----------------------------------------------------
-	// const [data, setData] = useState({})
-
-	// const getData = useCallback(async () => {
-	// 	try {
-	// 		const { data } = await axios.get('/api/user/my-page/account-book', {
-	// 			params: filter,
-	// 		})
-	// 		console.log(data)
-	// 		setData(data)
-	// 	} catch (err) {
-	// 		console.log(err)
-	// 	}
-	// }, [filter])
-
-	// useEffect(() => {
-	// 	getData()
-	// }, [])
-
-	// const setPage = page => {
-	// 	setFilter(prev => ({ ...prev, page }))
-	// }
-
-	// const getNewBankList = () => {
-	// 	navigate(
-	// 		`${location.pathname}?page=${filter.page}&category=${filter.category}&start=${filter.start}&end=${filter.end}`,
-	// 	)
-	// 	getData()
-	// }
-
-	// ----------------------------------------------------------------
-
 	return (
 		<S.Wrapper>
 			<AmountSection status={status} amount={data?.amount} />
@@ -95,6 +63,7 @@ function MyBank() {
 				status={status}
 				category={filter.category}
 				payList={data?.payList ?? []}
+				refetch={refetch}
 			/>
 
 			{status === 'success' && data?.payList.length !== 0 && (

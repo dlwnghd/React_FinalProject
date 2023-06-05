@@ -2,12 +2,38 @@ import styled from 'styled-components'
 import ChatBox from './ChatBox/ChatBox'
 import RoomBox from './RoomBox/RoomBox'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
+import { useEffect } from 'react'
+import { useSocket } from '../../../../Context/socket'
+import { useState } from 'react'
+import ChatApi from '../../../../Apis/chatApi'
 
-function ChatView() {
+function ChatView({ prod_idx, room_state }) {
+	const [roomList, setRoomList] = useState([])
+	const [roomIdx, setRoomIdx] = useState(null)
+	const socket = useSocket()
+
+	const getChatRoomList = async () => {
+		try {
+			const res = await ChatApi.prdChatList(prod_idx)
+			setRoomList(res.data)
+		} catch (error) {
+			console.log('채팅룸 없어요.')
+		}
+	}
+	useEffect(() => {
+		getChatRoomList()
+	}, [prod_idx])
+
+	const onClickUserChatRoom = room_idx => {
+		setRoomIdx(room_idx)
+		socket.emit('join', { room_idx })
+		console.log(`${room_idx}방에 접속합니다`)
+	}
 	return (
 		<S.ChatViewContainer>
-			<RoomBox />
-			<ChatBox />
+			<RoomBox prod_idx={prod_idx} onClickUserChatRoom={onClickUserChatRoom} />
+
+			<ChatBox roomIdx={roomIdx} />
 		</S.ChatViewContainer>
 	)
 }

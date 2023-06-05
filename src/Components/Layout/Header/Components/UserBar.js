@@ -4,18 +4,24 @@ import styled from 'styled-components'
 import { FlexAlignCSS } from '../../../../Styles/common'
 import { Chatting_Icon, Profile_Icon } from '../../../Icons/Icons'
 import useUser from '../../../../Hooks/useUser'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
+import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
 
-function UserBar({ setSelectedNav, userInfo }) {
+function UserBar({ setSelectedNav }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const user = useUser()
+	const queryClient = useQueryClient()
+	const userInfo = useRecoilValue(userInfoAtom)
 
 	return (
 		<S.UserWrapper>
 			<S.UserContainer>
-				<span onClick={() => navigate('/chating')}>
+				<div onClick={() => navigate('/chating')}>
 					<Chatting_Icon size="28" color={'black'} />
-				</span>
+					<p>채팅</p>
+				</div>
 				<S.IssueBox />
 				<S.UserBox ref={userMenu}>
 					{userInfo.profileUrl ? (
@@ -23,7 +29,7 @@ function UserBar({ setSelectedNav, userInfo }) {
 					) : (
 						<Profile_Icon size="28" />
 					)}
-					<p>회원명</p>
+					<p>{userInfo.nickName} 님</p>
 					<S.UserDropDownMenu className="dropdown">
 						<span
 							onClick={() => {
@@ -45,6 +51,8 @@ function UserBar({ setSelectedNav, userInfo }) {
 							onClick={() => {
 								navigate('/')
 								user.logout()
+								localStorage.removeItem('myChatRoomList')
+								queryClient.removeQueries() // 캐싱된 데이터 모두 삭제
 								setSelectedNav(0)
 							}}
 						>
@@ -77,33 +85,26 @@ const UserWrapper = styled.div`
 const UserContainer = styled.div`
 	display: flex;
 	column-gap: 8px;
+	position: relative;
+
+	& > div {
+		${FlexAlignCSS}
+		padding:2px;
+		color: ${({ theme }) => theme.COLOR.common.black};
+		column-gap: 0.5rem;
+	}
 `
 
 const UserBox = styled.div`
 	${FlexAlignCSS}
 	height: 100%;
 	color: ${({ theme }) => theme.COLOR.common.black};
-	column-gap: 1rem;
+
 	z-index: 600;
 	border-radius: 1rem;
-	padding: 2px;
 	transition: 0.1s ease;
 
 	&:hover {
-		&:hover:before {
-			content: '';
-			position: absolute;
-			border-color: transparent transparent
-				${({ theme }) => theme.COLOR.common.gray[300]};
-			border-style: solid;
-			border-width: 0px 20px 11px;
-			width: 0rem;
-			height: 1rem;
-			top: 41px;
-			z-index: 20;
-			margin-left: 4rem;
-		}
-
 		& > .dropdown {
 			display: grid;
 		}
@@ -136,26 +137,28 @@ const ProfileIMG = styled.div`
 
 const UserDropDownMenu = styled.div`
 	position: absolute;
+	padding-top: 1rem;
 	display: none;
 	border: 1px solid ${({ theme }) => theme.COLOR.common.white};
 	border-radius: 5%;
-	top: 25%;
+	top: 85%;
+	right: 0;
 	z-index: 9999;
-	width: 9%;
-	max-width: 12rem;
+	width: 11rem;
 
 	& > span {
 		padding: 1rem;
-		border: 1px solid ${({ theme }) => theme.COLOR.common.white};
+		border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.white};
+		box-sizing: content-box;
 		cursor: pointer;
-		border-radius: 1rem;
-		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
+		color: ${({ theme }) => theme.COLOR.main};
+		background-color: ${({ theme }) => theme.COLOR.common.black};
 
 		:hover {
-			scale: 1.1;
 			font-family: ${({ theme }) => theme.FONT_WEIGHT.bold};
 			background-color: ${({ theme }) => theme.COLOR.hover};
 			color: ${({ theme }) => theme.COLOR.common.white};
+			box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
 		}
 	}
 `

@@ -12,6 +12,7 @@ function Navigation({ selectedNav, setSelectedNav }) {
 				onClick={() => {
 					setSelectedNav(1) // 선택된 Navigation 항목의 인덱스 업데이트
 					navigate('/list/freeMarket')
+					window.scrollTo(0, 0)
 				}}
 			>
 				FREE MARKET
@@ -21,6 +22,7 @@ function Navigation({ selectedNav, setSelectedNav }) {
 				onClick={() => {
 					setSelectedNav(2) // 선택된 Navigation 항목의 인덱스 업데이트
 					navigate('/list/usedTrade')
+					window.scrollTo(0, 0)
 				}}
 			>
 				TRADE USED

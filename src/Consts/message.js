@@ -21,8 +21,25 @@ const MESSAGE = {
 	USERDATA: {
 		FAILURE: '데이터를 불러오는데 실패했습니다.',
 	},
+	REGISTER: {
+		SUCCESS: '물품 등록이 완료되었습니다.',
+		FAILURE: '물품 등록에 실패했습니다.',
+	},
+	EDITPRODUCT: {
+		SUCCESS: '물품 수정이 완료되었습니다.',
+		FAILURE: '물품 수정에 실패했습니다.',
+	},
+	DELETEPRODUCT: {
+		CHECK: '정말로 삭제하시겠습니까?',
+	},
+	SALECOMPLETE: {
+		SUCCESS: '물품이 판매 확정되었습니다.',
+	},
 	SEARCH: {
-		EMPTY: '검색 결과가 없습니다.',
+		EMPTY: '검색 결과가 없습니다.!',
+	},
+	REVIEW: {
+		EMPTY: '후기를 작성해 보세요!',
 	},
 }
 export default MESSAGE

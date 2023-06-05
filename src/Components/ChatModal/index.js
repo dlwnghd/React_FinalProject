@@ -1,15 +1,45 @@
 import styled from 'styled-components'
 import useChatModal from '../../Hooks/useChatModal'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ModalClose_icon } from '../Icons/Icons'
 import { WidthAutoCSS } from '../../Styles/common'
 import ChatList from './Components/List'
 import { useRecoilState } from 'recoil'
-import { userInfoAtom } from '../../Atoms/userInfo.atom'
+import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
+import { useSocket } from '../../Context/socket'
+import ChatView from './Components/View'
 
-function ChatModal() {
+function ChatModal({ isDetailPage }) {
+	// 소켓 불러오기
+	const socket = useSocket()
+	// 모달 HOOKS
 	const { chatModalOpen, closeChat } = useChatModal()
-	const userInfo = useRecoilState(userInfoAtom)
+	// 채팅방 리스트 관리 recoil
+	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
+	// 동일한 상품idx를 가진 채팅방끼리 묶어주기
+	const groupedChats = roomList.chats?.reduce((groups, chats) => {
+		const { product } = chats
+		const { idx } = product
+		if (!groups[idx]) {
+			groups[idx] = []
+		}
+		groups[idx].push(chats)
+		return groups
+	}, {})
+	// 동일한 상품idx로 묶어진 객체들을 배열화
+	const prdChatsList = Object.values(groupedChats)
+
+	// 선택한 채팅방 채팅창 띄우기 STATE
+	const [viewChatState, setViewChatState] = useState(false)
+	// 선택한 상품의 prod_idx를 받아와서 PROPS로 뿌려준 뒤 socket.emit('join',{ viewChatIdx })
+	const [viewChatIdx, setViewChatIdx] = useState(null)
+
+	// 판매자 시점 - 판매자가 등록한 물품리스트 중 물품의 채팅리스트
+	const onClickChatRoom = prod_idx => {
+		setViewChatIdx(prod_idx)
+		setViewChatState(true)
+		// socket.emit('join', { room_idx })
+	}
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY
@@ -40,15 +70,26 @@ function ChatModal() {
 					<ModalClose_icon
 						size={15}
 						onClick={() => {
+							setViewChatState(false)
 							closeChat()
-							socket.on('disconnect', () => {
-								console.log('유저가 나감', socket.id)
-							})
 						}}
 					/>
 				</S.ChatHeader>
 				<S.ChatBody>
-					<ChatList />
+					{prdChatsList &&
+						!viewChatState &&
+						prdChatsList?.map((item, idx) => {
+							return (
+								<ChatList
+									key={idx}
+									list={item}
+									onClickChatRoom={onClickChatRoom}
+								/>
+							)
+						})}
+					{viewChatState && (
+						<ChatView prod_idx={viewChatIdx} room_state={viewChatState} />
+					)}
 				</S.ChatBody>
 			</S.ChatContainer>
 		</S.Wrapper>
@@ -102,6 +143,12 @@ const ChatHeader = styled.div`
 const ChatBody = styled.div`
 	${WidthAutoCSS}
 	margin-top: 1rem;
+	height: 85%;
+	overflow-y: scroll;
+	z-index: 100;
+	::-webkit-scrollbar {
+		display: none;
+	}
 `
 const S = {
 	Wrapper,

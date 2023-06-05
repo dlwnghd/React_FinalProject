@@ -4,66 +4,87 @@ import { ColumnNumberCSS, GridCenterCSS } from '../../../Styles/common'
 import Button from '../../../Components/Button/Button'
 import { Camera_Icon, ModalClose_icon } from '../../../Components/Icons/Icons'
 import AlertText from '../../../Components/AlertText/AlertText'
-import { useState } from 'react'
 import { useEffect } from 'react'
 
-function Images({ setImageFiles, imageList, setImageList, DetailData }) {
-	const [imgNum, setImgNum] = useState(false)
+function Images({
+	imageList,
+	setImageList,
+	DetailData,
+	setImageFileArr,
+	imageFileArr,
+	setImgNum,
+	imgNum,
+	imageFileArrTest,
+}) {
 	const pictureInput = useRef()
 
 	const handleClick = () => {
 		pictureInput.current.click()
+		setImgNum(false)
 	}
 
 	useEffect(() => {
 		if (DetailData) {
 			const { img_url, ProductImages } = DetailData.searchProduct
-			setImageList([img_url])
-			setImageList(prev => [...prev, ...ProductImages.map(img => img.img_url)])
+			setImageList([img_url, ...ProductImages.map(el => el.img_url)])
 		}
 	}, [DetailData])
 
 	const onAddImg = e => {
 		const ImageLists = e.target.files
-		setImageFiles(ImageLists)
 		let ImageUrlLists = [...imageList]
+
 		for (let i = 0; i < ImageLists.length; i++) {
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
+
+			if (ImageUrlLists.length > 5) return setImgNum(true)
+			console.log(ImageUrlLists.length)
+
+			imageFileArrTest.push(ImageLists[i])
 		}
-		if (ImageUrlLists.length > 5) {
+
+		if (imageFileArrTest.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
+			imageFileArrTest = imageFileArrTest.slice(0, imageFileArr.length)
+			setImgNum(true)
 		}
 		setImageList(ImageUrlLists)
+		setImageFileArr(prev => [...prev, ...imageFileArrTest])
 	}
 
 	//이미지 삭제
-	const DelViewImg = e => {
+	const DelViewImg = (e, idx) => {
 		let filterImg = imageList.filter(el => el !== e)
-		setImageList(filterImg)
+		let filterFile = imageFileArr.filter((el, index) => idx != index)
+		console.log(idx)
+		setImageList(() => filterImg)
+		setImageFileArr(filterFile)
 		setImgNum(() => false)
 	}
-
-	//Drag
+	console.log({ imageFileArr })
+	//드래그
 	const dragStartIdx = useRef()
 	const dragEnterIdx = useRef()
 
-	//drag sort
 	const onhandleSort = () => {
 		let imgItems = [...imageList]
+		let imgFileItem = [...imageFileArr]
 
-		//remove and save dragged item
 		const draggedItemContent = imgItems.splice(dragStartIdx.current, 1)[0]
+		const draggedFileItemContent = imgFileItem.splice(
+			dragStartIdx.current,
+			1,
+		)[0]
 
-		//switch the position
 		imgItems.splice(dragEnterIdx.current, 0, draggedItemContent)
+		imgFileItem.splice(dragEnterIdx.current, 0, draggedFileItemContent)
 
-		//reset the position ref
 		dragStartIdx.current = null
 		dragEnterIdx.current = null
 
-		//update state value
 		setImageList(imgItems)
+		setImageFileArr(imgFileItem)
 	}
 
 	return (
@@ -104,7 +125,7 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 						onDragOver={e => e.preventDefault()}
 					>
 						<S.Img src={imageList[idx]} />
-						<S.Del onClick={() => DelViewImg(e)}>
+						<S.Del onClick={() => DelViewImg(e, idx)}>
 							<ModalClose_icon size={25} />
 						</S.Del>
 					</S.ImgBox>
@@ -115,12 +136,12 @@ function Images({ setImageFiles, imageList, setImageList, DetailData }) {
 			{imgNum ? (
 				<S.Error>
 					<AlertText type={'error'}>
-						이미지 등록은 5개까지만 가능합니다.
+						이미지 하나 이상 등록해주세요. 5개까지 등록 가능합니다.
 					</AlertText>
 				</S.Error>
 			) : (
 				<S.Hint>
-					클릭 또는 드래그로 등록할 수 있어요. 드래그로 이미지 순서를 변경할 수
+					이미지는 5개까지 등록 가능합니다. 드래그로 이미지 순서를 변경할 수
 					있습니다.
 				</S.Hint>
 			)}
