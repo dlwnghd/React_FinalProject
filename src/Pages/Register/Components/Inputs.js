@@ -134,7 +134,6 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 		formData.append('category', Number(data.category))
 		formData.append('tag', hashArr)
 
-		console.log(imageFileArr)
 		if (submitType === '수정') {
 			imageList.map((el, idx) => {
 				if (idx === 0) {
