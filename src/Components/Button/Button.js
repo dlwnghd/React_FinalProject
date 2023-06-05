@@ -5,6 +5,7 @@ function Button(props) {
 		variant = 'default',
 		shape = 'default',
 		size = 'default',
+		fontSize = 'default',
 		fullWidth = false,
 		children,
 		...rest
@@ -15,6 +16,7 @@ function Button(props) {
 			variant={variant}
 			shape={shape}
 			size={size}
+			fontSize={fontSize}
 			fullWidth={fullWidth}
 			disabled={!!rest.disabled}
 			{...rest}

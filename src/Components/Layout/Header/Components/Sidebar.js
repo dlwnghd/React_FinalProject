@@ -1,34 +1,59 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router'
-import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
+import { useLocation, useNavigate } from 'react-router'
+import {
+	ColumnNumberCSS,
+	FlexCenterCSS,
+	GridCenterCSS,
+} from '../../../../Styles/common'
 import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ViewedItemBox from './ViewedItemBox'
 
-function Sidebar({ onSideBar }) {
+function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	const navigate = useNavigate()
+	const currentURL = useLocation().pathname
 	const slideRef = useRef()
 	const { data, error, status, isLoading, isError, refetch } =
 		useGetViewedProductsList()
 
 	useEffect(() => {
-		const $body = document.querySelector('body')
-		if (onSideBar === false) {
-			slideRef.current.style.transform = 'translateX(100%)'
-			$body.style.overflow = 'auto'
-			return
+		function handleResize() {
+			const $body = document.querySelector('body')
+
+			if (window.innerWidth > 414) {
+				slideRef.current.style.transform = 'translateX(0%)'
+				$body.style.overflow = 'auto'
+				slideRef.current.style.transition = 'none'
+			} else if (onSideBar === true) {
+				slideRef.current.style.transform = 'translateX(0%)'
+				$body.style.overflow = 'hidden'
+			} else if (onSideBar === false) {
+				slideRef.current.style.transform = 'translateX(100%)'
+				$body.style.overflow = 'auto'
+			}
 		}
-		if (onSideBar === true) {
-			slideRef.current.style.transform = 'translateX(0%)'
-			$body.style.overflow = 'hidden'
-			return
+
+		// 최초 실행
+		handleResize()
+
+		// 이벤트 리스너 추가
+		window.addEventListener('resize', handleResize)
+
+		// 컴포넌트가 언마운트되거나 onSideBar 값이 변경되면 이벤트 리스너 제거
+		return () => {
+			window.removeEventListener('resize', handleResize)
 		}
 	}, [onSideBar])
 
+	// 전역에서 관리되는 회원정보가 바뀌면(Login, 회원정보 수정) 최근 본 상품 재요청
+	useEffect(() => {
+		refetch()
+	}, [userInfo])
+
 	return (
-		<S.SidebarWrapper ref={slideRef}>
+		<S.SidebarWrapper ref={slideRef} pathURL={currentURL}>
 			<S.SideBarTitleContainer>
-				<h4>최근 본 상품</h4>
+				<h5>최근 본 상품</h5>
 			</S.SideBarTitleContainer>
 			<S.SideBarContainer>
 				<S.ProductList>
@@ -63,38 +88,73 @@ export default Sidebar
 
 const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 7.8rem;
-	left: 0;
+	top: 25.5rem;
 	z-index: 99;
-	width: 100%;
 	height: 100%;
 	overflow-y: auto;
-	padding: 6rem 6rem 12rem 6rem;
 	color: ${({ theme }) => theme.COLOR.common.black};
-	transition: 0.5s ease-in-out;
-	transform: translateX(100%);
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-	display: none;
+	height: 50%;
+	background-color: ${({ theme }) => theme.COLOR.common.white};
+	transform: translateX(0%);
+	width: 21rem;
+	right: 6%;
+	/* padding: 0rem 1rem 1rem; */
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+	${({ pathURL }) =>
+		pathURL.includes('search')
+			? {
+					display: 'block',
+			  }
+			: pathURL.includes('list')
+			? {
+					display: 'block',
+			  }
+			: { display: 'none' }}
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		top: 7.8rem;
 		display: block;
+		transform: translateX(100%);
+		width: 100%;
+		left: 0;
+		padding: 0rem 6rem 12rem 6rem;
+		height: 100%;
+		transition: 0.5s ease-in-out;
 	}
 `
 
 const SideBarTitleContainer = styled.div`
-	margin: 2rem 0;
+	padding: 1rem;
+	position: sticky;
+	top: 0px;
+	z-index: 99999;
+	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		padding: 4rem 1rem 2rem;
+		background-color: ${({ theme }) => theme.COLOR.common.white};
+	}
 `
 
-const SideBarContainer = styled.ul``
+const SideBarContainer = styled.ul`
+	padding: 1rem;
+`
 
 const ProductList = styled.li`
 	width: 100%;
-	${GridCenterCSS}
+	${FlexCenterCSS}
 	${ColumnNumberCSS(4)};
+	flex-direction: column;
+	row-gap: 1rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${GridCenterCSS}
 		${ColumnNumberCSS(1)}
 		column-gap: 2rem;
 	}

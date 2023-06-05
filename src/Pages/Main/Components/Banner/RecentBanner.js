@@ -54,7 +54,9 @@ function RecentBanner({ freeProduct, usedProduct }) {
 										<S.SlideItem
 											key={idx}
 											recentIMG={`${item.img_url}`}
-											onClick={() => navigate(`/detail/${item.idx}`)}
+											onClick={() =>
+												navigate(`/detail/${item.idx}`, { state: item.liked })
+											}
 										></S.SlideItem>
 									)
 								})}
@@ -87,6 +89,7 @@ const Title = styled.div`
 
 	margin-bottom: ${({ alignDetail }) =>
 		alignDetail === 'detail' ? '1rem' : '3rem'};
+	margin-bottom: 3rem;
 
 	& > h3 {
 		margin-bottom: 1rem;

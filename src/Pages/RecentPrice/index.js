@@ -3,12 +3,25 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import Filter from './Components/DateFilter'
 import useGetQuoteProductList from '../../Hooks/Queries/get-quoteList'
-import { FlexAlignCSS, WidthAutoCSS } from '../../Styles/common'
+import {
+	ColumnNumberCSS,
+	FlexBetweenCSS,
+	GridCenterCSS,
+	WidthAutoCSS,
+} from '../../Styles/common'
 import Graph from './Components/Graph'
 import RecentSearch from './Components/Search'
 import SoldOutList from './Components/SoldOutList'
+import getFormattedDate from '../../Utils/getFormattedDate'
+import { useLocation, useSearchParams } from 'react-router-dom'
+import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
+import EmptyList from '../../Components/EmptyList/EmptyList'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 function RecentPrice() {
+	const location = useLocation()
+	const { state: title } = location
+
 	// Filter 종류
 	const dateFilter = [
 		'최근 일주일',
@@ -21,7 +34,7 @@ function RecentPrice() {
 	// 필터버튼 클릭시
 	const onFilter = date => {
 		dateFilter.some(item => {
-			if (date == item) {
+			if (date === item) {
 				updateData(item)
 				return true
 			}
@@ -48,21 +61,16 @@ function RecentPrice() {
 	}
 
 	// 시세 상품 검색어
-	const [searchQuote, setSearchQuote] = useState('')
-
-	// 날짜 형태 (yyy-mm-dd)로 변경
-	const formatDate = date => {
-		const year = date.getFullYear()
-		const month = String(date.getMonth() + 1).padStart(2, '0')
-		const day = String(date.getDate()).padStart(2, '0')
-		return `${year}-${month}-${day}`
-	}
+	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchQuote, setSearchQuote] = useState(
+		searchParams.get('quote') || '',
+	)
 
 	// 1년 전 데이터 구하기 (yyyy-mm-dd)
 	const getOneYearAgo = () => {
 		const oneYearAgo = new Date()
 		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-		return formatDate(oneYearAgo)
+		return getFormattedDate(oneYearAgo)
 	}
 
 	// use-query 시작
@@ -70,25 +78,25 @@ function RecentPrice() {
 	const { data, error, status, isLoading } = useGetQuoteProductList({
 		keyword: searchQuote,
 		start: getOneYearAgo(),
-		end: formatDate(new Date()),
+		end: getFormattedDate(new Date()),
 	})
 
 	if (error) {
-		return
+		return <ErrorFallback error={error} />
 	}
 
 	return (
 		<S.RecentPriceWrapper>
 			<S.RecentPriceContainer>
 				<S.OptionContainer>
-					<RecentSearch setSearchQuote={setSearchQuote} />
+					<RecentSearch setSearchQuote={setSearchQuote} title={title} />
 					<Filter
 						filterArray={dateFilter}
 						onFilter={onFilter}
 						searchQuote={searchQuote}
 					/>
 				</S.OptionContainer>
-				{data ? (
+				{!isLoading ? (
 					<Graph quoteList={data} searchQuote={searchQuote} />
 				) : (
 					<S.SkeletonBox>
@@ -102,7 +110,19 @@ function RecentPrice() {
 					</S.SkeletonBox>
 				)}
 			</S.RecentPriceContainer>
-			<SoldOutList soldOutList={data} />
+			<S.SoldOutListWrapper>
+				<h3>최근 거래 종료 품목</h3>
+				{data?.products.product.length === 0 && <EmptyList />}
+				<S.SoldOutListContainer>
+					{!isLoading ? (
+						<SoldOutList soldOutList={data} />
+					) : (
+						Array(8)
+							.fill('')
+							.map((_, i) => <MainSkeleton />)
+					)}
+				</S.SoldOutListContainer>
+			</S.SoldOutListWrapper>
 		</S.RecentPriceWrapper>
 	)
 }
@@ -119,7 +139,9 @@ const RecentPriceContainer = styled.div`
 `
 
 const OptionContainer = styled.div`
-	${FlexAlignCSS}
+	${FlexBetweenCSS}
+	align-items: flex-end;
+	padding-bottom: 1.5rem;
 	border-bottom: 1px solid ${({ theme }) => theme.COLOR.common.gray[100]};
 `
 
@@ -138,9 +160,26 @@ const SkeletonBox = styled.div`
 	}
 `
 
+const SoldOutListWrapper = styled.div``
+
+const SoldOutListContainer = styled.div`
+	width: 100%;
+	margin-top: 4rem;
+	margin-bottom: 8rem;
+	${GridCenterCSS}
+	${ColumnNumberCSS(4)};
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		${ColumnNumberCSS(2)}
+		column-gap: 1rem;
+	}
+`
+
 const S = {
 	RecentPriceWrapper,
 	RecentPriceContainer,
 	OptionContainer,
 	SkeletonBox,
+	SoldOutListWrapper,
+	SoldOutListContainer,
 }

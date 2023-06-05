@@ -17,7 +17,9 @@ const useGetUserInfo = () => {
 		[QUERY_KEY.GET_USER_INFO],
 		() => getUserInfo(),
 		{
+			refetchOnMount: 'always',
 			cacheTime: 1000 * 5 * 60,
+			staleTime: 1000 * 5 * 60,
 			// onSuccess: () => {},
 			// onError: () => {
 			// 	setMessage(MESSAGE.USERDATA.FAILURE)

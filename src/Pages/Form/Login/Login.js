@@ -29,22 +29,21 @@ import MESSAGE from '../../../Consts/message'
 import { useMutation } from '@tanstack/react-query'
 import { CircularProgress } from '@mui/material'
 
-import { firstConnect } from '../../../Socket/socketIo'
 import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
 import ChatApi from '../../../Apis/chatApi'
+import { useSocket } from '../../../Context/socket'
 
 function Login() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const from = location.state?.from
-
 	const user = useUser()
 	const [isSaveId, setIsSaveId] = useState(false)
 	const [error, setError] = useState(null)
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
-
 	const loginState = TokenService.getAccessToken()
 
+	const socket = useSocket()
 	const {
 		register,
 		formState: { errors },
@@ -56,16 +55,9 @@ function Login() {
 	const watchedEmail = watch('email')
 	const watchedPassword = watch('password')
 
-	useEffect(() => {
-		console.log(roomList)
-	}, [setRoomList])
-
 	const getChatRoomList = async () => {
 		try {
 			const res = await ChatApi.chatRoomList()
-
-			console.log(res.data)
-
 			setRoomList(res.data)
 		} catch (err) {
 			console.log('에러발생', err)
@@ -77,14 +69,10 @@ function Login() {
 		{
 			onSuccess: ({ data }) => {
 				user.login(data.tokenForHeader, data.user)
-
-				if (data.tokenForHeader && data.user.socket) {
-					if (firstConnect(data.user.socket)) {
-						getChatRoomList()
-
-						console.log(roomList)
-					}
-				}
+				getChatRoomList()
+				socket?.emit('connect-user', {
+					token: data.tokenForHeader,
+				})
 
 				if (isSaveId) {
 					// 로그인 성공 시에만 아이디 저장
@@ -94,24 +82,29 @@ function Login() {
 				navigate('/') // 그게 아니라면 메인 페이지로 이동
 			},
 			onError: err => {
-				const { FAILURE, ERROR } = MESSAGE.LOGIN
-				try {
-					const {
-						message: { info },
-					} = err.response.data
-					setError(info === 'loginFailed' ? FAILURE : ERROR)
-				} catch (err) {
-					// setError하는 과정에서 에러가 발생할 수 있어
-					// 대비하여 ERROR로 텍스트를 띄웁니다.
-					setError(ERROR)
-				}
+				throw err
 			},
 		},
 	)
 
 	const onSubmit = async data => {
 		const { email, password: pw } = data
-		await mutateAsync({ email, pw })
+
+		try {
+			await mutateAsync({ email, pw })
+		} catch (error) {
+			const { FAILURE, ERROR } = MESSAGE.LOGIN
+			try {
+				const {
+					message: { info },
+				} = err.response.data
+				setError(info === 'loginFailed' ? FAILURE : ERROR)
+			} catch (err) {
+				// setError하는 과정에서 에러가 발생할 수 있어
+				// 대비하여 ERROR로 텍스트를 띄웁니다.
+				setError(ERROR)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -122,7 +115,7 @@ function Login() {
 	}, [])
 
 	useEffect(() => {
-		setError(null)
+		setError('')
 	}, [watchedEmail, watchedPassword])
 
 	if (loginState) return <Navigate replace to="/" /> // 이미 로그인 상태이면 메인페이지로 보내기

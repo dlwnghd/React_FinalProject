@@ -14,16 +14,18 @@ function PriceItem(props) {
 				<div>
 					<Input
 						placeholder={'가격을 입력해주세요.'}
-						status={errors.price && 'error'}
+						status={errors.price ? 'error' : 'default'}
 						{...field}
 						{...rest}
 					/>
 				</div>
 			</S.InputField>
 
-			<S.StyledAlertText type="error">
-				{errors.price && errors.price.message}
-			</S.StyledAlertText>
+			{
+				<S.StyledAlertText type="error">
+					{errors.price && errors.price.message}
+				</S.StyledAlertText>
+			}
 		</S.Wrapper>
 	)
 }
