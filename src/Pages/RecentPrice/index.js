@@ -15,6 +15,8 @@ import SoldOutList from './Components/SoldOutList'
 import getFormattedDate from '../../Utils/getFormattedDate'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
+import EmptyList from '../../Components/EmptyList/EmptyList'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 function RecentPrice() {
 	const location = useLocation()
@@ -80,7 +82,7 @@ function RecentPrice() {
 	})
 
 	if (error) {
-		return
+		return <ErrorFallback error={error} />
 	}
 
 	return (
@@ -110,6 +112,7 @@ function RecentPrice() {
 			</S.RecentPriceContainer>
 			<S.SoldOutListWrapper>
 				<h3>최근 거래 종료 품목</h3>
+				{data?.products.product.length === 0 && <EmptyList />}
 				<S.SoldOutListContainer>
 					{!isLoading ? (
 						<SoldOutList soldOutList={data} />

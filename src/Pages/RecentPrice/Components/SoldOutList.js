@@ -7,21 +7,20 @@ function SoldOutList({ soldOutList }) {
 
 	return (
 		<>
-			{product &&
-				product.map((item, idx) => {
-					return (
-						<SoldOutItemBox
-							title={item.title}
-							price={item.price}
-							posterPath={item.img_url}
-							isLiked={item.liked}
-							createdAt={item.createdAt}
-							key={idx}
-							status={item.status}
-							// onClick={() => navigate(`/detail/${item.idx}`)}
-						/>
-					)
-				})}
+			{product?.map((item, idx) => {
+				return (
+					<SoldOutItemBox
+						title={item.title}
+						price={item.price}
+						posterPath={item.img_url}
+						isLiked={item.liked}
+						createdAt={item.createdAt}
+						key={idx}
+						status={item.status}
+						// onClick={() => navigate(`/detail/${item.idx}`)}
+					/>
+				)
+			})}
 		</>
 	)
 }
