@@ -1,11 +1,7 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import {
-	ColumnNumberCSS,
-	FlexCenterCSS,
-	GridCenterCSS,
-} from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ViewedItemBox from './ViewedItemBox'
 
@@ -88,21 +84,19 @@ export default Sidebar
 
 const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 25.5rem;
+	top: 24rem;
 	z-index: 99;
-	height: 100%;
+	${window.innerWidth < 1440 ? '{ right: 0 }' : '{ right: 12% }'}
 	overflow-y: auto;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
 	font-family: ${({ theme }) => theme.FONT_WEIGHT.regular};
-	height: 50%;
+	height: 36rem;
 	background-color: ${({ theme }) => theme.COLOR.common.white};
 	transform: translateX(0%);
-	width: 21rem;
-	right: 6%;
-	/* padding: 0rem 1rem 1rem; */
+
 	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-	${({ pathURL }) =>
+	/* ${({ pathURL }) =>
 		pathURL.includes('search')
 			? {
 					display: 'block',
@@ -111,7 +105,7 @@ const SidebarWrapper = styled.nav`
 			? {
 					display: 'block',
 			  }
-			: { display: 'none' }}
+			: { display: 'none' }} */
 
 	&::-webkit-scrollbar {
 		display: none;
@@ -143,13 +137,11 @@ const SideBarTitleContainer = styled.div`
 `
 
 const SideBarContainer = styled.ul`
-	padding: 1rem;
+	/* padding: 1rem; */
 `
 
 const ProductList = styled.li`
 	width: 100%;
-	${FlexCenterCSS}
-	${ColumnNumberCSS(4)};
 	flex-direction: column;
 	row-gap: 1rem;
 

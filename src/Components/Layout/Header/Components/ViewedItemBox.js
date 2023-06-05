@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { DeleteProduct_Icon } from '../../../Icons/Icons'
 import ProductApi from '../../../../Apis/productApi'
-import { FlexBetweenCSS } from '../../../../Styles/common'
+import { FlexBetweenCSS, WidthAutoCSS } from '../../../../Styles/common'
 
 function ViewedItemBox({
 	refetch,
@@ -45,11 +45,12 @@ function ViewedItemBox({
 export default ViewedItemBox
 
 const Wrapper = styled.div`
+	position: relative;
 	${FlexBetweenCSS}
-	flex-direction: row;
+	flex-direction: column;
 	position: relative;
 	padding: 1rem 0;
-	width: 100%;
+	${WidthAutoCSS}
 	height: 100%;
 	z-index: 0;
 	box-sizing: border-box;
@@ -60,10 +61,12 @@ const Wrapper = styled.div`
 		z-index: 999;
 		cursor: pointer;
 		top: 1rem;
-		right: 1.4rem;
+		right: 1rem;
 		color: ${({ theme }) => theme.COLOR.main};
+	}
 
-		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		flex-direction: row;
 	}
 `
 
@@ -84,7 +87,8 @@ const IMGContainer = styled.div`
 
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
-	width:60%;
+	cursor: pointer;
+	width: 100%;
 	height: 100%;
 	padding: 0 1rem;
 	flex-direction: column;
@@ -97,7 +101,7 @@ const DescContainer = styled.div`
 `
 
 const DescBox = styled.div`
-	/* margin-top: 1rem; */
+	margin-top: 1rem;
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -121,6 +125,10 @@ const DescBox = styled.div`
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	& > h5 {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 	}
 
 	& > p {
