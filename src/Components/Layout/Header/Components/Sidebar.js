@@ -46,7 +46,7 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	}, [onSideBar])
 
 	useEffect(() => {
-		setOnSideBar(false)
+		// setOnSideBar(false)
 	}, [currentURL])
 
 	// 전역에서 관리되는 회원정보가 바뀌면(Login, 회원정보 수정) 최근 본 상품 재요청

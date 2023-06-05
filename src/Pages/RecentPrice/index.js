@@ -16,11 +16,10 @@ import getFormattedDate from '../../Utils/getFormattedDate'
 import { useSearchParams } from 'react-router-dom'
 import MainSkeleton from '../../Components/ItemBox/ItemSkeleton'
 
-
-	const location = useLocation()
 function RecentPrice() {
 	const { state: title } = location
 
+	const location = useLocation()
 	// Filter 종류
 	const dateFilter = [
 		'최근 일주일',

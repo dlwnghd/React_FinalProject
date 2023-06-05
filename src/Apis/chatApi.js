@@ -38,6 +38,7 @@ const ChatApi = {
 
 	// 특정 물품 채팅방 조회
 	prdChatList(prod_idx) {
+		console.log(prod_idx)
 		return axiosInstance.get(PATH + '/product-chat-list', {
 			params: { prod_idx },
 		})
