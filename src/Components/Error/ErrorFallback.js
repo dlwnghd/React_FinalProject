@@ -15,7 +15,7 @@ function ErrorFallback({ error, refetch }) {
 		if (isExpiredSession) {
 			navigate('/login')
 		} else {
-			refetch()
+			refetch ? refetch() : window.location.reload()
 		}
 	}
 

@@ -4,7 +4,6 @@ import { useLocation } from 'react-router'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import ProductApi from '../../Apis/productApi'
-import QUERY_KEY from '../../Consts/query.key'
 
 function Heart({ like, prod_idx, change_size, category }) {
 	const [isLike, setIsLike] = useState(like)
@@ -18,12 +17,8 @@ function Heart({ like, prod_idx, change_size, category }) {
 		() => ProductApi.like(prod_idx),
 		{
 			onSuccess: async res => {
-				await queryClient.refetchQueries(
-					[QUERY_KEY.GET_MAINPAGE_MAIN_DATA],
-					[QUERY_KEY.GET_DETAILPAGE_DATA, prod_idx],
-				)
+				await queryClient.refetchQueries()
 				const { message } = res.data
-				console.log(res)
 				setIsLike(message)
 			},
 			onError: err => {

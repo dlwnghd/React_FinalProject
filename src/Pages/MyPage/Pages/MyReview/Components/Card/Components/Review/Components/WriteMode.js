@@ -3,16 +3,15 @@ import Stars from './Stars'
 import * as S from './style'
 import Button from '../../../../../../../../../Components/Button/Button'
 import ImageInput from './ImageInput'
+import InnerError from './Error'
 
 function WriteMode({
-	mode,
+	mode: { mode, onClickChangeMode },
 	review,
-	imageArray,
-	setImageArray,
+	imageArray: { imageArray, setImageArray },
 	originalImageLength,
-	onClickChangeMode,
-	newReview,
-	setNewReview,
+	newReview: { newReview, setNewReview },
+	errorData: { errorData, setErrorData },
 }) {
 	const titleArea = useRef()
 
@@ -84,6 +83,9 @@ function WriteMode({
 
 	return (
 		<S.Wrapper>
+			{errorData && (
+				<InnerError error={errorData} onCloseError={() => setErrorData(null)} />
+			)}
 			<S.Container>
 				<Stars mode={mode} ondo={newReview.ondo} setNewReview={setNewReview} />
 				<S.BottomSection>
