@@ -19,6 +19,7 @@ import { ModalTitle } from '../../../../Components/Modal/Modal.style'
 import useGetProductChatListData from '../../../../Hooks/Queries/get-productChatList'
 import AlertModal from '../../../../Components/Modal/AlertModal/AlertModal'
 import ErrorModal from '../../../../Components/Error/ErrorModal'
+import EmptyList from '../../../../Components/EmptyList/EmptyList'
 
 function MyPrdRegister() {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -147,11 +148,7 @@ function MyPrdRegister() {
 								})}
 							</S.PrdList>
 						) : (
-							<S.AlertTextContainer>
-								<p>
-									{category === '0' ? '중고상품' : '무료상품'} 내역이 없습니다.
-								</p>
-							</S.AlertTextContainer>
+							<EmptyList />
 						)}
 					</>
 				)}
