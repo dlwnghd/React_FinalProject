@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { DeleteProduct_Icon } from '../../../Icons/Icons'
 import ProductApi from '../../../../Apis/productApi'
-import { FlexBetweenCSS, WidthAutoCSS } from '../../../../Styles/common'
+import { FlexBetweenCSS } from '../../../../Styles/common'
 
 function ViewedItemBox({
 	refetch,
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
 	flex-direction: column;
 	position: relative;
 	padding: 1rem 0;
-	${WidthAutoCSS}
+	width: 100%;
 	height: 100%;
 	z-index: 0;
 	box-sizing: border-box;
@@ -58,26 +58,45 @@ const Wrapper = styled.div`
 
 	& > svg {
 		position: absolute;
+		width: 2rem;
+		height: 2rem;
+		padding: 0.2rem;
 		z-index: 999;
 		cursor: pointer;
 		top: 1rem;
-		right: 1rem;
+		right: 0;
+		border-radius: 50%;
+
 		color: ${({ theme }) => theme.COLOR.main};
+		background: ${({ theme }) => theme.COLOR.common.white};
+		border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[200]};
 	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		flex-direction: row;
+
+		& > svg {
+			width: 3rem;
+			height: 3rem;
+			right: 0;
+			bottom: 0;
+		}
 	}
 `
 
 const IMGContainer = styled.div`
 	position: relative;
 	cursor: pointer;
-	width: 7.2rem;
-	height: 7.2rem;
+	width: 100%;
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
-	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 17rem;
@@ -90,7 +109,6 @@ const DescContainer = styled.div`
 	cursor: pointer;
 	width: 100%;
 	height: 100%;
-	padding: 0 1rem;
 	flex-direction: column;
 	align-items: baseline;
 	font-size: 50%;
@@ -135,10 +153,7 @@ const DescBox = styled.div`
 		margin: 1rem 0 2rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+		white-space: nowrap;
 	}
 `
 

@@ -1,13 +1,17 @@
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import useGetViewedProductsList from '../../../../Hooks/Queries/get-viewedProductList'
 import ViewedItemBox from './ViewedItemBox'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import ProductApi from '../../../../Apis/productApi'
+import { useCallback } from 'react'
 
 function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	const navigate = useNavigate()
 	const currentURL = useLocation().pathname
+	const { idx: prod_idx } = useParams()
 	const slideRef = useRef()
 	const { data, error, status, isLoading, isError, refetch } =
 		useGetViewedProductsList()
@@ -29,22 +33,48 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 			}
 		}
 
-		// 최초 실행
-		handleResize()
+		if (slideRef.current) {
+			handleResize()
+		}
 
-		// 이벤트 리스너 추가
 		window.addEventListener('resize', handleResize)
 
-		// 컴포넌트가 언마운트되거나 onSideBar 값이 변경되면 이벤트 리스너 제거
 		return () => {
 			window.removeEventListener('resize', handleResize)
 		}
 	}, [onSideBar])
 
-	// 전역에서 관리되는 회원정보가 바뀌면(Login, 회원정보 수정) 최근 본 상품 재요청
 	useEffect(() => {
 		refetch()
 	}, [userInfo])
+
+	const queryClient = useQueryClient()
+	const { mutateAsync } = useMutation(
+		prod_idx => ProductApi.addViewedList(prod_idx),
+		{
+			onSuccess: async () => {
+				await queryClient.refetchQueries()
+			},
+			onError: err => {
+				console.log(err)
+			},
+		},
+	)
+
+	const fetchData = useCallback(
+		async prod_idx => {
+			if (currentURL.includes('detail')) {
+				await mutateAsync(prod_idx)
+			}
+		},
+		[prod_idx],
+	)
+
+	useEffect(() => {
+		fetchData(prod_idx)
+	}, [prod_idx])
+
+	if (isLoading) return
 
 	return (
 		<S.SidebarWrapper ref={slideRef} pathURL={currentURL}>
@@ -53,27 +83,27 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 			</S.SideBarTitleContainer>
 			<S.SideBarContainer>
 				<S.ProductList>
-					{data &&
-						data.productList.map((item, idx) => {
-							return (
-								<>
-									<ViewedItemBox
-										refetch={refetch}
-										title={item.Product.title}
-										price={item.Product.price}
-										status={item.Product.status}
-										posterPath={item.Product.img_url}
-										createdAt={item.Product.createdAt}
-										key={item.idx}
-										prod_idx={item.Product.idx}
-										onClick={() => navigate(`/detail/${item.Product.idx}`)}
-									/>
-									{data.productList.length !== idx + 1 ? (
-										<S.ItemLine />
-									) : undefined}
-								</>
-							)
-						})}
+					{data?.productList.map((item, idx) => {
+						return (
+							<>
+								<ViewedItemBox
+									refetch={refetch}
+									title={item.Product.title}
+									price={item.Product.price}
+									status={item.Product.status}
+									posterPath={item.Product.img_url}
+									createdAt={item.Product.createdAt}
+									key={item.idx}
+									prod_idx={item.Product.idx}
+									fetchData={fetchData}
+									onClick={() => navigate(`/detail/${item.Product.idx}`)}
+								/>
+								{data?.productList.length !== idx + 1 ? (
+									<S.ItemLine />
+								) : undefined}
+							</>
+						)
+					})}
 				</S.ProductList>
 			</S.SideBarContainer>
 		</S.SidebarWrapper>
@@ -84,9 +114,11 @@ export default Sidebar
 
 const SidebarWrapper = styled.nav`
 	position: fixed;
-	top: 24rem;
+	top: 34.6rem;
+
+	width: 12rem;
 	z-index: 99;
-	${window.innerWidth < 1440 ? '{ right: 0 }' : '{ right: 12% }'}
+	${window.innerWidth < 1440 ? '{ right: 0 }' : '{ right: 11% }'}
 	overflow-y: auto;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
@@ -96,7 +128,7 @@ const SidebarWrapper = styled.nav`
 	transform: translateX(0%);
 
 	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-	/* ${({ pathURL }) =>
+	${({ pathURL }) =>
 		pathURL.includes('search')
 			? {
 					display: 'block',
@@ -105,7 +137,7 @@ const SidebarWrapper = styled.nav`
 			? {
 					display: 'block',
 			  }
-			: { display: 'none' }} */
+			: { display: 'none' }}
 
 	&::-webkit-scrollbar {
 		display: none;
@@ -126,9 +158,9 @@ const SidebarWrapper = styled.nav`
 const SideBarTitleContainer = styled.div`
 	padding: 1rem;
 	position: sticky;
-	top: 0px;
 	z-index: 99999;
-	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+	color: ${({ theme }) => theme.COLOR.main};
+	background-color: ${({ theme }) => theme.COLOR.common.black};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		padding: 4rem 1rem 2rem;
@@ -137,7 +169,8 @@ const SideBarTitleContainer = styled.div`
 `
 
 const SideBarContainer = styled.ul`
-	/* padding: 1rem; */
+	width: 100%;
+	padding: 1rem;
 `
 
 const ProductList = styled.li`
