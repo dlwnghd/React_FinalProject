@@ -4,7 +4,6 @@ import RoomBox from './RoomBox/RoomBox'
 import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 
 function ChatView({ prod_idx, room_state }) {
-	console.log('chatview', prod_idx)
 	return (
 		<S.ChatViewContainer>
 			<RoomBox prod_idx={prod_idx} />

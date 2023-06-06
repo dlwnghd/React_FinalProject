@@ -73,7 +73,6 @@ function UserInfo() {
 
 		{
 			onSuccess: res => {
-				console.log(res)
 				const editData = JSON.parse(res[0].config.data)
 				if (res[1]) {
 					user.editUserInfo({
@@ -106,7 +105,6 @@ function UserInfo() {
 				// )
 			},
 			onError: err => {
-				console.log(err)
 				setModalType('error')
 				setIsOpenModal(true)
 			},
@@ -164,9 +162,7 @@ function UserInfo() {
 
 		try {
 			mutateAsync(editUser)
-		} catch (err) {
-			console.log(err)
-		}
+		} catch (err) {}
 	}
 
 	useEffect(() => {

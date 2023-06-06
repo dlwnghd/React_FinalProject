@@ -20,7 +20,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
 	const {
 		title,
-    idx,
+		idx,
 		status,
 		liked,
 		price,
@@ -35,8 +35,8 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	const [isLiked, setIsLiked] = useState(liked)
 	const { openChat } = useChatModal()
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
-  
-  const createdDay = new Date(createdAt)
+
+	const createdDay = new Date(createdAt)
 	const year = createdDay.getFullYear()
 	const month = createdDay.getMonth() + 1
 	const day = createdDay.getDate()
@@ -68,13 +68,12 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			}
 			openChat()
 		} catch (err) {
-			console.log('에러 발생%', err)
 			if (err.response && err.response.status === 400) {
 				openChat()
 			}
 		}
 	}
-  
+
 	return (
 		<S.Wrapper>
 			<S.TitleContainer>
@@ -111,7 +110,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						variant={'no-border'}
 						shape={'soft'}
 						size={'full'}
-            onClick={makeChatRoom}
+						onClick={makeChatRoom}
 					>
 						채팅
 					</S.StyledMainButton>

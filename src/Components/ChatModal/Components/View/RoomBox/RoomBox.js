@@ -10,17 +10,13 @@ function RoomBox({ prod_idx }) {
 	const getChatRooms = async () => {
 		try {
 			const res = await ChatApi.prdChatList(prod_idx)
-
-			console.log(res)
-		} catch (err) {
-			console.log(err)
-		}
+		} catch (err) {}
 	}
 
 	useEffect(() => {
 		getChatRooms()
 	}, [prod_idx])
-	console.log(prod_idx)
+
 	return (
 		<S.RoomBoxContainer>
 			<S.profileImgBox />

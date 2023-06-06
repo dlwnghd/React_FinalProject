@@ -15,9 +15,7 @@ const usePostHeart = (prod_idx, getMessage) => {
 				const { message } = res.data
 				getMessage(message)
 			},
-			onError: err => {
-				console.log(err)
-			},
+			onError: err => {},
 		},
 	)
 	return { mutateAsync, isLoading }
