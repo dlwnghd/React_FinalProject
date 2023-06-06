@@ -39,7 +39,6 @@ function Images({
 			ImageUrlLists.push(currentImageUrl)
 
 			if (ImageUrlLists.length > 5) return setImgNum(true)
-			console.log(ImageUrlLists.length)
 
 			imageFileArrTest.push(ImageLists[i])
 		}
@@ -57,12 +56,12 @@ function Images({
 	const DelViewImg = (e, idx) => {
 		let filterImg = imageList.filter(el => el !== e)
 		let filterFile = imageFileArr.filter((el, index) => idx != index)
-		console.log(idx)
+
 		setImageList(() => filterImg)
 		setImageFileArr(filterFile)
 		setImgNum(() => false)
 	}
-	console.log({ imageFileArr })
+
 	//드래그
 	const dragStartIdx = useRef()
 	const dragEnterIdx = useRef()
@@ -180,6 +179,7 @@ const ImgBox = styled.div`
 const Img = styled.img`
 	width: 20.6rem;
 	height: 20.6rem;
+
 	cursor: pointer;
 	&:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[300]};
@@ -212,6 +212,9 @@ const MainImg = styled.div`
 	bottom: 0.5rem;
 	left: 0.5rem;
 	font-size: ${({ theme }) => theme.FONT_SIZE.large};
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		display: none;
+	}
 `
 const MobileTitle = styled.div`
 	display: none;

@@ -8,6 +8,7 @@ import { useState } from 'react'
 import ChatApi from '../../../../Apis/chatApi'
 
 function ChatView({ prod_idx, room_state }) {
+
 	const [roomList, setRoomList] = useState([])
 	const [roomIdx, setRoomIdx] = useState(null)
 	const socket = useSocket()
@@ -17,7 +18,7 @@ function ChatView({ prod_idx, room_state }) {
 			const res = await ChatApi.prdChatList(prod_idx)
 			setRoomList(res.data)
 		} catch (error) {
-			console.log('채팅룸 없어요.')
+			
 		}
 	}
 	useEffect(() => {
@@ -27,8 +28,9 @@ function ChatView({ prod_idx, room_state }) {
 	const onClickUserChatRoom = room_idx => {
 		setRoomIdx(room_idx)
 		socket.emit('join', { room_idx })
-		console.log(`${room_idx}방에 접속합니다`)
+		
 	}
+
 	return (
 		<S.ChatViewContainer>
 			<RoomBox prod_idx={prod_idx} onClickUserChatRoom={onClickUserChatRoom} />

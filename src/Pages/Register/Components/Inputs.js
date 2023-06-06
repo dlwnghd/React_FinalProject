@@ -137,9 +137,7 @@ function Inputs({ DetailData, setImgNum, imageFileArr, imageList }) {
 		if (submitType === '수정') {
 			imageList.map((el, idx) => {
 				if (idx === 0) {
-					if (imageFileArr.length === 0) {
-						formData.append('main_url', el)
-					}
+					formData.append('main_url', el)
 					formData.append('images', imageFileArr[idx])
 				} else {
 					subUrl.push(el)

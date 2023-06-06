@@ -38,7 +38,6 @@ function Header() {
 
 	// 현재 URL 변경시
 	useEffect(() => {
-		console.log('✅', currentURL)
 		const foundIndex = NavigationFilter.findIndex(item =>
 			currentURL.includes(item),
 		)

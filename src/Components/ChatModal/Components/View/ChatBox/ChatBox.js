@@ -30,18 +30,14 @@ function ChatBox({ roomIdx }) {
 		try {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
-		} catch (err) {
-			console.log('에러발생', err)
-		}
+		} catch (err) {}
 	}
 
 	const getChatMsg = async () => {
 		try {
 			const res = await ChatApi.checkChatLog(roomIdx)
 			setAllMessages(res.data)
-		} catch (error) {
-			console.log(error)
-		}
+		} catch (error) {}
 	}
 
 	const postMessage = async e => {
@@ -66,13 +62,10 @@ function ChatBox({ roomIdx }) {
 				const res = await ChatApi.sendMsg(roomIdx, messagesInput.current.value)
 
 				if (res.status) {
-					console.log(messagesInput.current.value)
 					messagesInput.current.value = ''
 					newChatRoomList()
 				}
-			} catch (error) {
-				console.log('전송실패')
-			}
+			} catch (error) {}
 
 			return
 		}
