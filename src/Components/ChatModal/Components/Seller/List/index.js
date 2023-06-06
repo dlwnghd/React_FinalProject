@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import ChatItemBox from './ItemBox/ItemBox'
+import SellChatItemBox from './ItemBox/ItemBox'
 
-function ChatList({ list, onClickChatRoom }) {
+function SellChatList({ list, onClickChatRoom }) {
 	const prod_idx = list[0].product.idx
-
 	const onClickJoinChat = () => {
 		onClickChatRoom(prod_idx)
 		// socket.emit('join', { idx })
@@ -11,13 +10,13 @@ function ChatList({ list, onClickChatRoom }) {
 	// list.isRead == true이면? 채팅창 빨간불 끄고 false일땐 빨간불 들어오게 ui그려야함
 	return (
 		<S.ChatListContainer>
-			<ChatItemBox list={list} />
+			<SellChatItemBox list={list} />
 			<button onClick={onClickJoinChat}>채팅방 목록 확인</button>
 		</S.ChatListContainer>
 	)
 }
 
-export default ChatList
+export default SellChatList
 
 const ChatListContainer = styled.div`
 	position: relative;

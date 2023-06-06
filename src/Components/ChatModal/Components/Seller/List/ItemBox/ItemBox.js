@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-function ChatItemBox({ list }) {
+function SellChatItemBox({ list }) {
 	const options = {
 		timeZone: 'Asia/Seoul',
 		hour12: true, // 오후/오후 구분을 위해 true로 설정합니다.
@@ -9,7 +9,6 @@ function ChatItemBox({ list }) {
 		hour: 'numeric',
 		minute: 'numeric',
 	}
-
 	// 채팅방 중 가장 최근 메시지 시간 필터
 	const times = list.map(item => item.lastMessageCreatedAt)
 	times.sort((a, b) => new Date(b) - new Date(a))
@@ -22,13 +21,14 @@ function ChatItemBox({ list }) {
 			<S.DesBox>
 				<p>{list[0].product.title}</p>
 				<p>{list[0].product.price}원</p>
+				<p>판매자 : {list[0].User.nick_name}</p>
 				<p>최근 메시지 : {koreanDate}</p>
 			</S.DesBox>
 		</ItemContainer>
 	)
 }
 
-export default ChatItemBox
+export default SellChatItemBox
 
 const ItemContainer = styled.div`
 	display: flex;
@@ -39,7 +39,7 @@ const ItemContainer = styled.div`
 `
 const ImgBox = styled.div`
 	width: 8rem;
-	height: 8rem;
+	height: auto;
 	border: 1px solid black;
 	background: ${({ images }) => (images ? `url(${images})` : '이미지없음')}
 		no-repeat center center;
