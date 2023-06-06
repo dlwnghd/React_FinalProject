@@ -79,7 +79,7 @@ function Header() {
 
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
-					<UserBar setSelectedNav={setSelectedNav} userInfo={userInfo} />
+					<UserBar setSelectedNav={setSelectedNav} />
 				) : (
 					<NonUserBar setSelectedNav={setSelectedNav} />
 				)}

@@ -45,10 +45,6 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 		}
 	}, [onSideBar])
 
-	// useEffect(() => {
-	// 	setOnSideBar(false)
-	// }, [currentURL])
-
 	// 전역에서 관리되는 회원정보가 바뀌면(Login, 회원정보 수정) 최근 본 상품 재요청
 	useEffect(() => {
 		refetch()
@@ -107,11 +103,15 @@ const SidebarWrapper = styled.nav`
 	/* padding: 0rem 1rem 1rem; */
 	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
 	${({ pathURL }) =>
-		pathURL === '/'
+		pathURL.includes('search')
 			? {
-					display: 'none',
+					display: 'block',
 			  }
-			: { display: 'block' }}
+			: pathURL.includes('list')
+			? {
+					display: 'block',
+			  }
+			: { display: 'none' }}
 
 	&::-webkit-scrollbar {
 		display: none;

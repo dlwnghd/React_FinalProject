@@ -108,6 +108,11 @@ const SlideBox = styled.li`
 	height: 100%;
 	padding: 6rem;
 
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
 	// 심볼 로고
 	&::before {
 		position: absolute;

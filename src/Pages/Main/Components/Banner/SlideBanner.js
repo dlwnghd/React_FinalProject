@@ -99,6 +99,11 @@ const SlideItems = styled.li`
 	background: ${({ theme }) => theme.COLOR.common.black};
 	color: ${({ theme }) => theme.COLOR.common.white};
 
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
 	& > div:first-of-type {
 		position: relative;
 		margin-left: 6rem;

@@ -17,7 +17,7 @@ function EmptyList() {
 			path === 'mypage-register'
 		) {
 			navigate('/register')
-		} else if (path === 'mypage-interest') {
+		} else if (path === 'mypage-interest' || path === 'recent-price') {
 			navigate('/list/freeMarket')
 		} else if (path === 'mypage-review') {
 			navigate('/list/usedTrade')

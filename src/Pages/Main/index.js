@@ -75,7 +75,7 @@ function Main() {
 										description={item.description}
 										price={item.price}
 										posterPath={item.img_url}
-										createdAt={item.created_at}
+										createdAt={item.createdAt}
 										isLiked={item.liked}
 										status={item.status}
 										productsTags={item.ProductsTags}

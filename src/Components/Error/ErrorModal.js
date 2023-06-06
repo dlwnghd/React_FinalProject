@@ -2,17 +2,19 @@ import styled from 'styled-components'
 import Modal from '../Modal/Modal'
 import { FlexCenterCSS } from '../../Styles/common'
 import getErrorMessage from '../../Utils/getErrorMessage'
+import getComponentsByPeriod from '../../Utils/getComponentsByPeriod'
 
 function ErrorModal({ error }) {
 	const status = error?.response?.status
 	const { title, content } = getErrorMessage(status)
+	const formattedContent = getComponentsByPeriod(content)
 
 	return (
 		<Modal size={'medium'}>
 			<S.Container>
 				<h3>{title}</h3>
 				<section>
-					<S.Content>{content}</S.Content>
+					<S.Content>{formattedContent}</S.Content>
 				</section>
 			</S.Container>
 		</Modal>

@@ -57,7 +57,7 @@ const MainIMGContainer = styled.div`
 	position: relative;
 	width: 100%;
 	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-	margin-bottom: 3rem;
+	margin-bottom: 1rem;
 `
 
 const MainIMGBox = styled.div`
@@ -98,6 +98,8 @@ const SubImages = styled.div`
 	margin-right: 1rem;
 	background: ${({ images }) => `url(${images})`} no-repeat center center;
 	background-size: cover;
+	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
 	:hover {
 		cursor: pointer;
 	}
