@@ -101,8 +101,7 @@ function Graph({ quoteList, searchQuote }) {
 	// Option
 	const options = {
 		responsive: [
-			// createBreakpoint(414, 330, 200, -150),
-			createBreakpoint(415, 380, 300, -50),
+			createBreakpoint(415, 380, 300, -80),
 			createBreakpoint(820, 660, 400, -450),
 			createBreakpoint(10000, 900, 500, -700),
 		],
