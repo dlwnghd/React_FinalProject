@@ -8,9 +8,10 @@ function RoomBox({ prod_idx, onClickUserChatRoom }) {
 	const getChatRoomList = async () => {
 		try {
 			const res = await ChatApi.prdChatList(prod_idx)
-		} catch (err) {}
 			setRoomList(res.data)
-		} 
+		} catch (error) {
+			console.log('채팅룸 없어요.')
+		}
 	}
 	useEffect(() => {
 		getChatRoomList()
