@@ -4,11 +4,13 @@ import styled from 'styled-components'
 import { isScrollAtom } from '../../../../Atoms/scrollState.atom'
 import { FlexCenterCSS } from '../../../../Styles/common'
 import { AddProduct_Icon } from '../../../Icons/Icons'
+import TokenService from '../../../../Utils/tokenService'
 
 function AddProductButton() {
 	const navigate = useNavigate()
 	const currentURL = useLocation().pathname
 	const [scroll, setScroll] = useRecoilState(isScrollAtom)
+	const access_token = TokenService.getAccessToken()
 
 	let touchStart = 0
 	let touchEnd = 0
@@ -37,7 +39,7 @@ function AddProductButton() {
 
 	return (
 		<>
-			{currentURL.includes('register') ? (
+			{!access_token || currentURL.includes('register') ? (
 				''
 			) : (
 				<S.ButtonBox className={scroll ? 'scroll' : ''}>
