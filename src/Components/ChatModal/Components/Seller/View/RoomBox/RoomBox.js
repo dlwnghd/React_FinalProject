@@ -8,6 +8,11 @@ function SellRoomBox({ prod_idx, onClickUserChatRoom }) {
 
 	const [productIdx, setProductIdx] = useState(prd_idx)
 	const [roomList, setRoomList] = useState([])
+	const [select, setSelect] = useState(null)
+
+	const onClickSelect = id => {
+		setSelect(id)
+	}
 	//셀러냐 아니냐의 따라 또 달라지네...
 	console.log(roomList, '룸 리스트')
 	const getChatRoomList = async () => {
@@ -31,8 +36,11 @@ function SellRoomBox({ prod_idx, onClickUserChatRoom }) {
 				roomList.map(user => {
 					return (
 						<S.ProfileBox
+							selectId={select}
+							roomId={user.idx}
 							onClick={() => {
 								onClickUserChatRoom(user.idx)
+								onClickSelect(user.idx)
 							}}
 						>
 							<S.ProfileImg />
@@ -66,6 +74,10 @@ const ProfileBox = styled.div`
 	padding: 1rem 0.1rem;
 	height: 7rem;
 	border-radius: 1rem;
+	background-color: ${({ theme, roomId, selectId }) =>
+		roomId === selectId
+			? theme.COLOR.common.gray[200]
+			: theme.COLOR.common.gray[100]};
 	:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
 	}

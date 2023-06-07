@@ -7,14 +7,20 @@ import styled from 'styled-components'
 function BuyerChat({ list }) {
 	const socket = useSocket()
 	const [roomIdx, setRoomIdx] = useState()
+	// const [roomSelect, setRoomSelect] = useState(false)
 
 	const onSetRoomIdx = room_idx => {
 		setRoomIdx(room_idx)
+
 		socket.emit('join', { room_idx })
 	}
 	return (
 		<S.BuyerChatContainer>
-			<BuyRoomBox list={list} onSetRoomIdx={onSetRoomIdx} />
+			<BuyRoomBox
+				list={list}
+				onSetRoomIdx={onSetRoomIdx}
+				// roomSelect={roomSelect}
+			/>
 			<BuyChatBox roomIdx={roomIdx} />
 		</S.BuyerChatContainer>
 	)

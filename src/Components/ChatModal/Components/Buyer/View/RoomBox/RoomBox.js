@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import styled from 'styled-components'
 
 function BuyRoomBox({ list, onSetRoomIdx }) {
@@ -9,7 +10,12 @@ function BuyRoomBox({ list, onSetRoomIdx }) {
 		hour: 'numeric',
 		minute: 'numeric',
 	}
+
+	const [select, setSelect] = useState(null)
 	// 채팅방 중 가장 최근 메시지 시간 필터
+	const onClickSelect = id => {
+		setSelect(id)
+	}
 
 	return (
 		<S.RoomBoxContainer>
@@ -17,11 +23,15 @@ function BuyRoomBox({ list, onSetRoomIdx }) {
 				list.map(item => {
 					const utcDate = new Date(item.lastMessageCreatedAt)
 					const korTime = utcDate.toLocaleString('ko-KR', options)
+
 					return (
 						<S.ProfileBox
+							roomSelectid={select}
+							roomid={item.idx}
 							key={item.idx}
 							onClick={() => {
 								onSetRoomIdx(item.idx)
+								onClickSelect(item.idx)
 							}}
 						>
 							<S.ProductIMG img={item.product.img_url} />
@@ -45,9 +55,14 @@ const RoomBoxContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
-	flex-wrap: wrap;
+
 	box-shadow: 1px 1px 1px gray;
 	border-radius: 1rem;
+	overflow-y: scroll;
+
+	::-webkit-scrollbar {
+		display: none;
+	}
 `
 const ProfileBox = styled.div`
 	display: flex;
@@ -56,6 +71,10 @@ const ProfileBox = styled.div`
 	gap: 0.5rem;
 	height: 7rem;
 	border-radius: 1rem;
+	background-color: ${({ theme, roomSelectid, roomid }) =>
+		roomSelectid === roomid
+			? theme.COLOR.common.gray[200]
+			: theme.COLOR.common.gray[100]};
 	:hover {
 		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
 	}

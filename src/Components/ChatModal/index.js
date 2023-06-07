@@ -161,6 +161,7 @@ const ChatCategory = styled.div`
 	width: 100%;
 	display: flex;
 	justify-content: space-around;
+	margin-top: 1rem;
 `
 const SellBtn = styled.button`
 	width: 50%;
