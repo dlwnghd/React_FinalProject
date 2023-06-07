@@ -12,14 +12,15 @@ function Images({
 	DetailData,
 	setImageFileArr,
 	imageFileArr,
-	imageFileRef,
 	setImgNum,
 	imgNum,
+	imageFileArrTest,
 }) {
 	const pictureInput = useRef()
 
 	const handleClick = () => {
 		pictureInput.current.click()
+		setImgNum(false)
 	}
 
 	useEffect(() => {
@@ -37,30 +38,31 @@ function Images({
 			const currentImageUrl = URL.createObjectURL(ImageLists[i])
 			ImageUrlLists.push(currentImageUrl)
 
-			if (imageList.length + ImageLists.length > 5) return setImgNum(true)
+			if (ImageUrlLists.length > 5) return setImgNum(true)
+			console.log(ImageUrlLists.length)
 
-			imageFileRef.current.push(ImageLists[i])
+			imageFileArrTest.push(ImageLists[i])
 		}
 
-		if (ImageLists.length > 5) {
+		if (imageFileArrTest.length > 5) {
 			ImageUrlLists = ImageUrlLists.slice(0, 5)
-			imageFileRef.current = imageFileRef.current.slice(0, imageFileArr.length)
+			imageFileArrTest = imageFileArrTest.slice(0, imageFileArr.length)
 			setImgNum(true)
 		}
 		setImageList(ImageUrlLists)
-		setImageFileArr(imageFileRef.current)
+		setImageFileArr(prev => [...prev, ...imageFileArrTest])
 	}
 
 	//이미지 삭제
 	const DelViewImg = (e, idx) => {
 		let filterImg = imageList.filter(el => el !== e)
 		let filterFile = imageFileArr.filter((el, index) => idx != index)
-
+		console.log(idx)
 		setImageList(() => filterImg)
-		setImageFileArr(() => filterFile)
+		setImageFileArr(filterFile)
 		setImgNum(() => false)
 	}
-
+	console.log({ imageFileArr })
 	//드래그
 	const dragStartIdx = useRef()
 	const dragEnterIdx = useRef()

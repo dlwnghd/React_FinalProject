@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import ChatItemBox from './ItemBox/ItemBox'
 
-function ChatList({ list, onClickChatRoom, socket }) {
+function ChatList({ list, onClickChatRoom }) {
 	const prod_idx = list[0].product.idx
 
 	const onClickJoinChat = () => {

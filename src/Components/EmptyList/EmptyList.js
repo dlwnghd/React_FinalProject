@@ -7,6 +7,7 @@ import Button from '../Button/Button'
 function EmptyList() {
 	const { pathname } = useLocation()
 	const path = pathname.substring(1)
+
 	const navigate = useNavigate()
 	const { title, content } = getEmptyListMessage(path)
 
@@ -17,10 +18,12 @@ function EmptyList() {
 			path === 'mypage-register'
 		) {
 			navigate('/register')
-		} else if (path === 'mypage-interest') {
+		} else if (path === 'mypage-interest' || path === 'recent-price') {
 			navigate('/list/freeMarket')
 		} else if (path === 'mypage-review') {
 			navigate('/list/usedTrade')
+		} else {
+			navigate('/')
 		}
 	}
 
