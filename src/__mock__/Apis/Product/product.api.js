@@ -48,7 +48,6 @@ export const getProducts = rest.get('/api/products', async (req, res, ctx) => {
 		})
 		.slice((page - 1) * 10, (page - 1) * 10 + Number(pageSize))
 
-	console.log(sliceProducts)
 	return res(ctx.status(200), ctx.json(sliceProducts))
 })
 

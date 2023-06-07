@@ -10,9 +10,7 @@ function Maps({ detailProduct }) {
 			center: new kakao.maps.LatLng(0, 0),
 			level: 3,
 		}
-
 		const map = new kakao.maps.Map(container, options)
-
 		// Geocoder : 주소나 장소명을 좌표로 변환 가능
 		const geocoder = new kakao.maps.services.Geocoder()
 		geocoder.addressSearch(
@@ -22,12 +20,10 @@ function Maps({ detailProduct }) {
 					// 검색어 기반 좌표 설정
 					const { y: latitude, x: longitude } = result[0]
 					const markerPosition = new kakao.maps.LatLng(latitude, longitude)
-
 					// 옵션과 좌표를 기반하여 마커 생성
 					const marker = new kakao.maps.Marker({
 						position: markerPosition,
 					})
-
 					marker.setMap(map)
 					map.setCenter(markerPosition)
 				}

@@ -67,7 +67,6 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			}
 			openChat()
 		} catch (err) {
-			console.log('에러 발생%', err)
 			if (err.response && err.response.status === 400) {
 				openChat()
 			}
