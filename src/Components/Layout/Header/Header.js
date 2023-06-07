@@ -18,7 +18,6 @@ import MobileHeader from './Components/MobileHeader'
 import Navigation from './Components/Navigation'
 import useChatModal from '../../../Hooks/useChatModal'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
-import ChatModal from '../../ChatModal'
 
 function Header() {
 	const NavigationFilter = ['freeMarket', 'usedTrade', 'chat', 'mypage'] // 네비게이션 Filter
@@ -33,8 +32,6 @@ function Header() {
 	const [onSideBar, setOnSideBar] = useRecoilState(isOnSideBar) // 모바일 관심상품메뉴 활성화용
 	const [selectedNav, setSelectedNav] = useRecoilState(isNavigationAtom) // 선택된 Navigation 항목의 인덱스
 	const { chatModalOpen } = useChatModal()
-
-	const isDetailPage = currentURL.includes('detail')
 
 	// 현재 URL 변경시
 	useEffect(() => {
@@ -70,11 +67,7 @@ function Header() {
 	}, [navigate])
 
 	return (
-		<S.HeaderWrapper
-			className={scroll ? 'scroll' : ''}
-			// chatModalOpen={chatModalOpen}
-		>
-			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
+		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
 			<Sidebar onSideBar={onSideBar} />
 
 			<S.HeaderContainer>
