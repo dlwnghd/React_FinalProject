@@ -30,7 +30,7 @@ function Contents({ detailProduct }) {
 
 	return (
 		<S.PrdListBox>
-			{/* <Maps detailProduct={detailProduct} /> */}
+			<Maps detailProduct={detailProduct} />
 			<S.RecentPrdList>
 				<RecentBanner {...productList} />
 			</S.RecentPrdList>
