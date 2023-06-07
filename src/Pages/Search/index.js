@@ -111,6 +111,8 @@ const Wrapper = styled.section`
 `
 
 const SearchContainer = styled.div`
+	margin: 12rem 0;
+
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		margin: 6rem 0;
 	}
