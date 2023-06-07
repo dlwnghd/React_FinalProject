@@ -101,7 +101,15 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						variant={'no-border'}
 						shape={'soft'}
 						size={'full'}
-						onClick={makeChatRoom}
+						onClick={() => {
+							if (User.token !== user.token) {
+								//내가 올린 상품이 아니라면~
+								makeChatRoom()
+							} else if (User.token === user.token) {
+								// 내가 올린 상품이라면~?
+								openChat()
+							}
+						}}
 					>
 						채팅
 					</S.StyledMainButton>

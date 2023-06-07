@@ -72,7 +72,7 @@ function Header() {
 	return (
 		<S.HeaderWrapper
 			className={scroll ? 'scroll' : ''}
-			chatModalOpen={chatModalOpen}
+			// chatModalOpen={chatModalOpen}
 		>
 			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
 			<Sidebar onSideBar={onSideBar} />
