@@ -96,14 +96,8 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			<SellerInfo User={User} />
 			<S.OptionContainer>
 				<S.ButtonBox>
-					<S.StyledMainButton
-						variant={'no-border'}
-						shape={'soft'}
-						size={'full'}
-					>
-						<p>찜</p>
-						<Heart {...heartProps} />
-					</S.StyledMainButton>
+					<Heart {...heartProps} />
+
 					<S.StyledMainButton
 						variant={'no-border'}
 						shape={'soft'}
@@ -220,15 +214,9 @@ const StyledSubButton = styled(Button)`
 `
 
 const StyledMainButton = styled(Button)`
-	&:first-of-type {
-		background: ${({ theme }) => theme.COLOR.common.white};
-		color: ${({ theme }) => theme.COLOR.error};
-		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
-
-		& > p {
-			font-size: 2rem;
-			margin-right: 0.3rem;
-		}
+	& > p {
+		font-size: 2rem;
+		margin-right: 0.3rem;
 	}
 
 	${FlexCenterCSS}

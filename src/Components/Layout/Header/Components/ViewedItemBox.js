@@ -45,8 +45,9 @@ function ViewedItemBox({
 export default ViewedItemBox
 
 const Wrapper = styled.div`
+	position: relative;
 	${FlexBetweenCSS}
-	flex-direction: row;
+	flex-direction: column;
 	position: relative;
 	padding: 1rem 0;
 	width: 100%;
@@ -57,24 +58,45 @@ const Wrapper = styled.div`
 
 	& > svg {
 		position: absolute;
+		width: 2rem;
+		height: 2rem;
+		padding: 0.2rem;
 		z-index: 999;
 		cursor: pointer;
 		top: 1rem;
-		right: 1.4rem;
-		color: ${({ theme }) => theme.COLOR.main};
+		right: 0;
+		border-radius: 50%;
 
-		// 파람으로 보낼 데이터의 디폴트와 변수를 구분해서 삼항 연산자로 정리
+		color: ${({ theme }) => theme.COLOR.main};
+		background: ${({ theme }) => theme.COLOR.common.white};
+		border: 0.1rem solid ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+
+	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
+		flex-direction: row;
+
+		& > svg {
+			width: 3rem;
+			height: 3rem;
+			right: 0;
+			bottom: 0;
+		}
 	}
 `
 
 const IMGContainer = styled.div`
 	position: relative;
 	cursor: pointer;
-	width: 7.2rem;
-	height: 7.2rem;
+	width: 100%;
 	background: ${({ posterIMG }) => `url(${posterIMG})`} no-repeat center center;
 	background-size: cover;
-	box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
+	&::after {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
+	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 17rem;
@@ -84,9 +106,9 @@ const IMGContainer = styled.div`
 
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
-	width:60%;
+	cursor: pointer;
+	width: 100%;
 	height: 100%;
-	padding: 0 1rem;
 	flex-direction: column;
 	align-items: baseline;
 	font-size: 50%;
@@ -97,7 +119,7 @@ const DescContainer = styled.div`
 `
 
 const DescBox = styled.div`
-	/* margin-top: 1rem; */
+	margin-top: 1rem;
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -123,14 +145,15 @@ const DescBox = styled.div`
 		white-space: nowrap;
 	}
 
+	& > h5 {
+		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	}
+
 	& > p {
 		margin: 1rem 0 2rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		/* white-space: nowrap; 1줄로 넘친 글자를 생략할 때 이용 */
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+		white-space: nowrap;
 	}
 `
 

@@ -5,8 +5,6 @@ import { useState } from 'react'
 import { FlexBetweenCSS } from '../../Styles/common'
 
 function Filter({ filterArray, ...rest }) {
-	// 배열에 인수가 3개이면 필터 border X
-
 	const selectRef = useRef(null)
 	const [isSelect, setIsSelect] = useState(false)
 	const [changeText, setChangeText] = useState(filterArray[0])
@@ -19,10 +17,6 @@ function Filter({ filterArray, ...rest }) {
 		setChangeText(e.target.innerText)
 		setIsSelect(prev => !prev)
 	}
-
-	// const onLeave = () => {
-	// 	setIsSelect(prev => !prev)
-	// }
 
 	return (
 		<Wrapper>

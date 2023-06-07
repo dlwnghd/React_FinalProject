@@ -14,13 +14,11 @@ function ItemBox({
 	status,
 	prod_idx,
 	productsTags,
-	category,
 	...rest
 }) {
 	const heartProps = {
 		like: isLiked,
 		prod_idx: prod_idx,
-		category: category,
 	}
 
 	return (
@@ -29,7 +27,7 @@ function ItemBox({
 				<Heart {...heartProps} />
 				<S.IMGBox posterIMG={posterPath} {...rest}></S.IMGBox>
 			</S.IMGContainer>
-			<S.DescContainer>
+			<S.DescContainer {...rest}>
 				<S.DescBox description={description}>
 					<h4>{title}</h4>
 					{description !== '' ? (
@@ -103,10 +101,12 @@ const IMGBox = styled.div`
 const DescContainer = styled.div`
 	${FlexBetweenCSS}
 	width:100%;
-	padding: 0 2rem;
+	z-index: 1;
+	cursor: pointer;
+	padding: 2rem;
 	flex-direction: column;
 	align-items: baseline;
-	margin: 2rem 0;
+	/* margin: 2rem 0; */
 `
 
 const DescBox = styled.div`
