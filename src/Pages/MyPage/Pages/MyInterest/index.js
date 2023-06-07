@@ -53,9 +53,9 @@ function MyInterest() {
 									title={item.Product.title}
 									price={item.Product.price}
 									posterPath={item.Product.img_url}
-									description={item.description}
 									isLiked={item.Product.liked}
 									key={item.Product.idx}
+									createdAt={item.Product.createdAt}
 									onClick={() => navigate(`/detail/${item.Product.idx}`)}
 									prod_idx={item.Product.idx}
 								/>
