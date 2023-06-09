@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+<p align="center"><img src="https://github.com/FrontTeam2/React_FinalProject/assets/112946860/cc1de18f-a3c9-4b6b-b7d9-a15a98408e4e" alt="logo" width="30%"/></p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center"><strong>중고거래 커머스 플랫폼, 네고마켓</strong></p>
+<p align="center"><strong><a href="https://negomarket.vercel.app/">NEGO MARKET</a></strong></p>
 
-## Available Scripts
+## 😺 소개
+네고마켓은 중고 거래 커머스 플랫폼입니다. <br>채팅으로 중고 및 무료 상품 거래가 가능하며, 시세 동향 페이지에서 상품의 평균 시세를 일별로 확인할 수 있습니다. 또한, 개인 가계부를 통해 손쉽게 자신의 거래 내역을 확인할 수 있어 신뢰성을 높이고 편리한 거래 서비스을 제공합니다.
 
-In the project directory, you can run:
+<br>
 
-### `npm start`
+## 🖥️ 서비스 화면
+<img src="https://github.com/FrontTeam2/React_FinalProject/assets/112946860/f6180df3-6e3e-4b37-9449-3fef273458ce" />
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<br>
+<br>
+<br>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ 기술 스텍
+<img src="https://github.com/FrontTeam2/React_FinalProject/assets/112946860/dae759f8-d4a6-4ec2-bd6a-1dc64d20894b" width="80%"/>
 
-### `npm test`
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 👪 팀원
+| 빈태찬 | 윤동영 | 이주홍 | 김태기 | 김도은 | 이하늘 |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| <img src="https://avatars.githubusercontent.com/u/77373566?v=4" width="90px"/> | <img src="https://avatars.githubusercontent.com/u/119868766?v=4" width="90px" /> | <img src="https://avatars.githubusercontent.com/u/61799492?v=4" width="90px" /> | <img src="https://avatars.githubusercontent.com/u/103398790?v=4" width="90px" /> | <img src="https://avatars.githubusercontent.com/u/112946860?v=4" width="90px" /> | <img src="https://avatars.githubusercontent.com/u/110607164?v=4" width="90px" /> |
+| [beenbin](https://github.com/showme0241) | [JacobYoon97](https://github.com/JacobYoon97) | [LEE JUHONG](https://github.com/dlwnghd) | [taeginote](https://github.com/taeginote) | [Doeunnkimm](https://github.com/Doeunnkimm) | [twosky0202](https://github.com/twosky0202) |

@@ -67,7 +67,6 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			}
 			openChat()
 		} catch (err) {
-			console.log('에러 발생%', err)
 			if (err.response && err.response.status === 400) {
 				openChat()
 			}
@@ -96,19 +95,21 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			<SellerInfo User={User} />
 			<S.OptionContainer>
 				<S.ButtonBox>
+					<Heart {...heartProps} />
+
 					<S.StyledMainButton
 						variant={'no-border'}
 						shape={'soft'}
 						size={'full'}
-					>
-						<p>찜</p>
-						<Heart {...heartProps} />
-					</S.StyledMainButton>
-					<S.StyledMainButton
-						variant={'no-border'}
-						shape={'soft'}
-						size={'full'}
-						onClick={makeChatRoom}
+						onClick={() => {
+							if (User.token !== user.token) {
+								//내가 올린 상품이 아니라면~
+								makeChatRoom()
+							} else if (User.token === user.token) {
+								// 내가 올린 상품이라면~?
+								openChat()
+							}
+						}}
 					>
 						채팅
 					</S.StyledMainButton>
@@ -220,15 +221,9 @@ const StyledSubButton = styled(Button)`
 `
 
 const StyledMainButton = styled(Button)`
-	&:first-of-type {
-		background: ${({ theme }) => theme.COLOR.common.white};
-		color: ${({ theme }) => theme.COLOR.error};
-		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
-
-		& > p {
-			font-size: 2rem;
-			margin-right: 0.3rem;
-		}
+	& > p {
+		font-size: 2rem;
+		margin-right: 0.3rem;
 	}
 
 	${FlexCenterCSS}

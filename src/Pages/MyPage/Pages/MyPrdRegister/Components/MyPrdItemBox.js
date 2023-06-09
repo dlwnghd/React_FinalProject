@@ -5,6 +5,7 @@ import Button from '../../../../../Components/Button/Button'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexCenterCSS } from '../../../../../Styles/common'
+import useChatModal from '../../../../../Hooks/useChatModal'
 
 function MyPrdItemBox({
 	item,
@@ -15,6 +16,7 @@ function MyPrdItemBox({
 }) {
 	const navigate = useNavigate()
 	const [editOption, setEditOption] = useState(false)
+	const { openChat } = useChatModal()
 
 	const { img_url, title, price, status, idx } = item
 
@@ -71,6 +73,9 @@ function MyPrdItemBox({
 					shape={'square'}
 					style={{ width: '48%' }}
 					variant={'default-reverse'}
+					onClick={() => {
+						openChat()
+					}}
 				>
 					채팅
 				</S.Buttons>

@@ -14,13 +14,11 @@ function ItemBox({
 	status,
 	prod_idx,
 	productsTags,
-	category,
 	...rest
 }) {
 	const heartProps = {
 		like: isLiked,
 		prod_idx: prod_idx,
-		category: category,
 	}
 
 	return (

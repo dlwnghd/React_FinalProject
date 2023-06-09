@@ -7,18 +7,40 @@ import useUser from '../../../../Hooks/useUser'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
 import { userInfoAtom } from '../../../../Atoms/userInfo.atom'
+import useChatModal from '../../../../Hooks/useChatModal'
 
 function UserBar({ setSelectedNav }) {
+	const { openChat } = useChatModal()
 	const navigate = useNavigate() // 네비게이션 추가
 	const userMenu = useRef() // 사용자 드롭다운 이외의 영역 클릭시 닫는용 Ref
 	const user = useUser()
 	const queryClient = useQueryClient()
 	const userInfo = useRecoilValue(userInfoAtom)
 
+	const isMobile = () => {
+		const user = navigator.userAgent
+		let isCheck = false
+
+		if (user.indexOf('iPhone') > -1 || user.indexOf('Android') > -1) {
+			isCheck = true
+		}
+
+		return isCheck
+	}
+
+	const check = isMobile()
 	return (
 		<S.UserWrapper>
 			<S.UserContainer>
-				<div onClick={() => navigate('/chating')}>
+				<div
+					onClick={() => {
+						if (check) {
+							navigate('/chating')
+						} else if (!check) {
+							openChat()
+						}
+					}}
+				>
 					<Chatting_Icon size="28" color={'black'} />
 					<p>채팅</p>
 				</div>

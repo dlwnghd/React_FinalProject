@@ -59,9 +59,7 @@ function Login({ token }) {
 		try {
 			const res = await ChatApi.chatRoomList()
 			setRoomList(res.data)
-		} catch (err) {
-			console.log('에러발생', err)
-		}
+		} catch (err) {}
 	}
 
 	const { mutateAsync, isLoading } = useMutation(

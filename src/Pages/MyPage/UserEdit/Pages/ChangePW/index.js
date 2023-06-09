@@ -39,7 +39,6 @@ function ChangePW() {
 				setValue('newPwConfirm', '')
 			},
 			onError: err => {
-				console.log(err)
 				setIsOpenModal(true)
 			},
 		},

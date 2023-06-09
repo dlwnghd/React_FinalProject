@@ -18,6 +18,7 @@ import PrivateRoute from './private'
 import Error404 from '../Components/Error/404'
 import MyReview from '../Pages/MyPage/Pages/MyReview'
 import MyPageIndex from '../Pages/MyPage/Components/Header'
+import MobileChatList from '../Pages/MobileChat'
 
 const router = createBrowserRouter([
 	{
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
 					{
 						path: '/detail/:idx',
 						element: <Detail />,
+					},
+					{
+						path: '/chat',
+						element: <MobileChatList />,
 					},
 
 					{

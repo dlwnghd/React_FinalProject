@@ -56,7 +56,7 @@ function MobileFooterNavigation() {
 		},
 		{
 			text: '채팅',
-			navigation: '/chat인데 modal로 띄우기로 해서 흠',
+			navigation: '/chat',
 			icon: <Chatting_Icon />,
 		},
 		{

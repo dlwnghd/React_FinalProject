@@ -67,7 +67,6 @@ function ProductList({
 								tags={item.ProductsTags}
 								createdAt={item.createdAt}
 								isLiked={item.liked}
-								category={currentURL}
 								onClick={() => navigate(`/detail/${item.idx}`)}
 							/>
 						)
