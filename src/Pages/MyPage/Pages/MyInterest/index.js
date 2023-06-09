@@ -34,6 +34,7 @@ function MyInterest() {
 
 	return (
 		<S.Wrapper>
+			<S.Text>전체 {data?.pagination.count}개</S.Text>
 			{data?.LikeList.length === 0 && <EmptyList />}
 			<S.Container>
 				{arr.map(_ => {
@@ -79,6 +80,11 @@ export default MyInterest
 const Wrapper = styled.div`
 	${WidthAutoCSS}
 `
+const Text = styled.div`
+	margin-top: 2rem;
+	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
+`
+
 const Container = styled.div`
 	${GridCenterCSS}
 	${ColumnNumberCSS(5)};
@@ -91,5 +97,6 @@ const Container = styled.div`
 
 const S = {
 	Wrapper,
+	Text,
 	Container,
 }
