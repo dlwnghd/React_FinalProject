@@ -118,7 +118,7 @@ const SidebarWrapper = styled.nav`
 
 	width: 12rem;
 	z-index: 99;
-	${window.innerWidth < 1440 ? '{ right: 0 }' : '{ right: 11% }'}
+	right: 0;
 	overflow-y: auto;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
