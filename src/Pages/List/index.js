@@ -6,6 +6,7 @@ import useGetProductList from '../../Hooks/Queries/get-productlist'
 import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import ProductList from './Components/ProductList'
 import { useEffect } from 'react'
+import EmptyList from '../../Components/EmptyList/EmptyList'
 
 function List() {
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
@@ -76,25 +77,29 @@ function List() {
 
 	return (
 		<S.ListWrapper>
-			<S.ListContainer>
-				<S.MainContent>
-					<S.SearchContent>
-						<h3>{isSuccess ? data.pages[0].pagination.count : 0}개의 상품</h3>
-						<Filter
-							filterArray={!currentURL ? listFilter : listFilter.slice(0, 2)}
-							onClick={onFilter}
+			{data?.pages[0].pagination.count === 0 ? (
+				<EmptyList />
+			) : (
+				<S.ListContainer>
+					<S.MainContent>
+						<S.SearchContent>
+							<h3>{isSuccess ? data.pages[0].pagination.count : 0}개의 상품</h3>
+							<Filter
+								filterArray={!currentURL ? listFilter : listFilter.slice(0, 2)}
+								onClick={onFilter}
+							/>
+						</S.SearchContent>
+						<ProductList
+							data={data}
+							isSuccess={isSuccess}
+							hasNextPage={hasNextPage}
+							fetchNextPage={fetchNextPage}
+							isFetching={isFetching}
+							currentURL={currentURL}
 						/>
-					</S.SearchContent>
-					<ProductList
-						data={data}
-						isSuccess={isSuccess}
-						hasNextPage={hasNextPage}
-						fetchNextPage={fetchNextPage}
-						isFetching={isFetching}
-						currentURL={currentURL}
-					/>
-				</S.MainContent>
-			</S.ListContainer>
+					</S.MainContent>
+				</S.ListContainer>
+			)}
 		</S.ListWrapper>
 	)
 }

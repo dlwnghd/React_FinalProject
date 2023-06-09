@@ -15,7 +15,12 @@ const ReviewImagesMapForImgURL = ReviewImages => {
 }
 
 const onMakeMainAndSubImageArray = (main, subImages) => {
-	return [...(main ? [main] : []), ...ReviewImagesMapForImgURL(subImages)]
+	const hasMainImage = main !== undefined && main !== 'undefined'
+
+	return [
+		...(hasMainImage ? [main] : []),
+		...ReviewImagesMapForImgURL(subImages),
+	]
 }
 
 function ReviewSection({ idx, review }) {
@@ -114,8 +119,10 @@ function ReviewSection({ idx, review }) {
 					const updateNewReview = {
 						// 이미지를 수정하지 않았다면 images를 포함 X
 						...(hasImages ? newReview : { title, content, ondo }),
-						main_url: imageArray[0],
-						img_url: imageArray.slice(1),
+						...(imageArray.length !== 0 && {
+							main_url: imageArray[0],
+							img_url: imageArray.slice(1),
+						}),
 					}
 					const formData = onAppendObjectToFormData(updateNewReview)
 					try {

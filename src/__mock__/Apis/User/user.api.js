@@ -4,8 +4,6 @@ import userMock from '../../Data/User/user.data'
 export const userLogin = rest.post('/api/user/login', async (req, res, ctx) => {
 	const { email, pw } = req.body
 
-	console.log(email, pw)
-
 	const findUser = userMock.find(user => user.email === email && user.pw === pw)
 
 	if (findUser) {

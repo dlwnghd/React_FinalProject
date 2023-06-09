@@ -33,7 +33,7 @@ import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
 import ChatApi from '../../../Apis/chatApi'
 import { useSocket } from '../../../Context/socket'
 
-function Login() {
+function Login({ isLogined }) {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const from = location.state?.from
@@ -59,9 +59,7 @@ function Login() {
 		try {
 			const res = await ChatApi.chatRoomList()
 			setRoomList(res.data)
-		} catch (err) {
-			console.log('에러발생', err)
-		}
+		} catch (err) {}
 	}
 
 	const { mutateAsync, isLoading } = useMutation(
@@ -122,7 +120,7 @@ function Login() {
 
 	return (
 		<S.Wrapper>
-			<S.Container>
+			<S.Container isLogined={isLogined}>
 				<h1>로그인</h1>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<S.StyledInput
@@ -173,12 +171,25 @@ function Login() {
 export default Login
 
 const Wrapper = styled.div`
+	position: relative;
 	${WidthAutoCSS};
 	${FlexCenterCSS};
 `
 const Container = styled.div`
 	width: 45%;
 	padding: 9rem 0;
+	${({ isLogined }) =>
+		isLogined === null && {
+			position: 'fixed',
+			maxWidth: '48rem',
+			padding: '4rem',
+			left: '50%',
+			top: '50%',
+			transform: 'translateX(-50%) translateY(-50%)',
+			zIndex: '9999',
+			background: 'white',
+			boxShadow: '0 0 1rem rgba(0,0,0,0.3)',
+		}};
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
 		width: 80%;

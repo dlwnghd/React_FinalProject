@@ -1,7 +1,15 @@
 const getEmptyListMessage = path => {
 	switch (path) {
 		case 'list/freeMarket':
+			return {
+				title: '등록된 상품이 없습니다.',
+				content: '등록하러 가기',
+			}
 		case 'list/usedTrade':
+			return {
+				title: '등록된 상품이 없습니다.',
+				content: '등록하러 가기',
+			}
 		case 'mypage-register':
 			return {
 				title: '등록한 상품이 없습니다.',
@@ -21,6 +29,11 @@ const getEmptyListMessage = path => {
 			return {
 				title: '최근 거래 종료된 품목이 없습니다.',
 				content: '구매하러 가기',
+			}
+		default:
+			return {
+				title: '검색 결과가 없습니다.',
+				content: '메인으로 가기',
 			}
 	}
 }
