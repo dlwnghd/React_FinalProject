@@ -23,17 +23,17 @@ function Main() {
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
 	// 로그아웃일 때, 사용할 조건부용
-	const token = TokenService.getAccessToken()
+	const isLogined = TokenService.getAccessToken()
 
 	useEffect(() => {
 		refetch()
-	}, [token])
+	}, [isLogined])
 
-	if (token === null) {
+	if (isLogined === null) {
 		return (
 			<>
-				<Login token={token} />
-				<S.Wrapper token={token}>
+				<Login isLogined={isLogined} />
+				<S.Wrapper isLogined={isLogined}>
 					<MainBanner />
 					<DummyList mainProduct={mainProduct} />
 				</S.Wrapper>
@@ -121,7 +121,7 @@ export default Main
 
 const Wrapper = styled.section`
 	${WidthAutoCSS}
-	${({ token }) => token === null && { filter: 'blur(0.3rem)' }}
+	${({ isLogined }) => isLogined === null && { filter: 'blur(0.3rem)' }}
 
 	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
 		width: 100%;

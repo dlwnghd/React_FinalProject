@@ -33,7 +33,7 @@ import { myChatRoomList } from '../../../Atoms/myChatRoomList.atom'
 import ChatApi from '../../../Apis/chatApi'
 import { useSocket } from '../../../Context/socket'
 
-function Login({ token }) {
+function Login({ isLogined }) {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const from = location.state?.from
@@ -120,7 +120,7 @@ function Login({ token }) {
 
 	return (
 		<S.Wrapper>
-			<S.Container token={token}>
+			<S.Container isLogined={isLogined}>
 				<h1>로그인</h1>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<S.StyledInput
@@ -178,8 +178,8 @@ const Wrapper = styled.div`
 const Container = styled.div`
 	width: 45%;
 	padding: 9rem 0;
-	${({ token }) =>
-		token === null && {
+	${({ isLogined }) =>
+		isLogined === null && {
 			position: 'fixed',
 			maxWidth: '48rem',
 			padding: '4rem',
