@@ -16,7 +16,7 @@
 <br>
 
 ## 🛠️ 기술 스텍
-<img src="https://github.com/FrontTeam2/React_FinalProject/assets/112946860/dae759f8-d4a6-4ec2-bd6a-1dc64d20894b" width="80%"/>
+<img src="https://github.com/FrontTeam2/React_FinalProject/assets/112946860/bcb147d1-7302-40df-830b-888165d8650e" width="45%"/>
 
 <br>
 
