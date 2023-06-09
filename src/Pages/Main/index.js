@@ -12,14 +12,38 @@ import RecentBanner from './Components/Banner/RecentBanner'
 import useGetMainPageData from '../../Hooks/Queries/get-mainPage'
 import { useRecoilState } from 'recoil'
 import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
+import Login from '../Form/Login/Login'
+import TokenService from '../../Utils/tokenService'
+import DummyList from './Components/Dummy/Dummy'
+import { useEffect } from 'react'
 
 function Main() {
-	const { data: mainProduct, error, isLoading } = useGetMainPageData()
+	const { data: mainProduct, error, isLoading, refetch } = useGetMainPageData()
 	const navigate = useNavigate()
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
-	if (isLoading) return
+	// 로그아웃일 때, 사용할 조건부용
+	const token = TokenService.getAccessToken()
+
+	useEffect(() => {
+		refetch()
+	}, [token])
+
+	if (token === null) {
+		return (
+			<>
+				<Login token={token} />
+				<S.Wrapper token={token}>
+					<MainBanner />
+					<DummyList mainProduct={mainProduct} />
+				</S.Wrapper>
+			</>
+		)
+	}
+
+	// ----------------------------------------------
 	if (error) return
+	if (isLoading) return
 
 	const productList = {
 		freeProduct: mainProduct.freeProduct,
@@ -97,6 +121,7 @@ export default Main
 
 const Wrapper = styled.section`
 	${WidthAutoCSS}
+	${({ token }) => token === null && { filter: 'blur(0.3rem)' }}
 
 	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
 		width: 100%;
