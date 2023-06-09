@@ -1,9 +1,5 @@
 import styled from 'styled-components'
-import {
-	ColumnNumberCSS,
-	FlexCenterCSS,
-	GridCenterCSS,
-} from '../../../../Styles/common'
+import { ColumnNumberCSS, GridCenterCSS } from '../../../../Styles/common'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { slide } from '../../../../Hooks/useSlide'
 
@@ -55,7 +51,9 @@ function RecentBanner({ freeProduct, usedProduct }) {
 											key={idx}
 											recentIMG={`${item.img_url}`}
 											onClick={() =>
-												navigate(`/detail/${item.idx}`, { state: item.liked })
+												navigate(`/detail/${item.idx}`, {
+													state: item.liked,
+												})
 											}
 										></S.SlideItem>
 									)
@@ -64,14 +62,6 @@ function RecentBanner({ freeProduct, usedProduct }) {
 						)
 					})}
 				</S.SlideList>
-				{/* <S.ButtonBox>
-					<button className="prev" onClick={prevSlide}>
-						<Arrow_Icon size="15" color="black" />
-					</button>
-					<button className="next" onClick={nextSlide}>
-						<Arrow_Icon size="15" color="black" />
-					</button>
-				</S.ButtonBox> */}
 			</S.SlideContainer>
 		</S.Wrapper>
 	)
@@ -140,33 +130,6 @@ const SlideItem = styled.li`
 	}
 `
 
-const ButtonBox = styled.div`
-	& > button {
-		position: absolute;
-		top: 50%;
-		width: 3rem;
-		height: 6rem;
-		${FlexCenterCSS}
-		transform: translateY(-50%);
-		border: none;
-		box-sizing: border-box;
-		background: ${({ theme }) => theme.COLOR.main};
-		cursor: pointer;
-	}
-
-	& > .prev {
-		left: 0;
-
-		& > svg {
-			transform: rotate(180deg);
-		}
-	}
-
-	& > .next {
-		right: 0;
-	}
-`
-
 const S = {
 	Wrapper,
 	Title,
@@ -174,5 +137,4 @@ const S = {
 	SlideList,
 	SlideBox,
 	SlideItem,
-	ButtonBox,
 }
