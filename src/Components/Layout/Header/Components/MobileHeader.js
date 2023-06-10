@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { FlexAlignCSS, FlexBetweenCSS } from '../../../../Styles/common'
+import { FlexAlignCSS } from '../../../../Styles/common'
 import { InterestBasket_Icon, RollBack_icon } from '../../../Icons/Icons'
 import { useEffect } from 'react'
+import { FlexBetweenCSS } from '../../../../Styles/common'
 
-function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
+function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar, userInfo }) {
 	const navigate = useNavigate() // 네비게이션 추가
 	const location = useLocation()
 	const { pathname } = location
@@ -14,18 +15,20 @@ function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
 	}, [pathname])
 
 	return (
-		<S.MobileHeaderWrapper>
-			<S.MobileIcon
-				onClick={() => {
-					if (onSideBar) {
-						setOnSideBar(false)
-					} else {
-						navigate(-1)
-					}
-				}}
-			>
-				<RollBack_icon size="24" cursor="pointer" />
-			</S.MobileIcon>
+		<S.MobileHeaderWrapper userInfo={userInfo.token}>
+			{userInfo.token && (
+				<S.MobileIcon
+					onClick={() => {
+						if (onSideBar) {
+							setOnSideBar(false)
+						} else {
+							navigate(-1)
+						}
+					}}
+				>
+					<RollBack_icon size="24" cursor="pointer" />
+				</S.MobileIcon>
+			)}
 			<S.Logo
 				onClick={() => {
 					navigate('/')
@@ -36,13 +39,15 @@ function MobileHeader({ onSideBar, setSelectedNav, setOnSideBar }) {
 			>
 				NEGO MARKET
 			</S.Logo>
-			<S.MobileIcon
-				onClick={() => {
-					setOnSideBar(prev => !prev)
-				}}
-			>
-				<InterestBasket_Icon size="24" cursor="pointer" />
-			</S.MobileIcon>
+			{userInfo.token && (
+				<S.MobileIcon
+					onClick={() => {
+						setOnSideBar(prev => !prev)
+					}}
+				>
+					<InterestBasket_Icon size="24" cursor="pointer" />
+				</S.MobileIcon>
+			)}
 		</S.MobileHeaderWrapper>
 	)
 }
@@ -56,6 +61,10 @@ const MobileHeaderWrapper = styled.div`
 			width: 100%;
 			height: 6rem;
 			${FlexBetweenCSS}
+			${({ userInfo }) =>
+				userInfo
+					? { justifyContent: 'space-between' }
+					: { justifyContent: 'center !important' }}
 		}
 
 		&:last-of-type {
