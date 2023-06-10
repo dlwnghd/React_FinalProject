@@ -24,7 +24,7 @@ function TagsItem(props) {
 					))}
 
 					<S.StyledInput
-						placeholder="태그를 ,(콤마)와 함께 입력해주세요."
+						placeholder="태그 입력후 Enter를 눌러주세요"
 						{...field}
 						{...rest}
 					/>
