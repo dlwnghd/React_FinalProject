@@ -254,7 +254,6 @@ const Indicator = styled.div`
 const S = {
 	NavigationWrapper,
 	NavigationContainer,
-	Navigation,
 	NavList,
 	NavBox,
 	IssueBox,
