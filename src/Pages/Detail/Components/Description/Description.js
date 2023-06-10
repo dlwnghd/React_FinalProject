@@ -46,6 +46,18 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 		prod_idx: idx,
 		change_size: '24',
 	}
+	const isMobile = () => {
+		const user = navigator.userAgent
+		let isCheck = false
+
+		if (user.indexOf('iPhone') > -1 || user.indexOf('Android') > -1) {
+			isCheck = true
+		}
+
+		return isCheck
+	}
+
+	const check = isMobile()
 
 	const onNavigateRecentPrice = () => {
 		const searchParams = new URLSearchParams({ quote: title }).toString()
@@ -104,10 +116,18 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 						onClick={() => {
 							if (User.token !== user.token) {
 								//내가 올린 상품이 아니라면~
-								makeChatRoom()
+								if (check) {
+									navigate('/chat')
+								} else {
+									makeChatRoom()
+								}
 							} else if (User.token === user.token) {
 								// 내가 올린 상품이라면~?
-								openChat()
+								if (check) {
+									navigate('/chat')
+								} else {
+									openChat()
+								}
 							}
 						}}
 					>

@@ -9,9 +9,9 @@ function SellChatList({ list, onClickChatRoom }) {
 	}
 	// list.isRead == true이면? 채팅창 빨간불 끄고 false일땐 빨간불 들어오게 ui그려야함
 	return (
-		<S.ChatListContainer>
+		<S.ChatListContainer onClick={onClickJoinChat}>
 			<SellChatItemBox list={list} />
-			<button onClick={onClickJoinChat}>채팅방 목록 확인</button>
+			<span onClick={onClickJoinChat}>채팅방 목록 확인</span>
 		</S.ChatListContainer>
 	)
 }
@@ -22,15 +22,20 @@ const ChatListContainer = styled.div`
 	position: relative;
 	display: flex;
 	justify-content: space-between;
-
-	& > button {
+	border-radius: 1px;
+	:hover {
+		/* background-color: ${({ theme }) => theme.COLOR.common.gray[200]}; */
+		box-shadow: 2px 2px 2px ${({ theme }) => theme.COLOR.common.gray[200]};
+		cursor: pointer;
+	}
+	& > span {
 		position: absolute;
 		border: none;
-		background-color: #fff;
+
 		width: auto;
 		height: 3rem;
 		bottom: 0;
-		right: 0;
+		right: 1rem;
 		font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
 		cursor: pointer;
 		:hover {

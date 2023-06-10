@@ -68,15 +68,17 @@ const ProfileBox = styled.div`
 	display: flex;
 	width: 100%;
 	padding: 1rem 0.1rem;
+	margin-bottom: 0.5rem;
 	gap: 0.5rem;
 	height: 7rem;
 	border-radius: 1rem;
-	background-color: ${({ theme, roomSelectid, roomid }) =>
-		roomSelectid === roomid
-			? theme.COLOR.common.gray[200]
-			: theme.COLOR.common.gray[100]};
+	box-shadow: ${({ theme, roomid, roomSelectid }) =>
+		roomid === roomSelectid
+			? '2px 2px 1px 0px' + theme.COLOR.common.gray[200]
+			: ''};
 	:hover {
-		background-color: ${({ theme }) => theme.COLOR.common.gray[200]};
+		box-shadow: 2px 2px 1px 0px ${({ theme }) => theme.COLOR.common.gray[200]};
+		cursor: pointer;
 	}
 `
 const ProductIMG = styled.div`
