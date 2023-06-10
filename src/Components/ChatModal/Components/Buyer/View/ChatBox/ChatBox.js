@@ -62,7 +62,7 @@ function BuyChatBox({ roomIdx }) {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
 		} catch (err) {
-			console.log('에러발생', err)
+			throw err
 		}
 	}
 
@@ -72,7 +72,7 @@ function BuyChatBox({ roomIdx }) {
 			const res = await ChatApi.checkChatLog(roomIdx)
 			setAllMessages(res.data)
 		} catch (error) {
-			console.log(error)
+			throw err
 		}
 	}
 
@@ -104,7 +104,7 @@ function BuyChatBox({ roomIdx }) {
 					newChatRoomList()
 				}
 			} catch (error) {
-				console.log('전송실패')
+				throw error
 			}
 
 			return

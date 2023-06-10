@@ -24,7 +24,7 @@ function Heart({ like, prod_idx, change_size }) {
 				setIsLike(message)
 			},
 			onError: err => {
-				console.log(err)
+				throw err
 			},
 		},
 	)

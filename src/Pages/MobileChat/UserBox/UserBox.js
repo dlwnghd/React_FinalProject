@@ -4,9 +4,7 @@ import { useRecoilState } from 'recoil'
 import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 
 function ChatUserBox({ list, onClickChatRoom }) {
-	//이것도 만들어져 있는거 위에 코드만 지우고 목데이터 적용해서 html, css 조금 수정한거에요
 	const [infor, setInfor] = useRecoilState(userInfoAtom)
-	console.log(infor)
 	const [chat, setChat] = useState([])
 
 	const a = infor.region.split(' ')

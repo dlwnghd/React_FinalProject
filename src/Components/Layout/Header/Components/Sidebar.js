@@ -58,9 +58,6 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 			onSuccess: async () => {
 				await queryClient.refetchQueries()
 			},
-			onError: err => {
-				console.log(err)
-			},
 		},
 	)
 

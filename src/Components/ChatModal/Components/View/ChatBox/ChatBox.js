@@ -78,9 +78,6 @@ function ChatBox({ roomIdx }) {
 		getChatMsg()
 	}, [roomIdx])
 
-	// useEffect(() => {
-	// 	console.log('하이')
-	// }, [setMyChatRoom])
 	useEffect(() => {
 		// 메세지 수신
 		socket.on('receiveMessage', data => {

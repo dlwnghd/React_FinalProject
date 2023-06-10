@@ -55,18 +55,17 @@ function MChatBox({ roomIdx, setViewChatState }) {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
 		} catch (err) {
-			console.log('에러발생', err)
+			throw err
 		}
 	}
 
-	console.log(allMessages)
 	const getChatMsg = async () => {
 		//특정 채팅방 내역 불러오기
 		try {
 			const res = await ChatApi.checkChatLog(roomIdx)
 			setAllMessages(res.data)
 		} catch (error) {
-			console.log(error)
+			throw error
 		}
 	}
 
@@ -98,7 +97,7 @@ function MChatBox({ roomIdx, setViewChatState }) {
 					newChatRoomList()
 				}
 			} catch (error) {
-				console.log('전송실패')
+				throw error
 			}
 
 			return

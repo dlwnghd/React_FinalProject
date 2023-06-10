@@ -22,15 +22,13 @@ function SellRoomBox({ prod_idx, onClickUserChatRoom }) {
 	}
 
 	//셀러냐 아니냐의 따라 또 달라지네...
-	console.log(roomList, '룸 리스트')
 	const getChatRoomList = async () => {
 		if (productIdx !== null && productIdx !== undefined) {
 			try {
 				const res = await ChatApi.prdChatList(productIdx)
-				console.log('성공')
 				setRoomList(res.data)
 			} catch (error) {
-				console.log('채팅룸 없어요.')
+				throw error
 			}
 		}
 	}

@@ -23,7 +23,6 @@ function ChatModal({ isDetailPage }) {
 
 	const onChangeForm = e => {
 		setForm(e.target.innerText)
-		console.log(e.target.innerText)
 	}
 	useEffect(() => {}, [form])
 	// 판매자(내가 판매하고 있는것)
