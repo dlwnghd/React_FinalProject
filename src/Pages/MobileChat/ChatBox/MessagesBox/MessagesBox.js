@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-function SellMessagesBox({ allMessages, myInfo }) {
+function MMessagesBox({ allMessages, myInfo }) {
 	const options = {
 		timeZone: 'Asia/Seoul',
 		hour12: true, // 오후/오후 구분을 위해 true로 설정합니다.
@@ -25,7 +25,7 @@ function SellMessagesBox({ allMessages, myInfo }) {
 	)
 }
 
-export default SellMessagesBox
+export default MMessagesBox
 
 const MessagesContainer = styled.div`
 	display: ${({ msg }) =>

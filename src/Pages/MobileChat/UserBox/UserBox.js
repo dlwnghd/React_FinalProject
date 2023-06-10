@@ -1,20 +1,43 @@
 import styled from 'styled-components'
+import { useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { userInfoAtom } from '../../../Atoms/userInfo.atom'
 
-function ChatUserBox({ list }) {
+function ChatUserBox({ list, onClickChatRoom }) {
 	//이것도 만들어져 있는거 위에 코드만 지우고 목데이터 적용해서 html, css 조금 수정한거에요
+	const [infor, setInfor] = useRecoilState(userInfoAtom)
+	console.log(infor)
+	const [chat, setChat] = useState([])
+
+	const a = infor.region.split(' ')
+
+	const options = {
+		timeZone: 'Asia/Seoul',
+		hour12: true, // 오후/오후 구분을 위해 true로 설정합니다.
+		month: 'short',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+	}
+	const utcDate = new Date(list.lastMessageCreatedAt)
+	const korTime = utcDate.toLocaleString('ko-KR', options)
 
 	return (
-		<ItemContainer>
-			<S.ImgBox images={list.profile_img} />
+		<ItemContainer
+			onClick={() => {
+				onClickChatRoom(list.idx)
+			}}
+		>
+			{/* <S.ImgBox images={list.profile_img} /> */}
 			<S.DesBox>
 				<S.Content>
-					<p>{list.nickName}</p>
+					<p>{list.User.nick_name}</p>
 					<span>
-						<p>{list.region}</p>
-						<p>{list.day}</p>
+						<p>{a[2]}</p>
+						<p>{korTime}</p>
 					</span>
 				</S.Content>
-				<S.Msg>{list.content}</S.Msg>
+				<S.Msg>{list.lastMessage}</S.Msg>
 			</S.DesBox>
 		</ItemContainer>
 	)

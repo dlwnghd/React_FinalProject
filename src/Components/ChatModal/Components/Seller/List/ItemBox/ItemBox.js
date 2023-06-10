@@ -21,7 +21,6 @@ function SellChatItemBox({ list }) {
 			<S.DesBox>
 				<p>{list[0].product.title}</p>
 				<p>{list[0].product.price}원</p>
-				<p>판매자 : {list[0].User.nick_name}</p>
 				<p>최근 메시지 : {koreanDate}</p>
 			</S.DesBox>
 		</ItemContainer>

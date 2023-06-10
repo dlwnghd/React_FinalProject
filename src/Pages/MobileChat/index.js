@@ -1,34 +1,34 @@
 import styled from 'styled-components'
 import ChatUserBox from './UserBox/UserBox'
+import { useRecoilState } from 'recoil'
+import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
+import MChatBox from './ChatBox'
+import { useState } from 'react'
+import { useSocket } from '../../Context/socket'
 
 function UserList() {
-	//이거 그냥 for문 돌리는 mock데이터 에요
-	//userList 배열로 해서 있는 만큼 맵 돌리고 그 안에 데이터는 그냥 제가 만들어서 보냈습니다.
+	const [chatRoomList, setChatRoomList] = useRecoilState(myChatRoomList)
+	const [viewChatState, setViewChatState] = useState(false)
+	const [roomIdx, setRoomIdx] = useState(null)
+	const socket = useSocket()
 
-	let user = {
-		profile_img:
-			'https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/1UzB/image/paEOLJhjPWh-CW7c2KoUJ-tKWs4.jpg',
-		nickName: '윤동영',
-		region: '역삼역',
-		day: '3주 전',
-		content: '네고 가능할까요?',
-		product_img:
-			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTebPiv0U2x9olTM8u_YueCNJPWJXSJjNGZlA&usqp=CAU',
+	const onClickChatRoom = room_Idx => {
+		socket.emit('join', { room_Idx })
+		setRoomIdx(room_Idx)
+		setViewChatState(true)
 	}
-	let userList = []
-	for (let i = 0; i < 10; i++) {
-		userList.push(user)
-	}
-	// 여기까지 목데이터
-
 	return (
 		<>
-			{userList.map(list => (
-				<S.ChatListContainer>
-					<ChatUserBox list={list} />
-					<S.ImgBox images={list.product_img} />
-				</S.ChatListContainer>
-			))}
+			{!viewChatState &&
+				chatRoomList.chats.map(list => (
+					<S.ChatListContainer>
+						<ChatUserBox list={list} onClickChatRoom={onClickChatRoom} />
+						<S.ImgBox images={list.product.img_url} />
+					</S.ChatListContainer>
+				))}
+			{viewChatState && (
+				<MChatBox setViewChatState={setViewChatState} roomIdx={roomIdx} />
+			)}
 		</>
 	)
 }
