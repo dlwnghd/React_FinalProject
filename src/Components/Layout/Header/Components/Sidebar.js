@@ -109,17 +109,32 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 					})}
 				</S.ProductList>
 			</S.SideBarContainer>
-			<StyledButton
-				shape={'soft'}
-				size={'full'}
-				onClick={() => {
-					queryClient.refetchQueries()
-					setOnSideBar(false)
-					user.logout()
-				}}
-			>
-				로그아웃
-			</StyledButton>
+			{window.innerWidth <= 414 && (
+				<StyledBtnContainer>
+					<StyledButton
+						shape={'soft'}
+						size={'full'}
+						onClick={() => {
+							setOnSideBar(false)
+							navigate('/mypage/useredit-userinfo')
+						}}
+					>
+						회원정보수정
+					</StyledButton>
+					<StyledButton
+						shape={'soft'}
+						size={'full'}
+						onClick={() => {
+							queryClient.refetchQueries()
+							setOnSideBar(false)
+							navigate('/')
+							user.logout()
+						}}
+					>
+						로그아웃
+					</StyledButton>
+				</StyledBtnContainer>
+			)}
 		</S.SidebarWrapper>
 	)
 }
@@ -202,6 +217,16 @@ const ItemLine = styled.hr`
 	width: 100%;
 	color: black;
 `
+const StyledBtnContainer = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
+	gap:1rem;
+
+	& > button:first-of-type {
+		color: ${({ theme }) => theme.COLOR.common.white};
+		background: ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+`
 
 const StyledButton = styled(Button)`
 	margin-top: 2rem;
@@ -213,5 +238,6 @@ const S = {
 	SideBarContainer,
 	ProductList,
 	ItemLine,
+	StyledBtnContainer,
 	StyledButton,
 }
