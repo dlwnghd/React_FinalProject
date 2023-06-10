@@ -7,9 +7,12 @@ import ViewedItemBox from './ViewedItemBox'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useCallback } from 'react'
+import Button from '../../../Button/Button'
+import useUser from '../../../../Hooks/useUser'
 
 function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	const navigate = useNavigate()
+	const user = useUser()
 	const currentURL = useLocation().pathname
 	const { idx: prod_idx } = useParams()
 	const slideRef = useRef()
@@ -106,6 +109,32 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 					})}
 				</S.ProductList>
 			</S.SideBarContainer>
+			{window.innerWidth <= 414 && (
+				<StyledBtnContainer>
+					<StyledButton
+						shape={'soft'}
+						size={'full'}
+						onClick={() => {
+							setOnSideBar(false)
+							navigate('/mypage/useredit-userinfo')
+						}}
+					>
+						회원정보수정
+					</StyledButton>
+					<StyledButton
+						shape={'soft'}
+						size={'full'}
+						onClick={() => {
+							queryClient.refetchQueries()
+							setOnSideBar(false)
+							navigate('/')
+							user.logout()
+						}}
+					>
+						로그아웃
+					</StyledButton>
+				</StyledBtnContainer>
+			)}
 		</S.SidebarWrapper>
 	)
 }
@@ -115,10 +144,9 @@ export default Sidebar
 const SidebarWrapper = styled.nav`
 	position: fixed;
 	top: 34.6rem;
-
 	width: 12rem;
 	z-index: 99;
-	${window.innerWidth < 1440 ? '{ right: 0 }' : '{ right: 11% }'}
+	right: 0;
 	overflow-y: auto;
 	color: ${({ theme }) => theme.COLOR.common.black};
 	font-size: ${({ theme }) => theme.FONT_SIZE.medium};
@@ -149,7 +177,7 @@ const SidebarWrapper = styled.nav`
 		transform: translateX(100%);
 		width: 100%;
 		left: 0;
-		padding: 0rem 6rem 12rem 6rem;
+		padding: 0rem 3rem 12rem;
 		height: 100%;
 		transition: 0.5s ease-in-out;
 	}
@@ -189,6 +217,20 @@ const ItemLine = styled.hr`
 	width: 100%;
 	color: black;
 `
+const StyledBtnContainer = styled.div`
+	${GridCenterCSS}
+	${ColumnNumberCSS(2)}
+	gap:1rem;
+
+	& > button:first-of-type {
+		color: ${({ theme }) => theme.COLOR.common.white};
+		background: ${({ theme }) => theme.COLOR.common.gray[200]};
+	}
+`
+
+const StyledButton = styled(Button)`
+	margin-top: 2rem;
+`
 
 const S = {
 	SidebarWrapper,
@@ -196,4 +238,6 @@ const S = {
 	SideBarContainer,
 	ProductList,
 	ItemLine,
+	StyledBtnContainer,
+	StyledButton,
 }

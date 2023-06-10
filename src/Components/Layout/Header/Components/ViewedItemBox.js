@@ -99,8 +99,8 @@ const IMGContainer = styled.div`
 	}
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 17rem;
-		height: 17rem;
+		width: 17.4rem;
+		height: 17.4rem;
 	}
 `
 
@@ -114,7 +114,7 @@ const DescContainer = styled.div`
 	font-size: 50%;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 50%;
+		width: 55%;
 	}
 `
 

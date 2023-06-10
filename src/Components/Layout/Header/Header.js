@@ -67,8 +67,14 @@ function Header() {
 	}, [navigate])
 
 	return (
-		<S.HeaderWrapper className={scroll ? 'scroll' : ''}>
-			<Sidebar onSideBar={onSideBar} />
+
+		<S.HeaderWrapper
+			className={scroll ? 'scroll' : ''}
+			chatModalOpen={chatModalOpen}
+		>
+			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
+			<Sidebar onSideBar={onSideBar} setOnSideBar={setOnSideBar} />
+
 
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (
