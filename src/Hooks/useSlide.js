@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 
-export const slide = products => {
+export const slide = (products, key) => {
 	const [currentIdx, setCurrentIdx] = useState(0)
 	let startX = 0
 	let endX = 0
@@ -56,6 +56,27 @@ export const slide = products => {
 
 	useEffect(() => {
 		slider.current.style.transform = `translateX(-${currentIdx}00%)`
+	}, [currentIdx])
+
+	useEffect(() => {
+		if (key) {
+			// 코드 PR때 함께 리뷰해보고 싶은 내용
+			// cloneNode()를 통해 슬라이드박스를 2배로 복사
+			// 마지막 슬라이드박스에서 복사된 첫번째 슬라이드박스에 도달했을 때,
+			// currentIdx를 0으로 보내면서 transition값을 제거한다.
+
+			const slideInterval = setInterval(() => {
+				if (currentIdx < products.length - 1) {
+					setCurrentIdx(currentIdx + 1)
+				}
+
+				if (currentIdx === products.length - 1) {
+					setCurrentIdx(0)
+				}
+			}, 2400)
+
+			return () => clearInterval(slideInterval)
+		}
 	}, [currentIdx])
 
 	return {

@@ -86,7 +86,7 @@ const InterestTitle = styled.div`
 
 const InterestBox = styled.div`
 	${GridCenterCSS}
-	${ColumnNumberCSS(5)}
+	${ColumnNumberCSS(6)}
 	column-gap: 2rem;
 	box-sizing: border-box;
 
