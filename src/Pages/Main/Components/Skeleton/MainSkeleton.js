@@ -25,13 +25,11 @@ function MainSkeleton() {
 						return <LoadingSkeleton width={'100%'} height={'auto'} key={idx} />
 					})}
 				</S.SkeletonContainer>
-
 				<S.FreeMarketList>
 					<S.Title>
 						<h3>Free Market</h3>
 						<span>네고와 함께하는 무료나눔</span>
 					</S.Title>
-
 					<S.SkeletonContainer>
 						{productsMock.slice(0, 8).map((it, idx) => {
 							return (

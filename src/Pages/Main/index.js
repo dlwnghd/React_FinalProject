@@ -17,9 +17,16 @@ import TokenService from '../../Utils/tokenService'
 import DummyList from './Components/Dummy/Dummy'
 import { useEffect } from 'react'
 import MainSkeleton from './Components/Skeleton/MainSkeleton'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 function Main() {
-	const { data: mainProduct, error, isLoading, refetch } = useGetMainPageData()
+	const {
+		data: mainProduct,
+		status,
+		error,
+		isLoading,
+		refetch,
+	} = useGetMainPageData()
 	const navigate = useNavigate()
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 
@@ -42,7 +49,7 @@ function Main() {
 		)
 	}
 
-	if (error) return
+	if (status === 'error') return <ErrorFallback error={error} />
 
 	const productList = {
 		freeProduct: mainProduct?.freeProduct,
