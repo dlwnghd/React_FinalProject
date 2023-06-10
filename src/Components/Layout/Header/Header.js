@@ -75,7 +75,7 @@ function Header() {
 			chatModalOpen={chatModalOpen}
 		>
 			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
-			<Sidebar onSideBar={onSideBar} />
+			<Sidebar onSideBar={onSideBar} setOnSideBar={setOnSideBar} />
 
 			<S.HeaderContainer>
 				{Object.keys(userInfo).length !== 0 ? (

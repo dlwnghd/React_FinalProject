@@ -7,9 +7,12 @@ import ViewedItemBox from './ViewedItemBox'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import ProductApi from '../../../../Apis/productApi'
 import { useCallback } from 'react'
+import Button from '../../../Button/Button'
+import useUser from '../../../../Hooks/useUser'
 
 function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 	const navigate = useNavigate()
+	const user = useUser()
 	const currentURL = useLocation().pathname
 	const { idx: prod_idx } = useParams()
 	const slideRef = useRef()
@@ -106,6 +109,17 @@ function Sidebar({ onSideBar, setOnSideBar, userInfo }) {
 					})}
 				</S.ProductList>
 			</S.SideBarContainer>
+			<StyledButton
+				shape={'soft'}
+				size={'full'}
+				onClick={() => {
+					queryClient.refetchQueries()
+					setOnSideBar(false)
+					user.logout()
+				}}
+			>
+				로그아웃
+			</StyledButton>
 		</S.SidebarWrapper>
 	)
 }
@@ -115,7 +129,6 @@ export default Sidebar
 const SidebarWrapper = styled.nav`
 	position: fixed;
 	top: 34.6rem;
-
 	width: 12rem;
 	z-index: 99;
 	right: 0;
@@ -149,7 +162,7 @@ const SidebarWrapper = styled.nav`
 		transform: translateX(100%);
 		width: 100%;
 		left: 0;
-		padding: 0rem 6rem 12rem 6rem;
+		padding: 0rem 3rem 12rem;
 		height: 100%;
 		transition: 0.5s ease-in-out;
 	}
@@ -190,10 +203,15 @@ const ItemLine = styled.hr`
 	color: black;
 `
 
+const StyledButton = styled(Button)`
+	margin-top: 2rem;
+`
+
 const S = {
 	SidebarWrapper,
 	SideBarTitleContainer,
 	SideBarContainer,
 	ProductList,
 	ItemLine,
+	StyledButton,
 }
