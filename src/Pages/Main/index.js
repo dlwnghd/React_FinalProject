@@ -130,6 +130,10 @@ const Wrapper = styled.section`
 
 	@media screen and (max-width:${({ theme }) => theme.MEDIA.mobile}) {
 		width: 100%;
+
+		& > span {
+			height: 55rem !important;
+		}
 	}
 `
 

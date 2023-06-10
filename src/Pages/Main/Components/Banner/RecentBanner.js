@@ -45,7 +45,7 @@ function RecentBanner({ freeProduct, usedProduct }) {
 					{recentFilter.slice(0, 2).map((item, idx) => {
 						return (
 							<S.SlideBox key={idx}>
-								{recentFilter.splice(0, 5).map((item, idx) => {
+								{recentFilter.splice(0, 6).map((item, idx) => {
 									return (
 										<S.SlideItem
 											key={idx}
@@ -100,7 +100,7 @@ const SlideList = styled.div`
 const SlideBox = styled.ul`
 	width: 100%;
 	${GridCenterCSS}
-	${ColumnNumberCSS(5)}
+	${ColumnNumberCSS(6)}
 	column-gap: 2rem;
 
 	box-sizing: border-box;
