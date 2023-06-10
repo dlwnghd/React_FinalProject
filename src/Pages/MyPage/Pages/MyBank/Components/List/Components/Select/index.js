@@ -47,7 +47,7 @@ const Wrapper = styled.div`
 	width: 68rem;
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.mobile}) {
-		width: 47rem;
+		width: 44rem;
 	}
 `
 const StyledButton = styled(Button)`

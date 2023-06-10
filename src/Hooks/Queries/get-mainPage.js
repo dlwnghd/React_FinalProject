@@ -13,9 +13,10 @@ const useGetMainPageData = () => {
 		error,
 		status,
 		isLoading,
+		refetch,
 	} = useQuery([QUERY_KEY.GET_MAINPAGE_MAIN_DATA], () => getMainPageData(), {})
 
-	return { data: mainProduct, error, status, isLoading }
+	return { data: mainProduct, error, status, isLoading, refetch }
 }
 
 export default useGetMainPageData
