@@ -41,7 +41,7 @@ function MainBanner() {
 		onMouseUp,
 		slider,
 		currentIdx,
-	} = slide(bannerList)
+	} = slide(bannerList, 'main')
 
 	return (
 		<S.Wrapper>
@@ -86,7 +86,7 @@ const Wrapper = styled.section`
 `
 
 const SlideList = styled.ul`
-	transition: 0.5s ease-in-out;
+	transition: 1.4s cubic-bezier(0.215, 0.61, 0.355, 1);
 	${FlexAlignCSS}
 	height: 100%;
 `
