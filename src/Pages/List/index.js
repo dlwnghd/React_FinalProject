@@ -7,6 +7,7 @@ import { FlexBetweenCSS, WidthAutoCSS } from '../../Styles/common'
 import ProductList from './Components/ProductList'
 import { useEffect } from 'react'
 import EmptyList from '../../Components/EmptyList/EmptyList'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 function List() {
 	// 현재 URL 기억 State (0: 무료, 1: 중고)
@@ -63,17 +64,27 @@ function List() {
 	}
 
 	// use-query 시작
-	const { data, isSuccess, hasNextPage, fetchNextPage, isFetching, refetch } =
-		useGetProductList(
-			{
-				category: currentURL,
-			},
-			isListFilter,
-		)
+	const {
+		data,
+		status,
+		error,
+		isSuccess,
+		hasNextPage,
+		fetchNextPage,
+		isFetching,
+		refetch,
+	} = useGetProductList(
+		{
+			category: currentURL,
+		},
+		isListFilter,
+	)
 
 	useEffect(() => {
 		refetch()
 	}, [isListFilter])
+
+	if (status === 'error') return <ErrorFallback error={error} />
 
 	return (
 		<S.ListWrapper>
