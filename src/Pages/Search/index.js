@@ -8,6 +8,7 @@ import useGetSearchResultData from '../../Hooks/Queries/get-searchResult'
 import { useRecoilState } from 'recoil'
 import { isOpenModalAtom } from '../../Atoms/modal.atom'
 import EmptyList from '../../Components/EmptyList/EmptyList'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 const skeletonUI = new Array(8).fill(0)
 
@@ -63,8 +64,16 @@ function Search() {
 		}
 	}
 
-	const { data, isSuccess, refetch, fetchNextPage, isFetching, hasNextPage } =
-		useGetSearchResultData(word, searchFilter)
+	const {
+		data,
+		status,
+		error,
+		isSuccess,
+		refetch,
+		fetchNextPage,
+		isFetching,
+		hasNextPage,
+	} = useGetSearchResultData(word, searchFilter)
 
 	useEffect(() => {
 		fetchNextPage(0)
@@ -76,6 +85,8 @@ function Search() {
 	useEffect(() => {
 		if (totalCount === 0) setIsOpenModal(true)
 	}, [word, totalCount])
+
+	if (status === 'error') return <ErrorFallback error={error} />
 
 	return (
 		<S.Wrapper>
