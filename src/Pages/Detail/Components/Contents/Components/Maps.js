@@ -14,7 +14,7 @@ function Maps({ detailProduct }) {
 		// Geocoder : 주소나 장소명을 좌표로 변환 가능
 		const geocoder = new kakao.maps.services.Geocoder()
 		geocoder.addressSearch(
-			detailProduct.searchProduct.region,
+			detailProduct?.searchProduct?.region,
 			(result, status) => {
 				if (status === kakao.maps.services.Status.OK) {
 					// 검색어 기반 좌표 설정
