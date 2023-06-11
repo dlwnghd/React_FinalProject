@@ -29,6 +29,8 @@ function Contents({ detailProduct }) {
 		usedProduct: mainProduct.usedProduct,
 	}
 
+	if (detailProduct === undefined) return
+
 	return (
 		<S.PrdListBox>
 			<Maps detailProduct={detailProduct} />
