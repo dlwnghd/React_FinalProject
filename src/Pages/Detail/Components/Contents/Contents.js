@@ -5,6 +5,7 @@ import useGetMyPageInterestData from '../../../../Hooks/Queries/get-myPageIntere
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGetMainPageData from '../../../../Hooks/Queries/get-mainPage'
+import Maps from './Components/Maps'
 
 function Contents({ detailProduct }) {
 	const [page, setPage] = useState(1)
