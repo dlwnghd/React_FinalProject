@@ -20,7 +20,12 @@ function SellChatItemBox({ list }) {
 			<S.ImgBox images={list[0].product.img_url} />
 			<S.DesBox>
 				<p>{list[0].product.title}</p>
-				<p>{list[0].product.price}원</p>
+				<p>
+					{list[0].product.price
+						.toString()
+						.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+					원
+				</p>
 				<p>최근 메시지 : {koreanDate}</p>
 			</S.DesBox>
 		</ItemContainer>
