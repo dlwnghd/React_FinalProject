@@ -29,6 +29,7 @@ function Detail() {
 		detailError,
 	}
 
+	if (detailProduct === undefined) return
 	if (detailStatus === 'error') return <ErrorFallback error={detailError} />
 
 	return (
