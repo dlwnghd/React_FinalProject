@@ -35,7 +35,7 @@ function UserBar({ setSelectedNav }) {
 				<div
 					onClick={() => {
 						if (check) {
-							navigate('/chating')
+							navigate('/chat')
 						} else if (!check) {
 							openChat()
 						}

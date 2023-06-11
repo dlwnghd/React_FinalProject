@@ -15,7 +15,6 @@ function ChatModal({ isDetailPage }) {
 	const socket = useSocket()
 	// 모달 HOOKS
 	const { chatModalOpen, closeChat } = useChatModal()
-	const [isSeller, setIsSeller] = useState(false)
 	// 채팅방 리스트 관리 recoil
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
@@ -52,10 +51,10 @@ function ChatModal({ isDetailPage }) {
 	const [viewChatIdx, setViewChatIdx] = useState(null)
 
 	// 판매자 시점 - 판매자가 등록한 물품리스트 중 물품의 채팅리스트
-	const onClickChatRoom = prod_idx => {
-		setViewChatIdx(prod_idx)
-		setViewChatState(true)
-	}
+	// const onClickChatRoom = prod_idx => {
+	// 	setViewChatIdx(prod_idx)
+	// 	setViewChatState(true)
+	// }
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY

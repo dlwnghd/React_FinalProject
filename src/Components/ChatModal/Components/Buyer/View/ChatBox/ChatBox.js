@@ -17,10 +17,7 @@ function BuyChatBox({ roomIdx }) {
 
 	// recoil 불러오기
 	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
-
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
-
-	const [chatState, setChatState] = useState(true)
 
 	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
 	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
@@ -61,9 +58,7 @@ function BuyChatBox({ roomIdx }) {
 		try {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
-		} catch (err) {
-			throw err
-		}
+		} catch (err) {}
 	}
 
 	const getChatMsg = async () => {
@@ -71,9 +66,7 @@ function BuyChatBox({ roomIdx }) {
 		try {
 			const res = await ChatApi.checkChatLog(roomIdx)
 			setAllMessages(res.data)
-		} catch (error) {
-			throw err
-		}
+		} catch (error) {}
 	}
 
 	const postMessage = async e => {
@@ -103,9 +96,7 @@ function BuyChatBox({ roomIdx }) {
 					setSendMessages('')
 					newChatRoomList()
 				}
-			} catch (error) {
-				throw error
-			}
+			} catch (error) {}
 
 			return
 		}
@@ -115,20 +106,6 @@ function BuyChatBox({ roomIdx }) {
 		}
 	}
 
-	const onDisableChat = () => {
-		setChatState(false)
-	}
-	const exitChatRoom = () => {
-		if (window.confirm('정말 채팅방 나갈꺼에요?')) {
-			socket.emit('leave', { roomIdx })
-			onDisableChat()
-			// const lestChat = myChatRoom.chats.filter(item => item !== chatInfo)
-			// setMyChatRoom(lestChat)
-			// setAllMessages([])
-		} else {
-			return
-		}
-	}
 	useEffect(() => {
 		// 채팅방에 따른 메시지 내역 불러오기
 		getChatMsg()
@@ -142,35 +119,30 @@ function BuyChatBox({ roomIdx }) {
 	}, [socket])
 
 	return (
-		<S.ChatContainer chatState={chatState}>
+		<S.ChatContainer>
 			<S.ChatDate>
 				<span>{koreanDate}</span>
 
 				{/* 오늘 날짜로 */}
 			</S.ChatDate>
-			<S.ChatOption>
-				<span onClick={exitChatRoom}>채팅방 나가기</span>
-			</S.ChatOption>
+			<S.ChatOption></S.ChatOption>
 			<S.ChatMsg ref={scrollRef}>
 				{allMessages?.map((item, idx) => {
 					return <BuyMessagesBox key={idx} allMessages={item} myInfo={myInfo} />
 				})}
-				{!chatState && <h1>채팅방을 이용 할 수 없습니다.</h1>}
 			</S.ChatMsg>
 			<S.ChatSend onKeyDown={postMessage}>
 				<S.StyledInput
 					placeholder="메시지를 입력해주세요"
 					ref={messagesInput}
-					disabled={!chatState}
+
 					// value={sendMessages}
 					// onChange={e => {
 					// 	setSendMessages(e.target.value)
 					// }}
 				/>
 
-				<S.StyledButton onClick={postMessage} disabled={!chatState}>
-					전송
-				</S.StyledButton>
+				<S.StyledButton onClick={postMessage}>전송</S.StyledButton>
 			</S.ChatSend>
 		</S.ChatContainer>
 	)
@@ -187,8 +159,7 @@ const ChatContainer = styled.div`
 	box-shadow: 1px 1px 1px gray;
 	border-radius: 1rem;
 
-	background-color: ${({ theme, chatState }) =>
-		chatState ? theme.COLOR.common.gray[100] : theme.COLOR.common.gray[200]};
+	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
 `
 const ChatDate = styled.div`
 	margin-top: 2rem;

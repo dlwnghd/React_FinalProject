@@ -18,8 +18,6 @@ function MChatBox({ roomIdx, setViewChatState }) {
 	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 
-	const [chatState, setChatState] = useState(true)
-
 	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
 	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
 	const [allMessages, setAllMessages] = useState([])
@@ -31,6 +29,7 @@ function MChatBox({ roomIdx, setViewChatState }) {
 		setSendMessages(messagesInput.current.value)
 	}
 	const [receivedMessages, setReceivedMessages] = useState([])
+
 	const options = {
 		timeZone: 'Asia/Seoul',
 		year: 'numeric',
@@ -54,9 +53,7 @@ function MChatBox({ roomIdx, setViewChatState }) {
 		try {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
-		} catch (err) {
-			throw err
-		}
+		} catch (err) {}
 	}
 
 	const getChatMsg = async () => {
@@ -64,9 +61,7 @@ function MChatBox({ roomIdx, setViewChatState }) {
 		try {
 			const res = await ChatApi.checkChatLog(roomIdx)
 			setAllMessages(res.data)
-		} catch (error) {
-			throw error
-		}
+		} catch (error) {}
 	}
 
 	const postMessage = async e => {
@@ -85,7 +80,7 @@ function MChatBox({ roomIdx, setViewChatState }) {
 
 			isSeller: chatInfo.isSeller,
 		}
-		if (messagesInput.current.value !== '' && e.keyCode === 13) {
+		if (messagesInput.current.value !== '') {
 			onMessageSet()
 			socket.emit('sendMessage', data)
 			try {
@@ -96,32 +91,16 @@ function MChatBox({ roomIdx, setViewChatState }) {
 					setSendMessages('')
 					newChatRoomList()
 				}
-			} catch (error) {
-				throw error
-			}
+			} catch (error) {}
 
 			return
 		}
-		if (messagesInput.current.value === '' && e.keyCode === 13) {
+		if (messagesInput.current.value === '') {
 			alert('메세지를 입력해주세요')
 			return
 		}
 	}
 
-	const onDisableChat = () => {
-		setChatState(false)
-	}
-	const exitChatRoom = () => {
-		if (window.confirm('정말 채팅방 나갈꺼에요?')) {
-			socket.emit('leave', { roomIdx })
-			onDisableChat()
-			// const lestChat = myChatRoom.chats.filter(item => item !== chatInfo)
-			// setMyChatRoom(lestChat)
-			// setAllMessages([])
-		} else {
-			return
-		}
-	}
 	useEffect(() => {
 		// 채팅방에 따른 메시지 내역 불러오기
 		getChatMsg()
@@ -136,6 +115,21 @@ function MChatBox({ roomIdx, setViewChatState }) {
 
 	return (
 		<S.ChatContainer>
+			<S.ChatInfo chatInfo={chatInfo}>
+				<p>{chatInfo.User.nick_name}</p>
+				<div>
+					<img />
+					<div>
+						<p>{chatInfo.product.title}</p>
+						<p>
+							{chatInfo.product.price
+								.toString()
+								.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							원
+						</p>
+					</div>
+				</div>
+			</S.ChatInfo>
 			<S.ChatDate>
 				<span>{koreanDate}</span>
 
@@ -149,27 +143,23 @@ function MChatBox({ roomIdx, setViewChatState }) {
 				>
 					이전으로
 				</span>
-				<span>채팅방 나가기</span>
 			</S.ChatOption>
 			<S.ChatMsg ref={scrollRef}>
 				{allMessages?.map((item, idx) => {
 					return <MMessagesBox key={idx} allMessages={item} myInfo={myInfo} />
 				})}
-				{!chatState && <h1>채팅방을 이용 할 수 없습니다.</h1>}
 			</S.ChatMsg>
-			<S.ChatSend onKeyDown={postMessage}>
+			<S.ChatSend>
 				<S.StyledInput
 					placeholder="메시지를 입력해주세요"
 					ref={messagesInput}
-					disabled={!chatState}
+
 					// value={sendMessages}
 					// onChange={e => {
 					// 	setSendMessages(e.target.value)
 					// }}
 				/>
-				<S.StyledButton onClick={postMessage} disabled={!chatState}>
-					전송
-				</S.StyledButton>
+				<S.StyledButton onClick={postMessage}>전송</S.StyledButton>
 			</S.ChatSend>
 		</S.ChatContainer>
 	)
@@ -187,6 +177,33 @@ const ChatContainer = styled.div`
 	border-radius: 1rem;
 
 	background-color: ${({ theme }) => theme.COLOR.common.gray[100]};
+`
+const ChatInfo = styled.div`
+	margin-top: 1rem;
+	padding-bottom: 1rem;
+	display: flex;
+	gap: 2rem;
+	border-bottom: 0.5px solid gray;
+	flex-direction: column;
+	& > p:first-child {
+		text-align: center;
+	}
+	& > div {
+		display: flex;
+		gap: 1rem;
+
+		& > div {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+	& > div > img {
+		width: 5rem;
+		height: 5rem;
+		background: ${({ chatInfo }) => `url(${chatInfo.product.img_url})`}
+			no-repeat center center;
+		background-size: cover;
+	}
 `
 const ChatDate = styled.div`
 	margin-top: 2rem;
@@ -206,7 +223,7 @@ const ChatOption = styled.div`
 
 	justify-content: space-between;
 	padding: 0 1rem;
-	margin-top: 2rem;
+	margin-top: 1rem;
 	width: 100%;
 	height: auto;
 	& > span {
@@ -251,4 +268,5 @@ const S = {
 	ChatOption,
 	StyledButton,
 	StyledInput,
+	ChatInfo,
 }
