@@ -31,7 +31,7 @@ function Contents({ detailProduct }) {
 
 	return (
 		<S.PrdListBox>
-			<Maps detailProduct={detailProduct} />
+			{detailProduct !== 'undefined' && <Maps detailProduct={detailProduct} />}
 			<S.RecentPrdList>
 				<RecentBanner {...productList} />
 			</S.RecentPrdList>
