@@ -9,6 +9,9 @@ import useGetDetailData from '../../Hooks/Queries/get-detailPage'
 import Thumbnail from './Components/Thumbnail/Thumbnail'
 import Description from './Components/Description/Description'
 import Contents from './Components/Contents/Contents'
+import ThumbnailSkeleton from './Components/Skeleton/ThumbnailSkeleton'
+import DescSkeleton from './Components/Skeleton/DescSkeleton'
+import ErrorFallback from '../../Components/Error/ErrorFallback'
 
 function Detail() {
 	const { idx } = useParams()
@@ -26,14 +29,22 @@ function Detail() {
 		detailError,
 	}
 
-	if (detailIsLoading) return
-	if (detailError) return
+	if (detailStatus === 'error') return <ErrorFallback error={detailError} />
 
 	return (
 		<S.Wrapper>
 			<S.MainContainer>
-				<Thumbnail {...detailProductList} />
-				<Description {...detailProductList} />
+				{detailIsLoading ? (
+					<>
+						<ThumbnailSkeleton />
+						<DescSkeleton />
+					</>
+				) : (
+					<>
+						<Thumbnail {...detailProductList} />
+						<Description {...detailProductList} />
+					</>
+				)}
 			</S.MainContainer>
 			<Contents detailProduct={detailProduct} />
 		</S.Wrapper>
@@ -59,6 +70,12 @@ const MainContainer = styled.section`
 
 	@media screen and (max-width: ${({ theme }) => theme.MEDIA.tablet}) {
 		${ColumnNumberCSS(1)}
+	}
+
+	& > span:first-of-type::before {
+		content: '';
+		display: block;
+		padding-bottom: 100%;
 	}
 `
 
