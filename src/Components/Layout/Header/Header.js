@@ -71,7 +71,6 @@ function Header() {
 			className={scroll ? 'scroll' : ''}
 			chatModalOpen={chatModalOpen}
 		>
-			{chatModalOpen && <ChatModal isDetailPage={isDetailPage} />}
 			<Sidebar
 				onSideBar={onSideBar}
 				setOnSideBar={setOnSideBar}

@@ -5,9 +5,11 @@ import ChatApi from '../../../../../../Apis/chatApi'
 
 function SellRoomBox({ prod_idx, onClickUserChatRoom }) {
 	const prd_idx = prod_idx
+
 	const [productIdx, setProductIdx] = useState(prd_idx)
 	const [roomList, setRoomList] = useState([])
 	const [select, setSelect] = useState(null)
+
 	const options = {
 		timeZone: 'Asia/Seoul',
 		hour12: true, // 오후/오후 구분을 위해 true로 설정합니다.
@@ -16,20 +18,18 @@ function SellRoomBox({ prod_idx, onClickUserChatRoom }) {
 		hour: 'numeric',
 		minute: 'numeric',
 	}
-
 	const onClickSelect = id => {
 		setSelect(id)
 	}
-
 	//셀러냐 아니냐의 따라 또 달라지네...
+
 	const getChatRoomList = async () => {
 		if (productIdx !== null && productIdx !== undefined) {
 			try {
 				const res = await ChatApi.prdChatList(productIdx)
+
 				setRoomList(res.data)
-			} catch (error) {
-				throw error
-			}
+			} catch (error) {}
 		}
 	}
 	useEffect(() => {
@@ -79,8 +79,8 @@ const RoomBoxContainer = styled.div`
 const ProfileBox = styled.div`
 	display: flex;
 	width: 100%;
-	padding: 1rem 0.1rem;
 	margin-bottom: 0.5rem;
+	padding: 1rem 0.1rem;
 	height: 7rem;
 	border-radius: 1rem;
 	box-shadow: ${({ theme, roomId, selectId }) =>
@@ -88,7 +88,6 @@ const ProfileBox = styled.div`
 			? '2px 2px 1px 0px' + theme.COLOR.common.gray[200]
 			: ''};
 	:hover {
-		/* background-color: ${({ theme }) => theme.COLOR.common.gray[200]}; */
 		box-shadow: 2px 2px 1px 0px ${({ theme }) => theme.COLOR.common.gray[200]};
 	}
 `
