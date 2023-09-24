@@ -12,14 +12,14 @@ import { useEffect } from 'react'
 import MMessagesBox from './MessagesBox/MessagesBox'
 import ChatApi from '../../../Apis/chatApi'
 
-function MChatBox({ roomIdx, setViewChatState }) {
+function MChatBox({ room_idx, setViewChatState }) {
 	// UTC 날짜를 한국 날짜로
 	const socket = useSocket()
 	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 
 	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
-	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
+	const chatInfo = myChatRoom.chats.find(item => item.idx === room_idx)
 	const [allMessages, setAllMessages] = useState([])
 
 	const messagesInput = useRef('')
@@ -28,7 +28,6 @@ function MChatBox({ roomIdx, setViewChatState }) {
 	const onMessageSet = () => {
 		setSendMessages(messagesInput.current.value)
 	}
-	const [receivedMessages, setReceivedMessages] = useState([])
 
 	const options = {
 		timeZone: 'Asia/Seoul',
@@ -59,12 +58,13 @@ function MChatBox({ roomIdx, setViewChatState }) {
 	const getChatMsg = async () => {
 		//특정 채팅방 내역 불러오기
 		try {
-			const res = await ChatApi.checkChatLog(roomIdx)
+			const res = await ChatApi.checkChatLog(room_idx)
 			setAllMessages(res.data)
 		} catch (error) {}
 	}
 
 	const postMessage = async e => {
+		e.preventDefault()
 		const data = {
 			title: chatInfo.product.title,
 			createdAt:
@@ -73,18 +73,16 @@ function MChatBox({ roomIdx, setViewChatState }) {
 				new Date(Date.now()).getMinutes(),
 
 			prod_idx: chatInfo.product.idx,
-			roomIdx: roomIdx,
+			room_idx: room_idx,
 			nicKname: myInfo.nicKname,
-
 			message: messagesInput.current.value,
-
 			isSeller: chatInfo.isSeller,
 		}
 		if (messagesInput.current.value !== '') {
 			onMessageSet()
 			socket.emit('sendMessage', data)
 			try {
-				const res = await ChatApi.sendMsg(roomIdx, messagesInput.current.value)
+				const res = await ChatApi.sendMsg(room_idx, messagesInput.current.value)
 
 				if (res.status) {
 					messagesInput.current.value = ''
@@ -101,17 +99,13 @@ function MChatBox({ roomIdx, setViewChatState }) {
 		}
 	}
 
+	// Mobile
+	// 채팅방 값 및 sendMessages의 값 변경 시
+	// 전송 버튼 클릭 시
 	useEffect(() => {
 		// 채팅방에 따른 메시지 내역 불러오기
 		getChatMsg()
-	}, [roomIdx, sendMessages])
-
-	useEffect(() => {
-		// 메세지 수신
-		socket.on('receiveMessage', data => {
-			setReceivedMessages(list => [...list, data])
-		})
-	}, [socket])
+	}, [room_idx, sendMessages])
 
 	return (
 		<S.ChatContainer>

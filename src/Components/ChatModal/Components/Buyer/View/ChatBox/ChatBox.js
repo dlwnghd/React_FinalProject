@@ -11,7 +11,7 @@ import { useSocket } from '../../../../../../Context/socket'
 import { useRef } from 'react'
 import BuyMessagesBox from './MessagesBox/MessagesBox'
 
-function BuyChatBox({ roomIdx }) {
+function BuyChatBox({ room_idx }) {
 	//소켓
 	const socket = useSocket()
 
@@ -19,21 +19,19 @@ function BuyChatBox({ roomIdx }) {
 	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 
-	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
-	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
+	// 채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
+	const chatInfo = myChatRoom.chats.find(item => item.idx === room_idx)
 
-	//채팅방 내역
+	// 채팅방 내역
 	const [allMessages, setAllMessages] = useState([])
 
-	//인풋창(보낼 채팅 입력)
+	// 인풋창(보낼 채팅 입력)
 	const messagesInput = useRef('')
 	const [sendMessages, setSendMessages] = useState('')
 	const onMessageSet = () => {
 		setSendMessages(messagesInput.current.value)
 	}
 
-	//수신 메시지
-	const [receivedMessages, setReceivedMessages] = useState([])
 	// UTC 날짜를 한국 날짜로
 	const options = {
 		timeZone: 'Asia/Seoul',
@@ -43,80 +41,102 @@ function BuyChatBox({ roomIdx }) {
 	}
 	const utcDate = new Date()
 	const koreanDate = utcDate.toLocaleString('ko-KR', options)
-
-	//채팅방 내역 불러올 시 가장 최근 메시지로 자동 스크롤
 	const scrollRef = useRef(null)
-	useEffect(() => {
-		if (scrollRef.current) {
-			const scrollContainer = scrollRef.current
-			scrollContainer.scrollTop = scrollContainer.scrollHeight
-		}
-	})
 
+	// 채팅창 스크롤
+	useEffect(() => {
+		// if (scrollRef.current) {
+		// 	const scrollContainer = scrollRef.current
+		// 	scrollContainer.scrollTop = scrollContainer.scrollHeight
+		// }
+		return scrollRef.current.scrollIntoView({
+			block: 'end',
+			inline: 'nearest',
+		})
+	}, [allMessages])
+
+	// 채팅방 리스트 최신화
 	const newChatRoomList = async () => {
-		// 채팅방 리스트 최신화
 		try {
 			const res = await ChatApi.chatRoomList()
 			setMyChatRoom(res.data)
 		} catch (err) {}
 	}
 
+	//특정 채팅방 내역 불러오기
 	const getChatMsg = async () => {
-		//특정 채팅방 내역 불러오기
 		try {
-			const res = await ChatApi.checkChatLog(roomIdx)
+			const res = await ChatApi.checkChatLog(room_idx)
 			setAllMessages(res.data)
 		} catch (error) {}
 	}
 
+	// 채팅방에 따른 메시지 내역 불러오기
+	useEffect(() => {
+		getChatMsg()
+	}, [room_idx, sendMessages])
+
+	// 채팅 수신
+	useEffect(() => {
+		socket?.emit('join', { room_idx })
+		socket?.on('receiveMessage', async data => {
+			try {
+				const res = await ChatApi.checkChatLog(data.room_idx)
+				setAllMessages(res.data)
+			} catch (error) {
+				alert(error)
+			}
+		})
+
+		return () => {
+			socket?.emit('leave', { room_idx })
+		};
+	}, [])
+
+	// 채팅 전송
 	const postMessage = async e => {
+		e.preventDefault()
+
 		const data = {
 			title: chatInfo.product.title,
-			createdAt:
-				new Date(Date.now()).getHours() +
-				':' +
-				new Date(Date.now()).getMinutes(),
-
+			createdAt:chatInfo.product.createdAt,
 			prod_idx: chatInfo.product.idx,
-			roomIdx: roomIdx,
+			room_idx: room_idx,
 			nicKname: myInfo.nicKname,
-
 			message: messagesInput.current.value,
-
 			isSeller: chatInfo.isSeller,
 		}
-		if (messagesInput.current.value !== '' && e.keyCode === 13) {
-			onMessageSet()
-			socket.emit('sendMessage', data)
-			try {
-				const res = await ChatApi.sendMsg(roomIdx, messagesInput.current.value)
-
-				if (res.status) {
-					messagesInput.current.value = ''
-					setSendMessages('')
-					newChatRoomList()
-				}
-			} catch (error) {}
-
-			return
+		
+		socket.emit('sendMessage', data)
+		
+		try {
+			const res = await ChatApi.sendMsg({
+				room_idx: data.room_idx,
+				message: data.message,
+			})
+		} catch (error) {
+		alert(error)
 		}
-		if (messagesInput.current.value === '' && e.keyCode === 13) {
-			alert('메세지를 입력해주세요')
-			return
+
+		try{
+			const res = await ChatApi.checkChatLog(data.room_idx);
+			setAllMessages(res.data);
+		} catch(error) {
+			alert(error)
 		}
+
+		messagesInput.current.value = ''
 	}
 
-	useEffect(() => {
-		// 채팅방에 따른 메시지 내역 불러오기
-		getChatMsg()
-	}, [roomIdx, sendMessages])
+	const pressEnter = e => {
+		if (e.nativeEvent.isComposing) return
 
-	useEffect(() => {
-		// 메세지 수신
-		socket.on('receiveMessage', data => {
-			setReceivedMessages(list => [...list, data])
-		})
-	}, [socket])
+		if (e.key === 'Enter' && e.shiftKey) {
+			return
+		} else if (e.key === 'Enter') {
+			postMessage(e)
+		}
+	}
 
 	return (
 		<S.ChatContainer>
@@ -126,23 +146,18 @@ function BuyChatBox({ roomIdx }) {
 				{/* 오늘 날짜로 */}
 			</S.ChatDate>
 			<S.ChatOption></S.ChatOption>
-			<S.ChatMsg ref={scrollRef}>
+			<S.ChatMsg>
 				{allMessages?.map((item, idx) => {
 					return <BuyMessagesBox key={idx} allMessages={item} myInfo={myInfo} />
 				})}
+				<div ref={scrollRef}></div>
 			</S.ChatMsg>
-			<S.ChatSend onKeyDown={postMessage}>
+			<S.ChatSend onKeyDown={pressEnter}>
 				<S.StyledInput
 					placeholder="메시지를 입력해주세요"
 					ref={messagesInput}
-
-					// value={sendMessages}
-					// onChange={e => {
-					// 	setSendMessages(e.target.value)
-					// }}
 				/>
-
-				<S.StyledButton onClick={postMessage}>전송</S.StyledButton>
+				<S.StyledButton onClick={pressEnter}>전송</S.StyledButton>
 			</S.ChatSend>
 		</S.ChatContainer>
 	)

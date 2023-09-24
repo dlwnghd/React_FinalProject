@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
 const socketContext = createContext()
-
 export const useSocket = () => useContext(socketContext)
 
 const SocketProvider = ({ children }) => {
@@ -10,7 +9,6 @@ const SocketProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (socket) return
-
 		setSocket(io(process.env.REACT_APP_BACKEND_URL))
 	}, [])
 

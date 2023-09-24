@@ -9,7 +9,7 @@ import { useSocket } from '../../Context/socket'
 function UserList() {
 	const [chatRoomList, setChatRoomList] = useRecoilState(myChatRoomList)
 	const [viewChatState, setViewChatState] = useState(false)
-	const [roomIdx, setRoomIdx] = useState(null)
+	const [room_idx, setRoomIdx] = useState(null)
 	const socket = useSocket()
 
 	const onClickChatRoom = room_Idx => {
@@ -27,7 +27,7 @@ function UserList() {
 					</S.ChatListContainer>
 				))}
 			{viewChatState && (
-				<MChatBox setViewChatState={setViewChatState} roomIdx={roomIdx} />
+				<MChatBox setViewChatState={setViewChatState} room_idx={room_idx} />
 			)}
 		</>
 	)

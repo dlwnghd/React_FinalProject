@@ -11,13 +11,13 @@ import { userInfoAtom } from '../../../../../Atoms/userInfo.atom'
 import { useSocket } from '../../../../../Context/socket'
 import { useRef } from 'react'
 
-function ChatBox({ roomIdx }) {
+function ChatBox({ room_idx }) {
 	const socket = useSocket()
 	const [myChatRoom, setMyChatRoom] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 
 	//채팅방 리스트를 받아오고 room_idx와 동일한 채팅방 내역 불러오기
-	const chatInfo = myChatRoom.chats.find(item => item.idx === roomIdx)
+	const chatInfo = myChatRoom.chats.find(item => item.idx === room_idx)
 	const [allMessages, setAllMessages] = useState([])
 
 	const messagesInput = useRef('')
@@ -35,7 +35,7 @@ function ChatBox({ roomIdx }) {
 
 	const getChatMsg = async () => {
 		try {
-			const res = await ChatApi.checkChatLog(roomIdx)
+			const res = await ChatApi.checkChatLog(room_idx)
 			setAllMessages(res.data)
 		} catch (error) {}
 	}
@@ -49,7 +49,7 @@ function ChatBox({ roomIdx }) {
 				new Date(Date.now()).getMinutes(),
 
 			prod_idx: chatInfo.product.idx,
-			roomIdx: roomIdx,
+			room_idx: room_idx,
 			nicKname: myInfo.nicKname,
 
 			message: messagesInput.current.value,
@@ -59,7 +59,7 @@ function ChatBox({ roomIdx }) {
 		if (messagesInput.current.value !== '' && e.keyCode === 13) {
 			socket.emit('sendMessage', data)
 			try {
-				const res = await ChatApi.sendMsg(roomIdx, messagesInput.current.value)
+				const res = await ChatApi.sendMsg(room_idx, messagesInput.current.value)
 
 				if (res.status) {
 					messagesInput.current.value = ''
@@ -76,7 +76,7 @@ function ChatBox({ roomIdx }) {
 	}
 	useEffect(() => {
 		getChatMsg()
-	}, [roomIdx])
+	}, [room_idx])
 
 	useEffect(() => {
 		// 메세지 수신

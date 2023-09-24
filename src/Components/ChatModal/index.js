@@ -5,21 +5,19 @@ import { ModalClose_icon } from '../Icons/Icons'
 import { WidthAutoCSS } from '../../Styles/common'
 import { useRecoilState } from 'recoil'
 import { myChatRoomList } from '../../Atoms/myChatRoomList.atom'
-import { useSocket } from '../../Context/socket'
 import { userInfoAtom } from '../../Atoms/userInfo.atom'
 import SellerChat from './Components/Seller'
 import BuyerChat from './Components/Buyer'
 
 function ChatModal({ isDetailPage }) {
-	// 소켓 불러오기
-	const socket = useSocket()
 	// 모달 HOOKS
 	const { chatModalOpen, closeChat } = useChatModal()
 	// 채팅방 리스트 관리 recoil
 	const [roomList, setRoomList] = useRecoilState(myChatRoomList)
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 	const [form, setForm] = useState('구매')
-
+	const [viewChatState, setViewChatState] = useState(false)
+	
 	const onChangeForm = e => {
 		setForm(e.target.innerText)
 	}
@@ -44,17 +42,6 @@ function ChatModal({ isDetailPage }) {
 	}, {})
 	// 동일한 상품idx로 묶어진 객체들을 배열화(판매자)
 	const sellPrdChatsList = Object.values(groupedChats)
-
-	// 선택한 채팅방 채팅창 띄우기 STATE
-	const [viewChatState, setViewChatState] = useState(false)
-	// 선택한 상품의 prod_idx를 받아와서 PROPS로 뿌려준 뒤 socket.emit('join',{ viewChatIdx })
-	const [viewChatIdx, setViewChatIdx] = useState(null)
-
-	// 판매자 시점 - 판매자가 등록한 물품리스트 중 물품의 채팅리스트
-	// const onClickChatRoom = prod_idx => {
-	// 	setViewChatIdx(prod_idx)
-	// 	setViewChatState(true)
-	// }
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY

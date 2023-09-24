@@ -8,18 +8,15 @@ import { useState } from 'react'
 import ChatApi from '../../../../Apis/chatApi'
 
 function ChatView({ prod_idx, room_state }) {
-
 	const [roomList, setRoomList] = useState([])
-	const [roomIdx, setRoomIdx] = useState(null)
+	const [room_idx, setRoomIdx] = useState(null)
 	const socket = useSocket()
 
 	const getChatRoomList = async () => {
 		try {
 			const res = await ChatApi.prdChatList(prod_idx)
 			setRoomList(res.data)
-		} catch (error) {
-			
-		}
+		} catch (error) {}
 	}
 	useEffect(() => {
 		getChatRoomList()
@@ -28,14 +25,13 @@ function ChatView({ prod_idx, room_state }) {
 	const onClickUserChatRoom = room_idx => {
 		setRoomIdx(room_idx)
 		socket.emit('join', { room_idx })
-		
 	}
 
 	return (
 		<S.ChatViewContainer>
 			<RoomBox prod_idx={prod_idx} onClickUserChatRoom={onClickUserChatRoom} />
 
-			<ChatBox roomIdx={roomIdx} />
+			<ChatBox room_idx={room_idx} />
 		</S.ChatViewContainer>
 	)
 }

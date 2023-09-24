@@ -16,7 +16,7 @@ const ChatApi = {
 		)
 	},
 	//채팅 보내기
-	sendMsg(room_idx, message) {
+	sendMsg({ room_idx, message }) {
 		return axiosInstance.post(PATH + '/send', { room_idx, message })
 	},
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Profile_Icon } from '../../../../../../Icons/Icons'
 
 function SellMessagesBox({ allMessages, myInfo }) {
 	const options = {
@@ -12,7 +13,9 @@ function SellMessagesBox({ allMessages, myInfo }) {
 
 	return (
 		<S.MessagesContainer msg={allMessages} myInfo={myInfo}>
+			{allMessages.User.profile_url === null ? <Profile_Icon size="50" /> : 
 			<S.profileImgBox msg={allMessages} myInfo={myInfo}></S.profileImgBox>
+			}
 			<S.MessagesBox msg={allMessages} myInfo={myInfo}>
 				<S.Messages msg={allMessages} myInfo={myInfo}>
 					{allMessages.message}

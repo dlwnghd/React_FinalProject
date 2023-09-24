@@ -9,7 +9,7 @@ import SellChatBox from './ChatBox/ChatBox'
 
 function ChatView({ prod_idx, setViewChatState }) {
 	const [roomList, setRoomList] = useState([])
-	const [roomIdx, setRoomIdx] = useState()
+	const [room_idx, setRoomIdx] = useState()
 	const socket = useSocket()
 	const getChatRoomList = async () => {
 		try {
@@ -33,8 +33,7 @@ function ChatView({ prod_idx, setViewChatState }) {
 				prod_idx={prod_idx}
 				onClickUserChatRoom={onClickUserChatRoom}
 			/>
-
-			<SellChatBox roomIdx={roomIdx} setViewChatState={setViewChatState} />
+			<SellChatBox room_idx={room_idx} setViewChatState={setViewChatState} />
 		</S.ChatViewContainer>
 	)
 }

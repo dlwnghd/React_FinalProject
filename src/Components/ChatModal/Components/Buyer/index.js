@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 function BuyerChat({ list }) {
 	const socket = useSocket()
-	const [roomIdx, setRoomIdx] = useState()
+	const [room_idx, setRoomIdx] = useState()
 	// const [roomSelect, setRoomSelect] = useState(false)
 
 	const onSetRoomIdx = room_idx => {
@@ -21,7 +21,7 @@ function BuyerChat({ list }) {
 				onSetRoomIdx={onSetRoomIdx}
 				// roomSelect={roomSelect}
 			/>
-			<BuyChatBox roomIdx={roomIdx} />
+			<BuyChatBox room_idx={room_idx} />
 		</S.BuyerChatContainer>
 	)
 }
