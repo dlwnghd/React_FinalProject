@@ -74,6 +74,7 @@ function BuyChatBox({ room_idx }) {
 	// 채팅방에 따른 메시지 내역 불러오기
 	useEffect(() => {
 		getChatMsg()
+		newChatRoomList()
 	}, [room_idx, sendMessages])
 
 	// 채팅 수신
@@ -83,6 +84,7 @@ function BuyChatBox({ room_idx }) {
 			try {
 				const res = await ChatApi.checkChatLog(data.room_idx)
 				setAllMessages(res.data)
+				newChatRoomList()
 			} catch (error) {
 				alert(error)
 			}
@@ -90,38 +92,39 @@ function BuyChatBox({ room_idx }) {
 
 		return () => {
 			socket?.emit('leave', { room_idx })
-		};
+		}
 	}, [])
 
 	// 채팅 전송
 	const postMessage = async e => {
 		e.preventDefault()
+		newChatRoomList()
 
 		const data = {
 			title: chatInfo.product.title,
-			createdAt:chatInfo.product.createdAt,
+			createdAt: chatInfo.product.createdAt,
 			prod_idx: chatInfo.product.idx,
 			room_idx: room_idx,
 			nicKname: myInfo.nicKname,
 			message: messagesInput.current.value,
 			isSeller: chatInfo.isSeller,
 		}
-		
+
 		socket.emit('sendMessage', data)
-		
+
 		try {
 			const res = await ChatApi.sendMsg({
 				room_idx: data.room_idx,
 				message: data.message,
 			})
 		} catch (error) {
-		alert(error)
+			alert(error)
 		}
 
-		try{
-			const res = await ChatApi.checkChatLog(data.room_idx);
-			setAllMessages(res.data);
-		} catch(error) {
+		try {
+			const res = await ChatApi.checkChatLog(data.room_idx)
+			setAllMessages(res.data)
+		} catch (error) {
 			alert(error)
 		}
 
