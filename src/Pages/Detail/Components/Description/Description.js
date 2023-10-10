@@ -15,6 +15,7 @@ import { myChatRoomList } from '../../../../Atoms/myChatRoomList.atom'
 import { useRecoilState } from 'recoil'
 import Heart from '../../../../Components/Heart/Heart'
 import SellerInfo from './Components/SellerInfo'
+import { useSocket } from '../../../../Context/socket'
 
 function Description({ detailProduct, detailIsLoading, detailStatus }) {
 	if (detailIsLoading && detailStatus === 'loading') return
@@ -30,6 +31,7 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 		ProductsTags,
 		User,
 	} = detailProduct.searchProduct
+	const socket = useSocket()
 
 	const navigate = useNavigate()
 	const [isLiked, setIsLiked] = useState(liked)
@@ -71,8 +73,11 @@ function Description({ detailProduct, detailIsLoading, detailStatus }) {
 			const res = await ChatApi.makeChat(idx)
 
 			if (res.status === 200) {
-				const room_idx = res.data.idx
-				await ChatApi.sendMsg(room_idx, '채팅방을 생성합니다')
+				socket.emit('sendMessage')
+				await ChatApi.sendMsg({
+					room_idx: res.data.idx,
+					message: '채팅방을 생성합니다',
+				})
 				const list = await ChatApi.chatRoomList()
 
 				setRoomList(list.data)

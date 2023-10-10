@@ -21,17 +21,9 @@ function ChatBox({ room_idx }) {
 	const [allMessages, setAllMessages] = useState([])
 
 	const messagesInput = useRef('')
-	const [sendMessages, setSendMessages] = useState('')
 	const [receivedMessages, setReceivedMessages] = useState([])
 
 	const time = new Date()
-
-	const newChatRoomList = async () => {
-		try {
-			const res = await ChatApi.chatRoomList()
-			setMyChatRoom(res.data)
-		} catch (err) {}
-	}
 
 	const getChatMsg = async () => {
 		try {
@@ -59,11 +51,13 @@ function ChatBox({ room_idx }) {
 		if (messagesInput.current.value !== '' && e.keyCode === 13) {
 			socket.emit('sendMessage', data)
 			try {
-				const res = await ChatApi.sendMsg(room_idx, messagesInput.current.value)
+				const res = await ChatApi.sendMsg({
+					room_idx,
+					message: messagesInput.current.value,
+				})
 
 				if (res.status) {
 					messagesInput.current.value = ''
-					newChatRoomList()
 				}
 			} catch (error) {}
 

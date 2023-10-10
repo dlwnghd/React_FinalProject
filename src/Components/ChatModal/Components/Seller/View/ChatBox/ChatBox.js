@@ -27,10 +27,6 @@ function SellChatBox({ room_idx, setViewChatState }) {
 
 	// 인풋창(보낼 채팅 입력)
 	const messagesInput = useRef('')
-	const [sendMessages, setSendMessages] = useState('')
-	const onMessageSet = () => {
-		setSendMessages(messagesInput.current.value)
-	}
 	// UTC 날짜를 한국 날짜로
 	const options = {
 		timeZone: 'Asia/Seoul',
@@ -52,17 +48,7 @@ function SellChatBox({ room_idx, setViewChatState }) {
 			block: 'end',
 			inline: 'nearest',
 		})
-		// 스크롤바를 내린다는 가정이 scollHegiht의 값에 따라 달라지니까
-		// 자식 컴포넌트의 넓이가 scrollIntoView가 인식할 수 있는 넓이 값을 가지고 있어야 한다.
 	}, [allMessages])
-
-	// 채팅방 리스트 최신화
-	const newChatRoomList = async () => {
-		try {
-			const res = await ChatApi.chatRoomList()
-			setMyChatRoom(res.data)
-		} catch (err) {}
-	}
 
 	//특정 채팅방 내역 불러오기
 	const getChatMsg = async () => {
@@ -72,11 +58,11 @@ function SellChatBox({ room_idx, setViewChatState }) {
 		} catch (error) {}
 	}
 
-	// 채팅방에 따른 메시지 내역 불러오기
+	// 채팅방 선택에 따른 메시지 내역 불러오기
 	useEffect(() => {
 		getChatMsg()
-	}, [room_idx, sendMessages])
-
+	}, [room_idx])
+	
 	// 채팅 수신
 	useEffect(() => {
 		socket.emit('join', { room_idx })
@@ -88,19 +74,21 @@ function SellChatBox({ room_idx, setViewChatState }) {
 				alert(error)
 			}
 		})
+
+		return () => {
+			socket?.emit('leave', { room_idx })
+		}
 	}, [])
 
 	// 채팅 전송
 	const postMessage = async e => {
 		e.preventDefault()
-
 		const data = {
 			title: chatInfo.product.title,
 			createdAt:
 				new Date(Date.now()).getHours() +
 				':' +
 				new Date(Date.now()).getMinutes(),
-
 			prod_idx: chatInfo.product.idx,
 			room_idx: room_idx,
 			nicKname: myInfo.nicKname,
@@ -115,7 +103,9 @@ function SellChatBox({ room_idx, setViewChatState }) {
 				room_idx: data.room_idx,
 				message: data.message,
 			})
-		} catch (error) {}
+		} catch (error) {
+			alert(error)
+		}
 
 		try {
 			const res = await ChatApi.checkChatLog(data.room_idx)

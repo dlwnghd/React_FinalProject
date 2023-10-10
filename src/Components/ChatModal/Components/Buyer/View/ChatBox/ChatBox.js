@@ -27,10 +27,6 @@ function BuyChatBox({ room_idx }) {
 
 	// 인풋창(보낼 채팅 입력)
 	const messagesInput = useRef('')
-	const [sendMessages, setSendMessages] = useState('')
-	const onMessageSet = () => {
-		setSendMessages(messagesInput.current.value)
-	}
 
 	// UTC 날짜를 한국 날짜로
 	const options = {
@@ -64,6 +60,7 @@ function BuyChatBox({ room_idx }) {
 	}
 
 	//특정 채팅방 내역 불러오기
+	// 특정 채팅방 내역 불러오기
 	const getChatMsg = async () => {
 		try {
 			const res = await ChatApi.checkChatLog(room_idx)
@@ -71,11 +68,11 @@ function BuyChatBox({ room_idx }) {
 		} catch (error) {}
 	}
 
-	// 채팅방에 따른 메시지 내역 불러오기
+	// 채팅방 선택에 따른 메시지 내역 불러오기
 	useEffect(() => {
 		getChatMsg()
 		newChatRoomList()
-	}, [room_idx, sendMessages])
+	}, [room_idx])
 
 	// 채팅 수신
 	useEffect(() => {
@@ -84,7 +81,6 @@ function BuyChatBox({ room_idx }) {
 			try {
 				const res = await ChatApi.checkChatLog(data.room_idx)
 				setAllMessages(res.data)
-				newChatRoomList()
 			} catch (error) {
 				alert(error)
 			}
@@ -98,7 +94,6 @@ function BuyChatBox({ room_idx }) {
 	// 채팅 전송
 	const postMessage = async e => {
 		e.preventDefault()
-		newChatRoomList()
 
 		const data = {
 			title: chatInfo.product.title,
