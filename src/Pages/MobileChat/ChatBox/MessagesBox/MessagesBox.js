@@ -58,13 +58,15 @@ const MessagesBox = styled.div`
 	gap: 0.3rem;
 `
 const Messages = styled.span`
-	border-radius: 4rem;
-	padding: 0.3rem 0.8rem;
+	border-radius: 2rem;
+	padding: 0.5rem 1rem;
 	background-color: ${({ theme, msg, myInfo }) =>
 		msg.User.nick_name === myInfo.nickName
 			? theme.COLOR.main
 			: theme.COLOR.common.white};
 	font-size: ${({ theme }) => theme.FONT_SIZE.tiny};
+	word-break: break-all;
+	max-width: 40rem;
 `
 const Time = styled.span`
 	font-size: 0.5rem;

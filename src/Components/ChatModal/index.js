@@ -17,7 +17,7 @@ function ChatModal({ isDetailPage }) {
 	const [myInfo, setMyInfo] = useRecoilState(userInfoAtom)
 	const [form, setForm] = useState('구매')
 	const [viewChatState, setViewChatState] = useState(false)
-	
+
 	const onChangeForm = e => {
 		setForm(e.target.innerText)
 	}
@@ -114,9 +114,9 @@ const Wrapper = styled.div`
 const ChatContainer = styled.div`
 	position: fixed;
 	top: 0;
+	right: 50%;
 	bottom: 0;
 	left: 50%;
-	right: 0;
 	margin: auto;
 	width: 80rem;
 	height: 60rem;
